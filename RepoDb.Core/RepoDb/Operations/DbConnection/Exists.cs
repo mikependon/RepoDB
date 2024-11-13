@@ -35,8 +35,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -69,8 +69,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -102,8 +102,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -135,8 +135,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -168,8 +168,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -201,8 +201,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -234,8 +234,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -287,8 +287,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -324,8 +324,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -360,8 +360,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -396,8 +396,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -432,8 +432,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -468,8 +468,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -504,8 +504,8 @@ namespace RepoDb
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             string hints = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -560,8 +560,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
@@ -594,8 +594,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
@@ -628,8 +628,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
@@ -662,8 +662,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
@@ -696,8 +696,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
@@ -730,8 +730,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             // Variables
@@ -784,8 +784,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -821,8 +821,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -858,8 +858,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -895,8 +895,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -932,8 +932,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -969,8 +969,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1020,8 +1020,8 @@ namespace RepoDb
             object param,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -1068,8 +1068,8 @@ namespace RepoDb
             object param,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
-using RepoDb.Extensions;
 using System.Linq.Expressions;
 using System.Reflection;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -112,7 +112,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(object obj) =>
+        public static IEnumerable<Field> Parse(object? obj) =>
             TypeCache.Get(obj?.GetType()).IsDictionaryStringObject() == true ?
                 ParseDictionaryStringObject((IDictionary<string, object>)obj) : Parse(obj?.GetType());
 
@@ -293,7 +293,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
 
@@ -305,7 +305,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(Field other)
+        public bool Equals(Field? other)
         {
             if (other is null) return false;
 
@@ -318,8 +318,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Field"/> object.</param>
         /// <param name="objB">The second <see cref="Field"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(Field objA,
-            Field objB)
+        public static bool operator ==(Field? objA,
+            Field? objB)
         {
             if (objA is null)
             {
@@ -334,8 +334,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Field"/> object.</param>
         /// <param name="objB">The second <see cref="Field"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(Field objA,
-            Field objB) =>
+        public static bool operator !=(Field? objA,
+            Field? objB) =>
             (objA == objB) == false;
 
         #endregion

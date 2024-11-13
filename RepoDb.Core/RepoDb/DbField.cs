@@ -189,7 +189,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
 
@@ -201,7 +201,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(DbField other)
+        public bool Equals(DbField? other)
         {
             if (other is null) return false;
 
@@ -214,8 +214,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="DbField"/> object.</param>
         /// <param name="objB">The second <see cref="DbField"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(DbField objA,
-            DbField objB)
+        public static bool operator ==(DbField? objA,
+            DbField? objB)
         {
             if (objA is null)
             {
@@ -230,8 +230,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="DbField"/> object.</param>
         /// <param name="objB">The second <see cref="DbField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(DbField objA,
-            DbField objB) =>
+        public static bool operator !=(DbField? objA,
+            DbField? objB) =>
             (objA == objB) == false;
 
         #endregion

@@ -243,7 +243,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for merge operation.</returns>
         string CreateMerge(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null);

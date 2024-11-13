@@ -28,7 +28,7 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IStatementBuilder statementBuilder = null)
@@ -59,7 +59,7 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IStatementBuilder statementBuilder = null)

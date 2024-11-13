@@ -44,8 +44,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -89,8 +89,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -134,8 +134,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -179,8 +179,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -220,8 +220,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -263,8 +263,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -306,8 +306,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -349,8 +349,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -394,8 +394,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -466,8 +466,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -514,8 +514,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -562,8 +562,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -610,8 +610,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -654,8 +654,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -700,8 +700,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -746,8 +746,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -792,8 +792,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -840,8 +840,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -913,8 +913,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return UpdateAllInternal<object>(connection: connection,
@@ -956,8 +956,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return UpdateAllInternal<object>(connection: connection,
@@ -999,8 +999,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return UpdateAllInternal<object>(connection: connection,
@@ -1045,8 +1045,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1091,8 +1091,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1137,8 +1137,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1187,8 +1187,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -1393,8 +1393,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.UpdateAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class

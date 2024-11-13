@@ -26,7 +26,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected.</returns>
         public int Truncate(string traceKey = TraceKeys.Truncate,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return DbRepository.Truncate<TEntity>(traceKey: traceKey,
                 transaction: transaction);
@@ -68,7 +68,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public Task<int> TruncateAsync(string traceKey = TraceKeys.Truncate,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.TruncateAsync<TEntity>(traceKey: traceKey,

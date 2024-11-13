@@ -22,7 +22,7 @@ namespace RepoDb
         public bool Exists(object what = null,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Exists<TEntity>(what: what,
                 hints: hints,
@@ -41,7 +41,7 @@ namespace RepoDb
         public bool Exists(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Exists<TEntity>(where: where,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public bool Exists(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Exists<TEntity>(where: where,
                 traceKey: traceKey,
@@ -79,7 +79,7 @@ namespace RepoDb
         public bool Exists(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Exists<TEntity>(where: where,
                 hints: hints,
@@ -98,7 +98,7 @@ namespace RepoDb
         public bool Exists(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Exists<TEntity>(where: where,
                 hints: hints,
@@ -122,7 +122,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync(object what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity>(what: what,
@@ -145,7 +145,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync<TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity, TWhat>(what: what,
@@ -167,7 +167,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity>(where: where,
@@ -189,7 +189,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity>(where: where,
@@ -211,7 +211,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity>(where: where,
@@ -233,7 +233,7 @@ namespace RepoDb
         public Task<bool> ExistsAsync(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Exists,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExistsAsync<TEntity>(where: where,

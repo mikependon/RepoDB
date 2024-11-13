@@ -185,9 +185,9 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
-            HashSet<string> propertiesToSkip,
-            Type entityType,
-            DbFieldCollection dbFields = null)
+            HashSet<string>? propertiesToSkip,
+            Type? entityType,
+            DbFieldCollection? dbFields = null)
         {
             // Check
             if (param == null)
@@ -414,7 +414,7 @@ namespace RepoDb.Extensions
             object param,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             var type = param.GetType();
 
@@ -470,7 +470,7 @@ namespace RepoDb.Extensions
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
             HashSet<string> propertiesToSkip,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key) != true);
@@ -513,9 +513,9 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         internal static void CreateParameters(IDbCommand command,
             QueryGroup queryGroup,
-            HashSet<string> propertiesToSkip,
+            HashSet<string>? propertiesToSkip,
             Type entityType,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             if (queryGroup == null)
             {
@@ -536,7 +536,7 @@ namespace RepoDb.Extensions
             IEnumerable<QueryField> queryFields,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             if (queryFields == null)
             {
@@ -579,7 +579,7 @@ namespace RepoDb.Extensions
             QueryField queryField,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             if (queryField == null)
             {

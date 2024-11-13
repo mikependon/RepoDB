@@ -18,7 +18,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll(string hints = null,
             string traceKey = TraceKeys.CountAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.CountAll<TEntity>(hints: hints,
                 traceKey: traceKey,
@@ -39,7 +39,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAllAsync(string hints = null,
             string traceKey = TraceKeys.CountAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAllAsync<TEntity>(hints: hints,

@@ -25,7 +25,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.InsertAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.InsertAll<TEntity>(entities: entities,
                 batchSize: batchSize,
@@ -55,7 +55,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.InsertAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.InsertAllAsync<TEntity>(entities: entities,

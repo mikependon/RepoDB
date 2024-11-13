@@ -38,8 +38,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -74,8 +74,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -110,8 +110,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -146,8 +146,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -182,8 +182,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -218,8 +218,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -254,8 +254,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -290,8 +290,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -326,8 +326,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -362,8 +362,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -398,8 +398,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -450,8 +450,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -487,8 +487,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -524,8 +524,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -561,8 +561,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -598,8 +598,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -635,8 +635,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -672,8 +672,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -709,8 +709,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -746,8 +746,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -783,8 +783,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -820,8 +820,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -876,8 +876,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -915,8 +915,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -954,8 +954,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -993,8 +993,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1032,8 +1032,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1071,8 +1071,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1110,8 +1110,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1149,8 +1149,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1188,8 +1188,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1227,8 +1227,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1266,8 +1266,8 @@ namespace RepoDb
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
             string hints = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1321,8 +1321,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1361,8 +1361,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1401,8 +1401,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1441,8 +1441,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1481,8 +1481,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1521,8 +1521,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1561,8 +1561,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1601,8 +1601,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1641,8 +1641,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1681,8 +1681,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1721,8 +1721,8 @@ namespace RepoDb
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
             string hints = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1779,8 +1779,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal(connection: connection,
@@ -1816,8 +1816,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal(connection: connection,
@@ -1853,8 +1853,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal(connection: connection,
@@ -1890,8 +1890,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal(connection: connection,
@@ -1927,8 +1927,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             // Variables
@@ -1979,8 +1979,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal<TResult>(connection: connection,
@@ -2017,8 +2017,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal<TResult>(connection: connection,
@@ -2055,8 +2055,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal<TResult>(connection: connection,
@@ -2093,8 +2093,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SumInternal<TResult>(connection: connection,
@@ -2131,8 +2131,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             // Variables
@@ -2187,8 +2187,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2227,8 +2227,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2267,8 +2267,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2307,8 +2307,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2347,8 +2347,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2402,8 +2402,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2443,8 +2443,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2484,8 +2484,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2525,8 +2525,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2566,8 +2566,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -2618,8 +2618,8 @@ namespace RepoDb
             object param,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -2666,8 +2666,8 @@ namespace RepoDb
             object param,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

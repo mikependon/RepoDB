@@ -45,8 +45,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -90,8 +90,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -135,8 +135,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -180,8 +180,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -221,8 +221,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -264,8 +264,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -307,8 +307,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -350,8 +350,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -395,8 +395,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -507,8 +507,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -555,8 +555,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -603,8 +603,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -651,8 +651,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -695,8 +695,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -741,8 +741,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -787,8 +787,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -833,8 +833,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -881,8 +881,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -996,8 +996,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return MergeAllInternal<object>(connection: connection,
@@ -1039,8 +1039,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return MergeAllInternal<object>(connection: connection,
@@ -1082,8 +1082,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return MergeAllInternal<object>(connection: connection,
@@ -1128,8 +1128,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1174,8 +1174,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1220,8 +1220,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1270,8 +1270,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -1511,13 +1511,13 @@ namespace RepoDb
         internal static int UpsertAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -1654,8 +1654,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1900,13 +1900,13 @@ namespace RepoDb
         internal static async Task<int> UpsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.MergeAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class

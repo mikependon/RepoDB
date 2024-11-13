@@ -21,7 +21,7 @@ namespace RepoDb
         public object AverageAll(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.AverageAll<TEntity>(field: field,
                 hints: hints,
@@ -40,7 +40,7 @@ namespace RepoDb
         public object AverageAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.AverageAll<TEntity>(field: field,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public TResult AverageAll<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.AverageAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -80,7 +80,7 @@ namespace RepoDb
         public TResult AverageAll<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.AverageAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -104,7 +104,7 @@ namespace RepoDb
         public Task<object> AverageAllAsync(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity>(field: field,
@@ -126,7 +126,7 @@ namespace RepoDb
         public Task<object> AverageAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity>(field: field,
@@ -149,7 +149,7 @@ namespace RepoDb
         public Task<TResult> AverageAllAsync<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,
@@ -172,7 +172,7 @@ namespace RepoDb
         public Task<TResult> AverageAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,

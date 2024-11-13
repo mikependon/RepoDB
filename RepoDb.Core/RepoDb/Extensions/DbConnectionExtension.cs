@@ -1,18 +1,20 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Reflection;
+﻿#nullable enable
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Enumerations;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Reflection;
 
 namespace RepoDb
 {
@@ -36,7 +38,7 @@ namespace RepoDb
             string commandText,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             var command = connection.CreateCommand();
             command.CommandText = commandText;
@@ -116,15 +118,15 @@ namespace RepoDb
         /// </returns>
         public static IEnumerable<dynamic> ExecuteQuery(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null)
         {
             return ExecuteQueryInternal(connection: connection,
                 commandText: commandText,
@@ -151,25 +153,25 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static IEnumerable<dynamic> ExecuteQueryInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            string tableName = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -198,7 +200,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
             // Variables
-            var result = (IEnumerable<dynamic>)null;
+            var result = (IEnumerable<dynamic>?)null;
 
             // Before Execution
             var traceResult = Tracer
@@ -207,7 +209,7 @@ namespace RepoDb
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
             {
-                return result;
+                return result!;
             }
 
             // Execute
@@ -264,15 +266,15 @@ namespace RepoDb
         /// </returns>
         public static Task<IEnumerable<dynamic>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteQueryAsyncInternal(connection: connection,
@@ -301,27 +303,27 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static async Task<IEnumerable<dynamic>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default,
-            string tableName = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -351,7 +353,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
             // Variables
-            IEnumerable<dynamic> result = null;
+            IEnumerable<dynamic>? result = null;
 
             // Before Execution
             var traceResult = await Tracer
@@ -360,7 +362,7 @@ namespace RepoDb
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
             {
-                return result;
+                return result!;
             }
 
             // Execute
@@ -418,15 +420,15 @@ namespace RepoDb
         /// </returns>
         public static IEnumerable<TResult> ExecuteQuery<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null)
         {
             return ExecuteQueryInternal<TResult>(connection: connection,
                 commandText: commandText,
@@ -454,25 +456,25 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static IEnumerable<TResult> ExecuteQueryInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            string tableName = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -534,25 +536,25 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static IEnumerable<TResult> ExecuteQueryInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            string tableName = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -604,25 +606,25 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static IEnumerable<TResult> ExecuteQueryInternalForType<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            string tableName = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -651,7 +653,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
             // Variables
-            IEnumerable<TResult> result = null;
+            IEnumerable<TResult>? result = null;
 
             // Before Execution
             var traceResult = Tracer
@@ -660,7 +662,7 @@ namespace RepoDb
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
             {
-                return default;
+                return null!;
             }
 
             // Execute
@@ -718,15 +720,15 @@ namespace RepoDb
         /// </returns>
         public static Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteQueryAsyncInternal<TResult>(connection: connection,
@@ -756,27 +758,27 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default,
-            string tableName = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -840,27 +842,27 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default,
-            string tableName = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -913,27 +915,27 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default,
-            string tableName = null,
+            string? tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -962,7 +964,7 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-            IEnumerable<TResult> result = null;
+            IEnumerable<TResult>? result = null;
 
             // Before Execution
             var traceResult = await Tracer
@@ -971,7 +973,7 @@ namespace RepoDb
             // Silent cancellation
             if (traceResult?.CancellableTraceLog?.IsCancelled == true)
             {
-                return result;
+                return result!;
             }
 
             // Execute
@@ -1025,15 +1027,15 @@ namespace RepoDb
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null) =>
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null) =>
             ExecuteQueryMultipleInternal(connection,
                 commandText,
                 param,
@@ -1057,26 +1059,26 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <returns></returns>
         internal static QueryMultipleExtractor ExecuteQueryMultipleInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             bool isDisposeConnection = false)
         {
-            IDataReader reader = null;
+            IDataReader? reader = null;
 
             // Get Cache
             if (cacheKey == null || cache?.Contains(cacheKey) != true)
@@ -1097,7 +1099,7 @@ namespace RepoDb
 
             // Return
             return new QueryMultipleExtractor((DbConnection)connection,
-                (DbDataReader)reader,
+                (DbDataReader?)reader,
                 param,
                 cacheKey,
                 cacheItemExpiration,
@@ -1133,15 +1135,15 @@ namespace RepoDb
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default) =>
             ExecuteQueryMultipleAsyncInternal(connection,
                 commandText,
@@ -1167,28 +1169,28 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
-            IDataReader reader = null;
+            IDataReader? reader = null;
 
             // Get Cache
             if (cacheKey == null || cache?.Contains(cacheKey) != true)
@@ -1210,7 +1212,7 @@ namespace RepoDb
 
             // Return
             return new QueryMultipleExtractor((DbConnection)connection,
-                (DbDataReader)reader,
+                (DbDataReader?)reader,
                 param,
                 cacheKey,
                 cacheItemExpiration,
@@ -1241,12 +1243,12 @@ namespace RepoDb
         /// <return>The instance of the <see cref="IDataReader"/> object.</return>
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             string traceKey = TraceKeys.ExecuteReader,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ITrace? trace = null)
         {
             return ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
@@ -1269,7 +1271,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="entityType"></param>
@@ -1279,16 +1281,16 @@ namespace RepoDb
         /// <returns></returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
             int? commandTimeout,
             string traceKey,
-            IDbTransaction transaction,
-            ITrace trace,
-            Type entityType,
-            DbFieldCollection dbFields,
+            IDbTransaction? transaction,
+            ITrace? trace,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck,
-            Func<DbCommand, TraceResult> beforeExecutionCallback = null)
+            Func<DbCommand, TraceResult>? beforeExecutionCallback = null)
         {
             // Variables
             var setting = DbSettingMapper.Get(connection);
@@ -1316,7 +1318,7 @@ namespace RepoDb
                 // Silent cancellation
                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    return default;
+                    return null!;
                 }
 
                 // Execute
@@ -1369,12 +1371,12 @@ namespace RepoDb
         /// <return>The instance of the <see cref="IDataReader"/> object.</return>
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             string traceKey = TraceKeys.ExecuteReader,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteReaderAsyncInternal(connection: connection,
@@ -1399,7 +1401,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
@@ -1410,17 +1412,17 @@ namespace RepoDb
         /// <returns></returns>
         internal static async Task<IDataReader> ExecuteReaderAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
             int? commandTimeout,
-            string traceKey,
-            IDbTransaction transaction,
-            ITrace trace,
+            string? traceKey,
+            IDbTransaction? transaction,
+            ITrace? trace,
             CancellationToken cancellationToken,
-            Type entityType,
-            DbFieldCollection dbFields,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck,
-            Func<DbCommand, CancellationToken, Task<TraceResult>> beforeExecutionCallbackAsync = null)
+            Func<DbCommand, CancellationToken, Task<TraceResult>>? beforeExecutionCallbackAsync = null)
         {
             // Variables
             var setting = connection.GetDbSetting();
@@ -1439,7 +1441,7 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
-                TraceResult traceResult = null;
+                TraceResult? traceResult = null;
 
                 // A hacky solution for other operations (i.e.: QueryMultipleAsync)
                 if (beforeExecutionCallbackAsync != null)
@@ -1454,7 +1456,7 @@ namespace RepoDb
                 // Silent cancellation
                 if (traceResult?.CancellableTraceLog?.IsCancelled == true)
                 {
-                    return default;
+                    return null!;
                 }
 
                 // Execute
@@ -1506,12 +1508,12 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             string traceKey = TraceKeys.ExecuteNonQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ITrace? trace = null)
         {
             return ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
@@ -1534,7 +1536,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="entityType"></param>
@@ -1543,14 +1545,14 @@ namespace RepoDb
         /// <returns></returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
             int? commandTimeout,
-            string traceKey,
-            IDbTransaction transaction,
-            ITrace trace,
-            Type entityType,
-            DbFieldCollection dbFields,
+            string? traceKey,
+            IDbTransaction? transaction,
+            ITrace? trace,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using var command = CreateDbCommandForExecution(connection: connection,
@@ -1610,12 +1612,12 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             string traceKey = TraceKeys.ExecuteNonQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteNonQueryAsyncInternal(connection: connection,
@@ -1640,7 +1642,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
@@ -1650,15 +1652,15 @@ namespace RepoDb
         /// <returns></returns>
         internal static async Task<int> ExecuteNonQueryAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
             int? commandTimeout,
-            string traceKey,
-            IDbTransaction transaction,
-            ITrace trace,
+            string? traceKey,
+            IDbTransaction? transaction,
+            ITrace? trace,
             CancellationToken cancellationToken,
-            Type entityType,
-            DbFieldCollection dbFields,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1722,17 +1724,17 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
-        public static object ExecuteScalar(this IDbConnection connection,
+        public static object? ExecuteScalar(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null)
         {
             return ExecuteScalarInternal<object>(connection: connection,
                 commandText: commandText,
@@ -1777,17 +1779,17 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
-        public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
+        public static Task<object?> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteScalarAsyncInternal<object>(connection: connection,
@@ -1834,17 +1836,17 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
-        public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
+        public static TResult? ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null)
         {
             return ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
@@ -1873,27 +1875,27 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static TResult ExecuteScalarInternal<TResult>(this IDbConnection connection,
+        internal static TResult? ExecuteScalarInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
-            string cacheKey,
+            string? cacheKey,
             int? cacheItemExpiration,
             int? commandTimeout,
-            string traceKey,
-            IDbTransaction transaction,
-            ICache cache,
-            ITrace trace,
-            Type entityType,
-            DbFieldCollection dbFields,
+            string? traceKey,
+            IDbTransaction? transaction,
+            ICache? cache,
+            ITrace? trace,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -1927,7 +1929,7 @@ namespace RepoDb
             }
 
             // Execute
-            var result = Converter.ToType<TResult>(command.ExecuteScalar());
+            var result = command.ExecuteScalar() is { } v ? Converter.ToType<TResult>(v) : default;
 
             // After Execution
             Tracer
@@ -1974,17 +1976,17 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
-        public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
+        public static Task<TResult?> ExecuteScalarAsync<TResult>(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ICache? cache = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteScalarAsyncInternal<TResult>(connection: connection,
@@ -2015,29 +2017,29 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
-		/// <param name="traceKey"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
-		/// <param name="trace"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static async Task<TResult> ExecuteScalarAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<TResult?> ExecuteScalarAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
-            object param,
+            object? param,
             CommandType? commandType,
-            string cacheKey,
+            string? cacheKey,
             int? cacheItemExpiration,
             int? commandTimeout,
             string traceKey,
-            IDbTransaction transaction,
-            ICache cache,
-            ITrace trace,
+            IDbTransaction? transaction,
+            ICache? cache,
+            ITrace? trace,
             CancellationToken cancellationToken,
-            Type entityType,
-            DbFieldCollection dbFields,
+            Type? entityType,
+            DbFieldCollection? dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -2072,7 +2074,7 @@ namespace RepoDb
             }
 
             // Execution
-            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+            var result = await command.ExecuteScalarAsync(cancellationToken) is { } v ? Converter.ToType<TResult>(v) : default;
 
             // After Execution
             await Tracer
@@ -2118,7 +2120,7 @@ namespace RepoDb
             }
 
             // Return the validator
-            return setting;
+            return setting!;
         }
 
         /// <summary>
@@ -2144,7 +2146,7 @@ namespace RepoDb
             }
 
             // Return the validator
-            return helper;
+            return helper!;
         }
 
         /// <summary>
@@ -2170,7 +2172,7 @@ namespace RepoDb
             }
 
             // Return the validator
-            return statementBuilder;
+            return statementBuilder!;
         }
 
         /// <summary>
@@ -2178,6 +2180,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="property"></param>
         /// <param name="connectionType"></param>
+#if NET
+        [DoesNotReturn]
+#endif
         private static void ThrowMissingMappingException(string property,
             Type connectionType)
         {
@@ -2194,7 +2199,7 @@ namespace RepoDb
         ///
         /// </summary>
         /// <param name="param"></param>
-        internal static void SetOutputParameters(object param)
+        internal static void SetOutputParameters(object? param)
         {
             if (param is QueryGroup group)
             {
@@ -2384,7 +2389,7 @@ namespace RepoDb
         /// <param name="dbField"></param>
         /// <returns></returns>
         internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            DbField dbField) =>
+            DbField? dbField) =>
             dbField ?? throw GetKeyFieldNotFoundException(tableName);
 
         /// <summary>
@@ -2394,7 +2399,7 @@ namespace RepoDb
         /// <param name="field"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            Field field) =>
+            Field? field) =>
             field ?? throw GetKeyFieldNotFoundException(tableName);
 
         /// <summary>
@@ -2403,7 +2408,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+        internal static Field? GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
             DbFieldCollection dbFields) =>
             entityType == null ? null :
                 TypeCache.Get(entityType).IsDictionaryStringObject() ?
@@ -2431,7 +2436,7 @@ namespace RepoDb
             }
 
             // Return
-            return dbField?.AsField();
+            return dbField.AsField();
         }
 
         /// <summary>
@@ -2445,7 +2450,7 @@ namespace RepoDb
         {
             // Properties
             var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
-            var property = (ClassProperty)null;
+            var property = (ClassProperty?)null;
 
             // Primary
             if (property == null)
@@ -2472,7 +2477,7 @@ namespace RepoDb
             }
 
             // Return
-            return property?.AsField();
+            return property.AsField();
         }
 
         /// <summary>
@@ -2504,10 +2509,10 @@ namespace RepoDb
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(this IDbConnection connection,
+        internal static QueryGroup? WhatToQueryGroup<T>(this IDbConnection connection,
             string tableName,
             T what,
-            IDbTransaction transaction)
+            IDbTransaction transaction) where T : notnull
         {
             if (what == null)
             {
@@ -2542,11 +2547,11 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync<T>(this IDbConnection connection,
+        internal static async Task<QueryGroup?> WhatToQueryGroupAsync<T>(this IDbConnection connection,
             string tableName,
             T what,
             IDbTransaction transaction,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default) where T : notnull
         {
             if (what == null)
             {
@@ -2579,9 +2584,9 @@ namespace RepoDb
         /// <param name="what"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(string tableName,
+        internal static QueryGroup? WhatToQueryGroup<T>(string tableName,
             T what,
-            IEnumerable<DbField> dbFields)
+            IEnumerable<DbField> dbFields) where T : notnull
         {
             var key = dbFields?.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields?.FirstOrDefault(p => p.IsIdentity == true);
             if (key == null)
@@ -2602,7 +2607,7 @@ namespace RepoDb
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup(Type entityType,
+        internal static QueryGroup? WhatToQueryGroup(Type entityType,
             IDbConnection connection,
             object what,
             IDbTransaction transaction)
@@ -2629,7 +2634,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync(Type entityType,
+        internal static async Task<QueryGroup?> WhatToQueryGroupAsync(Type entityType,
             IDbConnection connection,
             object what,
             IDbTransaction transaction,
@@ -2655,8 +2660,8 @@ namespace RepoDb
         /// <param name="dbField"></param>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(DbField dbField,
-            T what)
+        internal static QueryGroup? WhatToQueryGroup<T>(DbField dbField,
+            T what) where T : notnull
         {
             if (what == null)
             {
@@ -2684,7 +2689,7 @@ namespace RepoDb
         /// <param name="what"></param>
         /// <returns></returns>
         internal static QueryGroup WhatToQueryGroup<T>(Field field,
-            T what)
+            T what) where T : notnull
         {
             var type = typeof(T);
             if (field == null)
@@ -2708,7 +2713,7 @@ namespace RepoDb
         /// <typeparam name="T"></typeparam>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(T what)
+        internal static QueryGroup? WhatToQueryGroup<T>(T what)
         {
             if (what == null)
             {
@@ -2746,7 +2751,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(object obj)
+        internal static QueryGroup? ToQueryGroup(object obj)
         {
             if (obj == null)
             {
@@ -2769,7 +2774,7 @@ namespace RepoDb
         /// <param name="dbField"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(DbField dbField,
+        internal static QueryGroup? ToQueryGroup(DbField dbField,
             object entity)
         {
             if (entity == null)
@@ -2803,7 +2808,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
+        internal static QueryGroup? ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
             where TEntity : class
         {
             if (where == null)
@@ -2819,7 +2824,7 @@ namespace RepoDb
         /// <param name="field"></param>
         /// <param name="dictionary"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(Field field,
+        internal static QueryGroup? ToQueryGroup(Field field,
             IDictionary<string, object> dictionary)
         {
             if (!dictionary.ContainsKey(field.Name))
@@ -2836,13 +2841,13 @@ namespace RepoDb
         /// <param name="field"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(Field field,
+        internal static QueryGroup? ToQueryGroup<TEntity>(Field field,
             TEntity entity)
             where TEntity : class
         {
             var type = entity?.GetType() ?? typeof(TEntity);
-            return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
-                ToQueryGroup(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity);
+            return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity!) :
+                ToQueryGroup<TEntity>(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity!);
         }
 
         /// <summary>
@@ -2852,17 +2857,17 @@ namespace RepoDb
         /// <param name="property"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
+        internal static QueryGroup? ToQueryGroup<TEntity>(ClassProperty? property,
             TEntity entity)
             where TEntity : class =>
-            ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
+            ToQueryGroup(property?.PropertyInfo.AsQueryField(entity));
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="queryField"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(QueryField queryField)
+        internal static QueryGroup? ToQueryGroup(QueryField? queryField)
         {
             if (queryField == null)
             {
@@ -2876,7 +2881,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(IEnumerable<QueryField> queryFields)
+        internal static QueryGroup? ToQueryGroup(IEnumerable<QueryField> queryFields)
         {
             if (queryFields == null)
             {
@@ -2892,7 +2897,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static Field GetPrimaryOrIdentityKey(Type entityType) =>
+        internal static Field? GetPrimaryOrIdentityKey(Type entityType) =>
             entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
 
         /// <summary>
@@ -2919,7 +2924,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
-            IDbTransaction transaction)
+            IDbTransaction? transaction)
         {
             if (transaction != null && transaction.Connection != connection)
             {
@@ -2949,7 +2954,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static QueryGroup CreateQueryGroupForUpsert(object entity,
             IEnumerable<ClassProperty> properties,
-            IEnumerable<Field> qualifiers = null)
+            IEnumerable<Field> qualifiers)
         {
             var queryFields = new List<QueryField>();
             foreach (var field in qualifiers)
@@ -2972,7 +2977,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <returns></returns>
         internal static QueryGroup CreateQueryGroupForUpsert(IDictionary<string, object> dictionary,
-            IEnumerable<Field> qualifiers = null)
+            IEnumerable<Field>? qualifiers = null)
         {
             if (qualifiers?.Any() != true)
             {
@@ -3029,9 +3034,9 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
+        internal static IEnumerable<Field>? GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            (fields ?? (TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
+            (fields ?? (TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null))?.AsList();
 
         /// <summary>
         ///
@@ -3095,12 +3100,12 @@ namespace RepoDb
         /// <returns></returns>
         internal static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null,
-            DbFieldCollection dbFields = null,
+            IDbTransaction? transaction = null,
+            Type? entityType = null,
+            DbFieldCollection? dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -3137,13 +3142,13 @@ namespace RepoDb
         /// <returns></returns>
         internal static async Task<DbCommand> CreateDbCommandForExecutionAsync(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default,
-            Type entityType = null,
-            DbFieldCollection dbFields = null,
+            Type? entityType = null,
+            DbFieldCollection? dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -3179,12 +3184,12 @@ namespace RepoDb
         /// <returns></returns>
         private static DbCommand CreateDbCommandForExecutionInternal(this IDbConnection connection,
             string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null,
-            DbFieldCollection dbFields = null,
+            IDbTransaction? transaction = null,
+            Type? entityType = null,
+            DbFieldCollection? dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Command
@@ -3204,7 +3209,7 @@ namespace RepoDb
             }
 
             // ArrayParameters
-            var commandArrayParametersText = (CommandArrayParametersText)null;
+            var commandArrayParametersText = (CommandArrayParametersText?)null;
             if (param != null && skipCommandArrayParametersCheck == false)
             {
                 commandArrayParametersText = GetCommandArrayParametersText(commandText,
@@ -3247,7 +3252,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+        internal static CommandArrayParametersText? GetCommandArrayParametersText(string commandText,
             object param,
             IDbSetting dbSetting)
         {
@@ -3294,7 +3299,7 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static CommandArrayParametersText GetCommandArrayParametersTextInternal(string commandText,
+        private static CommandArrayParametersText? GetCommandArrayParametersTextInternal(string commandText,
             object param,
             IDbSetting dbSetting)
         {
@@ -3304,12 +3309,12 @@ namespace RepoDb
             }
 
             // Variables
-            var commandArrayParametersText = (CommandArrayParametersText)null;
+            var commandArrayParametersText = (CommandArrayParametersText?)null;
 
             // CommandArrayParameters
             foreach (var property in TypeCache.Get(param.GetType()).GetProperties())
             {
-                var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
+                var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType!, property);
                 if (propertyHandler != null ||
                     property.PropertyType == StaticType.String ||
                     StaticType.IEnumerable.IsAssignableFrom(property.PropertyType) == false)
@@ -3361,7 +3366,7 @@ namespace RepoDb
         /// <param name="dictionary"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+        private static CommandArrayParametersText? GetCommandArrayParametersText(string commandText,
             IDictionary<string, object> dictionary,
             IDbSetting dbSetting)
         {
@@ -3371,7 +3376,7 @@ namespace RepoDb
             }
 
             // Variables
-            var commandArrayParametersText = (CommandArrayParametersText)null;
+            var commandArrayParametersText = (CommandArrayParametersText?)null;
 
             // CommandArrayParameters
             foreach (var kvp in dictionary)
@@ -3420,7 +3425,7 @@ namespace RepoDb
         /// <param name="queryField"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+        private static CommandArrayParametersText? GetCommandArrayParametersText(string commandText,
             QueryField queryField,
             IDbSetting dbSetting)
         {
@@ -3470,7 +3475,7 @@ namespace RepoDb
         /// <param name="queryFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+        private static CommandArrayParametersText? GetCommandArrayParametersText(string commandText,
             IEnumerable<QueryField> queryFields,
             IDbSetting dbSetting)
         {
@@ -3480,7 +3485,7 @@ namespace RepoDb
             }
 
             // Variables
-            var commandArrayParametersText = (CommandArrayParametersText)null;
+            var commandArrayParametersText = (CommandArrayParametersText?)null;
 
             // CommandArrayParameters
             foreach (var queryField in queryFields)
@@ -3539,7 +3544,7 @@ namespace RepoDb
         /// <param name="queryGroup"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+        private static CommandArrayParametersText? GetCommandArrayParametersText(string commandText,
             QueryGroup queryGroup,
             IDbSetting dbSetting) =>
             GetCommandArrayParametersText(commandText, queryGroup.GetFields(true), dbSetting);
@@ -3550,8 +3555,8 @@ namespace RepoDb
         /// <param name="parameterName"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static CommandArrayParameter GetCommandArrayParameter(string parameterName,
-            object value)
+        private static CommandArrayParameter? GetCommandArrayParameter(string parameterName,
+            object? value)
         {
             var valueType = value?.GetType();
             var propertyHandler = valueType != null ? PropertyHandlerCache.Get<object>(valueType) : null;
@@ -3641,7 +3646,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        internal static string GetMappedName<TEntity>(IEnumerable<TEntity> entities)
+        internal static string GetMappedName<TEntity>(IEnumerable<TEntity>? entities)
             where TEntity : class =>
             GetMappedName<TEntity>(entities?.FirstOrDefault());
 
@@ -3651,7 +3656,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static string GetMappedName<TEntity>(TEntity entity)
+        internal static string GetMappedName<TEntity>(TEntity? entity)
             where TEntity : class =>
             entity != null ? ClassMappedNameCache.Get(entity.GetType()) : ClassMappedNameCache.Get<TEntity>();
 
@@ -3661,7 +3666,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        internal static Type GetEntityType<TEntity>(IEnumerable<TEntity> entities)
+        internal static Type GetEntityType<TEntity>(IEnumerable<TEntity>? entities)
             where TEntity : class =>
             GetEntityType<TEntity>(entities?.FirstOrDefault());
 
@@ -3671,7 +3676,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static Type GetEntityType<TEntity>(TEntity entity)
+        internal static Type GetEntityType<TEntity>(TEntity? entity)
             where TEntity : class =>
             entity?.GetType() ?? typeof(TEntity);
 

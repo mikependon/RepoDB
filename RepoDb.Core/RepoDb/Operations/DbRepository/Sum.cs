@@ -27,7 +27,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -66,7 +66,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -105,7 +105,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -144,7 +144,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -183,7 +183,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -222,7 +222,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -261,7 +261,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -300,7 +300,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -339,7 +339,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -378,7 +378,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -418,7 +418,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -458,7 +458,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -498,7 +498,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -538,7 +538,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -578,7 +578,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -618,7 +618,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -658,7 +658,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -698,7 +698,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -738,7 +738,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -778,7 +778,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -822,7 +822,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -864,7 +864,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -906,7 +906,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -948,7 +948,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -990,7 +990,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1032,7 +1032,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1074,7 +1074,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1116,7 +1116,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1158,7 +1158,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1200,7 +1200,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1243,7 +1243,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1286,7 +1286,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1329,7 +1329,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1372,7 +1372,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1415,7 +1415,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1458,7 +1458,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1501,7 +1501,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1544,7 +1544,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1587,7 +1587,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1630,7 +1630,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1676,7 +1676,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1716,7 +1716,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1756,7 +1756,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1796,7 +1796,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1837,7 +1837,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1878,7 +1878,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1919,7 +1919,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1960,7 +1960,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -2005,7 +2005,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2048,7 +2048,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2091,7 +2091,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2134,7 +2134,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2178,7 +2178,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2222,7 +2222,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2266,7 +2266,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -2310,7 +2310,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Sum,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

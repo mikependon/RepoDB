@@ -28,9 +28,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -73,9 +73,9 @@ namespace RepoDb
         public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -124,9 +124,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -172,9 +172,9 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -223,9 +223,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -273,9 +273,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-			string cacheKey = null,
+			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

@@ -70,7 +70,7 @@ namespace RepoDb.Contexts.Providers
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null)
         {
             var key = GetKey(entityType, tableName, qualifiers, fields, batchSize, hints);
@@ -134,7 +134,7 @@ namespace RepoDb.Contexts.Providers
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {

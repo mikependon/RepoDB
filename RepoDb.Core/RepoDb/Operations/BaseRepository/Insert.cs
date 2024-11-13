@@ -23,7 +23,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Insert<TEntity>(entity: entity,
                 fields: fields,
@@ -46,7 +46,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Insert<TEntity, TResult>(entity: entity,
                 fields: fields,
@@ -73,7 +73,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.InsertAsync<TEntity>(entity: entity,
@@ -99,7 +99,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Insert,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.InsertAsync<TEntity, TResult>(entity: entity,

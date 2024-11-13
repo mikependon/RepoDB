@@ -21,7 +21,7 @@ namespace RepoDb
         public object SumAll(Field field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SumAll<TEntity>(field: field,
                 hints: hints,
@@ -40,7 +40,7 @@ namespace RepoDb
         public object SumAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SumAll<TEntity>(field: field,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public TResult SumAll<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SumAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -80,7 +80,7 @@ namespace RepoDb
         public TResult SumAll<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SumAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -104,7 +104,7 @@ namespace RepoDb
         public Task<object> SumAllAsync(Field field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAllAsync<TEntity>(field: field,
@@ -126,7 +126,7 @@ namespace RepoDb
         public Task<object> SumAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAllAsync<TEntity>(field: field,
@@ -149,7 +149,7 @@ namespace RepoDb
         public Task<TResult> SumAllAsync<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAllAsync<TEntity, TResult>(field: field,
@@ -172,7 +172,7 @@ namespace RepoDb
         public Task<TResult> SumAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.SumAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAllAsync<TEntity, TResult>(field: field,

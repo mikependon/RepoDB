@@ -1,7 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +28,7 @@ namespace RepoDb.Interfaces
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null);
+            IDbTransaction? transaction = null);
 
         /// <summary>
         /// Gets the list of <see cref="DbField"/> objects of the table in an asynchronous way.
@@ -40,7 +40,7 @@ namespace RepoDb.Interfaces
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default);
 
         #endregion
@@ -55,7 +55,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
         T GetScopeIdentity<T>(IDbConnection connection,
-            IDbTransaction transaction = null);
+            IDbTransaction? transaction = null);
 
         /// <summary>
         /// Gets the newly generated identity from the database in an asynchronous way.
@@ -66,7 +66,7 @@ namespace RepoDb.Interfaces
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default);
 
         #endregion

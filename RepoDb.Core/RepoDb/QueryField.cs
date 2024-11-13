@@ -1,10 +1,10 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Linq;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -26,7 +26,7 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName,
-            object value)
+            object? value)
             : this(fieldName, Operation.Equal, value, null, false)
         { }
 
@@ -38,7 +38,7 @@ namespace RepoDb
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName,
             Operation operation,
-            object value)
+            object? value)
             : this(fieldName, operation, value, null, false)
         { }
 
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(string fieldName,
             Operation operation,
-            object value,
+            object? value,
             DbType? dbType)
             : this(fieldName, operation, value, dbType, false)
         { }
@@ -66,7 +66,7 @@ namespace RepoDb
         /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         public QueryField(string fieldName,
             Operation operation,
-            object value,
+            object? value,
             DbType? dbType,
             bool prependUnderscore = false)
             : this(new Field(fieldName), operation, value, dbType, false)
@@ -280,7 +280,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
 
@@ -292,7 +292,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryField other)
+        public bool Equals(QueryField? other)
         {
             if (other is null) return false;
 
@@ -305,8 +305,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryField"/> object.</param>
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryField objA,
-            QueryField objB)
+        public static bool operator ==(QueryField? objA,
+            QueryField? objB)
         {
             if (objA is null)
             {
@@ -321,8 +321,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryField"/> object.</param>
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryField objA,
-            QueryField objB) =>
+        public static bool operator !=(QueryField? objA,
+            QueryField? objB) =>
             (objA == objB) == false;
 
         #endregion

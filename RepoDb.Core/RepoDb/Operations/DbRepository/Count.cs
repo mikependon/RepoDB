@@ -25,7 +25,7 @@ namespace RepoDb
         public long Count<TEntity>(object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -61,7 +61,7 @@ namespace RepoDb
         public long Count<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -97,7 +97,7 @@ namespace RepoDb
         public long Count<TEntity>(QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -133,7 +133,7 @@ namespace RepoDb
         public long Count<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -169,7 +169,7 @@ namespace RepoDb
         public long Count<TEntity>(QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -210,7 +210,7 @@ namespace RepoDb
         public async Task<long> CountAsync<TEntity>(object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -249,7 +249,7 @@ namespace RepoDb
         public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -288,7 +288,7 @@ namespace RepoDb
         public async Task<long> CountAsync<TEntity>(QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -327,7 +327,7 @@ namespace RepoDb
         public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -366,7 +366,7 @@ namespace RepoDb
         public async Task<long> CountAsync<TEntity>(QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -409,7 +409,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -446,7 +446,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -483,7 +483,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -520,7 +520,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -562,7 +562,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -602,7 +602,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -642,7 +642,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -682,7 +682,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
 			string traceKey = TraceKeys.Count,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

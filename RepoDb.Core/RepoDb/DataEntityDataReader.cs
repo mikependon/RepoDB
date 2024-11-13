@@ -17,7 +17,7 @@ namespace RepoDb
     {
         #region Fields
 
-        private string tableName = null;
+        private string? tableName = null;
         private int fieldCount = 0;
         private bool isClosed = false;
         private bool isDisposed = false;

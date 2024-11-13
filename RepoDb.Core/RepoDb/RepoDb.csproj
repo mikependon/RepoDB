@@ -11,6 +11,10 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Disable some nullability for netstandard2.0, as some smart annotations are not available there -->
+    <NoWarn Condition="'$(TargetFramework)' == 'netstandard2.0'">$(NoWarn);CS8604</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" />
     <PackageReference Include="System.Data.Common" />

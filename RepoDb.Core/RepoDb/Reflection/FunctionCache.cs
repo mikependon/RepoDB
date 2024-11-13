@@ -1,12 +1,11 @@
-﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Reflection;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Dynamic;
 using System.Linq;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Reflection;
 
 namespace RepoDb
 {
@@ -50,7 +49,7 @@ namespace RepoDb
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
 
@@ -72,7 +71,7 @@ namespace RepoDb
             /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
             /// <returns></returns>
             internal static Func<DbDataReader, TResult> Get(DbDataReader reader,
-                DbFieldCollection dbFields = null,
+                DbFieldCollection? dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -102,7 +101,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
 
@@ -123,7 +122,7 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Func<DbDataReader, dynamic> Get(DbDataReader reader,
-                DbFieldCollection dbFields = null,
+                DbFieldCollection? dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -232,14 +231,14 @@ namespace RepoDb
                 {
                     foreach (var field in inputFields)
                     {
-                        key = HashCode.Combine(key,field.GetHashCode());
+                        key = HashCode.Combine(key, field.GetHashCode());
                     }
                 }
                 if (outputFields != null)
                 {
                     foreach (var field in outputFields)
                     {
-                        key = HashCode.Combine(key,field.GetHashCode());
+                        key = HashCode.Combine(key, field.GetHashCode());
                     }
                 }
                 return key;
@@ -346,7 +345,7 @@ namespace RepoDb
                 {
                     foreach (var field in inputFields)
                     {
-                        key = HashCode.Combine(key,field.GetHashCode());
+                        key = HashCode.Combine(key, field.GetHashCode());
                     }
                 }
                 if (outputFields?.Any() == true)
@@ -481,8 +480,8 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
-            Type entityType,
-            DbFieldCollection dbFields = null) =>
+            Type? entityType,
+            DbFieldCollection? dbFields = null) =>
             PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
 
         #region PlainTypeToDbParametersCompiledFunctionCache
@@ -502,8 +501,8 @@ namespace RepoDb
             /// <param name="dbFields"></param>
             /// <returns></returns>
             internal static Action<DbCommand, object> Get(Type paramType,
-                Type entityType,
-                DbFieldCollection dbFields = null)
+                Type? entityType,
+                DbFieldCollection? dbFields = null)
             {
                 if (paramType == null)
                 {

@@ -25,7 +25,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
-        public QueryGroup(QueryField queryField) :
+        public QueryGroup(QueryField? queryField) :
             this(queryField?.AsEnumerable(),
                 (IEnumerable<QueryGroup>)null,
                 Conjunction.And,
@@ -37,7 +37,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        public QueryGroup(QueryField queryField,
+        public QueryGroup(QueryField? queryField,
             QueryGroup queryGroup) :
             this(queryField?.AsEnumerable(),
                 queryGroup?.AsEnumerable(),
@@ -855,8 +855,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
         /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryGroup objA,
-            QueryGroup objB)
+        public static bool operator ==(QueryGroup? objA,
+            QueryGroup? objB)
         {
             if (objA is null)
             {
@@ -871,8 +871,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
         /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryGroup objA,
-            QueryGroup objB) =>
+        public static bool operator !=(QueryGroup? objA,
+            QueryGroup? objB) =>
             (objA == objB) == false;
 
         #endregion

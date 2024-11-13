@@ -22,7 +22,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>A list of the target result type.</returns>
         public static IEnumerable<TResult> ToEnumerable<TResult>(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null)
         {
             if (reader?.IsClosed == false && reader.HasRows)
@@ -51,7 +51,7 @@ namespace RepoDb.Reflection
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of the target result type.</returns>
         public static async IAsyncEnumerable<TResult> ToEnumerableAsync<TResult>(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -79,7 +79,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>An array of dynamic objects.</returns>
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null)
         {
             if (reader?.IsClosed == false && reader.HasRows)
@@ -107,7 +107,7 @@ namespace RepoDb.Reflection
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An array of dynamic objects.</returns>
         public static async IAsyncEnumerable<dynamic> ToEnumerableAsync(DbDataReader reader,
-            DbFieldCollection dbFields = null,
+            DbFieldCollection? dbFields = null,
             IDbSetting dbSetting = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {

@@ -22,7 +22,7 @@ namespace RepoDb
         public long Count(object where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 hints: hints,
@@ -41,7 +41,7 @@ namespace RepoDb
         public long Count(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public long Count(QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 traceKey: traceKey,
@@ -79,7 +79,7 @@ namespace RepoDb
         public long Count(IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 hints: hints,
@@ -98,7 +98,7 @@ namespace RepoDb
         public long Count(QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 hints: hints,
@@ -122,7 +122,7 @@ namespace RepoDb
         public Task<long> CountAsync(object where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
@@ -144,7 +144,7 @@ namespace RepoDb
         public Task<long> CountAsync(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
@@ -166,7 +166,7 @@ namespace RepoDb
         public Task<long> CountAsync(QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
@@ -188,7 +188,7 @@ namespace RepoDb
         public Task<long> CountAsync(IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
@@ -210,7 +210,7 @@ namespace RepoDb
         public Task<long> CountAsync(QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Count,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAsync<TEntity>(where: where,

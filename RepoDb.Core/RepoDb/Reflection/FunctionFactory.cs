@@ -183,7 +183,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            DbFieldCollection dbFields = null) =>
+            DbFieldCollection? dbFields = null) =>
             Compiler.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);
 
         #endregion

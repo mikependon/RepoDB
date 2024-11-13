@@ -309,7 +309,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
@@ -452,7 +452,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,

@@ -1,9 +1,10 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Interfaces;
+﻿#nullable enable
 using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -21,8 +22,8 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="command"></param>
         /// <returns></returns>
-        public static TraceResult InvokeBeforeExecution(string key,
-            ITrace trace,
+        public static TraceResult? InvokeBeforeExecution(string? key,
+            ITrace? trace,
             DbCommand command)
         {
             if (string.IsNullOrEmpty(key) || trace == null)
@@ -51,8 +52,8 @@ namespace RepoDb
         /// <param name="command"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<TraceResult> InvokeBeforeExecutionAsync(string key,
-            ITrace trace,
+        public static async Task<TraceResult?> InvokeBeforeExecutionAsync(string? key,
+            ITrace? trace,
             DbCommand command,
             CancellationToken cancellationToken = default)
         {
@@ -81,8 +82,8 @@ namespace RepoDb
         /// <param name="result"></param>
         /// <param name="trace"></param>
         /// <param name="value"></param>
-        public static void InvokeAfterExecution<TResult>(TraceResult result,
-            ITrace trace,
+        public static void InvokeAfterExecution<TResult>(TraceResult? result,
+            ITrace? trace,
             TResult value)
         {
             if (trace == null || result == null)
@@ -90,7 +91,7 @@ namespace RepoDb
                 return;
             }
 
-            if (result.CancellableTraceLog?.IsCancelled == true)
+            if (result.CancellableTraceLog.IsCancelled == true)
             {
                 return;
             }
@@ -117,8 +118,8 @@ namespace RepoDb
         /// <param name="value"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task InvokeAfterExecutionAsync<TResult>(TraceResult result,
-            ITrace trace,
+        public static async Task InvokeAfterExecutionAsync<TResult>(TraceResult? result,
+            ITrace? trace,
             TResult value,
             CancellationToken cancellationToken = default)
         {
@@ -146,7 +147,7 @@ namespace RepoDb
         /// <param name="key"></param>
         /// <param name="log"></param>
         /// <exception cref="CancelledExecutionException"></exception>
-        private static void ValidateCancellation(string key,
+        private static void ValidateCancellation(string? key,
             CancellableTraceLog log)
         {
             if (log?.IsCancelled == true && log?.IsThrowException == true)

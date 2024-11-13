@@ -18,7 +18,7 @@ namespace RepoDb
         /// <param name="statement"></param>
         /// <param name="parameters"></param>
         protected internal CancellableTraceLog(Guid sessionId,
-            string key,
+            string? key,
             string statement,
             IEnumerable<IDbDataParameter> parameters = null)
             : base(sessionId, key)

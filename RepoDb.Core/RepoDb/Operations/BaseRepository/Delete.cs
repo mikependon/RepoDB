@@ -22,7 +22,7 @@ namespace RepoDb
         public int Delete(TEntity entity,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(entity: entity,
                 hints: hints,
@@ -42,7 +42,7 @@ namespace RepoDb
         public int Delete<TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity, TWhat>(what: what,
                 hints: hints,
@@ -61,7 +61,7 @@ namespace RepoDb
         public int Delete(object what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(what: what,
                 hints: hints,
@@ -80,7 +80,7 @@ namespace RepoDb
         public int Delete(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(where: where,
                 hints: hints,
@@ -99,7 +99,7 @@ namespace RepoDb
         public int Delete(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(where: where,
                 hints: hints,
@@ -118,7 +118,7 @@ namespace RepoDb
         public int Delete(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(where: where,
                 hints: hints,
@@ -137,7 +137,7 @@ namespace RepoDb
         public int Delete(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Delete<TEntity>(where: where,
                 hints: hints,
@@ -161,7 +161,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(TEntity entity,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(entity: entity,
@@ -184,7 +184,7 @@ namespace RepoDb
         public Task<int> DeleteAsync<TWhat>(TWhat what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity, TWhat>(what: what,
@@ -206,7 +206,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(object what,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(what: what,
@@ -228,7 +228,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -250,7 +250,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(QueryField where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -272,7 +272,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(IEnumerable<QueryField> where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -294,7 +294,7 @@ namespace RepoDb
         public Task<int> DeleteAsync(QueryGroup where,
             string hints = null,
             string traceKey = TraceKeys.Delete,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,

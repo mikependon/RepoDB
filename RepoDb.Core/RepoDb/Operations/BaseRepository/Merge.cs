@@ -24,7 +24,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
                 fields: fields,
@@ -48,7 +48,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
                 qualifier: qualifier,
@@ -73,7 +73,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
                 qualifiers: qualifiers,
@@ -98,7 +98,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
                 qualifiers: qualifiers,
@@ -122,7 +122,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity, TResult>(entity: entity,
                 fields: fields,
@@ -147,7 +147,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity, TResult>(entity: entity,
                 qualifier: qualifier,
@@ -173,7 +173,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity, TResult>(entity: entity,
                 qualifiers: qualifiers,
@@ -199,7 +199,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Merge<TEntity, TResult>(entity: entity,
                 qualifiers: qualifiers,
@@ -227,7 +227,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -254,7 +254,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -282,7 +282,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -310,7 +310,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -337,7 +337,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
@@ -365,7 +365,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
@@ -394,7 +394,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,
@@ -423,7 +423,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.Merge,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAsync<TEntity, TResult>(entity: entity,

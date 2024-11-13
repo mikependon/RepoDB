@@ -1,12 +1,12 @@
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Reflection;
 
 namespace RepoDb
 {
@@ -41,11 +41,11 @@ namespace RepoDb
         /// <param name="isDisposeConnection">The flag that is used to define whether the associated <paramref name="connection"/> object will be disposed during the disposition process.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         internal QueryMultipleExtractor(DbConnection connection = null,
-            DbDataReader reader = null,
-            object param = null,
-            string cacheKey = null,
+            DbDataReader? reader = null,
+            object? param = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            ICache cache = null,
+            ICache? cache = null,
             bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
@@ -115,7 +115,7 @@ namespace RepoDb
                     }
                 }
             }
-            
+
             value = default(T);
 
             return false;

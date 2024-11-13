@@ -25,7 +25,7 @@ namespace RepoDb
         public bool Exists<TEntity>(object what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -62,7 +62,7 @@ namespace RepoDb
         public bool Exists<TEntity, TWhat>(TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -98,7 +98,7 @@ namespace RepoDb
         public bool Exists<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -134,7 +134,7 @@ namespace RepoDb
         public bool Exists<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -170,7 +170,7 @@ namespace RepoDb
         public bool Exists<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -206,7 +206,7 @@ namespace RepoDb
         public bool Exists<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -247,7 +247,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity>(object what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -287,7 +287,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity, TWhat>(TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -326,7 +326,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -365,7 +365,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -404,7 +404,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -443,7 +443,7 @@ namespace RepoDb
         public async Task<bool> ExistsAsync<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -487,7 +487,7 @@ namespace RepoDb
             TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -524,7 +524,7 @@ namespace RepoDb
             object what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -561,7 +561,7 @@ namespace RepoDb
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -598,7 +598,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -635,7 +635,7 @@ namespace RepoDb
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -678,7 +678,7 @@ namespace RepoDb
             TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -718,7 +718,7 @@ namespace RepoDb
             object what,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -758,7 +758,7 @@ namespace RepoDb
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -798,7 +798,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -838,7 +838,7 @@ namespace RepoDb
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Exists,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

@@ -68,7 +68,7 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
@@ -154,12 +154,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public override string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public override string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
 
-        public override string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public override string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }

@@ -61,7 +61,7 @@ namespace RepoDb.Contexts.Providers
             QueryGroup where,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null)
         {
             var key = GetKey(entityType, tableName, fields, hints, where);
@@ -118,7 +118,7 @@ namespace RepoDb.Contexts.Providers
             QueryGroup where,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {

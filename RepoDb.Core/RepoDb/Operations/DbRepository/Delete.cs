@@ -25,7 +25,7 @@ namespace RepoDb
         public int Delete<TEntity>(TEntity entity,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -62,7 +62,7 @@ namespace RepoDb
         public int Delete<TEntity, TWhat>(TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -98,7 +98,7 @@ namespace RepoDb
         public int Delete<TEntity>(object what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -134,7 +134,7 @@ namespace RepoDb
         public int Delete<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -170,7 +170,7 @@ namespace RepoDb
         public int Delete<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -206,7 +206,7 @@ namespace RepoDb
         public int Delete<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -242,7 +242,7 @@ namespace RepoDb
         public int Delete<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -283,7 +283,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(TEntity entity,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -323,7 +323,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity, TWhat>(TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -362,7 +362,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(object what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -401,7 +401,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -440,7 +440,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -479,7 +479,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -518,7 +518,7 @@ namespace RepoDb
         public async Task<int> DeleteAsync<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -562,7 +562,7 @@ namespace RepoDb
             TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -599,7 +599,7 @@ namespace RepoDb
             object what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -636,7 +636,7 @@ namespace RepoDb
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -673,7 +673,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -710,7 +710,7 @@ namespace RepoDb
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -753,7 +753,7 @@ namespace RepoDb
             TWhat what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -793,7 +793,7 @@ namespace RepoDb
             object what,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -833,7 +833,7 @@ namespace RepoDb
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -873,7 +873,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -913,7 +913,7 @@ namespace RepoDb
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Delete,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

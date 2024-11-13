@@ -48,7 +48,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -118,7 +118,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -188,7 +188,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -258,7 +258,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -328,7 +328,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -415,7 +415,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -505,7 +505,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -595,7 +595,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -685,7 +685,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -775,7 +775,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -883,7 +883,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -994,7 +994,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1105,7 +1105,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1216,7 +1216,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1327,7 +1327,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1455,7 +1455,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1586,7 +1586,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1717,7 +1717,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1848,7 +1848,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1979,7 +1979,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2127,7 +2127,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2278,7 +2278,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2429,7 +2429,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2580,7 +2580,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2731,7 +2731,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2899,7 +2899,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3070,7 +3070,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3241,7 +3241,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3412,7 +3412,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3583,7 +3583,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3697,7 +3697,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3770,7 +3770,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3843,7 +3843,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3916,7 +3916,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3989,7 +3989,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4079,7 +4079,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4172,7 +4172,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4265,7 +4265,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4358,7 +4358,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4451,7 +4451,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4562,7 +4562,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4676,7 +4676,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4790,7 +4790,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4904,7 +4904,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5018,7 +5018,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5149,7 +5149,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5283,7 +5283,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5417,7 +5417,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5551,7 +5551,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5685,7 +5685,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5836,7 +5836,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5990,7 +5990,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6144,7 +6144,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6298,7 +6298,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6452,7 +6452,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6623,7 +6623,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6797,7 +6797,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6971,7 +6971,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7145,7 +7145,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7319,7 +7319,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7440,7 +7440,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7516,7 +7516,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7592,7 +7592,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7668,7 +7668,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7744,7 +7744,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7839,7 +7839,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -7938,7 +7938,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8037,7 +8037,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8136,7 +8136,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8235,7 +8235,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8354,7 +8354,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8477,7 +8477,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8600,7 +8600,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8723,7 +8723,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8846,7 +8846,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8988,7 +8988,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9134,7 +9134,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9280,7 +9280,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9426,7 +9426,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9572,7 +9572,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9737,7 +9737,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9906,7 +9906,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10075,7 +10075,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10244,7 +10244,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10413,7 +10413,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10601,7 +10601,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10793,7 +10793,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10985,7 +10985,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11177,7 +11177,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11369,7 +11369,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11491,7 +11491,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11563,7 +11563,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11635,7 +11635,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11707,7 +11707,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11797,7 +11797,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11890,7 +11890,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11983,7 +11983,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12076,7 +12076,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12188,7 +12188,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12303,7 +12303,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12418,7 +12418,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12533,7 +12533,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12666,7 +12666,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12802,7 +12802,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12938,7 +12938,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13074,7 +13074,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13228,7 +13228,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13385,7 +13385,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13542,7 +13542,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13699,7 +13699,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13874,7 +13874,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -14052,7 +14052,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -14230,7 +14230,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -14408,7 +14408,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -14530,7 +14530,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14609,7 +14609,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14688,7 +14688,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14767,7 +14767,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14846,7 +14846,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14944,7 +14944,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15046,7 +15046,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15148,7 +15148,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15250,7 +15250,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15352,7 +15352,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15474,7 +15474,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15600,7 +15600,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15726,7 +15726,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15852,7 +15852,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15978,7 +15978,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16123,7 +16123,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16272,7 +16272,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16421,7 +16421,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16570,7 +16570,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16719,7 +16719,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16887,7 +16887,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17059,7 +17059,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17231,7 +17231,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17403,7 +17403,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17575,7 +17575,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17766,7 +17766,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17961,7 +17961,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -18156,7 +18156,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -18351,7 +18351,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -18546,7 +18546,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -18671,7 +18671,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18746,7 +18746,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18821,7 +18821,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18896,7 +18896,7 @@ namespace RepoDb
             string hints2 = null,
             string cacheKey2 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18989,7 +18989,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19085,7 +19085,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19181,7 +19181,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19277,7 +19277,7 @@ namespace RepoDb
             string hints3 = null,
             string cacheKey3 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19392,7 +19392,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19510,7 +19510,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19628,7 +19628,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19746,7 +19746,7 @@ namespace RepoDb
             string hints4 = null,
             string cacheKey4 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19882,7 +19882,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20021,7 +20021,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20160,7 +20160,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20299,7 +20299,7 @@ namespace RepoDb
             string hints5 = null,
             string cacheKey5 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20456,7 +20456,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20616,7 +20616,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20776,7 +20776,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20936,7 +20936,7 @@ namespace RepoDb
             string hints6 = null,
             string cacheKey6 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21114,7 +21114,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21295,7 +21295,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21476,7 +21476,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21657,7 +21657,7 @@ namespace RepoDb
             string hints7 = null,
             string cacheKey7 = null,
             string traceKey = null,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

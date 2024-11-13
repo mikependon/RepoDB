@@ -167,7 +167,7 @@ namespace RepoDb.DbHelpers
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Variables
             var commandText = GetCommandText();
@@ -202,7 +202,7 @@ namespace RepoDb.DbHelpers
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -247,7 +247,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
         public T GetScopeIdentity<T>(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return connection.ExecuteScalar<T>("SELECT LAST_INSERT_ID();", transaction: transaction);
         }
@@ -261,7 +261,7 @@ namespace RepoDb.DbHelpers
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return connection.ExecuteScalarAsync<T>("SELECT LAST_INSERT_ID();", transaction: transaction,

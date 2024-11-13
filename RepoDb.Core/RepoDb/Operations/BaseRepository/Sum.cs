@@ -24,7 +24,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -46,7 +46,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -68,7 +68,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -90,7 +90,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -112,7 +112,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -134,7 +134,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -156,7 +156,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -178,7 +178,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -200,7 +200,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -222,7 +222,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity>(field: field,
                 where: where,
@@ -244,7 +244,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -266,7 +266,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -288,7 +288,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -310,7 +310,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -332,7 +332,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -354,7 +354,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -376,7 +376,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -398,7 +398,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -420,7 +420,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -442,7 +442,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.Sum<TEntity, TResult>(field: field,
                 where: where,
@@ -469,7 +469,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -494,7 +494,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -519,7 +519,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -544,7 +544,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -569,7 +569,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -594,7 +594,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -619,7 +619,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -644,7 +644,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -669,7 +669,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -694,7 +694,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
@@ -719,7 +719,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -744,7 +744,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -769,7 +769,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -794,7 +794,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -819,7 +819,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -844,7 +844,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -869,7 +869,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -894,7 +894,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -919,7 +919,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,
@@ -944,7 +944,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity, TResult>(field: field,

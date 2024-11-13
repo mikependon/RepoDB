@@ -13,7 +13,7 @@ namespace RepoDb.UnitTests.CustomObjects
 
         public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return new[]
             {
@@ -24,7 +24,7 @@ namespace RepoDb.UnitTests.CustomObjects
 
         public Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<DbField>>(new[]
@@ -35,13 +35,13 @@ namespace RepoDb.UnitTests.CustomObjects
         }
 
         public T GetScopeIdentity<T>(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return default;
         }
 
         public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return Task.FromResult<T>(default);

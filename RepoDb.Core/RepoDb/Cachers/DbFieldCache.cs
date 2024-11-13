@@ -1,9 +1,10 @@
+#nullable enable
 using System;
-using RepoDb.Exceptions;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -51,7 +52,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction) =>
+            IDbTransaction? transaction) =>
             Get(connection, tableName, transaction, true);
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction,
+            IDbTransaction? transaction,
             bool enableValidation) =>
             GetInternal(connection, tableName, transaction, enableValidation);
 
@@ -79,7 +80,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         internal static DbFieldCollection GetInternal<TDbConnection>(TDbConnection connection,
             string tableName,
-            IDbTransaction transaction,
+            IDbTransaction? transaction,
             bool enableValidation)
             where TDbConnection : IDbConnection
         {
@@ -135,7 +136,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<DbFieldCollection> GetAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction,
+            IDbTransaction? transaction,
             CancellationToken cancellationToken = default) =>
             GetAsync(connection, tableName, transaction, true, cancellationToken);
 
@@ -150,7 +151,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<DbFieldCollection> GetAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction,
+            IDbTransaction? transaction,
             bool enableValidation,
             CancellationToken cancellationToken = default) =>
             GetAsyncInternal(connection, tableName, transaction, enableValidation, cancellationToken);
@@ -167,7 +168,7 @@ namespace RepoDb
         /// <returns>The cached field definitions of the entity.</returns>
         internal static async Task<DbFieldCollection> GetAsyncInternal<TDbConnection>(TDbConnection connection,
             string tableName,
-            IDbTransaction transaction,
+            IDbTransaction? transaction,
             bool enableValidation,
             CancellationToken cancellationToken = default)
             where TDbConnection : IDbConnection

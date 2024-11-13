@@ -21,7 +21,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            DbFieldCollection dbFields = null)
+            DbFieldCollection? dbFields = null)
         {
             var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entity");

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Linq;
+﻿#nullable enable
+using System;
 
 namespace RepoDb
 {
@@ -15,7 +14,7 @@ namespace RepoDb
         /// <param name="sessionId"></param>
         /// <param name="key"></param>
         protected internal TraceLog(Guid sessionId,
-            string key)
+            string? key)
         {
             SessionId = sessionId;
             Key = key;
@@ -31,7 +30,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the actual tracing key used by the operation.
         /// </summary>
-        public string Key { get; }
+        public string? Key { get; }
 
         #endregion
 

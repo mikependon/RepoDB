@@ -26,7 +26,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -66,7 +66,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -105,7 +105,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -142,7 +142,7 @@ namespace RepoDb
         public int DeleteAll<TEntity>(IEnumerable<TEntity> entities,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -179,7 +179,7 @@ namespace RepoDb
         public int DeleteAll<TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -215,7 +215,7 @@ namespace RepoDb
         public int DeleteAll<TEntity>(IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int DeleteAll<TEntity>(string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -291,7 +291,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -334,7 +334,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -376,7 +376,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -416,7 +416,7 @@ namespace RepoDb
         public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<TEntity> entities,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -456,7 +456,7 @@ namespace RepoDb
         public async Task<int> DeleteAllAsync<TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -495,7 +495,7 @@ namespace RepoDb
         public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -532,7 +532,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public async Task<int> DeleteAllAsync<TEntity>(string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -574,7 +574,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -609,7 +609,7 @@ namespace RepoDb
         public int DeleteAll(string tableName,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -650,7 +650,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -688,7 +688,7 @@ namespace RepoDb
         public async Task<int> DeleteAllAsync(string tableName,
             string hints = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

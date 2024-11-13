@@ -24,7 +24,7 @@ namespace RepoDb
         public object AverageAll<TEntity>(Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -60,7 +60,7 @@ namespace RepoDb
         public object AverageAll<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -97,7 +97,7 @@ namespace RepoDb
         public TResult AverageAll<TEntity, TResult>(Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -134,7 +134,7 @@ namespace RepoDb
         public TResult AverageAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -175,7 +175,7 @@ namespace RepoDb
         public async Task<object> AverageAllAsync<TEntity>(Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -214,7 +214,7 @@ namespace RepoDb
         public async Task<object> AverageAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -254,7 +254,7 @@ namespace RepoDb
         public async Task<TResult> AverageAllAsync<TEntity, TResult>(Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -294,7 +294,7 @@ namespace RepoDb
         public async Task<TResult> AverageAllAsync<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -337,7 +337,7 @@ namespace RepoDb
             Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -375,7 +375,7 @@ namespace RepoDb
             Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -417,7 +417,7 @@ namespace RepoDb
             Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -458,7 +458,7 @@ namespace RepoDb
             Field field,
             string hints = null,
 			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

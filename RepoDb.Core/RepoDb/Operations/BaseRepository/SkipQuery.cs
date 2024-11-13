@@ -30,7 +30,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -63,7 +63,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -97,7 +97,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -131,7 +131,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -165,7 +165,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -199,7 +199,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(tableName: tableName,
                 skip: skip,
@@ -229,7 +229,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(skip: skip,
                 rowsPerBatch: rowsPerBatch,
@@ -259,7 +259,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(where: where,
                 skip: skip,
@@ -289,7 +289,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(skip: skip,
                 rowsPerBatch: rowsPerBatch,
@@ -320,7 +320,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(skip: skip,
                 rowsPerBatch: rowsPerBatch,
@@ -351,7 +351,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(skip: skip,
                 rowsPerBatch: rowsPerBatch,
@@ -382,7 +382,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.SkipQuery<TEntity>(skip: skip,
                 rowsPerBatch: rowsPerBatch,
@@ -418,7 +418,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -454,7 +454,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -491,7 +491,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -528,7 +528,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -565,7 +565,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -602,7 +602,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(tableName: tableName,
@@ -635,7 +635,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,
@@ -668,7 +668,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,
@@ -702,7 +702,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,
@@ -736,7 +736,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,
@@ -770,7 +770,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,
@@ -804,7 +804,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.SkipQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SkipQueryAsync<TEntity>(skip: skip,

@@ -1,10 +1,11 @@
-﻿using RepoDb.Extensions;
+﻿#nullable enable
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -23,7 +24,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(Expression<Func<TEntity, object>> expression)
+        public static ClassProperty? Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
             Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression), false);
 
@@ -34,7 +35,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(string propertyName,
+        public static ClassProperty? Get<TEntity>(string propertyName,
             bool includeMappings = false)
             where TEntity : class =>
             Get(typeof(TEntity), propertyName, includeMappings);
@@ -46,7 +47,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
+        public static ClassProperty? Get(Type entityType,
             string propertyName,
             bool includeMappings = false)
         {
@@ -67,7 +68,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(Field field,
+        public static ClassProperty? Get<TEntity>(Field field,
             bool includeMappings = false)
             where TEntity : class =>
             Get(typeof(TEntity), field, includeMappings);
@@ -79,7 +80,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
+        public static ClassProperty? Get(Type entityType,
             Field field,
             bool includeMappings = false)
         {
@@ -97,7 +98,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        internal static ClassProperty Get(Type entityType,
+        internal static ClassProperty? Get(Type entityType,
             PropertyInfo propertyInfo,
             bool includeMappings = false)
         {
@@ -126,7 +127,7 @@ namespace RepoDb
         {
             if (entityType is null || TypeCache.Get(entityType).IsClassType() != true)
             {
-                return null;
+                return [];
             }
 
             // Variables

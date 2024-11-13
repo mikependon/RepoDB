@@ -21,7 +21,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll<TEntity>(string hints = null,
 			string traceKey = TraceKeys.CountAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -59,7 +59,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAllAsync<TEntity>(string hints = null,
 			string traceKey = TraceKeys.CountAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -99,7 +99,7 @@ namespace RepoDb
         public long CountAll(string tableName,
             string hints = null,
 			string traceKey = TraceKeys.CountAll,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -138,7 +138,7 @@ namespace RepoDb
         public async Task<long> CountAllAsync(string tableName,
             string hints = null,
 			string traceKey = TraceKeys.CountAll,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection

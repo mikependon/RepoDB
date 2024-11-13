@@ -21,7 +21,7 @@ namespace RepoDb
         public object MinAll(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.MinAll<TEntity>(field: field,
                 hints: hints,
@@ -40,7 +40,7 @@ namespace RepoDb
         public object MinAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.MinAll<TEntity>(field: field,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public TResult MinAll<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.MinAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -80,7 +80,7 @@ namespace RepoDb
         public TResult MinAll<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.MinAll<TEntity, TResult>(field: field,
                 hints: hints,
@@ -104,7 +104,7 @@ namespace RepoDb
         public Task<object> MinAllAsync(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MinAllAsync<TEntity>(field: field,
@@ -126,7 +126,7 @@ namespace RepoDb
         public Task<object> MinAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MinAllAsync<TEntity>(field: field,
@@ -149,7 +149,7 @@ namespace RepoDb
         public Task<TResult> MinAllAsync<TResult>(Field field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MinAllAsync<TEntity, TResult>(field: field,
@@ -172,7 +172,7 @@ namespace RepoDb
         public Task<TResult> MinAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             string hints = null,
             string traceKey = TraceKeys.MinAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MinAllAsync<TEntity, TResult>(field: field,

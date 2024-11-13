@@ -21,7 +21,7 @@ namespace RepoDb
         public int DeleteAll(IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.DeleteAll<TEntity>(entities: entities,
                 hints: hints,
@@ -41,7 +41,7 @@ namespace RepoDb
         public int DeleteAll<TKey>(IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.DeleteAll<TEntity, TKey>(keys: keys,
                 hints: hints,
@@ -60,7 +60,7 @@ namespace RepoDb
         public int DeleteAll(IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.DeleteAll<TEntity>(keys: keys,
                 hints: hints,
@@ -77,7 +77,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int DeleteAll(string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.DeleteAll<TEntity>(hints: hints,
                 traceKey: traceKey,
@@ -100,7 +100,7 @@ namespace RepoDb
         public Task<int> DeleteAllAsync(IEnumerable<TEntity> entities,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAllAsync<TEntity>(entities: entities,
@@ -123,7 +123,7 @@ namespace RepoDb
         public Task<int> DeleteAllAsync<TKey>(IEnumerable<TKey> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAllAsync<TEntity, TKey>(keys: keys,
@@ -145,7 +145,7 @@ namespace RepoDb
         public Task<int> DeleteAllAsync(IEnumerable<object> keys,
             string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAllAsync<TEntity>(keys: keys,
@@ -165,7 +165,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAllAsync(string hints = null,
             string traceKey = TraceKeys.DeleteAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.DeleteAllAsync<TEntity>(hints: hints,

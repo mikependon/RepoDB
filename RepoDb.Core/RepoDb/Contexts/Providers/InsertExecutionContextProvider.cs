@@ -55,7 +55,7 @@ namespace RepoDb.Contexts.Providers
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null)
         {
             var key = GetKey(entityType, tableName, fields, hints);
@@ -109,7 +109,7 @@ namespace RepoDb.Contexts.Providers
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {

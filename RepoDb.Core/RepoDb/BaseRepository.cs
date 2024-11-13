@@ -150,7 +150,7 @@ namespace RepoDb
             int? commandTimeout,
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            ITrace trace = null)
+            ITrace? trace = null)
             : this(connectionString,
                   commandTimeout,
                   cache,
@@ -172,7 +172,7 @@ namespace RepoDb
             int? commandTimeout,
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            ITrace trace = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             : this(connectionString,
                   commandTimeout,
@@ -201,7 +201,7 @@ namespace RepoDb
             ConnectionPersistency connectionPersistency,
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            ITrace trace = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             DbRepository = new DbRepository<TDbConnection>(connectionString,
@@ -313,11 +313,11 @@ namespace RepoDb
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public IEnumerable<TEntity> ExecuteQuery(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = null,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
@@ -351,11 +351,11 @@ namespace RepoDb
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             int? cacheItemExpiration = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
@@ -384,9 +384,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int ExecuteNonQuery(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            IDbTransaction transaction = null)
+            IDbTransaction? transaction = null)
         {
             return DbRepository.ExecuteNonQuery(commandText: commandText,
                 param: param,
@@ -412,9 +412,9 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> ExecuteNonQueryAsync(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            IDbTransaction transaction = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteNonQueryAsync(commandText: commandText,
@@ -445,10 +445,10 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public object ExecuteScalar(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
+            string? cacheKey = null,
+            IDbTransaction? transaction = null)
         {
             return DbRepository.ExecuteScalar(commandText: commandText,
                 param: param,
@@ -479,10 +479,10 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public Task<object> ExecuteScalarAsync(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null,
+            string? cacheKey = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteScalarAsync(commandText: commandText,
@@ -515,10 +515,10 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public TResult ExecuteScalar<TResult>(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
+            string? cacheKey = null,
+            IDbTransaction? transaction = null)
         {
             return DbRepository.ExecuteScalar<TResult>(commandText: commandText,
                 param: param,
@@ -550,10 +550,10 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
-            object param = null,
+            object? param = null,
             CommandType? commandType = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null,
+            string? cacheKey = null,
+            IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteScalarAsync<TResult>(commandText: commandText,

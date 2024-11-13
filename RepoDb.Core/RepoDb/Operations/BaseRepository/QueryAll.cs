@@ -25,9 +25,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.QueryAll<TEntity>(tableName: tableName,
                 fields: fields,
@@ -51,9 +51,9 @@ namespace RepoDb
         public IEnumerable<TEntity> QueryAll(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.QueryAll<TEntity>(fields: fields,
                 orderBy: orderBy,
@@ -83,9 +83,9 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAllAsync<TEntity>(tableName: tableName,
@@ -112,9 +112,9 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
-            string cacheKey = null,
+            string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAllAsync<TEntity>(fields: fields,

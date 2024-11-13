@@ -17,7 +17,7 @@ namespace RepoDb
         /// <param name="result"></param>
         /// <param name="beforeExecutionLog"></param>
         protected internal ResultTraceLog(Guid sessionId,
-            string key,
+            string? key,
             TimeSpan? executionTime = null,
             TResult result = default,
             CancellableTraceLog beforeExecutionLog = null)

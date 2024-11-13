@@ -43,8 +43,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -91,8 +91,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -139,8 +139,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -187,8 +187,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -235,8 +235,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -283,8 +283,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -327,8 +327,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -373,8 +373,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -419,8 +419,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -465,8 +465,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -511,8 +511,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -557,8 +557,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -605,8 +605,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -661,8 +661,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -712,8 +712,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -763,8 +763,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -814,8 +814,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -865,8 +865,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -916,8 +916,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -963,8 +963,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1012,8 +1012,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1061,8 +1061,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1110,8 +1110,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1159,8 +1159,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1208,8 +1208,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1259,8 +1259,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1315,8 +1315,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SkipQueryInternal<dynamic>(connection,
@@ -1361,8 +1361,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SkipQueryInternal<dynamic>(connection: connection,
@@ -1407,8 +1407,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SkipQueryInternal<dynamic>(connection: connection,
@@ -1453,8 +1453,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SkipQueryInternal<dynamic>(connection: connection,
@@ -1499,8 +1499,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return SkipQueryInternal<dynamic>(connection: connection,
@@ -1548,8 +1548,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1597,8 +1597,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1646,8 +1646,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1695,8 +1695,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1744,8 +1744,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1797,8 +1797,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -1875,8 +1875,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SkipQuery,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class

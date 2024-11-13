@@ -30,7 +30,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -63,7 +63,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -97,7 +97,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -131,7 +131,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -165,7 +165,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -199,7 +199,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -229,7 +229,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -259,7 +259,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(where: where,
                 page: page,
@@ -289,7 +289,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -320,7 +320,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -351,7 +351,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -382,7 +382,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null)
+			IDbTransaction? transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -418,7 +418,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -454,7 +454,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -491,7 +491,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -528,7 +528,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -565,7 +565,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -602,7 +602,7 @@ namespace RepoDb
             string hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -635,7 +635,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -668,7 +668,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -702,7 +702,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -736,7 +736,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -770,7 +770,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -804,7 +804,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             string traceKey = TraceKeys.BatchQuery,
-			IDbTransaction transaction = null,
+			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,

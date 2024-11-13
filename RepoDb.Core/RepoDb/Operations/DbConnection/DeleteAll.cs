@@ -45,8 +45,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -85,8 +85,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -121,8 +121,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -155,8 +155,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -193,8 +193,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -227,8 +227,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -259,8 +259,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -289,8 +289,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -335,8 +335,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -378,8 +378,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -417,8 +417,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -454,8 +454,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -495,8 +495,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -532,8 +532,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -567,8 +567,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -600,8 +600,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -646,8 +646,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return DeleteAllInternal(connection: connection,
@@ -678,8 +678,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             return DeleteAllInternal(connection: connection,
@@ -709,8 +709,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             // Variables
@@ -748,8 +748,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
@@ -834,8 +834,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -869,8 +869,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -903,8 +903,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -945,8 +945,8 @@ namespace RepoDb
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
@@ -1027,8 +1027,8 @@ namespace RepoDb
             DeleteAllRequest request,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -1070,8 +1070,8 @@ namespace RepoDb
             DeleteAllRequest request,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.DeleteAll,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
+            IDbTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
