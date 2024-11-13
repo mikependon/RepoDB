@@ -20,6 +20,11 @@ namespace RepoDb.Options
         public EnumHandling EnumHandling { get; init; } = EnumHandling.ThrowError;
 
         /// <summary>
+        /// Gets or sets the value that defines how <c>null</c> is handled in linq style expressions
+        /// </summary>
+        public ExpressionNullSemantics ExpressionNullSemantics { get; init; } = ExpressionNullSemantics.SqlNull;
+
+        /// <summary>
         /// Gets or sets the default value of the batch operation size. The value defines on this property mainly affects the batch size of the InsertAll, MergeAll and UpdateAll operations.
         /// </summary>
         public int DefaultBatchOperationSize { get; init; } = Constant.DefaultBatchOperationSize;
