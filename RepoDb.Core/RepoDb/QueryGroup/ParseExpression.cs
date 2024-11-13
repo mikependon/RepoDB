@@ -145,18 +145,24 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
-            return Parse<TEntity>(expression.Operand) is { } operand
-                ? expression.NodeType switch
-                {
-                    ExpressionType.Not => new QueryGroup(operand, true),
-                    ExpressionType.Convert or ExpressionType.ConvertChecked => operand,
-                    _ => throw new NotSupportedException($"Unary operation '{expression.NodeType}' is currently not supported.")
-                }
-                : expression.Operand switch
-                {
-                    MemberExpression me => new QueryGroup(new QueryField(me.Member.Name, Operation.NotEqual, false)),
-                    _ => null,
-                };
+            if (expression.NodeType == ExpressionType.Not || expression.NodeType == ExpressionType.Convert)
+            {
+                // These two handle
+                if (expression.Operand is MemberExpression memberExpression && Parse<TEntity>(memberExpression, expression.NodeType) is { } r1)
+                    return r1;
+                else if (expression.Operand is MethodCallExpression methodCallExpression && Parse<TEntity>(methodCallExpression, expression.NodeType) is { } r2)
+                    return r2;
+            }
+
+            if (Parse<TEntity>(expression.Operand) is { } r)
+            {
+                // Wrap result in A NOT expression
+                return new QueryGroup(r, true);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unary operation '{expression.NodeType}' is currently not supported.");
+            }
         }
 
         /*
