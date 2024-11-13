@@ -43,6 +43,14 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
+      - name: Setup .NET Core Versions
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            9.0.x
+
       - name: Build all
         run: dotnet build -f net8.0 
 

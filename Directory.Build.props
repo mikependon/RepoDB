@@ -15,5 +15,7 @@
         <IsPackable Condition="'$(Configuration)' != 'Release'">false</IsPackable>
         <LangVersion>12</LangVersion>
         <Nullable>annotations</Nullable>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     </PropertyGroup>
 </Project>

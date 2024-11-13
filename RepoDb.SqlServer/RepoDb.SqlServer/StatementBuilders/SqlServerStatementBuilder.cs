@@ -55,8 +55,8 @@ namespace RepoDb.StatementBuilders
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -120,8 +120,8 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
         public override string CreateCount(string tableName,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -158,7 +158,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         public override string CreateCountAll(string tableName,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -198,9 +198,9 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Initialize the builder
             var builder = new QueryBuilder();
@@ -261,9 +261,9 @@ namespace RepoDb.StatementBuilders
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Call the base
             var commandText = base.CreateInsertAll(tableName,
@@ -310,9 +310,9 @@ namespace RepoDb.StatementBuilders
         public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -454,9 +454,9 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -604,8 +604,8 @@ namespace RepoDb.StatementBuilders
             int skip,
             int take,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);

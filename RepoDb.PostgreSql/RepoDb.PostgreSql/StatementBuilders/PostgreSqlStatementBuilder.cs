@@ -56,8 +56,8 @@ namespace RepoDb.StatementBuilders
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -122,8 +122,8 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for exists operation.</returns>
         public override string CreateExists(string tableName,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -164,9 +164,9 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Initialize the builder
             var builder = new QueryBuilder();
@@ -219,9 +219,9 @@ namespace RepoDb.StatementBuilders
         public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = 1,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             #region Old
 
@@ -364,9 +364,9 @@ namespace RepoDb.StatementBuilders
         public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -479,9 +479,9 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize = 10,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -599,10 +599,10 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for query operation.</returns>
         public override string CreateQuery(string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -657,8 +657,8 @@ namespace RepoDb.StatementBuilders
             int skip,
             int take,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);

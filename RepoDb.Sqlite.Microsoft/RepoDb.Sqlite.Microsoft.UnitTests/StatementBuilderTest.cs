@@ -155,7 +155,7 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         [DataRow(ConversionType.Default)]
         public void TestMdsSqLiteStatementBuilderCreateInsert(ConversionType conversionType)
         {
-            GlobalConfiguration.Setup(GlobalConfiguration.Options with { ConversionType = conversionType });
+            //GlobalConfiguration.Setup(GlobalConfiguration.Options with { ConversionType = conversionType });
             // Setup
             var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
