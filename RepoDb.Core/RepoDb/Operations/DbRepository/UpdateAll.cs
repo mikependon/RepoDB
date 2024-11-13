@@ -29,7 +29,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -76,7 +76,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -124,7 +124,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -168,7 +168,7 @@ namespace RepoDb
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -212,7 +212,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -257,7 +257,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -307,7 +307,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -357,7 +357,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -408,7 +408,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -455,7 +455,7 @@ namespace RepoDb
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -502,7 +502,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -550,7 +550,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -600,7 +600,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
         {
@@ -645,7 +645,7 @@ namespace RepoDb
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
         {
@@ -691,7 +691,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null)
         {
@@ -740,7 +740,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -788,7 +788,7 @@ namespace RepoDb
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -837,7 +837,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.UpdateAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

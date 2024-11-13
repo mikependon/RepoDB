@@ -24,7 +24,7 @@ namespace RepoDb
         public IEnumerable<TEntity> QueryAll(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
 			IDbTransaction? transaction = null)
@@ -50,7 +50,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
 			IDbTransaction? transaction = null)
@@ -82,7 +82,7 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAllAsync(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
 			IDbTransaction? transaction = null,
@@ -111,7 +111,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             string traceKey = TraceKeys.QueryAll,
 			IDbTransaction? transaction = null,

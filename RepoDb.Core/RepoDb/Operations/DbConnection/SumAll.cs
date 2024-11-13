@@ -31,12 +31,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static object SumAll<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return SumAllInternal<TEntity, object>(connection: connection,
@@ -64,12 +64,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static object SumAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return SumAllInternal<TEntity, object>(connection: connection,
@@ -98,12 +98,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static TResult SumAll<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return SumAllInternal<TEntity, TResult>(connection: connection,
@@ -132,12 +132,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static TResult SumAll<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return SumAllInternal<TEntity, TResult>(connection: connection,
@@ -166,12 +166,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         internal static TResult SumAllInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -213,12 +213,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -249,12 +249,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -286,12 +286,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static Task<TResult> SumAllAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -323,12 +323,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         public static Task<TResult> SumAllAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -360,12 +360,12 @@ namespace RepoDb
         /// <returns>The sum value of the target field.</returns>
         internal static Task<TResult> SumAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -409,12 +409,12 @@ namespace RepoDb
         public static object SumAll(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return SumAllInternal<object>(connection: connection,
                 tableName: tableName,
@@ -444,12 +444,12 @@ namespace RepoDb
         public static TResult SumAll<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return SumAllInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -479,12 +479,12 @@ namespace RepoDb
         internal static TResult SumAllInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new SumAllRequest(tableName,
@@ -525,12 +525,12 @@ namespace RepoDb
         public static Task<object> SumAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return SumAllAsyncInternal<object>(connection: connection,
@@ -563,12 +563,12 @@ namespace RepoDb
         public static Task<TResult> SumAllAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return SumAllAsyncInternal<TResult>(connection: connection,
@@ -601,12 +601,12 @@ namespace RepoDb
         internal static Task<TResult> SumAllAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.SumAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

@@ -22,8 +22,8 @@ namespace RepoDb.Requests
         public DeleteAllRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
@@ -44,8 +44,8 @@ namespace RepoDb.Requests
         public DeleteAllRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : base(name,
                 connection,
                 transaction,

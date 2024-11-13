@@ -19,7 +19,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int DeleteAll(IEnumerable<TEntity> entities,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null)
         {
@@ -39,7 +39,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int DeleteAll<TKey>(IEnumerable<TKey> keys,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null)
         {
@@ -58,7 +58,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int DeleteAll(IEnumerable<object> keys,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null)
         {
@@ -75,7 +75,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll(string hints = null,
+        public int DeleteAll(string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null)
         {
@@ -98,7 +98,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAllAsync(IEnumerable<TEntity> entities,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAllAsync<TKey>(IEnumerable<TKey> keys,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -143,7 +143,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAllAsync(IEnumerable<object> keys,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -163,7 +163,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public Task<int> DeleteAllAsync(string hints = null,
+        public Task<int> DeleteAllAsync(string? hints = null,
             string traceKey = TraceKeys.DeleteAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

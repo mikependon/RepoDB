@@ -40,12 +40,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection,
@@ -88,12 +88,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -136,12 +136,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -182,14 +182,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -232,12 +232,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -278,14 +278,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -324,12 +324,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection,
@@ -370,12 +370,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -416,12 +416,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -460,14 +460,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -508,12 +508,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -552,14 +552,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return BatchQueryInternal<TEntity>(connection: connection,
@@ -600,14 +600,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Ensure the fields
@@ -658,12 +658,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -709,12 +709,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -760,12 +760,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -809,14 +809,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -862,12 +862,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -911,14 +911,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -960,12 +960,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1009,12 +1009,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1058,12 +1058,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1105,14 +1105,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1156,12 +1156,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1203,14 +1203,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1254,14 +1254,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1312,12 +1312,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return BatchQueryInternal<dynamic>(connection,
                 tableName: tableName,
@@ -1358,12 +1358,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -1402,14 +1402,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -1450,12 +1450,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -1494,14 +1494,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -1545,12 +1545,12 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return BatchQueryAsyncInternal<dynamic>(connection,
@@ -1594,12 +1594,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return BatchQueryAsyncInternal<dynamic>(connection: connection,
@@ -1641,14 +1641,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return BatchQueryAsyncInternal<dynamic>(connection: connection,
@@ -1692,12 +1692,12 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return BatchQueryAsyncInternal<dynamic>(connection: connection,
@@ -1739,14 +1739,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return BatchQueryAsyncInternal<dynamic>(connection: connection,
@@ -1792,14 +1792,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -1870,14 +1870,14 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

@@ -67,7 +67,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -138,7 +138,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -209,7 +209,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -280,7 +280,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -351,7 +351,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -422,7 +422,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -512,7 +512,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -603,7 +603,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -694,7 +694,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -785,7 +785,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -876,7 +876,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -967,7 +967,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1079,7 +1079,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1191,7 +1191,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1303,7 +1303,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1415,7 +1415,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1527,7 +1527,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1639,7 +1639,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1772,7 +1772,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1904,7 +1904,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2036,7 +2036,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2168,7 +2168,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2300,7 +2300,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2432,7 +2432,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2586,7 +2586,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2738,7 +2738,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2890,7 +2890,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3042,7 +3042,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3194,7 +3194,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3346,7 +3346,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3521,7 +3521,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3693,7 +3693,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3865,7 +3865,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4037,7 +4037,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4209,7 +4209,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4381,7 +4381,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4503,7 +4503,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4577,7 +4577,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4651,7 +4651,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4725,7 +4725,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4799,7 +4799,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4873,7 +4873,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4966,7 +4966,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5060,7 +5060,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5154,7 +5154,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5248,7 +5248,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5342,7 +5342,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5436,7 +5436,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5551,7 +5551,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5666,7 +5666,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5781,7 +5781,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5896,7 +5896,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6011,7 +6011,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6126,7 +6126,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6262,7 +6262,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6397,7 +6397,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6532,7 +6532,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6667,7 +6667,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6802,7 +6802,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6937,7 +6937,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7094,7 +7094,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7249,7 +7249,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7404,7 +7404,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7559,7 +7559,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7714,7 +7714,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7869,7 +7869,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8047,7 +8047,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8222,7 +8222,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8397,7 +8397,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8572,7 +8572,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8747,7 +8747,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -8922,7 +8922,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -9051,7 +9051,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9128,7 +9128,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9205,7 +9205,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9282,7 +9282,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9359,7 +9359,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9436,7 +9436,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
         {
@@ -9630,7 +9630,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9730,7 +9730,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9830,7 +9830,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9930,7 +9930,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10030,7 +10030,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10130,7 +10130,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10375,7 +10375,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10499,7 +10499,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10623,7 +10623,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10747,7 +10747,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10871,7 +10871,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10995,7 +10995,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11289,7 +11289,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11436,7 +11436,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11583,7 +11583,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11730,7 +11730,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11877,7 +11877,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -12024,7 +12024,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -12367,7 +12367,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -12537,7 +12537,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -12707,7 +12707,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -12877,7 +12877,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -13047,7 +13047,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -13217,7 +13217,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -13609,7 +13609,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -13802,7 +13802,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -13995,7 +13995,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -14188,7 +14188,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -14381,7 +14381,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -14574,7 +14574,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -14926,7 +14926,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -14999,7 +14999,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15072,7 +15072,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15145,7 +15145,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15218,7 +15218,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -15407,7 +15407,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15501,7 +15501,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15595,7 +15595,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15689,7 +15689,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -15783,7 +15783,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -16021,7 +16021,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -16137,7 +16137,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -16253,7 +16253,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -16369,7 +16369,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -16485,7 +16485,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -16769,7 +16769,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -16906,7 +16906,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -17043,7 +17043,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -17180,7 +17180,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -17317,7 +17317,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -17649,7 +17649,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -17807,7 +17807,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -17965,7 +17965,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -18123,7 +18123,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -18281,7 +18281,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -18660,7 +18660,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -18839,7 +18839,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -19018,7 +19018,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -19197,7 +19197,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryMultipleInternal(connection: connection,
                 tableName1: tableName1,
@@ -19376,7 +19376,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -19728,7 +19728,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -19808,7 +19808,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -19888,7 +19888,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -19968,7 +19968,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20048,7 +20048,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20128,7 +20128,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20329,7 +20329,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20432,7 +20432,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20535,7 +20535,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20638,7 +20638,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20741,7 +20741,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -20844,7 +20844,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21097,7 +21097,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21224,7 +21224,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21351,7 +21351,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21478,7 +21478,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21605,7 +21605,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -21732,7 +21732,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22036,7 +22036,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22186,7 +22186,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22336,7 +22336,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22486,7 +22486,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22636,7 +22636,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -22786,7 +22786,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -23141,7 +23141,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -23314,7 +23314,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -23487,7 +23487,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -23660,7 +23660,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -23833,7 +23833,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -24006,7 +24006,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -24412,7 +24412,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -24608,7 +24608,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -24804,7 +24804,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -25000,7 +25000,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -25196,7 +25196,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -25392,7 +25392,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -25760,7 +25760,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -25836,7 +25836,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -25912,7 +25912,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -25988,7 +25988,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -26064,7 +26064,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -26260,7 +26260,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -26357,7 +26357,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -26454,7 +26454,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -26551,7 +26551,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -26648,7 +26648,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -26894,7 +26894,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -27013,7 +27013,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -27132,7 +27132,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -27251,7 +27251,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -27370,7 +27370,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -27665,7 +27665,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -27805,7 +27805,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -27945,7 +27945,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -28085,7 +28085,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -28225,7 +28225,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -28569,7 +28569,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -28730,7 +28730,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -28891,7 +28891,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -29052,7 +29052,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -29213,7 +29213,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -29606,7 +29606,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await QueryMultipleAsyncInternal(connection: connection,
@@ -29788,7 +29788,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -29970,7 +29970,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -30152,7 +30152,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryMultipleAsyncInternal(connection: connection,
@@ -30334,7 +30334,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

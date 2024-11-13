@@ -20,7 +20,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(TEntity entity,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -40,7 +40,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete<TWhat>(TWhat what,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -59,7 +59,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(object what,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -78,7 +78,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -97,7 +97,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(QueryField where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -116,7 +116,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -135,7 +135,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(QueryGroup where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null)
         {
@@ -159,7 +159,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(TEntity entity,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -182,7 +182,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync<TWhat>(TWhat what,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -204,7 +204,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(object what,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -226,7 +226,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -248,7 +248,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(QueryField where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -270,7 +270,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -292,7 +292,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(QueryGroup where,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Delete,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

@@ -32,12 +32,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             TEntity entity,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entity), connection, transaction);
@@ -67,12 +67,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -100,12 +100,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -133,12 +133,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -166,12 +166,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -199,12 +199,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -232,12 +232,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
@@ -265,12 +265,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static int DeleteInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -318,12 +318,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -356,12 +356,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static async Task<int> DeleteAsync<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -392,12 +392,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -428,12 +428,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -464,12 +464,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -500,12 +500,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -536,12 +536,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -572,12 +572,12 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -628,12 +628,12 @@ namespace RepoDb
         public static int Delete<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
@@ -662,12 +662,12 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
@@ -696,12 +696,12 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
@@ -730,12 +730,12 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
@@ -764,12 +764,12 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
@@ -798,12 +798,12 @@ namespace RepoDb
         internal static int DeleteInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new DeleteRequest(tableName,
@@ -852,12 +852,12 @@ namespace RepoDb
         public static async Task<int> DeleteAsync<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await DeleteAsyncInternal(connection: connection,
@@ -889,12 +889,12 @@ namespace RepoDb
         public static async Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await DeleteAsyncInternal(connection: connection,
@@ -928,10 +928,10 @@ namespace RepoDb
             QueryField where,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
-            string hints = null,
+            string? hints = null,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return DeleteAsyncInternal(connection: connection,
@@ -963,12 +963,12 @@ namespace RepoDb
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return DeleteAsyncInternal(connection: connection,
@@ -1000,12 +1000,12 @@ namespace RepoDb
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return DeleteAsyncInternal(connection: connection,
@@ -1037,12 +1037,12 @@ namespace RepoDb
         internal static Task<int> DeleteAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Delete,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

@@ -31,12 +31,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static object MinAll<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MinAllInternal<TEntity, object>(connection: connection,
@@ -64,12 +64,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static object MinAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MinAllInternal<TEntity, object>(connection: connection,
@@ -98,12 +98,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MinAllInternal<TEntity, TResult>(connection: connection,
@@ -132,12 +132,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MinAllInternal<TEntity, TResult>(connection: connection,
@@ -166,12 +166,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         internal static TResult MinAllInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -213,12 +213,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static Task<object> MinAllAsync<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -249,12 +249,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static Task<object> MinAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -286,12 +286,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -323,12 +323,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -360,12 +360,12 @@ namespace RepoDb
         /// <returns>The min value of the target field.</returns>
         internal static Task<TResult> MinAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -409,12 +409,12 @@ namespace RepoDb
         public static object MinAll(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return MinAllInternal<object>(connection: connection,
                 tableName: tableName,
@@ -444,12 +444,12 @@ namespace RepoDb
         public static TResult MinAll<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return MinAllInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -479,12 +479,12 @@ namespace RepoDb
         internal static TResult MinAllInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new MinAllRequest(tableName,
@@ -525,12 +525,12 @@ namespace RepoDb
         public static Task<object> MinAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return MinAllAsyncInternal<object>(connection: connection,
@@ -563,12 +563,12 @@ namespace RepoDb
         public static Task<TResult> MinAllAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return MinAllAsyncInternal<TResult>(connection: connection,
@@ -601,12 +601,12 @@ namespace RepoDb
         internal static Task<TResult> MinAllAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MinAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

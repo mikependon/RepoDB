@@ -28,8 +28,8 @@ namespace RepoDb.Requests
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(type,
                   ClassMappedNameCache.Get(type),
                   connection,
@@ -55,8 +55,8 @@ namespace RepoDb.Requests
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(null,
                   name,
                   connection,
@@ -84,8 +84,8 @@ namespace RepoDb.Requests
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : base(name ?? ClassMappedNameCache.Get(type),
                   connection,
                   transaction,

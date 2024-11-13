@@ -26,12 +26,12 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long CountAll<TEntity>(this IDbConnection connection,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return CountAllInternal<TEntity>(connection: connection,
@@ -56,12 +56,12 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountAllInternal<TEntity>(this IDbConnection connection,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -100,12 +100,12 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAllAsync<TEntity>(this IDbConnection connection,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -133,12 +133,12 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -179,12 +179,12 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long CountAll(this IDbConnection connection,
             string tableName,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return CountAllInternal(connection: connection,
                 tableName: tableName,
@@ -210,12 +210,12 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountAllInternal(this IDbConnection connection,
             string tableName,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new CountAllRequest(tableName,
@@ -254,12 +254,12 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAllAsync(this IDbConnection connection,
             string tableName,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return CountAllAsyncInternal(connection: connection,
@@ -288,12 +288,12 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAllAsyncInternal(this IDbConnection connection,
             string tableName,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

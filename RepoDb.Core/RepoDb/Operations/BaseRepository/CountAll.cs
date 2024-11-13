@@ -16,7 +16,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long CountAll(string hints = null,
+        public long CountAll(string? hints = null,
             string traceKey = TraceKeys.CountAll,
 			IDbTransaction? transaction = null)
         {
@@ -37,7 +37,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public Task<long> CountAllAsync(string hints = null,
+        public Task<long> CountAllAsync(string? hints = null,
             string traceKey = TraceKeys.CountAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

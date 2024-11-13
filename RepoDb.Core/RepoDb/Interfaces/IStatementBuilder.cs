@@ -20,8 +20,8 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for average operation.</returns>
         string CreateAverage(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for average-all operation.</returns>
         string CreateAverageAll(string tableName,
             Field field,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -58,8 +58,8 @@ namespace RepoDb.Interfaces
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -81,8 +81,8 @@ namespace RepoDb.Interfaces
             int skip,
             int take,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -96,8 +96,8 @@ namespace RepoDb.Interfaces
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
         string CreateCount(string tableName,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -110,7 +110,7 @@ namespace RepoDb.Interfaces
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         string CreateCountAll(string tableName,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -124,8 +124,8 @@ namespace RepoDb.Interfaces
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for delete operation.</returns>
         string CreateDelete(string tableName,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace RepoDb.Interfaces
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for delete-all operation.</returns>
         string CreateDeleteAll(string tableName,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -152,8 +152,8 @@ namespace RepoDb.Interfaces
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for exists operation.</returns>
         string CreateExists(string tableName,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -170,9 +170,9 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for insert operation.</returns>
         string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -191,9 +191,9 @@ namespace RepoDb.Interfaces
         string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -209,8 +209,8 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for maximum operation.</returns>
         string CreateMax(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -225,7 +225,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for maximum-all operation.</returns>
         string CreateMaxAll(string tableName,
             Field field,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -244,9 +244,9 @@ namespace RepoDb.Interfaces
         string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -267,9 +267,9 @@ namespace RepoDb.Interfaces
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -285,8 +285,8 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for minimum operation.</returns>
         string CreateMin(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -301,7 +301,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for minimum-all operation.</returns>
         string CreateMinAll(string tableName,
             Field field,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -319,10 +319,10 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for query operation.</returns>
         string CreateQuery(string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -339,7 +339,7 @@ namespace RepoDb.Interfaces
         string CreateQueryAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -355,8 +355,8 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for sum operation.</returns>
         string CreateSum(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -371,7 +371,7 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for sum-all operation.</returns>
         string CreateSumAll(string tableName,
             Field field,
-            string hints = null);
+            string? hints = null);
 
         #endregion
 
@@ -400,10 +400,10 @@ namespace RepoDb.Interfaces
         /// <returns>A sql statement for update operation.</returns>
         string CreateUpdate(string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            QueryGroup? where = null,
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -424,9 +424,9 @@ namespace RepoDb.Interfaces
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
     }

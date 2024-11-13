@@ -40,12 +40,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertAllInternal(connection: connection,
@@ -80,12 +80,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertAllInternal<TEntity>(connection: connection,
@@ -122,12 +122,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             if (TypeCache.Get(GetEntityType(entities)).IsDictionaryStringObject())
@@ -186,12 +186,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -229,12 +229,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -274,12 +274,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -339,12 +339,12 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return InsertAllInternal<object>(connection: connection,
                 tableName: tableName,
@@ -384,12 +384,12 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return InsertAllAsyncInternal<object>(connection: connection,
@@ -431,12 +431,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -670,12 +670,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

@@ -28,7 +28,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -61,7 +61,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -94,7 +94,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
@@ -127,8 +127,8 @@ namespace RepoDb
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
@@ -162,7 +162,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
@@ -195,8 +195,8 @@ namespace RepoDb
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
@@ -227,7 +227,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -257,7 +257,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -287,7 +287,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -316,9 +316,9 @@ namespace RepoDb
         public IEnumerable<TEntity> SkipQuery(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -349,7 +349,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -378,9 +378,9 @@ namespace RepoDb
         public IEnumerable<TEntity> SkipQuery(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null)
         {
@@ -416,7 +416,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -452,7 +452,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -488,7 +488,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
@@ -524,8 +524,8 @@ namespace RepoDb
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
@@ -562,7 +562,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
@@ -598,8 +598,8 @@ namespace RepoDb
             int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             IEnumerable<Field> fields = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
@@ -633,7 +633,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -666,7 +666,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             object where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -700,7 +700,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -732,9 +732,9 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> SkipQueryAsync(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryField where = null,
+            QueryField? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -768,7 +768,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -800,9 +800,9 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> SkipQueryAsync(int skip,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.SkipQuery,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

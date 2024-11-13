@@ -23,7 +23,7 @@ namespace RepoDb
         public int InsertAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.InsertAll,
 			IDbTransaction? transaction = null)
         {
@@ -53,7 +53,7 @@ namespace RepoDb
         public Task<int> InsertAllAsync(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.InsertAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

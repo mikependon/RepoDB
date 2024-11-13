@@ -23,9 +23,9 @@ namespace RepoDb.Requests
         public CountRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
-            QueryGroup where = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            QueryGroup? where = null,
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
@@ -48,9 +48,9 @@ namespace RepoDb.Requests
         public CountRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
-            QueryGroup where = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            QueryGroup? where = null,
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : base(name,
                   connection,
                   transaction,

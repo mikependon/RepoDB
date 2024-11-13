@@ -21,7 +21,7 @@ namespace RepoDb.Requests
         public TruncateRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
@@ -40,7 +40,7 @@ namespace RepoDb.Requests
         public TruncateRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             : base(name,
                   connection,
                   transaction,

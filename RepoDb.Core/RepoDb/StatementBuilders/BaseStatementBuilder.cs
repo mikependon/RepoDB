@@ -62,8 +62,8 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for average operation.</returns>
         public virtual string CreateAverage(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -112,7 +112,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for average-all operation.</returns>
         public virtual string CreateAverageAll(string tableName,
             Field field,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -159,8 +159,8 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
         public virtual string CreateCount(string tableName,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -197,7 +197,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         public virtual string CreateCountAll(string tableName,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -234,8 +234,8 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for delete operation.</returns>
         public virtual string CreateDelete(string tableName,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -270,7 +270,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for delete-all operation.</returns>
         public virtual string CreateDeleteAll(string tableName,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -305,8 +305,8 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for exists operation.</returns>
         public virtual string CreateExists(string tableName,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -347,9 +347,9 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for insert operation.</returns>
         public virtual string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -422,9 +422,9 @@ namespace RepoDb.StatementBuilders
         public virtual string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -530,8 +530,8 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for maximum operation.</returns>
         public virtual string CreateMax(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -576,7 +576,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for maximum-all operation.</returns>
         public virtual string CreateMaxAll(string tableName,
             Field field,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -621,8 +621,8 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for minimum operation.</returns>
         public virtual string CreateMin(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -667,7 +667,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for minimum-all operation.</returns>
         public virtual string CreateMinAll(string tableName,
             Field field,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -714,10 +714,10 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for query operation.</returns>
         public virtual string CreateQuery(string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -765,7 +765,7 @@ namespace RepoDb.StatementBuilders
         public virtual string CreateQueryAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null)
+            string? hints = null)
         {
             // Guard the target table
             GuardTableName(tableName);
@@ -810,8 +810,8 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for sum operation.</returns>
         public virtual string CreateSum(string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null)
+            QueryGroup? where = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -856,7 +856,7 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for sum-all operation.</returns>
         public virtual string CreateSumAll(string tableName,
             Field field,
-            string hints = null)
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -931,10 +931,10 @@ namespace RepoDb.StatementBuilders
         /// <returns>A sql statement for update operation.</returns>
         public virtual string CreateUpdate(string tableName,
             IEnumerable<Field> fields,
-            QueryGroup where = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            QueryGroup? where = null,
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -989,9 +989,9 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -1107,8 +1107,8 @@ namespace RepoDb.StatementBuilders
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -1127,9 +1127,9 @@ namespace RepoDb.StatementBuilders
         public abstract string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -1150,9 +1150,9 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> fields,
             IEnumerable<Field>? qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null);
+            DbField? primaryField = null,
+            DbField? identityField = null,
+            string? hints = null);
 
         #endregion
 
@@ -1174,8 +1174,8 @@ namespace RepoDb.StatementBuilders
             int skip,
             int take,
             IEnumerable<OrderField> orderBy = null,
-            QueryGroup where = null,
-            string hints = null);
+            QueryGroup? where = null,
+            string? hints = null);
 
         #endregion
 
@@ -1227,7 +1227,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="hints"></param>
         /// <exception cref="NotSupportedException"></exception>
-        protected void GuardHints(string hints = null)
+        protected void GuardHints(string? hints = null)
         {
             if (!string.IsNullOrWhiteSpace(hints) && !DbSetting.AreTableHintsSupported)
             {

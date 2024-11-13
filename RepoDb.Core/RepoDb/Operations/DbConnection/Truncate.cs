@@ -29,7 +29,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return TruncateInternal<TEntity>(connection: connection,
@@ -56,7 +56,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -95,7 +95,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -125,7 +125,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -166,7 +166,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return TruncateInternal(connection: connection,
                 tableName: tableName,
@@ -194,7 +194,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new TruncateRequest(tableName,
@@ -233,7 +233,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return TruncateAsyncInternal(connection: connection,
@@ -264,7 +264,7 @@ namespace RepoDb
 			string traceKey = TraceKeys.Truncate,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

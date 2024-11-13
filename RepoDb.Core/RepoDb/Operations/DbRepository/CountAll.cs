@@ -19,7 +19,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long CountAll<TEntity>(string hints = null,
+        public long CountAll<TEntity>(string? hints = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAllAsync<TEntity>(string hints = null,
+        public async Task<long> CountAllAsync<TEntity>(string? hints = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -97,7 +97,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll(string tableName,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null)
         {
@@ -136,7 +136,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAllAsync(string tableName,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.CountAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

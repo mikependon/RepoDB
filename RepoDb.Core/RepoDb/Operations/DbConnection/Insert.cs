@@ -35,12 +35,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertInternal<TEntity, object>(connection: connection,
@@ -75,12 +75,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertInternal<TEntity, TResult>(connection: connection,
@@ -112,12 +112,12 @@ namespace RepoDb
         public static object Insert<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertInternal<TEntity, object>(connection: connection,
@@ -150,12 +150,12 @@ namespace RepoDb
         public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return InsertInternal<TEntity, TResult>(connection: connection,
@@ -190,12 +190,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
@@ -250,12 +250,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -293,12 +293,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -333,12 +333,12 @@ namespace RepoDb
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -374,12 +374,12 @@ namespace RepoDb
         public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -417,12 +417,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -478,12 +478,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return InsertInternal<object, object>(connection: connection,
                 tableName: tableName,
@@ -516,12 +516,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return InsertInternal<object, TResult>(connection: connection,
                 tableName: tableName,
@@ -559,12 +559,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return InsertAsyncInternal<object, object>(connection: connection,
@@ -600,12 +600,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return InsertAsyncInternal<object, TResult>(connection: connection,
@@ -645,12 +645,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -727,12 +727,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Insert,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

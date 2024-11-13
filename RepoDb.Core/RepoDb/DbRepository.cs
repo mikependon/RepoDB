@@ -181,7 +181,7 @@ namespace RepoDb
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
@@ -210,7 +210,7 @@ namespace RepoDb
             ICache? cache = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Properties
             ConnectionString = connectionString;

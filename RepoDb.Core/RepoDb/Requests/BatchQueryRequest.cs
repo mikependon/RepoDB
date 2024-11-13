@@ -33,9 +33,9 @@ namespace RepoDb.Requests
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            QueryGroup? where = null,
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
@@ -70,9 +70,9 @@ namespace RepoDb.Requests
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            QueryGroup? where = null,
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : base(name,
                   connection,
                   transaction,

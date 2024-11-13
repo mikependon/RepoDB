@@ -28,7 +28,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -71,7 +71,7 @@ namespace RepoDb
         public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -120,7 +120,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -166,7 +166,7 @@ namespace RepoDb
         public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -215,7 +215,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null)
         {
@@ -263,7 +263,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.InsertAll,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

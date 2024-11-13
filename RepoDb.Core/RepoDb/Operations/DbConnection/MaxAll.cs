@@ -31,12 +31,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static object MaxAll<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MaxAllInternal<TEntity, object>(connection: connection,
@@ -64,12 +64,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static object MaxAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MaxAllInternal<TEntity, object>(connection: connection,
@@ -98,12 +98,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static TResult MaxAll<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MaxAllInternal<TEntity, TResult>(connection: connection,
@@ -132,12 +132,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static TResult MaxAll<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return MaxAllInternal<TEntity, TResult>(connection: connection,
@@ -166,12 +166,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         internal static TResult MaxAllInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -213,12 +213,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -249,12 +249,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -286,12 +286,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static Task<TResult> MaxAllAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -323,12 +323,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public static Task<TResult> MaxAllAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -360,12 +360,12 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         internal static Task<TResult> MaxAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -409,12 +409,12 @@ namespace RepoDb
         public static object MaxAll(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return MaxAllInternal<object>(connection: connection,
                 tableName: tableName,
@@ -444,12 +444,12 @@ namespace RepoDb
         public static TResult MaxAll<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return MaxAllInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -479,12 +479,12 @@ namespace RepoDb
         internal static TResult MaxAllInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new MaxAllRequest(tableName,
@@ -525,12 +525,12 @@ namespace RepoDb
         public static Task<object> MaxAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return MaxAllAsyncInternal<object>(connection: connection,
@@ -563,12 +563,12 @@ namespace RepoDb
         public static Task<TResult> MaxAllAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return MaxAllAsyncInternal<TResult>(connection: connection,
@@ -601,12 +601,12 @@ namespace RepoDb
         internal static Task<TResult> MaxAllAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.MaxAll,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

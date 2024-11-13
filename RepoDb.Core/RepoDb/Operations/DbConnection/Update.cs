@@ -37,12 +37,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
@@ -82,12 +82,12 @@ namespace RepoDb
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -124,12 +124,12 @@ namespace RepoDb
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -166,12 +166,12 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -208,12 +208,12 @@ namespace RepoDb
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -250,12 +250,12 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -292,12 +292,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -330,12 +330,12 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entity), connection, transaction);
@@ -372,12 +372,12 @@ namespace RepoDb
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -412,12 +412,12 @@ namespace RepoDb
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -452,12 +452,12 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -492,12 +492,12 @@ namespace RepoDb
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -532,12 +532,12 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -572,12 +572,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
@@ -614,12 +614,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
@@ -676,12 +676,12 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -724,12 +724,12 @@ namespace RepoDb
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -769,12 +769,12 @@ namespace RepoDb
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -814,12 +814,12 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -859,12 +859,12 @@ namespace RepoDb
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -904,12 +904,12 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -949,12 +949,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -990,12 +990,12 @@ namespace RepoDb
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1035,12 +1035,12 @@ namespace RepoDb
             TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1078,12 +1078,12 @@ namespace RepoDb
             TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1121,12 +1121,12 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1164,12 +1164,12 @@ namespace RepoDb
             TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1207,12 +1207,12 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1250,12 +1250,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1295,12 +1295,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1358,12 +1358,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, entity?.GetType());
             return UpdateInternal<object>(connection: connection,
@@ -1399,12 +1399,12 @@ namespace RepoDb
             object entity,
             object where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1439,12 +1439,12 @@ namespace RepoDb
             object entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1479,12 +1479,12 @@ namespace RepoDb
             object entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1519,12 +1519,12 @@ namespace RepoDb
             object entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1562,12 +1562,12 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
@@ -1607,12 +1607,12 @@ namespace RepoDb
             object entity,
             object where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return UpdateAsyncInternal<object>(connection: connection,
@@ -1650,12 +1650,12 @@ namespace RepoDb
             object entity,
             QueryField where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return UpdateAsyncInternal<object>(connection: connection,
@@ -1693,12 +1693,12 @@ namespace RepoDb
             object entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return UpdateAsyncInternal<object>(connection: connection,
@@ -1736,12 +1736,12 @@ namespace RepoDb
             object entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return UpdateAsyncInternal<object>(connection: connection,
@@ -1783,12 +1783,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Set the flags
@@ -1865,12 +1865,12 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Update,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

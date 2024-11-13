@@ -32,12 +32,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -66,12 +66,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -99,12 +99,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -132,12 +132,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -165,12 +165,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -198,12 +198,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
@@ -231,12 +231,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static bool ExistsInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -284,12 +284,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static async Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -321,12 +321,12 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         public static async Task<bool> ExistsAsync<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -357,12 +357,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -393,12 +393,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -429,12 +429,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -465,12 +465,12 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -503,10 +503,10 @@ namespace RepoDb
             QueryGroup where,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
-            string hints = null,
+            string? hints = null,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -557,12 +557,12 @@ namespace RepoDb
         public static bool Exists<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
@@ -591,12 +591,12 @@ namespace RepoDb
         public static bool Exists(this IDbConnection connection,
             string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
@@ -625,12 +625,12 @@ namespace RepoDb
         public static bool Exists(this IDbConnection connection,
             string tableName,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
@@ -659,12 +659,12 @@ namespace RepoDb
         public static bool Exists(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
@@ -693,12 +693,12 @@ namespace RepoDb
         public static bool Exists(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
@@ -727,12 +727,12 @@ namespace RepoDb
         internal static bool ExistsInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new ExistsRequest(tableName,
@@ -781,12 +781,12 @@ namespace RepoDb
         public static async Task<bool> ExistsAsync<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await ExistsAsyncInternal(connection: connection,
@@ -818,12 +818,12 @@ namespace RepoDb
         public static async Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return await ExistsAsyncInternal(connection: connection,
@@ -855,12 +855,12 @@ namespace RepoDb
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             QueryField where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return ExistsAsyncInternal(connection: connection,
@@ -892,12 +892,12 @@ namespace RepoDb
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return ExistsAsyncInternal(connection: connection,
@@ -929,12 +929,12 @@ namespace RepoDb
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return ExistsAsyncInternal(connection: connection,
@@ -966,12 +966,12 @@ namespace RepoDb
         internal static Task<bool> ExistsAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

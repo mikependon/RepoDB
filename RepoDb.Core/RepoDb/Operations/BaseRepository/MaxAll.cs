@@ -19,7 +19,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object MaxAll(Field field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null)
         {
@@ -38,7 +38,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object MaxAll(Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null)
         {
@@ -58,7 +58,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult MaxAll<TResult>(Field field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null)
         {
@@ -78,7 +78,7 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult MaxAll<TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null)
         {
@@ -102,7 +102,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAllAsync(Field field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -124,7 +124,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAllAsync(Expression<Func<TEntity, object>> field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -147,7 +147,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAllAsync<TResult>(Field field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -170,7 +170,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MaxAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

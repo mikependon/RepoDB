@@ -8,107 +8,107 @@ namespace RepoDb.UnitTests.CustomObjects
 {
     public class CustomStatementBuilder : IStatementBuilder
     {
-        public string CreateAverage(string tableName, Field field, QueryGroup where = null, string hints = null)
+        public string CreateAverage(string tableName, Field field, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateAverageAll(string tableName, Field field, string hints = null)
+        public string CreateAverageAll(string tableName, Field field, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateBatchQuery(string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public string CreateBatchQuery(string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateCount(string tableName, QueryGroup where = null, string hints = null)
+        public string CreateCount(string tableName, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateCountAll(string tableName, string hints = null)
+        public string CreateCountAll(string tableName, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateDelete(string tableName, QueryGroup where = null, string hints = null)
+        public string CreateDelete(string tableName, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateDeleteAll(string tableName, string hints = null)
+        public string CreateDeleteAll(string tableName, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateExists(string tableName, QueryGroup where = null, string hints = null)
+        public string CreateExists(string tableName, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateInsert(string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateInsert(string tableName, IEnumerable<Field> fields = null, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateInsertAll(string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateInsertAll(string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMax(string tableName, Field field, QueryGroup where = null, string hints = null)
+        public string CreateMax(string tableName, Field field, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMaxAll(string tableName, Field field, string hints = null)
+        public string CreateMaxAll(string tableName, Field field, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMin(string tableName, Field field, QueryGroup where = null, string hints = null)
+        public string CreateMin(string tableName, Field field, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMinAll(string tableName, Field field, string hints = null)
+        public string CreateMinAll(string tableName, Field field, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateQuery(string tableName, IEnumerable<Field> fields, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null, string hints = null)
+        public string CreateQuery(string tableName, IEnumerable<Field> fields, QueryGroup? where = null, IEnumerable<OrderField> orderBy = null, int? top = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateQueryAll(string tableName, IEnumerable<Field> fields, IEnumerable<OrderField> orderBy = null, string hints = null)
+        public string CreateQueryAll(string tableName, IEnumerable<Field> fields, IEnumerable<OrderField> orderBy = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateSum(string tableName, Field field, QueryGroup where = null, string hints = null)
+        public string CreateSum(string tableName, Field field, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateSumAll(string tableName, Field field, string hints = null)
+        public string CreateSumAll(string tableName, Field field, string? hints = null)
         {
             return string.Empty;
         }
@@ -118,12 +118,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateUpdate(string tableName, IEnumerable<Field> fields, QueryGroup where = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateUpdate(string tableName, IEnumerable<Field> fields, QueryGroup? where = null, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateUpdateAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public string CreateUpdateAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
@@ -149,22 +149,22 @@ namespace RepoDb.UnitTests.CustomObjects
                   averageableClientTypeResolver)
         {}
 
-        public override string CreateBatchQuery(string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public override string CreateBatchQuery(string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public override string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public override string CreateMerge(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public override string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        public override string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field>? qualifiers = null, int batchSize = 10, DbField? primaryField = null, DbField? identityField = null, string? hints = null)
         {
             return string.Empty;
         }
 
-        public override string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public override string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup? where = null, string? hints = null)
         {
             return string.Empty;
         }

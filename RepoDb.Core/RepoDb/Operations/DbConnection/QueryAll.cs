@@ -37,7 +37,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -45,7 +45,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return QueryAllInternal<TEntity>(connection: connection,
@@ -83,7 +83,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> QueryAll<TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -91,7 +91,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return QueryAllInternal<TEntity>(connection: connection,
@@ -131,7 +131,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -139,7 +139,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Ensure the fields
@@ -189,7 +189,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -197,7 +197,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -238,7 +238,7 @@ namespace RepoDb
         public static Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -246,7 +246,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -289,7 +289,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -297,7 +297,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -347,7 +347,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -355,7 +355,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -393,7 +393,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -401,7 +401,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -444,7 +444,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -452,7 +452,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryAllAsyncInternal<dynamic>(connection: connection,
@@ -493,7 +493,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -501,7 +501,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return QueryAllAsyncInternal<dynamic>(connection: connection,
@@ -546,7 +546,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -554,7 +554,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Get Cache
@@ -631,7 +631,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
             string? cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
@@ -639,7 +639,7 @@ namespace RepoDb
             IDbTransaction? transaction = null,
             ICache? cache = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

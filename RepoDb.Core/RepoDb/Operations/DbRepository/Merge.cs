@@ -27,7 +27,7 @@ namespace RepoDb
         public object Merge<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -70,7 +70,7 @@ namespace RepoDb
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -115,7 +115,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -160,7 +160,7 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -204,7 +204,7 @@ namespace RepoDb
         public TResult Merge<TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -249,7 +249,7 @@ namespace RepoDb
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -295,7 +295,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -341,7 +341,7 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -382,7 +382,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Merge<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -422,7 +422,7 @@ namespace RepoDb
         public object Merge<TEntity>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -464,7 +464,7 @@ namespace RepoDb
         public object Merge<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -506,7 +506,7 @@ namespace RepoDb
         public object Merge<TEntity>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -547,7 +547,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Merge<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -589,7 +589,7 @@ namespace RepoDb
         public TResult Merge<TEntity, TResult>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -632,7 +632,7 @@ namespace RepoDb
         public TResult Merge<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -675,7 +675,7 @@ namespace RepoDb
         public TResult Merge<TEntity, TResult>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -722,7 +722,7 @@ namespace RepoDb
         public async Task<object> MergeAsync<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -769,7 +769,7 @@ namespace RepoDb
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -817,7 +817,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -865,7 +865,7 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -912,7 +912,7 @@ namespace RepoDb
         public async Task<TResult> MergeAsync<TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -960,7 +960,7 @@ namespace RepoDb
             TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1009,7 +1009,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1058,7 +1058,7 @@ namespace RepoDb
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1102,7 +1102,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> MergeAsync<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1146,7 +1146,7 @@ namespace RepoDb
         public async Task<object> MergeAsync<TEntity>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1191,7 +1191,7 @@ namespace RepoDb
         public async Task<object> MergeAsync<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1236,7 +1236,7 @@ namespace RepoDb
         public async Task<object> MergeAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1280,7 +1280,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1325,7 +1325,7 @@ namespace RepoDb
         public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1371,7 +1371,7 @@ namespace RepoDb
         public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1417,7 +1417,7 @@ namespace RepoDb
         public async Task<TResult> MergeAsync<TEntity, TResult>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1464,7 +1464,7 @@ namespace RepoDb
         public object Merge(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1506,7 +1506,7 @@ namespace RepoDb
             object entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1549,7 +1549,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1591,7 +1591,7 @@ namespace RepoDb
         public TResult Merge<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1634,7 +1634,7 @@ namespace RepoDb
             object entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1678,7 +1678,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null)
         {
@@ -1724,7 +1724,7 @@ namespace RepoDb
         public async Task<object> MergeAsync(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1769,7 +1769,7 @@ namespace RepoDb
             object entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1815,7 +1815,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1860,7 +1860,7 @@ namespace RepoDb
         public async Task<TResult> MergeAsync<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1906,7 +1906,7 @@ namespace RepoDb
             object entity,
             Field qualifier,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -1953,7 +1953,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Merge,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

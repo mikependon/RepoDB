@@ -26,10 +26,10 @@ namespace RepoDb.Requests
         public UpdateRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
@@ -54,10 +54,10 @@ namespace RepoDb.Requests
         public UpdateRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             IEnumerable<Field> fields = null,
-            string hints = null,
-            IStatementBuilder statementBuilder = null)
+            string? hints = null,
+            IStatementBuilder? statementBuilder = null)
             : base(name,
                   connection,
                   transaction,

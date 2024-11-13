@@ -24,7 +24,7 @@ namespace RepoDb
         public int MergeAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null)
         {
@@ -51,7 +51,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null)
         {
@@ -79,7 +79,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null)
         {
@@ -110,7 +110,7 @@ namespace RepoDb
         public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -140,7 +140,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -171,7 +171,7 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.MergeAll,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

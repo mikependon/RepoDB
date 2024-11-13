@@ -631,7 +631,7 @@ namespace RepoDb.Extensions
         /// <param name="dbField"></param>
         private static void CreateParametersForInOperation(this IDbCommand command,
             QueryField queryField,
-            DbField dbField = null)
+            DbField? dbField = null)
         {
             var values = (queryField?.Parameter.Value as System.Collections.IEnumerable)?
                         .WithType<object>()
@@ -663,7 +663,7 @@ namespace RepoDb.Extensions
         /// <param name="dbField"></param>
         private static void CreateParametersForBetweenOperation(this IDbCommand command,
             QueryField queryField,
-            DbField dbField = null)
+            DbField? dbField = null)
         {
             var values = (queryField?.Parameter.Value as System.Collections.IEnumerable)?
                         .WithType<object>()

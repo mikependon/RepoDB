@@ -22,7 +22,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -44,7 +44,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -65,8 +65,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object Max(Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -88,7 +88,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -109,8 +109,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object Max(Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -132,7 +132,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Expression<Func<TEntity, object>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -154,7 +154,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -175,8 +175,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object Max(Expression<Func<TEntity, object>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public object Max(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -219,8 +219,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public object Max(Expression<Func<TEntity, object>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -242,7 +242,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -264,7 +264,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -285,8 +285,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -308,7 +308,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -329,8 +329,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -352,7 +352,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -374,7 +374,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -395,8 +395,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -418,7 +418,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -439,8 +439,8 @@ namespace RepoDb
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The max value of the target field.</returns>
         public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null)
         {
@@ -467,7 +467,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -492,7 +492,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -516,8 +516,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -542,7 +542,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -566,8 +566,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -592,7 +592,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Expression<Func<TEntity, object>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -617,7 +617,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -641,8 +641,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Expression<Func<TEntity, object>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -667,7 +667,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -691,8 +691,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<object> MaxAsync(Expression<Func<TEntity, object>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -717,7 +717,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -742,7 +742,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -766,8 +766,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -792,7 +792,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -816,8 +816,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -842,7 +842,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -867,7 +867,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -891,8 +891,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -917,7 +917,7 @@ namespace RepoDb
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -941,8 +941,8 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
         public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             string traceKey = TraceKeys.Max,
 			IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

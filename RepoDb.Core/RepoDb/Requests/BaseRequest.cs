@@ -19,7 +19,7 @@ namespace RepoDb.Requests
         public BaseRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             Name = name;
             Connection = connection;

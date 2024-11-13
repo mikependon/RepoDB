@@ -23,7 +23,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity>(object what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -60,7 +60,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity, TWhat>(TWhat what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity>(Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -132,7 +132,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity>(QueryField where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -168,7 +168,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity>(IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -204,7 +204,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TEntity>(QueryGroup where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
             where TEntity : class
@@ -245,7 +245,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity>(object what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -285,7 +285,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity, TWhat>(TWhat what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -324,7 +324,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -363,7 +363,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity>(QueryField where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -402,7 +402,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity>(IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -441,7 +441,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TEntity>(QueryGroup where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -485,7 +485,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists<TWhat>(string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
         {
@@ -522,7 +522,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists(string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
         {
@@ -559,7 +559,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists(string tableName,
             QueryField where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
         {
@@ -596,7 +596,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists(string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
         {
@@ -633,7 +633,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public bool Exists(string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null)
         {
@@ -676,7 +676,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync<TWhat>(string tableName,
             TWhat what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -716,7 +716,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync(string tableName,
             object what,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -756,7 +756,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync(string tableName,
             QueryField where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -796,7 +796,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync(string tableName,
             IEnumerable<QueryField> where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)
@@ -836,7 +836,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public async Task<bool> ExistsAsync(string tableName,
             QueryGroup where,
-            string hints = null,
+            string? hints = null,
 			string traceKey = TraceKeys.Exists,
             IDbTransaction? transaction = null,
             CancellationToken cancellationToken = default)

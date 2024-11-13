@@ -35,12 +35,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -71,12 +71,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -106,13 +106,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static object Average<TEntity>(this IDbConnection connection,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -143,12 +143,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -178,13 +178,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static object Average<TEntity>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -215,12 +215,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -251,12 +251,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -286,13 +286,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static object Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -323,12 +323,12 @@ namespace RepoDb
         public static object Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -358,13 +358,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static object Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity>(connection: connection,
@@ -394,13 +394,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         internal static object AverageInternal<TEntity>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -447,12 +447,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -484,12 +484,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -520,13 +520,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -558,12 +558,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -594,13 +594,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -632,12 +632,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -669,12 +669,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -705,13 +705,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -743,12 +743,12 @@ namespace RepoDb
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -779,13 +779,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static TResult Average<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             return AverageInternal<TEntity, TResult>(connection: connection,
@@ -816,13 +816,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         internal static TResult AverageInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -873,12 +873,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -912,12 +912,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -950,13 +950,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -990,12 +990,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1028,13 +1028,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1068,12 +1068,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1107,12 +1107,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1145,13 +1145,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1185,12 +1185,12 @@ namespace RepoDb
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1223,13 +1223,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1262,13 +1262,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         internal static Task<object> AverageAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
-            string hints = null,
+            string? hints = null,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1318,12 +1318,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1358,12 +1358,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1397,13 +1397,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1438,12 +1438,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1477,13 +1477,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1518,12 +1518,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1558,12 +1558,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1597,13 +1597,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1638,12 +1638,12 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1677,13 +1677,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         public static Task<TResult> AverageAsync<TEntity, TResult>(this IDbConnection connection,
             Expression<Func<TEntity, TResult>> field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1717,13 +1717,13 @@ namespace RepoDb
         /// <returns>The average value of the target field.</returns>
         internal static Task<TResult> AverageAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
-            QueryGroup where = null,
+            QueryGroup? where = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
-            string hints = null,
+            string? hints = null,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1776,12 +1776,12 @@ namespace RepoDb
             string tableName,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal(connection: connection,
                 tableName: tableName,
@@ -1812,13 +1812,13 @@ namespace RepoDb
         public static object Average(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal(connection: connection,
                 tableName: tableName,
@@ -1850,12 +1850,12 @@ namespace RepoDb
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal(connection: connection,
                 tableName: tableName,
@@ -1886,13 +1886,13 @@ namespace RepoDb
         public static object Average(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal(connection: connection,
                 tableName: tableName,
@@ -1923,13 +1923,13 @@ namespace RepoDb
         internal static object AverageInternal(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new AverageRequest(tableName,
@@ -1976,12 +1976,12 @@ namespace RepoDb
             string tableName,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -2013,13 +2013,13 @@ namespace RepoDb
         public static TResult Average<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -2052,12 +2052,12 @@ namespace RepoDb
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -2089,13 +2089,13 @@ namespace RepoDb
         public static TResult Average<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             return AverageInternal<TResult>(connection: connection,
                 tableName: tableName,
@@ -2127,13 +2127,13 @@ namespace RepoDb
         internal static TResult AverageInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             // Variables
             var request = new AverageRequest(tableName,
@@ -2184,12 +2184,12 @@ namespace RepoDb
             string tableName,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal(connection: connection,
@@ -2223,13 +2223,13 @@ namespace RepoDb
         public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal(connection: connection,
@@ -2264,12 +2264,12 @@ namespace RepoDb
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal(connection: connection,
@@ -2303,13 +2303,13 @@ namespace RepoDb
         public static Task<object> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal(connection: connection,
@@ -2343,13 +2343,13 @@ namespace RepoDb
         internal static Task<object> AverageAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables
@@ -2399,12 +2399,12 @@ namespace RepoDb
             string tableName,
             Field field,
             object where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal<TResult>(connection: connection,
@@ -2439,13 +2439,13 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryField where = null,
-            string hints = null,
+            QueryField? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal<TResult>(connection: connection,
@@ -2481,12 +2481,12 @@ namespace RepoDb
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
-            string hints = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal<TResult>(connection: connection,
@@ -2521,13 +2521,13 @@ namespace RepoDb
         public static Task<TResult> AverageAsync<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             return AverageAsyncInternal<TResult>(connection: connection,
@@ -2562,13 +2562,13 @@ namespace RepoDb
         internal static Task<TResult> AverageAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
-            QueryGroup where = null,
-            string hints = null,
+            QueryGroup? where = null,
+            string? hints = null,
             int? commandTimeout = null,
             string traceKey = TraceKeys.Average,
             IDbTransaction? transaction = null,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null,
+            IStatementBuilder? statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
             // Variables

@@ -27,7 +27,7 @@ namespace RepoDb
         public IEnumerable<TEntity> QueryAll<TEntity>(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null)
@@ -72,7 +72,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null)
@@ -123,7 +123,7 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null,
@@ -171,7 +171,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null,
@@ -222,7 +222,7 @@ namespace RepoDb
         public IEnumerable<dynamic> QueryAll(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null)
@@ -272,7 +272,7 @@ namespace RepoDb
         public async Task<IEnumerable<dynamic>> QueryAllAsync(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
-            string hints = null,
+            string? hints = null,
 			string? cacheKey = null,
 			string traceKey = TraceKeys.QueryAll,
             IDbTransaction? transaction = null,

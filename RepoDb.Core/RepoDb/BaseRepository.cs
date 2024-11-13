@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using RepoDb.Interfaces;
-using System.Threading.Tasks;
-using RepoDb.Enumerations;
-using System;
 using System.Dynamic;
 using System.Threading;
+using System.Threading.Tasks;
+using RepoDb.Enumerations;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -173,7 +173,7 @@ namespace RepoDb
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
@@ -202,7 +202,7 @@ namespace RepoDb
             ICache cache,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace? trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder? statementBuilder = null)
         {
             DbRepository = new DbRepository<TDbConnection>(connectionString,
                 commandTimeout,
