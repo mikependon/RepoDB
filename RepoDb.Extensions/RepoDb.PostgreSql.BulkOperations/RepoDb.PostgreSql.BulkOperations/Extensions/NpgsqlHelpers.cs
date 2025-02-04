@@ -424,10 +424,37 @@ namespace RepoDb
             var bulkInsertIndex = -1;
             var index = 0;
 
+            var targetPropertyType = PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo.Name == identityField.Name);
+            var propType = targetPropertyType.PropertyInfo.PropertyType;
+
             foreach (var result in identityResults)
             {
                 var entity = entityList[result.Index == bulkInsertIndex ? index : result.Index];
-                func(entity, result.Identity);
+                object identityValue = result.Identity;
+
+                //When using Return Identity operations the IdentityResult class returns the Identity as long
+                //even though the Identity can be of type short or int so we need to convert it to the correct type
+                if (identityValue is long longValue)
+                {
+                    if (propType == typeof(short))
+                    {
+                        identityValue = Convert.ToInt16(longValue);
+                    }
+                    else if (propType == typeof(int))
+                    {
+                        identityValue = Convert.ToInt32(longValue);
+                    }
+                    else if (propType == typeof(short?))
+                    {
+                        identityValue = (short?)Convert.ToInt16(longValue);
+                    }
+                    else if (propType == typeof(int?))
+                    {
+                        identityValue = (int?)Convert.ToInt32(longValue);
+                    }
+                }
+
+                func(entity, identityValue);
                 index++;
             }
         }
