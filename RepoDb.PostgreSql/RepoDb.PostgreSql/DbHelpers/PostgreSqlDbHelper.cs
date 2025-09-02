@@ -54,39 +54,26 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private string GetCommandText()
         {
-            return @"
-                SELECT C.column_name
-                    , CAST((CASE WHEN C.column_name = TMP.column_name THEN 1 ELSE 0 END) AS BOOLEAN) AS IsPrimary
-                    , CASE WHEN C.is_identity = 'YES' OR POSITION('NEXTVAL' IN UPPER(C.column_default)) >= 1 THEN
-                        true
-                      ELSE
-                        false
-                      END AS IsIdentity
-                    , CAST(C.is_nullable AS BOOLEAN) AS IsNullable
-                    , C.data_type AS DataType
-                    , CASE WHEN C.column_default IS NOT NULL THEN
-                        true
-                      ELSE
-                        false
-                      END AS HasDefaultValue
-                FROM information_schema.columns C
-                LEFT JOIN
-                (
-                    SELECT C.table_schema
-                        , C.table_name
-                        , C.column_name
-                        , C.column_default
-                    FROM information_schema.table_constraints TC
-                    JOIN information_schema.constraint_column_usage AS CCU USING (constraint_schema, constraint_name)
-                    JOIN information_schema.columns AS C ON C.table_schema = TC.constraint_schema
-                        AND TC.table_name = C.table_name
-                        AND CCU.column_name = C.column_name
-                    WHERE TC.constraint_type = 'PRIMARY KEY'
-                ) TMP ON TMP.table_schema = C.table_schema
-                    AND TMP.table_name = C.table_name
-                    AND TMP.column_name = C.column_name
-                WHERE C.table_name = @TableName
-                    AND C.table_schema = @Schema;";
+            return """
+                   SELECT C.column_name,
+                       COALESCE(I.indisprimary, FALSE) AS IsPrimary,
+                       CASE
+                           WHEN C.is_identity = 'YES'
+                                OR POSITION('NEXTVAL' IN UPPER(C.column_default)) >= 1 THEN TRUE
+                           ELSE FALSE
+                       END AS IsIdentity,
+                       CAST(C.is_nullable AS BOOLEAN) AS IsNullable,
+                       C.data_type AS DataType,
+                       CASE
+                           WHEN C.column_default IS NOT NULL THEN TRUE
+                           ELSE FALSE
+                       END AS HasDefaultValue
+                   FROM information_schema.columns C
+                   LEFT JOIN pg_index I ON I.indrelid = (quote_ident(C.table_schema) || '.' || quote_ident(C.table_name))::regclass
+                   AND C.ordinal_position = ANY (I.indkey)
+                   WHERE C.table_name = @TableName
+                     AND C.table_schema = @Schema;
+                   """;
         }
 
         /// <summary>
