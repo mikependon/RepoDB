@@ -1,49 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<Title>RepoDb.SqlServer.BulkOperations</Title>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<Version>0.0.1</Version>
-		<FileVersion>0.0.1</FileVersion>
-		<AssemblyVersion>0.0.1</AssemblyVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
-		<PackageTags>orm hybrid-orm micro-orm sqlserver bulkoperations</PackageTags>
-		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
-		<PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Compile Remove="System.Data.SqlClient\**" />
-		<EmbeddedResource Remove="System.Data.SqlClient\**" />
-		<None Remove="System.Data.SqlClient\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="RepoDb" Version="0.0.1" />
-		<PackageReference Include="RepoDb.SqlServer" Version="0.0.1" />
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\..\..\LICENSE.txt">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-		<ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
-	</ItemGroup>
-
-	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\..\RepoDb.NuGet\Packages\$(Version)" />
-	</Target>
-
+  <PropertyGroup>
+    <Title>RepoDb.SqlServer.BulkOperations</Title>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
+    <PackageTags>orm hybrid-orm micro-orm sqlserver bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="System.Data.SqlClient\**" />
+    <EmbeddedResource Remove="System.Data.SqlClient\**" />
+    <None Remove="System.Data.SqlClient\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Async" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
+  </ItemGroup>
 </Project>

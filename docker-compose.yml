@@ -1,0 +1,23 @@
+services:
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 127.0.0.1:41433:1433
+    environment:
+      ACCEPT_EULA: true
+      MSSQL_SA_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+
+  postgresql:
+    image: postgres:latest
+    ports:
+      - 127.0.0.1:45432:5432
+    environment:
+      POSTGRES_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 127.0.0.1:43306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2

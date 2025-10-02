@@ -1,42 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<Title>RepoDb.PostgreSql</Title>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<Version>0.0.1</Version>
-		<AssemblyVersion>0.0.1</AssemblyVersion>
-		<FileVersion>0.0.1</FileVersion>
-		<Description>A hybrid .NET ORM library for PostgreSQL.</Description>
-		<PackageTags>orm hybrid-orm micro-orm postgresql npgsql</PackageTags>
-		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
-		<PackageReleaseNotes>http://repodb.net/release/postgresql</PackageReleaseNotes>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Npgsql" Version="7.0.6" />
-		<PackageReference Include="RepoDb" Version="0.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\..\LICENSE.txt">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
-
-	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\RepoDb.NuGet\Packages\$(Version)" />
-	</Target>
-
+  <PropertyGroup>
+    <Title>RepoDb.PostgreSql</Title>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid .NET ORM library for PostgreSQL.</Description>
+    <PackageTags>orm hybrid-orm micro-orm postgresql npgsql</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/postgresql</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+  </ItemGroup>
 </Project>

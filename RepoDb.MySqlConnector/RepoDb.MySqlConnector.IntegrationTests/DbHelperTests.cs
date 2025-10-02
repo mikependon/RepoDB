@@ -43,8 +43,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
-	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                        TABLE_NAME = @TableName
+                        AND TABLE_SCHEMA = @TableSchema
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable", TableSchema = connection.Database }))
                 {
                     var fieldCount = 0;
 
@@ -120,8 +121,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
-	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                        TABLE_NAME = @TableName
+                        AND TABLE_SCHEMA = @TableSchema
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable", TableSchema = connection.Database }))
                 {
                     var fieldCount = 0;
 

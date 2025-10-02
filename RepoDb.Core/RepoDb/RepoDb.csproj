@@ -1,60 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<Title>RepoDB</Title>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<Version>0.0.1</Version>
-		<AssemblyVersion>0.0.1</AssemblyVersion>
-		<FileVersion>0.0.1</FileVersion>
-		<Description>A hybrid ORM library for .NET.</Description>
-		<PackageTags>orm hybrid-orm micro-orm</PackageTags>
-		<PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
-		<PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Compile Remove="Reflection\DataCommand.cs" />
-		<Compile Remove="Reflection\DelegateCache.cs" />
-		<Compile Remove="Reflection\DelegateFactory.cs" />
-		<Compile Remove="Reflection\Delegates.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="System.Data.Common" Version="4.3.0" />
-		<PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
-		<PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
-		<PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-		<PackageReference Include="System.Memory" Version="4.5.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\..\LICENSE.txt">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>RepoDb.UnitTests</_Parameter1>
-		</AssemblyAttribute>
-	</ItemGroup>
-
-	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\RepoDb.NuGet\Packages\$(Version)" />
-	</Target>
-
+  <PropertyGroup>
+    <Title>RepoDB</Title>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid ORM library for .NET.</Description>
+    <PackageTags>orm hybrid-orm micro-orm</PackageTags>
+    <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Disable some nullability for netstandard2.0, as some smart annotations are not available there -->
+    <NoWarn Condition="'$(TargetFramework)' == 'netstandard2.0'">$(NoWarn);CS8604</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Reflection\DataCommand.cs" />
+    <Compile Remove="Reflection\DelegateCache.cs" />
+    <Compile Remove="Reflection\DelegateFactory.cs" />
+    <Compile Remove="Reflection\Delegates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="System.Data.Common" />
+    <PackageReference Include="System.Dynamic.Runtime" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="System.Reflection.Emit" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" />
+    <PackageReference Include="System.Reflection.TypeExtensions" />
+    <PackageReference Include="System.Text.RegularExpressions" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="RepoDb.UnitTests" />
+  </ItemGroup>
 </Project>
