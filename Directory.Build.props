@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Authors>Michael Camara Pendon and others</Authors>
+    <Authors>Michael Camara Pendon and Open-Source Software Contributors</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Version Condition="'$(Version)' == ''">0.0.1-dev</Version>

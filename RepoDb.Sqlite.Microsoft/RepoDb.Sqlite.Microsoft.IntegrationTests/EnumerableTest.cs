@@ -20,7 +20,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             GlobalConfiguration
                 .Setup(new()
                 {
-                    ConversionType = Enumerations.ConversionType.Automatic
+                    ConversionType = Enumerations.ConversionType.Default
                 })
                 .UseSqlite();
         }
@@ -29,7 +29,6 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         public void Cleanup()
         {
             Database.Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Default;
         }
 
         #region List
