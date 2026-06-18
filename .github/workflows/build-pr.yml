@@ -1,0 +1,69 @@
+name: Build & Run Tests for PR
+on: 
+  pull_request:
+
+env:
+  REPODB_SQLSERVER_CONSTR_MASTER: "Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
+  REPODB_SQLSERVER_CONSTR_REPODB: "Server=tcp:127.0.0.1,41433;Database=RepoDb;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
+  REPODB_SQLSERVER_CONSTR_REPODBTEST: "Server=tcp:127.0.0.1,41433;Database=RepoDbTest;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
+  REPODB_POSTGRESQL_CONSTR_POSTGRESDB: "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_POSTGRESQL_CONSTR: "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_POSTGRESQL_CONSTR_BULK: "Server=127.0.0.1;Port=45432;Database=RepoDbBulk;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_MYSQL_CONSTR_SYS: "Server=127.0.0.1;Port=43306;Database=sys;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_MYSQL_CONSTR_REPODB: "Server=127.0.0.1;Port=43306;Database=RepoDb;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_MYSQL_CONSTR_REPODBTEST: "Server=127.0.0.1;Port=43306;Database=RepoDbTest;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Services. See docker-compose.yml
+    services:
+        mssql:
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          ports:
+            - 127.0.0.1:41433:1433
+          env:
+            ACCEPT_EULA: true
+            MSSQL_SA_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+      
+        postgresql:
+          image: postgres:latest
+          ports:
+            - 127.0.0.1:45432:5432
+          env:
+            POSTGRES_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+      
+        mysql:
+          image: mysql:latest
+          ports:
+            - 127.0.0.1:43306:3306
+          env:
+            MYSQL_ROOT_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+
+      - name: build
+        run: dotnet build -c release
+        
+      - name: test
+        run: dotnet test -c release -f net8.0 --no-build -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false
+
+      - name: pack packages
+        run: dotnet pack -c release -p Version="1.14.0-dev-pr-${{ github.run_number }}" -o release RepoDb.Core/RepoDb.All.sln
+
+      - name: Package nupkg files
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: release/*nupkg

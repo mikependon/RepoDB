@@ -382,7 +382,7 @@ namespace RepoDb.Extensions
             if (expression.Arguments.Count > 0)
             {
                 return Activator.CreateInstance(expression.Type,
-                    expression.Arguments.Select(arg => arg.GetValue()));
+                    expression.Arguments.Select(arg => arg.GetValue()).ToArray());
             }
             else
             {

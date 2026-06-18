@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Interfaces;
-using RepoDb.Attributes;
-using RepoDb.UnitTests.CustomObjects;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Attributes;
+using RepoDb.Interfaces;
 using RepoDb.Options;
+using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Mappers
 {

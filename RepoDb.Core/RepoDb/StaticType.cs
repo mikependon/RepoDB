@@ -1,17 +1,17 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Attributes.Parameter;
-using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Options;
-using RepoDb.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Reflection;
+using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Options;
+using RepoDb.Types;
 
 namespace RepoDb
 {
@@ -95,8 +95,8 @@ namespace RepoDb
         /// Gets a type of the <see cref="System.DateTimeOffset"/> .NET CLR type.
         /// </summary>
         public static Type DateTimeOffset => typeof(DateTimeOffset);
-        
-        #if NET6_0_OR_GREATER
+
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Gets a type of the <see cref="System.DateOnly"/> .NET CLR type.
         /// </summary>
@@ -105,8 +105,8 @@ namespace RepoDb
         /// Gets a type of the <see cref="System.TimeOnly"/> .NET CLR type.
         /// </summary>
         public static Type TimeOnly => typeof(TimeOnly);
-        #endif
-        
+#endif
+
         /// <summary>
         /// Gets a type of the <see cref="System.Data.Common.DbCommand"/> .NET CLR type.
         /// </summary>
@@ -376,5 +376,10 @@ namespace RepoDb
         /// Gets a type of the <see cref="ulong"/> .NET CLR type.
         /// </summary>
         public static Type UInt64 => typeof(ulong);
+
+        /// <summary>
+        /// Gets a type of the <see cref="sbyte"/> .NET CLR type.
+        /// </summary>
+        public static Type SByte => typeof(sbyte);
     }
 }

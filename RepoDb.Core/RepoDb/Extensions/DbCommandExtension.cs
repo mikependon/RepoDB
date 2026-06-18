@@ -885,6 +885,12 @@ namespace RepoDb.Extensions
             {
                 return AutomaticConvertGuidToString(value);
             }
+#if NET6_0_OR_GREATER
+            else if (fromType == StaticType.DateOnly && targetType == StaticType.DateTime)
+            {
+                return AutomaticConvertDateOnlyToDateTime(value);
+            }
+#endif
             else
             {
                 return (value != DBNull.Value) ? Convert.ChangeType(value, targetType) : Activator.CreateInstance(targetType);
@@ -915,6 +921,10 @@ namespace RepoDb.Extensions
         private static object AutomaticConvertGuidToString(object value) =>
             value?.ToString();
 
+#if NET6_0_OR_GREATER
+        private static object AutomaticConvertDateOnlyToDateTime(object value) =>
+            (value is DateOnly dateOnly ? dateOnly.ToDateTime(default(TimeOnly)) : null);
+#endif
         #endregion
     }
 }
