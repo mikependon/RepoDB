@@ -1,5 +1,5 @@
-﻿using Npgsql;
-using System;
+﻿using System;
+using Npgsql;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -13,12 +13,20 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
-            // Set the connection string
-            ConnectionStringForPosgres = Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB", EnvironmentVariableTarget.Process) ??
-                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
-            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process)??
-                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;";
-            
+            // Master connection
+            ConnectionStringForPostgres =
+                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR_POSTGRESDB")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB")
+                //?? "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
+
+            // RepoDb connection
+            ConnectionStringForRepoDb =
+                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR_BULK")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_BULK")
+                //?? "Server=127.0.0.1;Port=45432;Database=RepoDbBulk;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? "Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=Password123;";
+
             // Initialize PostgreSql
             GlobalConfiguration.Setup().UsePostgreSql();
 
@@ -32,7 +40,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used for Postgres database.
         /// </summary>
-        public static string ConnectionStringForPosgres { get; private set; }
+        public static string ConnectionStringForPostgres { get; private set; }
 
         /// <summary>
         /// Gets or sets the connection string to be used.
@@ -46,12 +54,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForPosgres))
+            using (var connection = new NpgsqlConnection(ConnectionStringForPostgres))
             {
-                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
+                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDbBulk';");
                 if (recordCount <= 0)
                 {
-                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDb""
+                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDbBulk""
                         WITH OWNER = ""postgres""
                         ENCODING = ""UTF8""
                         CONNECTION LIMIT = -1;");

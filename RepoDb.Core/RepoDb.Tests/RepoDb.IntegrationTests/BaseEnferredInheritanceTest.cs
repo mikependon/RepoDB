@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -100,6 +100,7 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionInsertAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
@@ -192,6 +193,7 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionMergeAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
@@ -217,6 +219,7 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionMergeAllForInheritedWithNonEmptyTables()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
@@ -344,6 +347,7 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionUpdateAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 

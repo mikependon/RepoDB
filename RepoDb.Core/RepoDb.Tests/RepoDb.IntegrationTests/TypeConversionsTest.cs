@@ -1,10 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Setup;
-using System;
-using Microsoft.Data.SqlClient;
-using System.Linq;
 
 namespace RepoDb.IntegrationTests
 {
@@ -134,6 +135,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromStringToDecimal()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -147,6 +149,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromStringToFloat()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -263,6 +266,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromDecimalToString()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -306,6 +310,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromRealToString()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -424,6 +429,298 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+
+        enum Direction
+        {
+            None,
+            North,
+            East,
+            South,
+            West
+        }
+        enum Direction2
+        {
+            None,
+            North,
+            East,
+            South,
+            West
+        }
+
+        enum Direction3
+        {
+            None,
+            North,
+            East,
+            South,
+            West
+        }
+
+        enum Direction4
+        {
+            None,
+            North,
+            East,
+            South,
+            West
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromIntToEnum()
+        {
+            using var _ = new CultureScope("EN-US");
+
+            // With automatic conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction>("SELECT CONVERT(INT, 1) AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction>("SELECT CONVERT(INT, 0) AS Value;").First();
+                var data10 = connection.ExecuteQuery<Direction>("SELECT CONVERT(INT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction.North, data);
+                Assert.AreEqual(Direction.None, data0);
+                Assert.AreEqual((Direction)10, data10);
+            }
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.UseDefault });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction2>("SELECT CONVERT(INT, 1) AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction2>("SELECT CONVERT(INT, 0) AS Value;").First();
+                var data10 = connection.ExecuteQuery<Direction2>("SELECT CONVERT(INT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction2.North, data);
+                Assert.AreEqual(Direction2.None, data0);
+                Assert.AreEqual(Direction2.None, data10);
+            }
+
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.ThrowError });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction3>("SELECT CONVERT(INT, 1) AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction3>("SELECT CONVERT(INT, 0) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction3.North, data);
+                Assert.AreEqual(Direction3.None, data0);
+
+                try
+                {
+                    var data10 = connection.ExecuteQuery<Direction3>("SELECT CONVERT(INT, 10) AS Value;").First();
+                    Assert.Fail("Should have failed");
+                }
+                catch (InvalidEnumArgumentException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("The value of argument 'value' (10) is invalid for Enum type 'Direction3'. (Parameter 'value')", e.Message);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToEnum()
+        {
+            using var _ = new CultureScope("EN-US");
+
+            // With automatic conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction>("SELECT 'North' AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction>("SELECT 'None' AS Value;").First();
+                var data3 = connection.ExecuteQuery<Direction>("SELECT '3' AS Value;").First();
+                var data9 = connection.ExecuteQuery<Direction>("SELECT '9' AS Value;").First();
+                try
+                {
+                    var data10 = connection.ExecuteQuery<Direction>("SELECT 'Center' AS Value;").First();
+                    Assert.Fail("Should have failed Direction/3");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                }
+
+                // Assert
+                Assert.AreEqual(Direction.North, data);
+                Assert.AreEqual(Direction.South, data3);
+                Assert.AreEqual(Direction.None, data0);
+                Assert.AreEqual((Direction)9, data9);
+            }
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.UseDefault });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction2>("SELECT 'North' AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction2>("SELECT 'None' AS Value;").First();
+                var data3 = connection.ExecuteQuery<Direction2>("SELECT '3' AS Value;").First();
+                var data9 = connection.ExecuteQuery<Direction2>("SELECT '9' AS Value;").First();
+                var data10 = connection.ExecuteQuery<Direction2>("SELECT 'Center' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction2.North, data);
+                Assert.AreEqual(Direction2.None, data0);
+                Assert.AreEqual(Direction2.South, data3);
+                Assert.AreEqual(Direction2.None, data9);
+                Assert.AreEqual(Direction2.None, data10);
+            }
+
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.ThrowError });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction3>("SELECT 'North' AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction3>("SELECT 'None' AS Value;").First();
+
+                try
+                {
+                    var data10 = connection.ExecuteQuery<Direction3>("SELECT 'Center' AS Value;").First();
+                    Assert.Fail("Should have failed Direction3/Center");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                }
+
+                try
+                {
+                    var data9 = connection.ExecuteQuery<Direction3>("SELECT '9' AS Value;").First();
+                    Assert.Fail("Should have failed Direction3/9");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                }
+
+                // Assert
+                Assert.AreEqual(Direction3.North, data);
+                Assert.AreEqual(Direction3.None, data0);
+            }
+
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.ThrowError });
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction4>("SELECT 'North' AS Value;").First();
+                var data0 = connection.ExecuteQuery<Direction4>("SELECT 'None' AS Value;").First();
+                var data3 = connection.ExecuteQuery<Direction4>("SELECT '3' AS Value;").First();
+                try
+                {
+                    var data10 = connection.ExecuteQuery<Direction4>("SELECT 'Center' AS Value;").First();
+                    Assert.Fail("Should have failed Direction/3");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was Center.", e.Message.Replace("\r", ""));
+                }
+
+                try
+                {
+                    var data9 = connection.ExecuteQuery<Direction4>("SELECT '9' AS Value;").First();
+                    Assert.Fail("Should have failed Direction/9");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction4)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction4 (Parameter 'value')\nActual value was 9.", e.Message.Replace("\r", ""));
+                }
+
+                // Assert
+                Assert.AreEqual(Direction4.North, data);
+                Assert.AreEqual(Direction4.South, data3);
+                Assert.AreEqual(Direction4.None, data0);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToEnumFlags()
+        {
+            using var _ = new CultureScope("EN-US");
+
+            // With automatic conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction>("SELECT 'North, East' AS Value;").First();
+                var data2 = connection.ExecuteQuery<Direction>("SELECT 'North, West' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction.South, data); // Flag behavior
+                Assert.AreEqual(Direction.North | Direction.West, data2); // Flag behavior
+            }
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.UseDefault });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction2>("SELECT 'North, East' AS Value;").First();
+                var data2 = connection.ExecuteQuery<Direction2>("SELECT 'North, West' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Direction2.South, data); // Flag behavior
+                Assert.AreEqual(Direction2.None, data2); // Not defined
+            }
+
+
+            GlobalConfiguration.Setup(new() { ConversionType = ConversionType.Default, EnumHandling = EnumHandling.ThrowError });
+
+            // With default conversion
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Direction3>("SELECT 'North, East' AS Value;").First();
+
+                try
+                {
+                    var data2 = connection.ExecuteQuery<Direction3>("SELECT 'North, West' AS Value;").First();
+                    Assert.Fail("Should have failed Direction3/North, West");
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    Assert.IsTrue(e.Message.Contains(nameof(Direction3)));
+
+                    // We are in an EN-US scope so the message should match
+                    Assert.AreEqual("Invalid value for Direction3 (Parameter 'value')\nActual value was North, West.", e.Message.Replace("\r", ""));
+                }
+
+                Assert.AreEqual(Direction3.South, data);
+            }
+        }
+
         #endregion
 
         #region Query
@@ -521,6 +818,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToDecimal()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToDecimalClass
             {
@@ -556,6 +854,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToFloat()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToFloatClass
             {
@@ -626,6 +925,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToMoney()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToMoneyClass
             {
@@ -661,6 +961,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToNumeric()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToNumericClass
             {
@@ -696,6 +997,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToReal()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToRealClass
             {
@@ -766,6 +1068,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToSmallMoney()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToSmallMoneyClass
             {

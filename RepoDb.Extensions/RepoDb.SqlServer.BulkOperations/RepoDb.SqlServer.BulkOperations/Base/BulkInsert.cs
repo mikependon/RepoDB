@@ -1,5 +1,4 @@
-﻿using RepoDb.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 
 namespace RepoDb
@@ -30,18 +30,20 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         private static int BulkInsertInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null)
             where TEntity : class
         {
             // Validate
@@ -127,7 +129,8 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
                     using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
@@ -139,7 +142,7 @@ namespace RepoDb
 
                     // Drop the table after used
                     sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    connection.ExecuteNonQuery(sql, transaction: transaction);
+                    connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
                 }
 
                 CommitTransaction(transaction, hasTransaction);
@@ -153,7 +156,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -173,11 +176,11 @@ namespace RepoDb
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null)
         {
             // Validate
             if (!reader.HasRows)
@@ -252,7 +255,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -272,19 +275,21 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Validate
             if (dataTable?.Rows.Count <= 0)
@@ -372,7 +377,8 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
                         var column = dataTable.Columns[identityDbField.Name];
@@ -389,7 +395,7 @@ namespace RepoDb
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        connection.ExecuteNonQuery(sql, transaction: transaction);
+                        connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
                     }
                 }
 
@@ -404,7 +410,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -428,19 +434,21 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> BulkInsertAsyncInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -532,7 +540,8 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
@@ -542,7 +551,7 @@ namespace RepoDb
 
                     // Drop the table after used
                     sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
                 }
 
                 CommitTransaction(transaction, hasTransaction);
@@ -556,11 +565,11 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
-        
+
         /// <summary>
         ///
         /// </summary>
@@ -577,11 +586,11 @@ namespace RepoDb
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -658,7 +667,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -678,20 +687,22 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -749,7 +760,7 @@ namespace RepoDb
 
                 // Pseudo temp table
                 var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
-                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection, 
+                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
                     tableName,
                     usePhysicalPseudoTempTable,
                     transaction,
@@ -782,7 +793,8 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
                         var column = dataTable.Columns[identityDbField.Name];
@@ -799,7 +811,7 @@ namespace RepoDb
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
                     }
                 }
 
@@ -814,13 +826,13 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
 
         #endregion
-        
+
         private static string CreateBulkInsertTempTableIfNecessary<TSqlTransaction>(
             IDbConnection connection,
             string tableName,
@@ -828,16 +840,17 @@ namespace RepoDb
             TSqlTransaction transaction,
             bool withPseudoExecution,
             IDbSetting dbSetting,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            ITrace? trace = null)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) 
+            if (withPseudoExecution == false)
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
-            connection.ExecuteNonQuery(sql, transaction: transaction);
+            connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
             return tempTableName;
         }
@@ -848,17 +861,18 @@ namespace RepoDb
             TSqlTransaction transaction,
             bool withPseudoExecution,
             IDbSetting dbSetting,
-            IEnumerable<Field> fields, 
-            CancellationToken cancellationToken)
+            IEnumerable<Field> fields,
+            CancellationToken cancellationToken,
+            ITrace? trace = null)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) 
+            if (withPseudoExecution == false)
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
-            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
             return tempTableName;
         }

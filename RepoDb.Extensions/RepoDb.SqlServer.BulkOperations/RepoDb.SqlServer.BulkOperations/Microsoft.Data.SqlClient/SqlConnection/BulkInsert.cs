@@ -1,10 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -32,14 +33,14 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal<TEntity>(connection: connection,
@@ -74,14 +75,14 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal(connection: connection,
@@ -111,11 +112,11 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal(connection: connection,
@@ -147,11 +148,11 @@ namespace RepoDb
         public static int BulkInsert(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null)
         {
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
@@ -182,14 +183,14 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal(connection: connection,
@@ -226,14 +227,14 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
         {
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
@@ -271,14 +272,14 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -316,14 +317,14 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -356,11 +357,11 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -374,7 +375,7 @@ namespace RepoDb
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
-        
+
         /// <summary>
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
@@ -393,14 +394,14 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -438,14 +439,14 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -483,11 +484,11 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -521,14 +522,14 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -568,14 +569,14 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -616,20 +617,20 @@ namespace RepoDb
         internal static int BulkInsertInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class =>
             BulkInsertInternalBase(connection,
                 tableName,
                 entities,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
@@ -652,16 +653,16 @@ namespace RepoDb
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null) =>
+            SqlTransaction? transaction = null) =>
             BulkInsertInternalBase(connection,
                 tableName,
                 reader,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 bulkCopyTimeout,
                 batchSize,
                 transaction);
@@ -686,20 +687,20 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null) =>
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null) =>
             BulkInsertInternalBase(connection,
                 tableName,
                 dataTable,
                 rowState,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
@@ -726,32 +727,35 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkInsertAsyncInternalBase(connection,
                 tableName,
                 entities,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction,
+                trace,
                 cancellationToken);
 
         /// <summary>
@@ -770,17 +774,17 @@ namespace RepoDb
         internal static Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsyncInternalBase(connection,
                 tableName,
                 reader,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 bulkCopyTimeout,
                 batchSize,
                 transaction,
@@ -801,35 +805,38 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsyncInternalBase(connection,
                 tableName,
                 dataTable,
                 rowState,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction,
+                trace,
                 cancellationToken);
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -845,35 +852,38 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool isReturnIdentity = false,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var loadedEntities = await entities.ToListAsync(cancellationToken);
-            
+
             return await BulkInsertAsyncInternalBase(connection,
                 tableName,
                 loadedEntities,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction,
+                trace,
                 cancellationToken);
         }
 
