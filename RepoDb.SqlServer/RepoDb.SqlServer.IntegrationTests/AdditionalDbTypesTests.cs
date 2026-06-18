@@ -88,6 +88,55 @@ namespace RepoDb.SqlServer.IntegrationTests
             Assert.IsTrue((await connection.QueryAsync<DateOnlyTestData>(where: x => x.DateOnlyNullable == new DateOnly(2026, 1, 1), transaction: t)).Count() == 1);
         }
 
+        [TestMethod]
+        public async Task CompareValuesTests()
+        {
+            await using var connection = new SqlConnection(Database.ConnectionString);
+            await connection.OpenAsync();
+            await using var t = await connection.BeginTransactionAsync();
+
+            await connection.InsertAllAsync(
+                new DateOnlyTestData[] {
+                    new()
+                    {
+                        DateOnly = new DateOnly(2024,1,1),
+                        DateOnlyNullable = null,
+                    },
+                    new ()
+                    {
+                        DateOnly = new DateOnly(2025,1,1),
+                        DateOnlyNullable = new DateOnly(2026,1,1),
+                    }
+                },
+                transaction: t);
+
+
+            // This one used to fail with NotSupportedException as '!' was not interpreted correctly
+            var notEqualValue = new DateOnly(2024, 1, 1);
+            var n = await connection.UpdateAsync<DateOnlyTestData>(
+                new()
+                {
+                    DateOnly = new DateOnly(2027, 1, 1)
+                },
+                where: QueryGroup.Parse<DateOnlyTestData>(x => !(x.DateOnly == notEqualValue)),
+                fields: Field.Parse<DateOnlyTestData>(x => x.DateOnly),
+                transaction: t);
+
+            Assert.AreEqual(1, n);
+
+            // This one used to fail by silently ignoring the '!(x.DateOnlyNullable == notEqualValue2)' part
+            var notEqualValue2 = new DateOnly(2029, 1, 1);
+            var n2 = await connection.UpdateAsync<DateOnlyTestData>(
+                new()
+                {
+                    DateOnly = new DateOnly(2030, 1, 1)
+                },
+                where: QueryGroup.Parse<DateOnlyTestData>(x => x.DateOnlyNullable == null || !(x.DateOnlyNullable == notEqualValue2)),
+                fields: Field.Parse<DateOnlyTestData>(x => x.DateOnly),
+                transaction: t);
+            Assert.AreEqual(2, n2);
+        }
+
 
 
         public class DateOnlyTestData

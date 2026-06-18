@@ -1,8 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.SqlServer.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -12,6 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -606,6 +606,7 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="dbSetting"></param>
         /// <param name="isReturnIdentity"></param>
+        /// <param name="forceIdentityColumn"></param>
         /// <returns></returns>
         private static string GetBulkInsertSqlText(string tableName,
             string tempTableName,
@@ -614,7 +615,7 @@ namespace RepoDb
             string hints,
             IDbSetting dbSetting,
             bool isReturnIdentity,
-            bool keepIdentity)
+            bool forceIdentityColumn)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -627,13 +628,13 @@ namespace RepoDb
 
             // Insertable fields
             var insertableFields = fields
-                .Where(field => keepIdentity == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
+                .Where(field => forceIdentityColumn == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
 
             // Compose the statement
             builder.Clear();
 
             // SET IDENTITY_INSERT ON
-            if (keepIdentity)
+            if (forceIdentityColumn)
             {
                 builder
                     .WriteText("SET IDENTITY_INSERT")
@@ -703,7 +704,7 @@ namespace RepoDb
             builder.End();
 
             // SET IDENTITY_INSERT OFF (probably not necessary, but it won't hurt)
-            if (keepIdentity)
+            if (forceIdentityColumn)
             {
                 builder
                     .WriteText("SET IDENTITY_INSERT")
@@ -727,7 +728,7 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="dbSetting"></param>
         /// <param name="isReturnIdentity"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="forceIdentityColumn"></param>
         /// <returns></returns>
         private static string GetBulkMergeSqlText(string tableName,
             string tempTableName,
@@ -738,7 +739,7 @@ namespace RepoDb
             string hints,
             IDbSetting dbSetting,
             bool isReturnIdentity,
-            bool keepIdentity)
+            bool forceIdentityColumn)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -756,7 +757,7 @@ namespace RepoDb
 
             // Insertable fields
             var insertableFields = fields
-                .Where(field => keepIdentity == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
+                .Where(field => forceIdentityColumn == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
 
             // Updatable fields
             var updateableFields = fields
@@ -769,7 +770,7 @@ namespace RepoDb
             builder.Clear();
 
             // SET IDENTITY_INSERT ON
-            if (keepIdentity)
+            if (forceIdentityColumn)
             {
                 builder
                     .WriteText("SET IDENTITY_INSERT")
@@ -859,7 +860,7 @@ namespace RepoDb
             builder.End();
 
             // SET IDENTITY_INSERT OFF (probably not necessary, but it won't hurt)
-            if (keepIdentity)
+            if (forceIdentityColumn)
             {
                 builder
                     .WriteText("SET IDENTITY_INSERT")

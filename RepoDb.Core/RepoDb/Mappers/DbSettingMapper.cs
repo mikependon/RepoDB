@@ -1,8 +1,8 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Data;
+using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -77,7 +77,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         /// <param name="connection">The instance of <see cref="IDbConnection"/>.</param>
-        /// <returns>The instance of exising mapped <see cref="IDbSetting"/> object.</returns>
+        /// <returns>The instance of existing mapped <see cref="IDbSetting"/> object.</returns>
         public static IDbSetting Get<TDbConnection>(TDbConnection connection)
             where TDbConnection : IDbConnection
         {
