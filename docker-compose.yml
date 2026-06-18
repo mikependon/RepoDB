@@ -1,0 +1,23 @@
+services:
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    ports:
+      - 127.0.0.1:41433:1433
+    environment:
+      ACCEPT_EULA: true
+      MSSQL_SA_PASSWORD: RepoDB2026
+
+  postgresql:
+    image: postgres:latest
+    ports:
+      - 127.0.0.1:45432:5432
+    environment:
+      POSTGRES_PASSWORD: RepoDB2026
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 127.0.0.1:43306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: RepoDB2026

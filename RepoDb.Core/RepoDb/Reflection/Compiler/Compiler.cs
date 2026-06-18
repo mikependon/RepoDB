@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -510,13 +511,14 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDateOnlyFromDateTimeStaticMethod() =>
             StaticType.DateOnly.GetMethod("FromDateTime");
-#endif
+
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        internal static MethodInfo GetEnumParseMethod() =>
-            StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
+        internal static MethodInfo GetDateTimeFromDateOnlyMethod() =>
+            StaticType.DateOnly.GetMethod("ToDateTime", new Type[] { StaticType.TimeOnly });
+#endif
 
         /// <summary>
         ///
@@ -532,21 +534,61 @@ namespace RepoDb.Reflection
         internal static MethodInfo GetEnumIsDefinedMethod() =>
             StaticType.Enum.GetMethod("IsDefined", new[] { StaticType.Type, StaticType.Object });
 
+
+        internal static MethodInfo GetEnumParseNullMethod() =>
+            typeof(Compiler).GetMethod(nameof(EnumParseNull), BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static TEnum? EnumParseNull<TEnum>(string value) where TEnum : struct, System.Enum
+        {
+            if (Enum.TryParse<TEnum>(value, true, out var r))
+                return r;
+            else
+                return null;
+        }
+
+        internal static MethodInfo GetEnumParseNullDefinedMethod() =>
+            typeof(Compiler).GetMethod(nameof(EnumParseNullDefined), BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static TEnum? EnumParseNullDefined<TEnum>(string value) where TEnum : struct, System.Enum
+        {
+            if (Enum.TryParse<TEnum>(value, true, out var r) && Enum.IsDefined(typeof(TEnum), r))
+                return r;
+            else
+                return null;
+        }
+
         /// <summary>
         ///
         /// </summary>
         /// <param name="expression"></param>
+        /// 
         /// <returns></returns>
-        internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Expression expression)
+        internal static Expression ConvertExpressionToNullableValue(Expression expression)
         {
-            if (Nullable.GetUnderlyingType(expression.Type) != null)
+            if (Nullable.GetUnderlyingType(expression.Type) is { } underlyingType)
             {
-                var underlyingType = TypeCache.Get(expression.Type).GetUnderlyingType();
-                var method = expression.Type.GetMethod("GetValueOrDefault", new Type[] { underlyingType });
-                return Expression.Call(expression, method, Expression.Default(underlyingType));
+                return Expression.Property(expression, nameof(Nullable<int>.Value));
             }
             return expression;
         }
+
+#if NET6_0_OR_GREATER
+        internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Func<Expression, Expression> converter, Expression expression)
+        {
+            if (Nullable.GetUnderlyingType(expression.Type) != null)
+            {
+                var converted = converter(ConvertExpressionToNullableValue(expression));
+                var nullableType = typeof(Nullable<>).MakeGenericType(converted.Type);
+                return Expression.Condition(
+                    Expression.Property(expression, nameof(Nullable<int>.HasValue)),
+                    Expression.Convert(converted, nullableType),
+                    Expression.Constant(null, nullableType)
+                );
+            }
+
+            return converter(expression);
+        }
+#endif
 
         /// <summary>
         ///
@@ -568,7 +610,7 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression) =>
-            Expression.Call(ConvertExpressionToNullableGetValueOrDefaultExpression(expression), StaticType.Guid.GetMethod("ToString", Array.Empty<Type>()));
+            Expression.Call(ConvertExpressionToNullableValue(expression), StaticType.Guid.GetMethod("ToString", Array.Empty<Type>()));
 
         /// <summary>
         ///
@@ -576,7 +618,7 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression) =>
-            Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
+            Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableValue(expression));
 
         /// <summary>
         ///
@@ -585,7 +627,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToTimeSpanToDateTimeExpression(Expression expression) =>
             Expression.New(StaticType.DateTime.GetConstructor(new[] { StaticType.Int64 }),
-                ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToTimeSpanTicksExpression(expression)));
+                ConvertExpressionToNullableValue(ConvertExpressionToTimeSpanTicksExpression(expression)));
 
         /// <summary>
         ///
@@ -593,7 +635,7 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToTimeSpanExpression(Expression expression) =>
-            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
+            ConvertExpressionToNullableValue(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
 #if NET6_0_OR_GREATER
         /// <summary>
         ///
@@ -601,7 +643,15 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToDateOnlyExpression(Expression expression) =>
-            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression(expression));
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeFromDateOnlyExpression, expression);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateOnlyToDateTimeExpression(Expression expression) =>
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression, expression);
 #endif
         /// <summary>
         ///
@@ -625,6 +675,14 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateOnlyFromDateTimeExpression(Expression expression) =>
+            Expression.Call(expression, GetDateTimeFromDateOnlyMethod(), Expression.Constant(default(TimeOnly)));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateTimeFromDateOnlyExpression(Expression expression) =>
             Expression.Call(null, GetDateOnlyFromDateTimeStaticMethod(), expression);
 #endif
         /// <summary>
@@ -636,38 +694,89 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToSystemConvertExpression(Expression expression,
             Type toType)
         {
-            if (TypeCache.Get(expression.Type).GetUnderlyingType() == toType)
+            var fromType = expression.Type;
+            var underlyingFromType = TypeCache.Get(fromType).GetUnderlyingType();
+            var underlyingToType = TypeCache.Get(toType).GetUnderlyingType();
+
+            if (fromType == toType)
             {
                 return expression;
             }
 
             // Identify
-            if (toType.IsAssignableFrom(expression.Type))
+            if (underlyingToType.IsAssignableFrom(fromType))
             {
-                return ConvertExpressionToTypeExpression(expression, toType);
+                return ConvertExpressionToTypeExpression(expression, underlyingToType);
             }
+
+            var result = ConvertExpressionToNullableValue(expression);
 
             // Convert.To<Type>()
-            var methodInfo = GetSystemConvertToTypeMethod(expression.Type, toType);
-            if (methodInfo != null)
+            if (underlyingFromType.IsEnum)
             {
-                return Expression.Call(methodInfo, ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
+                if (underlyingToType == StaticType.String)
+                {
+                    result = Expression.Call(result, nameof(ToString), Array.Empty<Type>());
+                }
+                else if (underlyingToType.IsPrimitive &&
+                    (underlyingToType) == StaticType.Int16
+                    || underlyingToType == StaticType.Int32
+                    || underlyingToType == StaticType.Int64
+                    || underlyingToType == StaticType.Byte
+                    || underlyingToType == StaticType.UInt16
+                    || underlyingToType == StaticType.UInt32
+                    || underlyingToType == StaticType.UInt64
+                    || underlyingToType == StaticType.SByte)
+                {
+                    result = Expression.Convert(result, Enum.GetUnderlyingType(underlyingFromType));
+
+                    if (result.Type != underlyingToType)
+                        result = Expression.Convert(result, underlyingToType);
+                }
+                else
+                    return result; // Will fail
+            }
+            else if (GetSystemConvertToTypeMethod(underlyingFromType, underlyingToType) is { } methodInfo)
+            {
+                result = Expression.Call(methodInfo, result);
+            }
+            else if (GetSystemConvertChangeTypeMethod(underlyingToType) is { } systemChangeType)
+            {
+                result = Expression.Call(systemChangeType, new Expression[]
+                {
+                    ConvertExpressionToTypeExpression(result, StaticType.Object),
+                    Expression.Constant(TypeCache.Get(underlyingToType).GetUnderlyingType())
+                });
+            }
+            else
+            {
+                return result; // Will fail!
             }
 
-            // Convert.ChangeType
-            methodInfo = GetSystemConvertChangeTypeMethod(toType);
-            if (methodInfo != null)
+            // Do we need manual NULL handling?
+            if ((!underlyingToType.IsValueType || underlyingToType != toType)
+                && (!underlyingFromType.IsValueType || underlyingFromType != fromType))
             {
-                expression = ConvertExpressionToNullableGetValueOrDefaultExpression(expression);
-                return Expression.Call(methodInfo, new Expression[]
+                Expression condition;
+                if (underlyingFromType != fromType)
                 {
-                    ConvertExpressionToTypeExpression(expression, StaticType.Object),
-                    Expression.Constant(TypeCache.Get(toType).GetUnderlyingType())
-                });
+                    // E.g. Nullable<System.Int32> -> string
+                    condition = Expression.Property(expression, nameof(Nullable<int>.HasValue));
+                }
+                else
+                {
+                    // E.g. String -> Nullable<System.Int32>
+                    condition = Expression.NotEqual(expression, Expression.Constant(null, expression.Type));
+                }
+
+                return Expression.Condition(
+                    condition,
+                    (result.Type != toType) ? Expression.Convert(result, toType) : result,
+                    Expression.Constant(null, toType));
             }
 
             // Return
-            return expression;
+            return result;
         }
 
         /// <summary>
@@ -703,17 +812,21 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToEnumExpressionForString(Expression expression,
             Type toEnumType)
         {
-            var trueExpression = GetEnumParseExpression(expression, toEnumType, true);
-            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
-            {
-                var isDefinedExpression = GetEnumIsDefinedExpression(expression, toEnumType);
-                var falseExpression = ConvertExpressionToTypeExpression(Expression.Default(toEnumType), StaticType.Object);
-                return Expression.Condition(isDefinedExpression, trueExpression, falseExpression);
-            }
-            else
-            {
-                return trueExpression;
-            }
+            var checkMethod = (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic || GlobalConfiguration.Options.EnumHandling == EnumHandling.Cast || toEnumType.GetCustomAttribute<FlagsAttribute>() != null)
+                ? GetEnumParseNullMethod()
+                : GetEnumParseNullDefinedMethod();
+
+            return Expression.Coalesce(
+                        Expression.Call(checkMethod.MakeGenericMethod(toEnumType), expression),
+
+                        (GlobalConfiguration.Options.EnumHandling == EnumHandling.UseDefault)
+                        ? Expression.Default(toEnumType)
+                        : Expression.Throw(Expression.New(
+                            typeof(ArgumentOutOfRangeException).GetConstructor(new[] { StaticType.String, StaticType.Object, StaticType.String }),
+                            Expression.Constant("value"),
+                            expression,
+                            Expression.Constant($"Invalid value for {toEnumType.Name}")),
+                            toEnumType));
         }
 
         /// <summary>
@@ -725,14 +838,28 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToEnumExpressionForNonString(Expression expression,
             Type toEnumType)
         {
-            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
+            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic || GlobalConfiguration.Options.EnumHandling == EnumHandling.Cast)
             {
                 return Expression.Convert(expression, toEnumType);
             }
             else
             {
-                return ConvertExpressionToEnumExpressionForString(
-                    GetEnumGetNameExpression(expression, toEnumType), toEnumType);
+                // Handle long/short to enum and/or non integer based enums
+                if (expression.Type != Enum.GetUnderlyingType(toEnumType))
+                    expression = Expression.Convert(expression, Enum.GetUnderlyingType(toEnumType));
+
+                return Expression.Condition(
+                    GetEnumIsDefinedExpression(expression, toEnumType), // Check if the value is defined
+                    Expression.Convert(expression, toEnumType), // Cast to enum
+                    GlobalConfiguration.Options.EnumHandling switch
+                    {
+                        EnumHandling.UseDefault => Expression.Default(toEnumType),
+                        EnumHandling.ThrowError => Expression.Throw(Expression.New(typeof(InvalidEnumArgumentException).GetConstructor(new[] { StaticType.String, StaticType.Int32, StaticType.Type }),
+                                                                    new Expression[] { Expression.Constant("value"), Expression.Convert(expression, StaticType.Int32), Expression.Constant(toEnumType) }),
+                            toEnumType
+                        ),
+                        _ => throw new InvalidEnumArgumentException("EnumHandling set to invalid value")
+                    }); // Default value for undefined
             }
         }
 
@@ -871,12 +998,13 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="toType"></param>
+        /// <param name="trueToType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
-            Type toType)
+            Type trueToType)
         {
             var fromType = TypeCache.Get(expression.Type).GetUnderlyingType();
+            var toType = TypeCache.Get(trueToType)?.GetUnderlyingType();
 
             // Guid to String
             if (fromType == StaticType.Guid && toType == StaticType.String)
@@ -907,11 +1035,17 @@ namespace RepoDb.Reflection
             {
                 expression = ConvertExpressionToDateTimeToDateOnlyExpression(expression);
             }
+
+            // DateOnly to DateTime
+            else if (fromType == StaticType.DateOnly && toType == StaticType.DateTime)
+            {
+                expression = ConvertExpressionToDateOnlyToDateTimeExpression(expression);
+            }
 #endif
             // Others
             else
             {
-                expression = ConvertExpressionToSystemConvertExpression(expression, toType);
+                expression = ConvertExpressionToSystemConvertExpression(expression, trueToType);
             }
 
             // Return
@@ -1084,29 +1218,9 @@ namespace RepoDb.Reflection
             return entityOrEntitiesExpression;
         }
 
-#endregion
+        #endregion
 
         #region Common
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="enumType"></param>
-        /// <param name="ignoreCase"></param>
-        /// <returns></returns>
-        internal static Expression GetEnumParseExpression(Expression expression,
-            Type enumType,
-            bool ignoreCase)
-        {
-            var parameters = new Expression[]
-            {
-                Expression.Constant(enumType),
-                expression,
-                Expression.Constant(ignoreCase)
-            };
-            return Expression.Call(GetEnumParseMethod(), parameters);
-        }
 
         /// <summary>
         ///
@@ -1284,7 +1398,7 @@ namespace RepoDb.Reflection
                 {
                     try
                     {
-                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, targetTypeUnderlyingType);
+                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, targetType);
                     }
                     catch (Exception ex)
                     {
@@ -1563,7 +1677,7 @@ namespace RepoDb.Reflection
 
             // Target type
             var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(TypeCache.Get(dbField.Type).GetUnderlyingType());
-            var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
+            var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.TypeNullable();
 
             /*
              * Note: The other data provider can coerce the Enum into its destination data type in the DB by default,
@@ -1577,8 +1691,10 @@ namespace RepoDb.Reflection
                 {
                     if (!IsPostgreSqlUserDefined(dbField))
                     {
-                        var dbType = classProperty.GetDbType() ?? TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().GetDbType();
-                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : TypeCache.Get(targetType)?.GetUnderlyingType();
+                        var enumType = TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType();
+                        var dbType = classProperty.GetDbType() ?? enumType.GetDbType();
+                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType;
+
                         expression = ConvertEnumExpressionToTypeExpression(expression, toType);
                     }
                 }
@@ -1594,7 +1710,21 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    expression = ConvertExpressionWithAutomaticConversion(expression, TypeCache.Get(targetType)?.GetUnderlyingType());
+                    var origExpression = expression;
+                    expression = ConvertExpressionWithAutomaticConversion(expression, targetType);
+
+                    if (dbField?.IsIdentity == true
+                        && targetType.IsValueType && TypeCache.Get(targetType).GetUnderlyingType() == targetType
+                        && TypeCache.Get(origExpression.Type).GetUnderlyingType() != origExpression.Type)
+                    {
+                        var nullableType = typeof(Nullable<>).MakeGenericType(expression.Type);
+
+                        // Don't set '0' in the identity output property
+                        expression = Expression.Condition(
+                            Expression.Property(origExpression, nameof(Nullable<int>.HasValue)),
+                            Expression.Convert(expression, nullableType),
+                            Expression.Constant(null, nullableType));
+                    }
                 }
                 catch (Exception ex)
                 {

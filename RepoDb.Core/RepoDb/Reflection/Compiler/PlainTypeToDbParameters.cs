@@ -1,12 +1,12 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using RepoDb.Resolvers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using RepoDb.Resolvers;
 
 namespace RepoDb.Reflection
 {
@@ -33,7 +33,7 @@ namespace RepoDb.Reflection
             foreach (var paramProperty in PropertyCache.Get(paramType))
             {
                 var mappedParamPropertyName = paramProperty.GetMappedName();
-                
+
                 // Ensure it matches to atleast one param
                 var entityProperty = PropertyCache.Get(entityType)?.FirstOrDefault(e =>
                     string.Equals(e.GetMappedName(), mappedParamPropertyName, StringComparison.OrdinalIgnoreCase) ||
@@ -66,7 +66,8 @@ namespace RepoDb.Reflection
                 {
                     #region NewParameter
 
-                    var underlyingType = TypeCache.Get(targetProperty.PropertyInfo.PropertyType).GetUnderlyingType();
+                    var propertyType = targetProperty.PropertyInfo.PropertyType;
+                    var underlyingType = TypeCache.Get(propertyType).GetUnderlyingType();
                     var valueType = GetPropertyHandlerSetMethodReturnType(paramProperty, underlyingType) ?? underlyingType;
                     var dbParameterExpression = Expression.Variable(StaticType.DbParameter, $"var{parameterName}");
                     var parameterCallExpressions = new List<Expression>();
@@ -79,11 +80,6 @@ namespace RepoDb.Reflection
                             ConvertExpressionToTypeExpression(createParameterExpression, StaticType.DbParameter)));
 
                     // Convert
-                    if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic && dbField?.Type != null)
-                    {
-                        valueType = TypeCache.Get(dbField.Type).GetUnderlyingType();
-                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
-                    }
 
                     // DbType
                     var dbType = (DbType?)null;
@@ -100,17 +96,16 @@ namespace RepoDb.Reflection
                                 valueType.GetDbType() ??
                                 (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
                                 (DbType?)GlobalConfiguration.Options.EnumDefaultDatabaseType;
-
-                            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
-                            {
-                                var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : TypeCache.Get(valueType)?.GetUnderlyingType();
-                                valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, toType);
-                            }
-                        } 
+                        }
                         else
                         {
                             dbType = default;
                         }
+                    }
+                    else if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                    {
+                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, dbField.TypeNullable());
+                        dbType = default;
                     }
                     else
                     {

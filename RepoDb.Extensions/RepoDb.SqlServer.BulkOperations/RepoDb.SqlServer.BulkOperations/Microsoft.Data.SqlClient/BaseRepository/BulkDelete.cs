@@ -1,9 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace RepoDb
 {
@@ -27,10 +27,10 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<object> primaryKeys,
-            string hints = null,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return repository.DbRepository.BulkDelete<TEntity>(primaryKeys: primaryKeys,
@@ -56,13 +56,13 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return repository.DbRepository.BulkDelete(entities: entities,
@@ -93,13 +93,13 @@ namespace RepoDb
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return repository.DbRepository.BulkDelete(tableName: tableName,
@@ -131,10 +131,10 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<object> primaryKeys,
-            string hints = null,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -163,13 +163,13 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -203,13 +203,13 @@ namespace RepoDb
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {

@@ -119,6 +119,13 @@ namespace RepoDb
         /// </summary>
         public string Provider { get; }
 
+
+        /// <summary>
+        /// Gets the type to map to, including nullable
+        /// </summary>
+        /// <returns></returns>
+        public Type TypeNullable() => IsNullable && Type.IsValueType ? typeof(System.Nullable<>).MakeGenericType(Type) : Type;
+
         #endregion
 
         #region Methods
