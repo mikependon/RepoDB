@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>RepoDB</Title>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>A hybrid ORM library for .NET.</Description>
     <PackageTags>orm hybrid-orm micro-orm</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!-- Disable some nullability for netstandard2.0, as some smart annotations are not available there -->
-    <NoWarn Condition="'$(TargetFramework)' == 'netstandard2.0'">$(NoWarn);CS8604</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Reflection\DataCommand.cs" />
@@ -21,8 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" />
-    <PackageReference Include="System.Data.Common" />
-    <PackageReference Include="System.Dynamic.Runtime" />
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="System.Reflection.Emit" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" />
@@ -33,6 +27,9 @@
     <PackageReference Include="Microsoft.Bcl.HashCode" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     <PackageReference Include="System.Memory" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
