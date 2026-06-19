@@ -35,7 +35,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -53,7 +53,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -70,7 +70,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -87,7 +87,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -109,7 +109,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -132,7 +132,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max<CompleteTable>(e => e.ColumnInt,
@@ -149,7 +149,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -169,7 +169,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -187,7 +187,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -204,7 +204,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -221,7 +221,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -243,7 +243,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -266,7 +266,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
@@ -283,7 +283,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
@@ -307,7 +307,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
@@ -325,7 +325,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
@@ -343,7 +343,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
@@ -366,7 +366,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
@@ -390,7 +390,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
@@ -408,7 +408,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -429,7 +429,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -447,7 +447,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -465,7 +465,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -488,7 +488,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -512,7 +512,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -530,7 +530,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>

@@ -111,7 +111,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -131,7 +131,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -150,7 +150,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var people = GetPersonWithText(10).AsList();
@@ -173,7 +173,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -193,7 +193,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -212,7 +212,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var people = GetPersonWithInteger(10).AsList();
@@ -235,7 +235,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
@@ -254,7 +254,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();

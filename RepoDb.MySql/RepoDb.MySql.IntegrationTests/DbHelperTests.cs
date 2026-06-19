@@ -31,7 +31,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -69,7 +69,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -87,7 +87,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -109,7 +109,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -147,7 +147,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -165,7 +165,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -191,7 +191,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -219,7 +219,7 @@ namespace RepoDb.MySql.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var helper = connection.GetDbHelper();

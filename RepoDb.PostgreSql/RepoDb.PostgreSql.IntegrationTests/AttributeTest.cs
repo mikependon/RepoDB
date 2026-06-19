@@ -79,7 +79,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.Insert<AttributeTable>(table);
@@ -101,7 +101,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);
@@ -123,7 +123,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var id = connection.Insert<AttributeTable>(table);
@@ -142,7 +142,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);

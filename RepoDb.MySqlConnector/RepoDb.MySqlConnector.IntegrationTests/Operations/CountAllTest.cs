@@ -34,7 +34,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.CountAll<CompleteTable>();
@@ -50,7 +50,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -68,7 +68,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAllAsync<CompleteTable>();
@@ -84,7 +84,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
@@ -106,7 +106,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.CountAll(ClassMappedNameCache.Get<CompleteTable>());
@@ -122,7 +122,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -141,7 +141,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
@@ -157,7 +157,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>

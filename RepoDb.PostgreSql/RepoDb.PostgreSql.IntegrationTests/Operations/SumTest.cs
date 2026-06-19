@@ -35,7 +35,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -53,7 +53,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -70,7 +70,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -87,7 +87,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -109,7 +109,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -132,7 +132,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
@@ -149,7 +149,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -169,7 +169,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -187,7 +187,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -204,7 +204,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -221,7 +221,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -243,7 +243,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -266,7 +266,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
@@ -283,7 +283,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
@@ -307,7 +307,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
@@ -325,7 +325,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
@@ -343,7 +343,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
@@ -366,7 +366,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
@@ -390,7 +390,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
@@ -408,7 +408,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -429,7 +429,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -447,7 +447,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -465,7 +465,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -488,7 +488,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -512,7 +512,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -530,7 +530,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>

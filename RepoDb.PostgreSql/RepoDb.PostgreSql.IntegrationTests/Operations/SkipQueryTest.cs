@@ -35,7 +35,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery<CompleteTable>(
@@ -56,7 +56,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery<CompleteTable>(
@@ -77,7 +77,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery<CompleteTable>(
@@ -98,7 +98,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery<CompleteTable>(
@@ -119,7 +119,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -142,7 +142,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync<CompleteTable>(
@@ -163,7 +163,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync<CompleteTable>(
@@ -184,7 +184,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync<CompleteTable>(
@@ -205,7 +205,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync<CompleteTable>(
@@ -226,7 +226,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
@@ -253,7 +253,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -274,7 +274,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -295,7 +295,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -316,7 +316,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -337,7 +337,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -360,7 +360,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -381,7 +381,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -402,7 +402,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -423,7 +423,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -444,7 +444,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>

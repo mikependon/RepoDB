@@ -34,7 +34,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -62,7 +62,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -93,7 +93,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
@@ -113,7 +113,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
@@ -137,7 +137,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -165,7 +165,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -196,7 +196,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
@@ -216,7 +216,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))

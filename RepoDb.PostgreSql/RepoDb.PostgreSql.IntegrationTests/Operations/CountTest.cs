@@ -35,7 +35,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>((object)null);
@@ -52,7 +52,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(e => ids.Contains(e.Id));
@@ -68,7 +68,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(new { tables.First().Id });
@@ -84,7 +84,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -105,7 +105,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(queryFields);
@@ -127,7 +127,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(queryGroup);
@@ -143,7 +143,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>((object)null);
@@ -179,7 +179,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
@@ -195,7 +195,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
@@ -211,7 +211,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -232,7 +232,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(queryFields);
@@ -254,7 +254,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(queryGroup);
@@ -270,7 +270,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
@@ -293,7 +293,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -310,7 +310,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -327,7 +327,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -349,7 +349,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -372,7 +372,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -389,7 +389,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -409,7 +409,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -426,7 +426,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -443,7 +443,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -465,7 +465,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -488,7 +488,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -505,7 +505,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(async () =>
