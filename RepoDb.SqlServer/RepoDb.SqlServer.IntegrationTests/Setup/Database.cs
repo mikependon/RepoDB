@@ -28,17 +28,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             // Master connection
             ConnectionStringForMaster =
-                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_MASTER")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER")
-                //?? @"Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
-                ?? @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
+                Environment.GetEnvironmentVariable("REPODB_CONSTR_SQLSVR_MASTER") ??
+                @"Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // RepoDb connection
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_REPODBTEST")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
-                //?? @"Server=tcp:127.0.0.1,41433;Database=RepoDbTest;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
-                ?? @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
+                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR") ??
+                @"Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             GlobalConfiguration

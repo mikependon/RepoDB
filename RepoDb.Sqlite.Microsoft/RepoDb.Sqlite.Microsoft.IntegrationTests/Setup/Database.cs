@@ -10,10 +10,10 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
         static Database()
         {
             // Get the environment variable
-            var variable = Environment.GetEnvironmentVariable("REPODB_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
+            var variable = Environment.GetEnvironmentVariable("REPODB_SQLITE_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
-            IsInMemory = true; //string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
+            IsInMemory = variable != null || string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
         }
 
         #region Properties

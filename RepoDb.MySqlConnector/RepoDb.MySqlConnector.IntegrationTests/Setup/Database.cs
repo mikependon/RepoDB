@@ -17,7 +17,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionString { get; private set; }
+        public static string ConnectionStringForRepoDb { get; private set; }
 
         #endregion
 
@@ -25,19 +25,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static void Initialize()
         {
+            // Set the connection string
             ConnectionStringForSys =
-                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYS")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_SYS")
-                // ?? @"Server=127.0.0.1;Port=43306;Database=sys;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
-                ?? @"Server=localhost;Database=sys;Uid=user;Pwd=Password123;";
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYS") ??
+                @"Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;";
 
-            ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_REPODBTEST")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
-                // ?? @"Server=127.0.0.1;Port=43306;Database=RepoDbTest;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
-                ?? @"Server=localhost;Database=RepoDbTest;Uid=user;Pwd=Password123;";
+            ConnectionStringForRepoDb =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
+                @"Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;";
 
-            // Initialize MySql
+            // Initialize MySqlConnector
             GlobalConfiguration
                 .Setup()
                 .UseMySqlConnector();
@@ -51,7 +48,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
@@ -64,7 +61,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);
@@ -78,7 +75,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
@@ -111,7 +108,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `CompleteTable`
                     (
@@ -164,7 +161,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateNonIdentityCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `NonIdentityCompleteTable`
                     (
