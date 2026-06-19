@@ -296,7 +296,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .ExecuteQueryMultipleAsync("", trace: new ErroneousCancellationTrace());

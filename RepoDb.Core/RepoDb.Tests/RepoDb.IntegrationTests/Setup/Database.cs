@@ -16,12 +16,12 @@ namespace RepoDb.IntegrationTests.Setup
             // Master connection
             ConnectionStringForMaster =
                 Environment.GetEnvironmentVariable("REPODB_CONSTR_SQLSVR_MASTER")
-                ?? "Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
+                ?? "Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // RepoDb connection
             ConnectionStringForRepoDb =
                 Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR")
-                ?? "Server=tcp:127.0.0.1,41433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
+                ?? "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Set the proper values for type mapper
             TypeMapper.Add(typeof(DateTime), System.Data.DbType.DateTime2, true);
