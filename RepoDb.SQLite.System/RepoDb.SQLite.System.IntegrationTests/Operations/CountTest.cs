@@ -273,7 +273,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync<SdsCompleteTable>((object)null,
                         hints: "WhatEver"));
             }
@@ -508,7 +508,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         (object)null,
                         hints: "WhatEver"));

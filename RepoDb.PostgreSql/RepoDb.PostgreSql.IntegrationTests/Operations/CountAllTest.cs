@@ -87,7 +87,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAllAsync<CompleteTable>(hints: "WhatEver"));
             }
         }
@@ -160,7 +160,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         hints: "WhatEver"));
             }

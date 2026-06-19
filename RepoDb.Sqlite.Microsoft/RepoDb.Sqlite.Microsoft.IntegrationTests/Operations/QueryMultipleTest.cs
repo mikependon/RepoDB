@@ -445,7 +445,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(e => e.Id > 0,
                         e => e.Id > 0,
                         top1: 1,

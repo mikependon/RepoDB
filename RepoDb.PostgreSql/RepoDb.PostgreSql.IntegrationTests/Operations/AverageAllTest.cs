@@ -88,7 +88,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInteger,
                         hints: "WhatEver"));
             }
@@ -165,7 +165,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                         hints: "WhatEver"));

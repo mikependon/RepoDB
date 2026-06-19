@@ -1822,7 +1822,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                Assert.Throws<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
+                await Assert.ThrowsAsync<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
             }
         }
 

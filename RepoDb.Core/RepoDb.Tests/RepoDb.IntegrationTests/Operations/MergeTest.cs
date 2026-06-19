@@ -2706,7 +2706,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<InvalidQualifiersException>(async () =>
+                await Assert.ThrowsAsync<InvalidQualifiersException>(async () =>
                 {
                     await connection.MergeAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
                         (object)entity);

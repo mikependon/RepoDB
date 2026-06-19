@@ -581,7 +581,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -591,7 +591,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -1292,7 +1292,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                Assert.Throws<InvalidParameterException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
+                await Assert.ThrowsAsync<InvalidParameterException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
@@ -1302,7 +1302,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -1325,7 +1325,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
+                await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 

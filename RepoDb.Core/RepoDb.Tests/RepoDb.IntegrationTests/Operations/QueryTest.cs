@@ -2020,7 +2020,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () => await connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()));
+                await Assert.ThrowsAsync<MissingFieldsException>(async () => await connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -3673,7 +3673,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
             }
         }
 
@@ -3686,7 +3686,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () =>
+                await Assert.ThrowsAsync<MissingFieldsException>(async () =>
                 {
                     await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                         what: null,

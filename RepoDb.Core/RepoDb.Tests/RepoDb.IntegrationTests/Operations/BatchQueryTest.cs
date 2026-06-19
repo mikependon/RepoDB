@@ -1809,7 +1809,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () =>
+                await Assert.ThrowsAsync<MissingFieldsException>(async () =>
                 {
                     var result = await connection.BatchQueryAsync<IdentityTable>(page: 0,
                         rowsPerBatch: 10,
@@ -2840,7 +2840,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () =>
+                await Assert.ThrowsAsync<MissingFieldsException>(async () =>
                 {
                     var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                         page: 0,

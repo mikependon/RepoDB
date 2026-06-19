@@ -286,7 +286,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                         (object)null,
                         hints: "WhatEver"));
@@ -533,7 +533,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         new Field("ColumnInteger", typeof(int)),
                         (object)null,

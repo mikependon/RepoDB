@@ -128,7 +128,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                         (object)null,
                         hints: "WhatEver"));
@@ -247,7 +247,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                         (object)null,

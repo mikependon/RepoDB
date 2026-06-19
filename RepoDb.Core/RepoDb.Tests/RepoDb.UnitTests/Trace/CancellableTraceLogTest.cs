@@ -200,7 +200,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .ExecuteNonQueryAsync("", trace: new ErroneousCancellationTrace());
@@ -232,7 +232,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .ExecuteQueryAsync("", trace: new ErroneousCancellationTrace());
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .ExecuteScalarAsync("", trace: new ErroneousCancellationTrace());
@@ -328,7 +328,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .AverageAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
@@ -360,7 +360,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .AverageAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -392,7 +392,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .BatchQueryAsync("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
@@ -424,7 +424,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .CountAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -456,7 +456,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .CountAllAsync("", trace: new ErroneousCancellationTrace());
@@ -488,7 +488,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .DeleteAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -520,7 +520,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .DeleteAllAsync("", trace: new ErroneousCancellationTrace());
@@ -552,7 +552,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .ExistsAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -584,7 +584,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .InsertAsync("", null, trace: new ErroneousCancellationTrace());
@@ -645,7 +645,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
@@ -665,7 +665,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
@@ -697,7 +697,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MaxAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
@@ -729,7 +729,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MaxAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -761,7 +761,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MergeAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
@@ -801,7 +801,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace());
@@ -841,7 +841,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace());
@@ -873,7 +873,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MinAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
@@ -905,7 +905,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .MinAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -937,7 +937,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryAsync("", (QueryField)null, trace: new ErroneousCancellationTrace());
@@ -969,7 +969,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryAllAsync("", trace: new ErroneousCancellationTrace());
@@ -1005,7 +1005,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1042,7 +1042,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1081,7 +1081,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1122,7 +1122,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1165,7 +1165,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1210,7 +1210,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .QueryMultipleAsync("", (QueryField)null,
@@ -1251,7 +1251,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .SumAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
@@ -1283,7 +1283,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .SumAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
@@ -1315,7 +1315,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .TruncateAsync("", trace: new ErroneousCancellationTrace());
@@ -1347,7 +1347,7 @@ namespace RepoDb.UnitTests.Trace
             var connection = new TraceDbConnection();
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
@@ -1387,7 +1387,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace());
@@ -1427,7 +1427,7 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            Assert.Throws<CancelledExecutionException>(async () =>
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
             {
                 await connection
                     .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace());

@@ -220,7 +220,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync<SdsCompleteTable>(0,
                         3,
                         OrderField.Ascending<SdsCompleteTable>(c => c.Id).AsEnumerable(),
@@ -437,7 +437,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                         0,
                         3,

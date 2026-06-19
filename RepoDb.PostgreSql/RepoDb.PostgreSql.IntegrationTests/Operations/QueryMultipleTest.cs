@@ -445,7 +445,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                         e => e.Id > 0,
                         top1: 1,

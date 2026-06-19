@@ -220,7 +220,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync<MdsCompleteTable>(0,
                         3,
                         OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
@@ -437,7 +437,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                         0,
                         3,

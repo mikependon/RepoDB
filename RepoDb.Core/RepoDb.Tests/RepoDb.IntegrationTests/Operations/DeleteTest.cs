@@ -1106,7 +1106,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
             }
         }
 

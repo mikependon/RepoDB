@@ -220,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync<CompleteTable>(0,
                         3,
                         OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
@@ -437,7 +437,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         0,
                         3,

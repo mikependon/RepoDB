@@ -445,7 +445,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable>(e => e.Id > 0,
                         e => e.Id > 0,
                         top1: 1,

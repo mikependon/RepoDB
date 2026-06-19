@@ -2264,7 +2264,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
@@ -2277,7 +2277,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
@@ -2290,7 +2290,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 

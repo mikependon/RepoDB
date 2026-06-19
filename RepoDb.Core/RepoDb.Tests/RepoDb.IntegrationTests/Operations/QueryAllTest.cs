@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () => await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()));
+                await Assert.ThrowsAsync<MissingFieldsException>(async () => await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -1085,7 +1085,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<MissingFieldsException>(async () =>
+                await Assert.ThrowsAsync<MissingFieldsException>(async () =>
                     await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                         orderBy: orderBy.AsEnumerable()));
             }

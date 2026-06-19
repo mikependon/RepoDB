@@ -2251,7 +2251,7 @@ namespace RepoDb.IntegrationTests.Operations
                     ColumnInt = 1,
                     ColumnDecimal = 2
                 };
-                Assert.Throws<KeyFieldNotFoundException>(async () =>
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () =>
                     await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                         data));
             }
@@ -2267,7 +2267,7 @@ namespace RepoDb.IntegrationTests.Operations
                     Id = 1,
                     AnyField = 1
                 };
-                Assert.Throws<EmptyException>(async () => await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data));
+                await Assert.ThrowsAsync<EmptyException>(async () => await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data));
             }
         }
 

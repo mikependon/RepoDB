@@ -88,7 +88,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
                         hints: "WhatEver"));
             }
@@ -165,7 +165,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                Assert.Throws<NotSupportedException>(async () =>
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
                     await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                         Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                         hints: "WhatEver"));
