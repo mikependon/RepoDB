@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Extensions;
 using RepoDb.MySql.IntegrationTests.Models;
@@ -109,7 +109,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionBatchQueryWithHints()
         {
             // Setup
@@ -118,11 +118,12 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQuery<CompleteTable>(0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BatchQuery<CompleteTable>(0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -210,7 +211,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionBatchQueryAsyncWithHints()
         {
             // Setup
@@ -219,11 +220,12 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.BatchQueryAsync<CompleteTable>(0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.BatchQueryAsync<CompleteTable>(0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -319,7 +321,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionBatchQueryViaTableNameWithHints()
         {
             // Setup
@@ -328,12 +330,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -425,7 +428,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             // Setup
@@ -434,12 +437,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
@@ -44,7 +44,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionAverageAllWithHints()
         {
             // Setup
@@ -53,8 +53,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAll<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.AverageAll<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -78,7 +79,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionAverageAllAsyncWithHints()
         {
             // Setup
@@ -87,8 +88,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -117,7 +119,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionAverageAllViaTableNameWithHints()
         {
             // Setup
@@ -126,9 +128,10 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -153,7 +156,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
@@ -162,9 +165,10 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 

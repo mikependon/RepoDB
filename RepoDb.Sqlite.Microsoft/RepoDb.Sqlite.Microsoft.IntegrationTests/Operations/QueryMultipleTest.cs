@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
@@ -221,7 +221,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryMultipleWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -230,12 +230,13 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver"));
             }
         }
 
@@ -435,7 +436,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionQueryMultipleAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -444,12 +445,13 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver"));
             }
         }
 

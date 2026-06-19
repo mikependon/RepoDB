@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
@@ -44,7 +44,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumAllWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -53,8 +53,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAll<MdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -78,7 +79,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -87,8 +88,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -117,7 +119,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumAllViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -126,9 +128,10 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -153,7 +156,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -162,9 +165,10 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 

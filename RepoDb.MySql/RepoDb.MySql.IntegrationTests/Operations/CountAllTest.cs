@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
@@ -44,7 +44,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionCountAllWithHints()
         {
             // Setup
@@ -53,7 +53,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAll<CompleteTable>(hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.CountAll<CompleteTable>(hints: "WhatEver"));
             }
         }
 
@@ -77,7 +78,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionCountAllAsyncWithHints()
         {
             // Setup
@@ -86,7 +87,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.CountAllAsync<CompleteTable>(hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.CountAllAsync<CompleteTable>(hints: "WhatEver"));
             }
         }
 
@@ -114,7 +116,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionCountAllViaTableNameWithHints()
         {
             // Setup
@@ -123,8 +125,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.CountAll(ClassMappedNameCache.Get<CompleteTable>(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -148,7 +151,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
@@ -157,8 +160,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        hints: "WhatEver"));
             }
         }
 

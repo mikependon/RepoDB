@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -2352,7 +2352,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2373,7 +2373,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.BulkInsert(tables, mappings);
+                Assert.Throws<InvalidOperationException>(() =>
+                    repository.BulkInsert(tables, mappings));
             }
         }
 
@@ -2462,7 +2463,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2496,7 +2497,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationRepository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                        Assert.Throws<InvalidOperationException>(() =>
+                            destinationRepository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings));
                     }
                 }
             }
@@ -2597,7 +2599,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2635,7 +2637,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationRepository.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<InvalidOperationException>(() =>
+                                destinationRepository.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings));
                         }
                     }
                 }
@@ -2883,7 +2886,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2904,7 +2907,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsertAsync(tables, mappings);
+                Assert.Throws<AggregateException>(() =>
+                    repository.BulkInsertAsync(tables, mappings));
 
                 // Trigger
                 var result = bulkInsertResult.Result;
@@ -2996,7 +3000,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3030,7 +3034,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
+                        Assert.Throws<AggregateException>(() =>
+                            destinationRepository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings));
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -3134,7 +3139,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3172,7 +3177,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<AggregateException>(() =>
+                                destinationRepository.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings));
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -8648,7 +8654,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryMergeViaTableNameIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -8657,7 +8663,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    repository.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item));
             }
         }
 
@@ -8990,7 +8997,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryMergeAsyncViaTableNameIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -8999,7 +9006,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    repository.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait());
             }
         }
 
@@ -10025,7 +10033,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -10034,7 +10042,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables));
             }
         }
 
@@ -10328,7 +10337,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -10337,7 +10346,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait());
             }
         }
 
@@ -13505,14 +13515,15 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryQueryViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.Query(ClassMappedNameCache.Get<IdentityTable>(),
-                    1);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    repository.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                        1));
             }
         }
 
@@ -13968,14 +13979,15 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    1).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    repository.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                        1).Wait());
             }
         }
 
@@ -17294,7 +17306,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfThePrimaryKeyIsNotFound()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -17308,7 +17320,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfTheFieldsAreNotFound()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -17335,7 +17347,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(tables);
+                Assert.Throws<EmptyException>(() =>
+                    Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                        repository.InsertAll(tables)));
 
                 // Act
                 tables.ForEach(item =>
@@ -17567,7 +17581,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -17581,7 +17595,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -17612,7 +17626,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.InsertAll(tables);
+                Assert.Throws<AggregateException>(() =>
+                    Assert.Throws<AggregateException>(() =>
+                        repository.InsertAll(tables)));
 
                 // Act
                 tables.ForEach(item =>
@@ -18499,7 +18515,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -18508,11 +18524,12 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidParameterException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -18521,27 +18538,30 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidOperationException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -18853,7 +18873,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -18862,11 +18882,12 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
@@ -18875,27 +18896,30 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -19151,23 +19175,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -19423,23 +19449,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -19594,23 +19622,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -19765,23 +19795,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -19936,23 +19968,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -20107,23 +20141,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 

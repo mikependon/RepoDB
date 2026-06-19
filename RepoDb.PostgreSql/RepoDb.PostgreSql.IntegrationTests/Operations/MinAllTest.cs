@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
@@ -44,7 +44,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnPostgreSqlConnectionMinAllWithHints()
         {
             // Setup
@@ -53,8 +53,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAll<CompleteTable>(e => e.ColumnInteger,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll<CompleteTable>(e => e.ColumnInteger,
+                        hints: "WhatEver"));
             }
         }
 
@@ -78,7 +79,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnPostgreSqlConnectionMinAllAsyncWithHints()
         {
             // Setup
@@ -87,8 +88,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger,
+                        hints: "WhatEver"));
             }
         }
 
@@ -117,7 +119,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnPostgreSqlConnectionMinAllViaTableNameWithHints()
         {
             // Setup
@@ -126,9 +128,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -153,7 +156,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnPostgreSqlConnectionMinAllAsyncViaTableNameWithHints()
         {
             // Setup
@@ -162,9 +165,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
+                        hints: "WhatEver"));
             }
         }
 

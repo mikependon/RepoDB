@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
@@ -44,7 +44,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumAllWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -53,8 +53,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAll<SdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll<SdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -78,7 +79,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -87,8 +88,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAllAsync<SdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAllAsync<SdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -117,7 +119,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumAllViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -126,9 +128,10 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SumAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -153,7 +156,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -162,9 +165,10 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using System;
 using System.Linq;
@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.Others
             Assert.IsTrue(parsed.All(field => fields.Contains(field.Name)));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsNull()
         {
             // Prepare
@@ -58,7 +58,7 @@ namespace RepoDb.UnitTests.Others
             Field.From(fields).AsList();
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsEmpty()
         {
             // Prepare
@@ -68,44 +68,48 @@ namespace RepoDb.UnitTests.Others
             Field.From(fields).AsList();
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsWhitespace()
         {
             // Prepare
             var fields = new[] { " " };
 
             // Act/Assert
-            Field.From(fields).AsList();
+            Assert.Throws<NullReferenceException>(() =>
+                Field.From(fields).AsList());
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasNull()
         {
             // Prepare
             var fields = new[] { "Field1", null, "Field3" };
 
             // Act/Assert
-            Field.From(fields).AsList();
+            Assert.Throws<NullReferenceException>(() =>
+                Field.From(fields).AsList());
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldFromIfAnyOfTheParameterIsEmpty()
         {
             // Prepare
             var fields = new[] { "Field1", "", "Field3" };
 
             // Act/Assert
-            Field.From(fields).AsList();
+            Assert.Throws<NullReferenceException>(() =>
+                Field.From(fields).AsList());
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasWhitespace()
         {
             // Prepare
             var fields = new[] { "Field1", " ", "Field3" };
 
             // Act/Assert
-            Field.From(fields).AsList();
+            Assert.Throws<NullReferenceException>(() =>
+                Field.From(fields).AsList());
         }
     }
 }

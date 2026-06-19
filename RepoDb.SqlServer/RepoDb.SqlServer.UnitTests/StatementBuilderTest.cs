@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -208,7 +208,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
@@ -225,7 +225,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
@@ -242,7 +242,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
@@ -251,15 +251,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: 0,
-                rowsPerBatch: 10,
-                orderBy: null,
-                where: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: null,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
@@ -268,15 +269,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: null,
-                page: 0,
-                rowsPerBatch: 10,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<MissingFieldsException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: null,
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
@@ -285,15 +287,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: 0,
-                rowsPerBatch: 10,
-                orderBy: null,
-                where: null);
+            Assert.Throws<EmptyException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: null,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
         {
             // Setup
@@ -303,15 +306,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: -1,
-                rowsPerBatch: 10,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: -1,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
@@ -321,12 +325,13 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: 0,
-                rowsPerBatch: 0,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: 0,
+                    rowsPerBatch: 0,
+                    orderBy: orderBy,
+                    where: null));
         }
         #endregion
 
@@ -340,8 +345,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(tableName: tableName,
-                hints: null);
+            var actual = statementBuilder.CreateCountAll(tableName: tableName, hints: null);
             var expected = "SELECT COUNT_BIG (*) AS [CountValue] FROM [Table] ;";
 
             // Assert
@@ -1393,7 +1397,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
@@ -1402,15 +1406,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: null,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<MissingFieldsException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: null,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(MissingQualifierFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
@@ -1419,15 +1424,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<MissingQualifierFieldsException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
@@ -1437,15 +1443,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<InvalidQualifiersException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
@@ -1455,15 +1462,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                batchSize: 1,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidQualifiersException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    batchSize: 1,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsNull()
         {
             // Setup
@@ -1473,15 +1481,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsEmpty()
         {
             // Setup
@@ -1491,15 +1500,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -1509,15 +1519,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -1527,15 +1538,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                batchSize: 1,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    batchSize: 1,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -1546,12 +1558,13 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMergeAll(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: identifyField));
         }
 
         #endregion
@@ -1892,7 +1905,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
@@ -1901,14 +1914,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: null,
-                qualifiers: qualifiers,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<MissingFieldsException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: null,
+                    qualifiers: qualifiers,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(MissingQualifierFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
@@ -1917,14 +1931,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<MissingQualifierFieldsException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
@@ -1934,14 +1949,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<InvalidQualifiersException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
@@ -1951,14 +1967,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidQualifiersException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsNull()
         {
             // Setup
@@ -1968,14 +1985,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsEmpty()
         {
             // Setup
@@ -1985,14 +2003,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsWhitespace()
         {
             // Setup
@@ -2002,14 +2021,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -2019,14 +2039,15 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -2037,11 +2058,12 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateMerge(tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateMerge(tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    primaryField: null,
+                    identityField: identifyField));
         }
 
         #endregion
@@ -2270,7 +2292,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsNull()
         {
             // Setup
@@ -2287,7 +2309,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsEmpty()
         {
             // Setup
@@ -2304,7 +2326,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsWhitespace()
         {
             // Setup
@@ -2313,15 +2335,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: 0,
-                take: 10,
-                orderBy: null,
-                where: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: 0,
+                    take: 10,
+                    orderBy: null,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheFieldsAreNull()
         {
             // Setup
@@ -2330,15 +2353,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: null,
-                skip: 0,
-                take: 10,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<MissingFieldsException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: null,
+                    skip: 0,
+                    take: 10,
+                    orderBy: orderBy,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
         {
             // Setup
@@ -2347,15 +2371,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: 0,
-                take: 10,
-                orderBy: null,
-                where: null);
+            Assert.Throws<EmptyException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: 0,
+                    take: 10,
+                    orderBy: null,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfThePageIsLessThanZero()
         {
             // Setup
@@ -2365,15 +2390,16 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: -1,
-                take: 10,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: -1,
+                    take: 10,
+                    orderBy: orderBy,
+                    where: null));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
@@ -2383,12 +2409,13 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
             // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: 0,
-                take: 0,
-                orderBy: orderBy,
-                where: null);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: 0,
+                    take: 0,
+                    orderBy: orderBy,
+                    where: null));
         }
         #endregion
     }

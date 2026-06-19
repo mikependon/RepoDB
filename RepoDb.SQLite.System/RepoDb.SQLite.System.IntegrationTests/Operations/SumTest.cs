@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
@@ -143,7 +143,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -152,9 +152,10 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.Sum<SdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Sum<SdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -276,7 +277,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -285,9 +286,10 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAsync<SdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAsync<SdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -400,7 +402,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionSumViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -409,10 +411,11 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.Sum(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Sum(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        new Field("ColumnInt", typeof(int)),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -521,7 +524,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionSumAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -530,10 +533,11 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.SumAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SumAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        new Field("ColumnInt", typeof(int)),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

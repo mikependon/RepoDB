@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
 using RepoDb.Extensions;
 using RepoDb.MySqlConnector.IntegrationTests.Models;
@@ -113,7 +113,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionSkipQueryWithHints()
         {
             // Setup
@@ -122,12 +122,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SkipQuery<CompleteTable>(
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SkipQuery<CompleteTable>(
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -219,7 +220,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionSkipQueryAsyncWithHints()
         {
             // Setup
@@ -228,12 +229,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.SkipQueryAsync<CompleteTable>(
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SkipQueryAsync<CompleteTable>(
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -329,7 +331,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionSkipQueryViaTableNameWithHints()
         {
             // Setup
@@ -338,12 +340,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.SkipQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -435,7 +438,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionSkipQueryAsyncViaTableNameWithHints()
         {
             // Setup
@@ -444,12 +447,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.SkipQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

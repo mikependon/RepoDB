@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
@@ -108,7 +108,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionBatchQueryWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -117,11 +117,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.BatchQuery<MdsCompleteTable>(0,
-                    3,
-                    OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BatchQuery<MdsCompleteTable>(0,
+                        3,
+                        OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -209,7 +210,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionBatchQueryAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -218,11 +219,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.BatchQueryAsync<MdsCompleteTable>(0,
-                    3,
-                    OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.BatchQueryAsync<MdsCompleteTable>(0,
+                        3,
+                        OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 
@@ -318,7 +320,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionBatchQueryViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -327,12 +329,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.BatchQuery(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BatchQuery(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -424,7 +427,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -433,12 +436,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.BatchQueryAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    0,
-                    3,
-                    OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.BatchQueryAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        0,
+                        3,
+                        OrderField.Ascending<MdsCompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 

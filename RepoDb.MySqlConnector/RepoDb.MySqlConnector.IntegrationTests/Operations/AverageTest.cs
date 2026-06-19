@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
 using RepoDb.Enumerations;
 using RepoDb.MySqlConnector.IntegrationTests.Models;
@@ -64,7 +64,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestMySqlConnectionAverageWithHints()
         {
             // Setup
@@ -73,9 +73,10 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Average<CompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average<CompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -118,7 +119,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task TestMySqlConnectionAverageAsyncWithHints()
         {
             // Setup
@@ -127,9 +128,10 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -178,7 +180,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestMySqlConnectionAverageViaTableNameWithHints()
         {
             // Setup
@@ -187,10 +189,11 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -235,7 +238,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task TestMySqlConnectionAverageAsyncViaTableNameWithHints()
         {
             // Setup
@@ -244,10 +247,11 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

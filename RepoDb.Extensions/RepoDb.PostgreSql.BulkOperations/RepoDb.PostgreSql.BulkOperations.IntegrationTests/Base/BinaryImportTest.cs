@@ -227,7 +227,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PostgresException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -243,10 +243,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true);
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true);
+                Assert.Throws<PostgresException>(() =>
+                    NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true));
             }
         }
 
@@ -402,7 +403,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PostgresException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportViaAnonymousWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -418,10 +419,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true);
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImport(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true);
+                Assert.Throws<PostgresException>(() =>
+                    NpgsqlConnectionExtension.BinaryImport(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true));
             }
         }
 
@@ -576,7 +578,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PostgresException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportViaExpandoObjectWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -592,10 +594,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true);
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImport(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true);
+                Assert.Throws<PostgresException>(() =>
+                    NpgsqlConnectionExtension.BinaryImport(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true));
             }
         }
 
@@ -758,7 +761,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PostgresException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportViaDataTableWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -773,10 +776,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true);
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImport(connection,
-                    table.TableName,
-                    table: table,
-                    keepIdentity: true);
+                Assert.Throws<PostgresException>(() =>
+                    NpgsqlConnectionExtension.BinaryImport(connection,
+                        table.TableName,
+                        table: table,
+                        keepIdentity: true));
             }
         }
 
@@ -920,7 +924,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PostgresException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportViaDbDataReaderWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -941,10 +945,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act (Trigger)
-                    NpgsqlConnectionExtension.BinaryImport(connection,
+                    Assert.Throws<PostgresException>(() =>
+                        NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true);
+                        keepIdentity: true));
                 }
             }
         }
@@ -1153,7 +1158,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportAsyncWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1169,10 +1174,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true).Wait();
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true).Wait();
+                Assert.Throws<PostgresException>(() =>
+                    NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true).Wait());
             }
         }
 
@@ -1329,7 +1335,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportAsyncViaAnonymousWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1345,10 +1351,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true).Wait();
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImportAsync(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true).Wait());
             }
         }
 
@@ -1503,7 +1510,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportAsyncViaExpandoObjectWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1519,10 +1526,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true).Wait();
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImportAsync(connection,
-                    tableName,
-                    entities: entities,
-                    keepIdentity: true).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                        tableName,
+                        entities: entities,
+                        keepIdentity: true).Wait());
             }
         }
 
@@ -1685,7 +1693,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportAsyncViaDataTableWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1700,10 +1708,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true).Wait();
 
                 // Act (Trigger)
-                NpgsqlConnectionExtension.BinaryImportAsync(connection,
-                    table.TableName,
-                    table: table,
-                    keepIdentity: true).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                        table.TableName,
+                        table: table,
+                        keepIdentity: true).Wait());
             }
         }
 
@@ -1849,7 +1858,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnBinaryImportAsyncViaDbDataReaderWithDuplicateIdentityOnKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1870,10 +1879,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act (Trigger)
-                    NpgsqlConnectionExtension.BinaryImportAsync(connection,
-                        tableName,
-                        reader: reader,
-                        keepIdentity: true).Wait();
+                    Assert.Throws<AggregateException>(() =>
+                        NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                            tableName,
+                            reader: reader,
+                            keepIdentity: true).Wait());
                 }
             }
         }

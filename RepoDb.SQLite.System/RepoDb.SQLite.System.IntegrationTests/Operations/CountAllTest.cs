@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
@@ -44,7 +44,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionCountAllWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -53,7 +53,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.CountAll<SdsCompleteTable>(hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.CountAll<SdsCompleteTable>(hints: "WhatEver"));
             }
         }
 
@@ -77,7 +78,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionCountAllAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -86,7 +87,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.CountAllAsync<SdsCompleteTable>(hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.CountAllAsync<SdsCompleteTable>(hints: "WhatEver"));
             }
         }
 
@@ -114,7 +116,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionCountAllViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -123,8 +125,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.CountAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.CountAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -148,7 +151,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqLiteConnectionCountAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -157,8 +160,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                await connection.CountAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.CountAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        hints: "WhatEver"));
             }
         }
 

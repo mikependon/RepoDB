@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -2486,7 +2486,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2507,7 +2507,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.BulkInsert(tables, mappings);
+                Assert.Throws<InvalidOperationException>(() =>
+                    connection.BulkInsert(tables, mappings));
             }
         }
 
@@ -2596,7 +2597,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2630,7 +2631,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
+                        Assert.Throws<InvalidOperationException>(() =>
+                            destinationConnection.BulkInsert<IdentityTable>((DbDataReader)reader, mappings));
                     }
                 }
             }
@@ -2731,7 +2733,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2769,7 +2771,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<InvalidOperationException>(() =>
+                                destinationConnection.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings));
                         }
                     }
                 }
@@ -2957,7 +2960,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2991,7 +2994,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
+                        Assert.Throws<InvalidOperationException>(() =>
+                            destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings));
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3000,7 +3004,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
@@ -3022,13 +3026,14 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert("InvalidTable", (DbDataReader)reader);
+                        Assert.Throws<InvalidOperationException>(() =>
+                            destinationConnection.BulkInsert("InvalidTable", (DbDataReader)reader));
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
@@ -3050,7 +3055,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkInsert("MissingTable", (DbDataReader)reader);
+                        Assert.Throws<InvalidOperationException>(() =>
+                            destinationConnection.BulkInsert("MissingTable", (DbDataReader)reader));
                     }
                 }
             }
@@ -3151,7 +3157,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3189,7 +3195,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<InvalidOperationException>(() =>
+                                destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings));
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -3199,7 +3206,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
@@ -3225,14 +3232,15 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged);
+                            Assert.Throws<InvalidOperationException>(() =>
+                                destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged));
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
@@ -3258,7 +3266,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged);
+                            Assert.Throws<InvalidOperationException>(() =>
+                                destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged));
                         }
                     }
                 }
@@ -3331,7 +3340,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3352,7 +3361,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables, mappings);
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkInsertAsync(tables, mappings));
 
                 // Trigger
                 var result = bulkInsertResult.Result;
@@ -3444,7 +3454,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3478,7 +3488,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings);
+                        Assert.Throws<AggregateException>(() =>
+                            destinationConnection.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings));
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -3582,7 +3593,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3620,7 +3631,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings));
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -3811,7 +3823,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3845,7 +3857,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings);
+                        Assert.Throws<AggregateException>(() =>
+                            destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader, mappings));
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -3854,7 +3867,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
@@ -3876,7 +3889,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", (DbDataReader)reader);
+                        Assert.Throws<AggregateException>(() =>
+                            destinationConnection.BulkInsertAsync("InvalidTable", (DbDataReader)reader));
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -3885,7 +3899,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
@@ -3907,7 +3921,8 @@ namespace RepoDb.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", (DbDataReader)reader);
+                        Assert.Throws<AggregateException>(() =>
+                            destinationConnection.BulkInsertAsync("MissingTable", (DbDataReader)reader));
 
                         // Trigger
                         var result = bulkInsertResult.Result;
@@ -4011,7 +4026,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -4049,7 +4064,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings));
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -4059,7 +4075,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
@@ -4085,7 +4101,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", table);
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkInsertAsync("InvalidTable", table));
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -4095,7 +4112,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
@@ -4121,7 +4138,8 @@ namespace RepoDb.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged);
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged));
 
                             // Trigger
                             var result = bulkInsertResult.Result;
@@ -9432,7 +9450,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeViaTableNameIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -9441,7 +9459,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    connection.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item));
             }
         }
 
@@ -9774,7 +9793,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAsyncViaTableNameIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -9783,7 +9802,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait());
             }
         }
 
@@ -10809,7 +10829,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -10818,7 +10838,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables));
             }
         }
 
@@ -11112,7 +11133,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoPrimaryKey()
         {
             // Setup
@@ -11121,7 +11142,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait());
             }
         }
 
@@ -14289,14 +14311,15 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
-                    1);
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                        1));
             }
         }
 
@@ -14752,14 +14775,15 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    1).Wait();
+                Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                    connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                        1).Wait());
             }
         }
 
@@ -18101,7 +18125,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -18115,7 +18139,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -18142,7 +18166,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<EmptyException>(() =>
+                    Assert.Throws<PrimaryFieldNotFoundException>(() =>
+                        connection.InsertAll(tables)));
 
                 // Act
                 tables.ForEach(item =>
@@ -18374,7 +18400,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -18388,7 +18414,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -18419,7 +18445,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<AggregateException>(() =>
+                    Assert.Throws<AggregateException>(() =>
+                        connection.InsertAll(tables)));
 
                 // Act
                 tables.ForEach(item =>
@@ -19203,23 +19231,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryViaDynamicsIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryViaDynamicsIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -19454,23 +19484,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncViaDynamicsIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncViaDynamicsIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -19808,7 +19840,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -19817,11 +19849,12 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidParameterException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -19830,27 +19863,30 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidOperationException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -20162,7 +20198,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -20171,21 +20207,23 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -20194,17 +20232,19 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -21486,23 +21526,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteReaderIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteReaderIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -21658,23 +21700,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -21930,23 +21974,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -22202,23 +22248,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -22373,23 +22421,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -22544,23 +22594,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -22715,23 +22767,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarTIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarTIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    connection.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -22886,23 +22940,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarTAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarTAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 

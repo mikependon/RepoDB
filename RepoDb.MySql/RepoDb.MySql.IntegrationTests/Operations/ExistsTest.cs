@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations;
 using RepoDb.MySql.IntegrationTests.Models;
@@ -137,7 +137,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionExistsWithHints()
         {
             // Setup
@@ -146,8 +146,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Exists<CompleteTable>((object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Exists<CompleteTable>((object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -263,7 +264,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionExistsAsyncWithHints()
         {
             // Setup
@@ -272,8 +273,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.ExistsAsync<CompleteTable>((object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.ExistsAsync<CompleteTable>((object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -381,7 +383,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnMySqlConnectionExistsViaTableNameWithHints()
         {
             // Setup
@@ -390,9 +392,10 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -496,7 +499,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMySqlConnectionExistsAsyncViaTableNameWithHints()
         {
             // Setup
@@ -505,9 +508,10 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Models;
@@ -154,7 +154,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryWithHints()
         {
             // Setup
@@ -163,8 +163,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Query<CompleteTable>((object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Query<CompleteTable>((object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -297,7 +298,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionQueryAsyncWithHints()
         {
             // Setup
@@ -306,8 +307,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.QueryAsync<CompleteTable>((object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.QueryAsync<CompleteTable>((object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -429,7 +431,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryViaTableNameWithHints()
         {
             // Setup
@@ -438,9 +440,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -558,7 +561,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionQueryAsyncViaTableNameWithHints()
         {
             // Setup
@@ -567,9 +570,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

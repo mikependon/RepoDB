@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.SqLite.IntegrationTests.Models;
@@ -136,7 +136,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionExistsWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -145,8 +145,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.Exists<MdsCompleteTable>((object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Exists<MdsCompleteTable>((object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -262,7 +263,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionExistsAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -271,8 +272,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.ExistsAsync<MdsCompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExistsAsync<MdsCompleteTable>((object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 
@@ -380,7 +382,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionExistsViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -389,9 +391,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.Exists(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Exists(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -495,7 +498,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionExistsAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -504,9 +507,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 

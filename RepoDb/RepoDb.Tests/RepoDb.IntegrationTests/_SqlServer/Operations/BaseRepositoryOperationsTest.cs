@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -1389,7 +1389,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1410,7 +1410,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.BulkInsert(tables, mappings);
+                Assert.Throws<InvalidOperationException>(() =>
+                    repository.BulkInsert(tables, mappings));
             }
         }
 
@@ -1578,7 +1579,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1599,7 +1600,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsertAsync(tables, mappings);
+                Assert.Throws<AggregateException>(() =>
+                    repository.BulkInsertAsync(tables, mappings));
                 bulkInsertResult.Wait();
 
                 // Trigger
@@ -10205,7 +10207,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new IdentityTableRepository())
@@ -10214,11 +10216,12 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidParameterException>(() =>
+                    repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var repository = new IdentityTableRepository())
@@ -10227,27 +10230,30 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+                Assert.Throws<InvalidOperationException>(() =>
+                    repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -10562,7 +10568,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
             using (var repository = new IdentityTableRepository())
@@ -10571,11 +10577,12 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new Dictionary<string, int>();
 
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
             using (var repository = new IdentityTableRepository())
@@ -10584,27 +10591,30 @@ namespace RepoDb.IntegrationTests.Operations
                 var param = new QueryField("Id", Operation.NotEqual, 1);
 
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -10860,23 +10870,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -11132,23 +11144,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -11303,23 +11317,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -11474,23 +11490,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
@@ -11645,23 +11663,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(SqlException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                repository.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
+                Assert.Throws<SqlException>(() =>
+                    repository.ExecuteScalar<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
             }
         }
 
@@ -11816,23 +11836,25 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync<object>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new IdentityTableRepository())
             {
                 // Act
-                var result = repository.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                Assert.Throws<AggregateException>(() =>
+                    repository.ExecuteScalarAsync<object>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
 using RepoDb.Extensions;
 using RepoDb.MySqlConnector.IntegrationTests.Models;
@@ -221,7 +221,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryMultipleWithHints()
         {
             // Setup
@@ -230,12 +230,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver"));
             }
         }
 
@@ -435,7 +436,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionQueryMultipleAsyncWithHints()
         {
             // Setup
@@ -444,12 +445,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver");
+                Assert.Throws<NotSupportedException>(async () =>
+                    await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver"));
             }
         }
 

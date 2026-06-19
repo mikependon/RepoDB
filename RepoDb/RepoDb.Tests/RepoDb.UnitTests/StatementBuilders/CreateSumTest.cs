@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateSumIfTheTableIsNull()
         {
             // Setup
@@ -163,13 +163,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateSum(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateSumIfTheTableIsEmpty()
         {
             // Setup
@@ -179,13 +180,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateSum(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateSumIfTheTableIsWhitespace()
         {
             // Setup
@@ -195,13 +197,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateSum(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateSumIfTheFieldIsNull()
         {
             // Setup
@@ -210,13 +213,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateSum(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: null,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: null,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateSumIIfTheHintsAreNotSupported()
         {
             // Setup
@@ -226,10 +230,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateSum(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateSum(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: "Hints"));
         }
     }
 }
