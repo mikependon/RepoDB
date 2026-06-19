@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.UnitTests.CustomObjects;
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryIfThereAreNoFields()
         {
             // Setup
@@ -194,11 +194,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateQuery(tableName: tableName,
-                fields: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateQuery(tableName: tableName,
+                    fields: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryIfTheTableIsNull()
         {
             // Setup
@@ -207,11 +210,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateQuery(tableName: tableName,
+                    fields: fields);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryIfTheTableIsEmpty()
         {
             // Setup
@@ -220,11 +226,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateQuery(tableName: tableName,
+                    fields: fields);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryIfTheTableIsWhitespace()
         {
             // Setup
@@ -233,11 +242,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateQuery(tableName: tableName,
+                    fields: fields);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryIfTheHintsAreNotSupported()
         {
             // Setup
@@ -246,9 +258,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(tableName: tableName,
-                fields: fields,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                statementBuilder.CreateQuery(tableName: tableName,
+                    fields: fields,
+                    hints: "Hints");
+            });
         }
     }
 }

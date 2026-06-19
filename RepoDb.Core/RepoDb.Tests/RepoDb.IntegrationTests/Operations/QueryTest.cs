@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -743,7 +743,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryWithInvalidOrderFields()
         {
             // Setup
@@ -752,7 +752,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.Query<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(() => connection.Query<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -2011,7 +2011,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionQueryAsyncWithInvalidOrderFields()
         {
             // Setup
@@ -2020,7 +2020,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = await connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(async () => await connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -3099,18 +3099,21 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<NonKeyedTable>(),
-                    1);
+                Assert.Throws<KeyFieldNotFoundException>(() =>
+                {
+                    connection.Query(ClassMappedNameCache.Get<NonKeyedTable>(),
+                        1);
+                });
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryViaTableNameWithInvalidOrderFields()
         {
             // Setup
@@ -3119,9 +3122,12 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.Query<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    what: null,
-                    orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(() =>
+                {
+                    var result = connection.Query<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                        what: null,
+                        orderBy: orderBy.AsEnumerable());
+                });
             }
         }
 
@@ -3661,18 +3667,17 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                await connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
-                    1);
+                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameWithInvalidOrderFields()
         {
             // Setup
@@ -3681,9 +3686,12 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    what: null,
-                    orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(async () =>
+                {
+                    await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                        what: null,
+                        orderBy: orderBy.AsEnumerable());
+                });
             }
         }
 

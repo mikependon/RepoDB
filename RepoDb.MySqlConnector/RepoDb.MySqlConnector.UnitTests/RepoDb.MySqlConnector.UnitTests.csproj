@@ -7,7 +7,7 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest" />
+    <PackageReference Include="MSTest" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj" />

@@ -11,8 +11,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSTest" />
-    <PackageReference Include="MySqlConnector" />
+    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="MySqlConnector" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

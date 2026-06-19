@@ -74,7 +74,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.Insert<DottedTable, long>(entity);
+                long? id = connection.Insert<DottedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -117,7 +117,7 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.Merge<DottedTable, long>(entity);
+                long? id = connection.Merge<DottedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);

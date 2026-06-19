@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -886,12 +886,12 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionDeleteViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.Delete(ClassMappedNameCache.Get<NonKeyedTable>(), 1);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.Delete(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
             }
         }
 
@@ -1101,12 +1101,12 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionDeleteAsyncViaTableNameIfThereIsNoKeyField()
         {
             await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1);
+                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1));
             }
         }
 

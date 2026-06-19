@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -249,7 +249,7 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaList()
         {
             // Setup
@@ -271,11 +271,11 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaArrayWithEmptyValues()
         {
             // Setup
@@ -297,11 +297,11 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaArrayWithLessValues()
         {
             // Setup
@@ -323,11 +323,11 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaArrayWithMoreVaues()
         {
             // Setup
@@ -349,7 +349,7 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
@@ -423,7 +423,7 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaListWithEmptyValues()
         {
             // Setup
@@ -445,11 +445,11 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaListWithLessValues()
         {
             // Setup
@@ -471,11 +471,11 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationViaListWithMoreVaues()
         {
             // Setup
@@ -497,7 +497,7 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 
@@ -505,7 +505,7 @@ namespace RepoDb.IntegrationTests
          * Shared
          */
 
-        [TestMethod, ExpectedException(typeof(InvalidParameterException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryFromQueryBuilderCreateQueryForNotBetweenOperationWithNullValues()
         {
             // Setup
@@ -526,7 +526,7 @@ namespace RepoDb.IntegrationTests
                     where: where);
 
                 // Act
-                connection.ExecuteQuery<IdentityTable>(sql, where);
+                Assert.Throws<InvalidParameterException>(() => connection.ExecuteQuery<IdentityTable>(sql, where));
             }
         }
 

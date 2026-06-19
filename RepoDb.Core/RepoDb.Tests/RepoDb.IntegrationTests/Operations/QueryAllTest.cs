@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -288,7 +288,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryAllWithInvalidOrderFields()
         {
             // Setup
@@ -297,7 +297,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.QueryAll<IdentityTable>(orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(() => connection.QueryAll<IdentityTable>(orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -589,7 +589,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionQueryAllAsyncWithInvalidOrderFields()
         {
             // Setup
@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(async () => await connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()));
             }
         }
 
@@ -844,7 +844,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionQueryAllViaTableNameWithInvalidOrderFields()
         {
             // Setup
@@ -853,8 +853,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.QueryAll<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(() =>
+                {
+                    var result = connection.QueryAll<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                        orderBy: orderBy.AsEnumerable());
+                });
             }
         }
 
@@ -1073,7 +1076,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionQueryAllAsyncViaTableNameWithInvalidOrderFields()
         {
             // Setup
@@ -1082,8 +1085,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    orderBy: orderBy.AsEnumerable());
+                Assert.Throws<MissingFieldsException>(async () =>
+                    await connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                        orderBy: orderBy.AsEnumerable()));
             }
         }
 

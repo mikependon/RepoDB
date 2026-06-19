@@ -13,7 +13,7 @@
     <Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MySqlConnector" />
+    <PackageReference Include="MySqlConnector" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />

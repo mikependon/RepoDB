@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Enumerations;
 using RepoDb.IntegrationTests.Models;
@@ -2247,6 +2247,7 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #region Custom Enum Mapping
+
         private static CustomedMappingEnumPropertyHandler<TDbType, TEnum> CreateCustomedMappingEnumPropertyHandler<TEnum, TDbType>(
             Dictionary<TEnum, TDbType> mapping)
             => new CustomedMappingEnumPropertyHandler<TDbType, TEnum>(mapping);
@@ -2273,7 +2274,6 @@ namespace RepoDb.IntegrationTests
         {
             public TEnum? Value { get; set; }
         }
-
 
         public enum CustomedStringEnum { A, B }
         private CustomedMappingEnumPropertyHandler<string, CustomedStringEnum?> customedStringEnumHandler =
@@ -2476,7 +2476,7 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryForEnumWithPropertyHandlerForInvalid()
         {
             // Setup
@@ -2496,7 +2496,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
 
                 // Act
-                connection.Query<EnumCompleteTableWithPropertyHandler>(id);
+                Assert.Throws<InvalidOperationException>(() => connection.Query<EnumCompleteTableWithPropertyHandler>(id));
             }
         }
 

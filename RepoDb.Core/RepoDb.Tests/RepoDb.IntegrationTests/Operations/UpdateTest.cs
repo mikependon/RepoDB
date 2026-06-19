@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -1734,7 +1734,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateIfThereIsNoKeyField()
         {
             // Setup
@@ -1743,11 +1743,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Update<NonKeyedTable>(data);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.Update<NonKeyedTable>(data));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThereIsNoKeyField()
         {
             // Setup
@@ -1756,11 +1756,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), (object)data);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), (object)data));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
         {
             // Setup
@@ -1773,7 +1773,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+                Assert.Throws<EmptyException>(() => connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data));
             }
         }
 
@@ -2241,7 +2241,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2251,12 +2251,13 @@ namespace RepoDb.IntegrationTests.Operations
                     ColumnInt = 1,
                     ColumnDecimal = 2
                 };
-                await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    data);
+                Assert.Throws<KeyFieldNotFoundException>(async () =>
+                    await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                        data));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -2266,8 +2267,7 @@ namespace RepoDb.IntegrationTests.Operations
                     Id = 1,
                     AnyField = 1
                 };
-                await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    data);
+                Assert.Throws<EmptyException>(async () => await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(), data));
             }
         }
 

@@ -17,8 +17,8 @@
     <Compile Remove="Others\ClassMapTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Moq" />
-    <PackageReference Include="MSTest" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="MSTest" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />

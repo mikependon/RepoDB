@@ -299,7 +299,6 @@ namespace RepoDb.IntegrationTests.Caches
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
-                Assert.IsNotNull(result);
                 Assert.IsNotNull(item);
                 Assert.AreEqual(result, item.Value);
             }
@@ -327,7 +326,6 @@ namespace RepoDb.IntegrationTests.Caches
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
-                Assert.IsNotNull(result);
                 Assert.IsNotNull(item);
                 Assert.AreEqual(result, item.Value);
             }

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -173,31 +173,31 @@ namespace RepoDb.UnitTests.Others
 
         // Exceptions
 
-        [TestMethod, ExpectedException(typeof(InvalidExpressionException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
         {
             // Act/Assert
-            OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending);
+            Assert.Throws<InvalidExpressionException>(() => OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectFieldValueIsNotAnOrderType()
         {
             // Prepare
             var orderBy = new { Id = "NotAnOrderType" };
 
             // Act/Assert
-            OrderField.Parse(orderBy);
+            Assert.Throws<InvalidTypeException>(() => OrderField.Parse(orderBy));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectIsNull()
         {
             // Prepare
             var orderBy = (object)null;
 
             // Act/Assert
-            OrderField.Parse(orderBy);
+            Assert.Throws<NullReferenceException>(() => OrderField.Parse(orderBy));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1798,7 +1798,7 @@ namespace RepoDb.IntegrationTests
             public string Extra { get; set; }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1808,11 +1808,11 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                connection.ExecuteQuery<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
+                Assert.Throws<MissingMemberException>(() => connection.ExecuteQuery<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionExecuteQueryAsyncForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1822,7 +1822,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
+                Assert.Throws<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
             }
         }
 

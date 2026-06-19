@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -152,7 +152,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsNull()
         {
             // Setup
@@ -161,12 +161,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverageAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateAverageAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsEmpty()
         {
             // Setup
@@ -175,12 +178,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverageAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateAverageAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -189,12 +195,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverageAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateAverageAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheFieldIsNull()
         {
             // Setup
@@ -202,12 +211,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateAverageAll(tableName: tableName,
-                field: null,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateAverageAll(tableName: tableName,
+                    field: null,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheHintsAreNotSupported()
         {
             // Setup
@@ -216,9 +228,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverageAll(tableName: tableName,
-                field: field,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                statementBuilder.CreateAverageAll(tableName: tableName,
+                    field: field,
+                    hints: "Hints");
+            });
         }
     }
 }

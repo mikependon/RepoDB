@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using RepoDb.Types;
 using System;
@@ -237,11 +237,11 @@ namespace RepoDb.UnitTests.Resolvers
             Assert.AreEqual(DbType.Object, dbType);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowOnExceptionClientTypeToDbTypeResolverIfTypeIsNull()
         {
             // Act
-            m_resolver.Resolve(null);
+            Assert.Throws<NullReferenceException>(() => m_resolver.Resolve(null));
         }
     }
 }

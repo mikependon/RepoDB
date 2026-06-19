@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.IntegrationTests.Models;
@@ -1643,7 +1643,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAllIfTheKeyFieldIsNotPresent()
         {
             // Setup
@@ -1652,11 +1652,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoKeyField()
         {
             // Setup
@@ -1665,11 +1665,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoKeyFieldAtTheTable()
         {
             // Setup
@@ -1678,7 +1678,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(() => connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
@@ -2122,7 +2122,7 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var current = (dynamic)table;
                     var entity = queryAllResult.First(item => item.Id == current.Id);
-                    Helper.AssertMembersEquality(entity,table);
+                    Helper.AssertMembersEquality(entity, table);
                 });
             }
         }
@@ -2255,7 +2255,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionMergeAllAsyncIfTheKeyFieldIsNotPresent()
         {
             // Setup
@@ -2264,11 +2264,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionAsyncMergeAllIfThereIsNoKeyField()
         {
             // Setup
@@ -2277,11 +2277,11 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoKeyFieldAtTheTable()
         {
             // Setup
@@ -2290,7 +2290,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+                Assert.Throws<KeyFieldNotFoundException>(async () => await connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables));
             }
         }
 

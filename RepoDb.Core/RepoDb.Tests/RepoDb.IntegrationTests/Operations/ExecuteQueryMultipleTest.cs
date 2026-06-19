@@ -871,12 +871,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -910,12 +910,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(param.Value2, value2);
 
@@ -949,17 +949,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
 
                     // Assert
-                    var value3 = result.Scalar<int>();
+                    int? value3 = result.Scalar<int>();
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
@@ -990,12 +990,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param[0].Parameter.Value, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
                 }
@@ -1019,13 +1019,13 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>(false);
+                    DateTime? value1 = result.Scalar<DateTime>(false);
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
                     result.NextResult();
-                    var value2 = result.Scalar<int>(false);
+                    int? value2 = result.Scalar<int>(false);
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -1206,12 +1206,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -1245,12 +1245,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(param.Value2, value2);
 
@@ -1284,17 +1284,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
 
                     // Assert
-                    var value3 = result.Scalar<int>();
+                    int? value3 = result.Scalar<int>();
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
@@ -1325,12 +1325,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param[0].Parameter.Value, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
                 }
@@ -1354,13 +1354,13 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>(false);
+                    DateTime? value1 = result.Scalar<DateTime>(false);
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
                     result.NextResult();
-                    var value2 = result.Scalar<int>(false);
+                    int? value2 = result.Scalar<int>(false);
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 

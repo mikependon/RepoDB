@@ -2,15 +2,16 @@
   <PropertyGroup>
     <Title>RepoDb.SqlServer</Title>
     <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
-    <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for SQL Server.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm sqlserver</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/sqlserver</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlserver</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

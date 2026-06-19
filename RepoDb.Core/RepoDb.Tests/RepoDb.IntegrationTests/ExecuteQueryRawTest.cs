@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -564,13 +564,13 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryTypeResultWithMoreColumns()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.ExecuteQuery<int>("SELECT 1 AS Column1, 2 AS Column2 UNION ALL SELECT 3, 4;").AsList();
+                Assert.Throws<InvalidOperationException>(() => connection.ExecuteQuery<int>("SELECT 1 AS Column1, 2 AS Column2 UNION ALL SELECT 3, 4;").AsList());
             }
         }
 
@@ -1044,7 +1044,7 @@ namespace RepoDb.IntegrationTests
 #if NET5_0_OR_GREATER
 
         #region Records
-        
+
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithStringRecordParam()
         {
@@ -1052,14 +1052,14 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = connection.ExecuteQuery<string>("WITH CTE AS (SELECT 'ABC' AS Value UNION ALL SELECT 'DEF') SELECT * FROM CTE WHERE Value = @Value;",
-                    new { Value = new StringRecord("ABC")}).AsList();
+                    new { Value = new StringRecord("ABC") }).AsList();
 
                 // Assert
                 Assert.AreEqual(1, result.Count);
                 Assert.AreEqual("ABC", result[0]);
             }
         }
-        
+
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMultipleStringRecordParams()
         {
@@ -1531,7 +1531,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1548,7 +1549,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1565,7 +1567,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1582,7 +1585,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1603,7 +1607,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1620,7 +1625,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1637,7 +1643,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
@@ -1654,7 +1661,8 @@ namespace RepoDb.IntegrationTests
 
                     // Assert
                     Assert.AreEqual(100, value);
-                };
+                }
+                ;
             }
         }
 
