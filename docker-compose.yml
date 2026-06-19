@@ -1,23 +1,39 @@
+name: repodb
+version: '3.8'
+
 services:
 
   mssql:
+    container_name: mssql
     image: mcr.microsoft.com/mssql/server:2025-latest
     ports:
-      - 127.0.0.1:41433:1433
+      - 127.0.0.1:1433:1433
+    networks:
+      - repodb
     environment:
       ACCEPT_EULA: true
       MSSQL_SA_PASSWORD: RepoDB2026
 
   postgresql:
+    container_name: pgsql
     image: postgres:latest
     ports:
-      - 127.0.0.1:45432:5432
+      - 127.0.0.1:5432:5432
+    networks:
+      - repodb
     environment:
       POSTGRES_PASSWORD: RepoDB2026
 
   mysql:
+    container_name: mysql
     image: mysql:latest
     ports:
-      - 127.0.0.1:43306:3306
+      - 127.0.0.1:3306:3306
+    networks:
+      - repodb
     environment:
       MYSQL_ROOT_PASSWORD: RepoDB2026
+
+networks:
+  repodb:
+    driver: bridge
