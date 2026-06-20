@@ -330,8 +330,31 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="MethodCallExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
-        public static object GetValue(this MethodCallExpression expression) =>
-            expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments.Select(argExpression => argExpression.GetValue()).ToArray());
+        public static object GetValue(this MethodCallExpression expression)
+        {
+            try
+            {
+                return expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments.Select(argExpression => argExpression.GetValue()).ToArray());
+            }
+            catch (NotSupportedException)
+            {
+                // In .NET 10, implicit conversion operators to ByRefLike types (e.g. ReadOnlySpan<T>.op_Implicit
+                // from T[]) cannot be invoked via reflection. Return the underlying argument value directly —
+                // callers expecting IEnumerable can still work with the original array.
+                if (expression.Method.Name == "op_Implicit"
+                    && IsRefLikeType(expression.Method.ReturnType)
+                    && expression.Arguments.Count == 1)
+                {
+                    return expression.Arguments[0].GetValue();
+                }
+                throw;
+            }
+        }
+
+        // Type.IsByRefLike is netstandard2.1+; check for the compiler-emitted attribute instead.
+        private static bool IsRefLikeType(Type type) =>
+            type.GetCustomAttributes(false)
+                .Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.IsByRefLikeAttribute");
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
