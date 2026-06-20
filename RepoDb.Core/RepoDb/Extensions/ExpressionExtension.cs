@@ -351,7 +351,11 @@ namespace RepoDb.Extensions
             }
         }
 
-        // Type.IsByRefLike is netstandard2.1+; check for the compiler-emitted attribute instead.
+        /// <summary>
+        /// Type.IsByRefLike is netstandard2.1+; check for the compiler-emitted attribute instead.
+        /// </summary>
+        /// <param name="type">The type to be evaluated.</param>
+        /// <returns>True if the type is supporting the IsByRefLike namespace.</returns>
         private static bool IsRefLikeType(Type type) =>
             type.GetCustomAttributes(false)
                 .Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.IsByRefLikeAttribute");
