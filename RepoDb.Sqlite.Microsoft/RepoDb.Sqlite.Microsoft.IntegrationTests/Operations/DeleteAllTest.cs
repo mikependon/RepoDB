@@ -30,7 +30,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionDeleteAll()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -46,7 +46,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaPrimaryKeys()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -84,7 +84,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionDeleteAllAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -100,7 +100,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeys()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -142,7 +142,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaTableName()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -158,7 +158,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaTableNameViaPrimaryKeys()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -196,7 +196,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionDeleteAllAsyncViaTableName()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -212,7 +212,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);

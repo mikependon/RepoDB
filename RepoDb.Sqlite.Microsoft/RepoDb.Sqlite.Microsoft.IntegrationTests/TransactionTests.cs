@@ -56,7 +56,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForBatchQuery()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -77,7 +77,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForBatchQueryAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -102,7 +102,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCount()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -123,7 +123,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForCountAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -148,7 +148,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCountAll()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -169,7 +169,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForCountAllAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -194,7 +194,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -223,7 +223,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -256,7 +256,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForDeleteAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -285,7 +285,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForDeleteAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -322,7 +322,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -351,7 +351,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -384,7 +384,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForDeleteAllAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -413,7 +413,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForDeleteAllAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -450,7 +450,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -476,7 +476,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -506,7 +506,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForInsertAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -532,7 +532,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForInsertAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -566,7 +566,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -592,7 +592,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -622,7 +622,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForInsertAllAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -648,7 +648,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForInsertAllAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -682,7 +682,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -708,7 +708,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -738,7 +738,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForMergeAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -763,7 +763,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForMergeAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -796,7 +796,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -822,7 +822,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -852,7 +852,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForMergeAllAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -878,7 +878,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForMergeAllAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -912,7 +912,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQuery()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -933,7 +933,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -958,7 +958,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryAll()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -979,7 +979,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryAllAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1004,7 +1004,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT2()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1023,7 +1023,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT3()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1043,7 +1043,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT4()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1064,7 +1064,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT5()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1086,7 +1086,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT6()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1109,7 +1109,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT7()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1137,7 +1137,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT2()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1156,7 +1156,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT3()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1176,7 +1176,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT4()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1197,7 +1197,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT5()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1219,7 +1219,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT6()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1242,7 +1242,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForQueryMultipleAsyncT7()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1325,7 +1325,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1359,7 +1359,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1397,7 +1397,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForUpdateAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1431,7 +1431,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForUpdateAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1473,7 +1473,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1507,7 +1507,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1545,7 +1545,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForUpdateAllAsyncAsCommitted()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1579,7 +1579,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public async Task TestSqlTransactionForUpdateAllAsyncAsRolledBack()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateMdsCompleteTable(connection);
@@ -1628,7 +1628,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);
@@ -1653,7 +1653,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);
@@ -1682,7 +1682,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);
@@ -1707,7 +1707,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);
@@ -1736,7 +1736,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);
@@ -1770,7 +1770,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 
             using (var transaction = new TransactionScope())
             {
-                using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+                using (var connection = new SqliteConnection(Database.ConnectionString))
                 {
                     // Create the tables
                     Database.CreateMdsCompleteTable(connection);

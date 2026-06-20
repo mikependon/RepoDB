@@ -13,7 +13,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             var variable = Environment.GetEnvironmentVariable("REPODB_SQLITE_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
-            IsInMemory = variable != null || string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
+            IsInMemory = variable == null || string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
         }
 
         #region Properties
@@ -21,7 +21,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used (for MDS).
         /// </summary>
-        public static string ConnectionStringMDS { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
+        public static string ConnectionString { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
         /// <summary>
         /// Gets the value that indicates whether to use the in-memory database.
@@ -43,12 +43,12 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             if (IsInMemory == true)
             {
                 // Memory
-                ConnectionStringMDS = @"Data Source=:memory:;";
+                ConnectionString = @"Data Source=:memory:;";
             }
             else
             {
                 // Local
-                ConnectionStringMDS = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
+                ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
                 // Create tables
                 CreateMdsTables();
@@ -61,7 +61,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             {
                 return;
             }
-            using (var connection = new SqliteConnection(ConnectionStringMDS))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.DeleteAll<MdsCompleteTable>();
                 connection.DeleteAll<MdsNonIdentityCompleteTable>();
@@ -78,7 +78,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionStringMDS);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -106,7 +106,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionStringMDS);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -139,7 +139,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionStringMDS);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -184,7 +184,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionStringMDS);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
