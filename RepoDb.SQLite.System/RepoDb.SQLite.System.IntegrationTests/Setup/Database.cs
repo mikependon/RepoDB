@@ -13,7 +13,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Setup
             var variable = Environment.GetEnvironmentVariable("REPODB_SQLITE_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
-            IsInMemory = variable != null || string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
+            IsInMemory = (variable == null) || string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
         }
 
         #region Properties
