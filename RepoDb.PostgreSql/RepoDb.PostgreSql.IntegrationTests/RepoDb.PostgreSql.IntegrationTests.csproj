@@ -10,7 +10,12 @@
     <PackageReference Include="MSTest" Version="4.2.3" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
   </ItemGroup>
-  <ItemGroup>
+	
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	<PackageReference Include="Npgsql" Version="8.0.3" />
+  </ItemGroup>
+
+	<ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
   </ItemGroup>

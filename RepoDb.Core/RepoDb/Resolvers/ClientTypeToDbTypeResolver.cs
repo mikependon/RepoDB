@@ -109,10 +109,6 @@ namespace RepoDb.Resolvers
             {
                 return DbType.Time;
             }
-            else if (type == StaticType.Byte)
-            {
-                return DbType.Byte;
-            }
             else if (type == StaticType.Guid)
             {
                 return DbType.Guid;
