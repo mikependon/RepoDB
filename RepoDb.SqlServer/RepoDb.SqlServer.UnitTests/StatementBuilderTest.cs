@@ -216,13 +216,14 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: 0,
-                rowsPerBatch: 10,
-                orderBy: null,
-                where: null);
+            // Act
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: null,
+                    where: null));
         }
 
         [TestMethod]
@@ -233,13 +234,14 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
-            statementBuilder.CreateBatchQuery(tableName: tableName,
-                fields: fields,
-                page: 0,
-                rowsPerBatch: 10,
-                orderBy: null,
-                where: null);
+            // Act
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateBatchQuery(tableName: tableName,
+                    fields: fields,
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: null,
+                    where: null));
         }
 
         [TestMethod]
@@ -250,7 +252,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
+            // Act
             Assert.Throws<NullReferenceException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
@@ -268,7 +270,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<MissingFieldsException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: null,
@@ -286,7 +288,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
+            // Act
             Assert.Throws<EmptyException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
@@ -305,7 +307,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
@@ -324,7 +326,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 statementBuilder.CreateBatchQuery(tableName: tableName,
                     fields: fields,
@@ -2300,13 +2302,14 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: 0,
-                take: 10,
-                orderBy: null,
-                where: null);
+            // Act
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: 0,
+                    take: 10,
+                    orderBy: null,
+                    where: null));
         }
 
         [TestMethod]
@@ -2317,13 +2320,14 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
-            statementBuilder.CreateSkipQuery(tableName: tableName,
-                fields: fields,
-                skip: 0,
-                take: 10,
-                orderBy: null,
-                where: null);
+            // Act
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateSkipQuery(tableName: tableName,
+                    fields: fields,
+                    skip: 0,
+                    take: 10,
+                    orderBy: null,
+                    where: null));
         }
 
         [TestMethod]
@@ -2334,7 +2338,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
+            // Act
             Assert.Throws<NullReferenceException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
@@ -2352,7 +2356,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<MissingFieldsException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: null,
@@ -2370,7 +2374,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
-            // Act/Assert
+            // Act
             Assert.Throws<EmptyException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
@@ -2389,7 +2393,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,
@@ -2408,7 +2412,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
-            // Act/Assert
+            // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 statementBuilder.CreateSkipQuery(tableName: tableName,
                     fields: fields,

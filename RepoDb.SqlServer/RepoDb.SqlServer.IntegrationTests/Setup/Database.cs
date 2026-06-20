@@ -34,7 +34,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             // RepoDb connection
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR") ??
-                @"Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=Password=RepoDB2026;TrustServerCertificate=True;";
+                @"Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             GlobalConfiguration
