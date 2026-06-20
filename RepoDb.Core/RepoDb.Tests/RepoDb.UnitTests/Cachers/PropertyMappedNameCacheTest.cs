@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using System;
 using System.Linq;
@@ -57,11 +57,11 @@ namespace RepoDb.UnitTests.Caches
             Assert.AreEqual(expected, property.GetMappedName());
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExcpetionOnPropertyMappingCacheIfThePropertyIsNull()
         {
             // Setup
-            PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null);
+            Assert.Throws<NullReferenceException>(() => PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null));
         }
 
         #endregion

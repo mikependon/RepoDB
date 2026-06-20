@@ -39,7 +39,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var id = connection.Insert(entity);
@@ -69,7 +69,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -99,7 +99,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var id = connection.Insert(entity);
@@ -129,7 +129,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -159,7 +159,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(entity);
@@ -191,7 +191,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -223,7 +223,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(entity);
@@ -255,7 +255,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -291,7 +291,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var id = connection.Insert(ClassMappedNameCache.Get<OthersClass>(), entity);
@@ -321,7 +321,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<OthersClass>(), entity);
@@ -351,7 +351,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //        ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
         //    };
         //
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);
@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);

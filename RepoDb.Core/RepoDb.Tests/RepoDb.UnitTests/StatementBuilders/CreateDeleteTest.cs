@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateDeleteIfTheTableIsNull()
         {
             // Setup
@@ -109,10 +109,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateDelete(tableName: tableName);
+            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateDeleteIfTheTableIsEmpty()
         {
             // Setup
@@ -120,10 +120,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateDelete(tableName: tableName);
+            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateDeleteIfTheTableIsWhitespace()
         {
             // Setup
@@ -131,7 +131,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateDelete(tableName: tableName);
+            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateDelete(tableName: tableName));
         }
     }
 }

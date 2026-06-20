@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -216,7 +216,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageIfTheTableIsNull()
         {
             // Setup
@@ -226,13 +226,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateAverage(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageIfTheTableIsEmpty()
         {
             // Setup
@@ -242,13 +243,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateAverage(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageIfTheTableIsWhitespace()
         {
             // Setup
@@ -258,13 +260,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateAverage(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageIfTheFieldIsNull()
         {
             // Setup
@@ -273,13 +276,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: null,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateAverage(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: null,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageIfTheHintsAreNotSupported()
         {
             // Setup
@@ -289,10 +293,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
-                field: field,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateAverage(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    field: field,
+                    hints: "Hints"));
         }
     }
 }

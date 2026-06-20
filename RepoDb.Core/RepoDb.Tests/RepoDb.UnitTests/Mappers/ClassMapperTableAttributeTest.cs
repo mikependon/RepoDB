@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
@@ -79,37 +79,37 @@ namespace RepoDb.UnitTests.Mappers
          * Override False
          */
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsAlreadyExisting()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]");
-            ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]");
+            Assert.Throws<MappingExistsException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]"));
         }
 
         /*
          * Empty/Null
          */
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsEmpty()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTableAttributeTestClass>("");
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(""));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsEmptySpaces()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTableAttributeTestClass>("  ");
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>("  "));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperViaTableThatIsNull()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTableAttributeTestClass>(null);
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTableAttributeTestClass>(null));
         }
 
         /*

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using System;
@@ -95,37 +95,37 @@ namespace RepoDb.UnitTests.Mappers
          * Override False
          */
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperThatIsAlreadyExisting()
         {
             // Setup
             ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]");
-            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]");
+            Assert.Throws<MappingExistsException>(() => ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]"));
         }
 
         /*
          * Empty/Null
          */
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperThatIsEmpty()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("");
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTestWithMapAttributeClass>(""));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperThatIsEmptySpaces()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("  ");
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("  "));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnClassMapperThatIsNull()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>(null);
+            Assert.Throws<NullReferenceException>(() => ClassMapper.Add<ClassMapperTestWithMapAttributeClass>(null));
         }
 
         #endregion

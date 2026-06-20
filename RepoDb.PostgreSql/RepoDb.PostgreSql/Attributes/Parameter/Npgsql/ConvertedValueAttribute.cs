@@ -1,11 +1,13 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 
 namespace RepoDb.Attributes.Parameter.Npgsql
 {
     /// <summary>
-    /// An attribute used to define a value to the <see cref="NpgsqlParameter.ConvertedValue"/>
+    /// An attribute used to define a value to the <see cref="NpgsqlParameter"/> for ConvertedValue
     /// property via an entity property before the actual execution.
     /// </summary>
+    [Obsolete("Obsoleted by Npgsql.")]
     public class ConvertedValueAttribute : PropertyValueAttribute
     {
         /// <summary>
@@ -13,7 +15,7 @@ namespace RepoDb.Attributes.Parameter.Npgsql
         /// </summary>
         /// <param name="convertedValue">The converted value.</param>
         public ConvertedValueAttribute(object convertedValue)
-            : base(typeof(NpgsqlParameter), nameof(NpgsqlParameter.ConvertedValue), convertedValue)
+            : base(typeof(NpgsqlParameter),  "ConvertedValue", convertedValue)
         { }
 
         /// <summary>

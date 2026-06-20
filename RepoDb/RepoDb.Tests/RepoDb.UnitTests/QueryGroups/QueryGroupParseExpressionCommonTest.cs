@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
@@ -36,11 +36,12 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnParseExpressionWithNameAtRight()
         {
             // Act
-            QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt);
+            Assert.Throws<NotSupportedException>(() =>
+                QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt));
         }
 
         #endregion

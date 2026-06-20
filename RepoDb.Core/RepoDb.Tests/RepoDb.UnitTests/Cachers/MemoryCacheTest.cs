@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using System;
 using System.Linq;
@@ -152,35 +152,35 @@ namespace RepoDb.UnitTests.Caches
             Assert.AreEqual(expirationInMinutes, (actual.Expiration - actual.CreatedDate).TotalMinutes);
         }
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnAddingNewItemAtMemoryCacheWithTheSameKey()
         {
             // Prepare
             var cache = new MemoryCache();
-            cache.Add("Key", new object(), throwException: true);
 
             // Act/Assert
             cache.Add("Key", new object(), throwException: true);
+            Assert.Throws<MappingExistsException>(() => cache.Add("Key", new object(), throwException: true));
         }
 
-        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [TestMethod]
         public void ThrowExceptionAtMemoryCacheOnAddingACacheWithNegativeExpiration()
         {
             // Prepare
             var cache = new MemoryCache();
 
             // Act/Assert
-            cache.Add("Key", "Value", -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => cache.Add("Key", "Value", -1));
         }
 
-        [TestMethod, ExpectedException(typeof(ItemNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionAtMemoryCacheOnRemovingAKeyThatIsNotPresent()
         {
             // Prepare
             var cache = new MemoryCache();
 
             // Act/Assert
-            cache.Remove("Key", true);
+            Assert.Throws<ItemNotFoundException>(() => cache.Remove("Key", true));
         }
     }
 }

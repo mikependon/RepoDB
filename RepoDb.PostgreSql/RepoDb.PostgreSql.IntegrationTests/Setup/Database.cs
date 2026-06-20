@@ -27,17 +27,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         {
             // Master connection
             ConnectionStringForPostgres =
-                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR_POSTGRESDB")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB")
-                // ?? "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
-                ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
+                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR_POSTGRES") ??
+                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;";
 
             // RepoDb connection
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR")
-                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
-                // ?? "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
-                ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;";
+                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR") ??
+                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
 
             // For >= v6.0.0: To reutilize the legacy behavior
             // https://github.com/abpframework/abp/issues/10273
@@ -122,8 +118,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         ""ColumnCharacter"" character(1) COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVarying"" character varying COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVaryingAsArray"" character varying[] COLLATE pg_catalog.""default"",
-                        ""ColumnCid"" cid,
-                        ""ColumnCidAsArray"" cid[],
+                        --""ColumnCid"" cid,
+                        --""ColumnCidAsArray"" cid[],
                         ""ColumnCidr"" cidr,
                         ""ColumnCircle"" circle,
                         ""ColumnCircleAsArray"" circle[],
@@ -136,8 +132,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         --""ColumnGtsVector"" gtsvector,
                         ""ColumnInet"" inet,
                         ""ColumnInetAsArray"" inet[],
-                        ""ColumnInt2Vector"" int2vector,
-                        ""ColumnInt2VectorAsArray"" int2vector[],
+                        --""ColumnInt2Vector"" int2vector,
+                        --""ColumnInt2VectorAsArray"" int2vector[],
                         ""ColumnInt4Range"" int4range,
                         ""ColumnInt4RangeAsArray"" int4range[],
                         ""ColumnInt8Range"" int8range,
@@ -170,52 +166,52 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         ""ColumnNumRangeAsArray"" numrange[],
                         ""ColumnOId"" oid,
                         ""ColumnOIdAsArray"" oid[],
-                        ""ColumnOIdVector"" oidvector,
-                        ""ColumnOIdVectorAsArray"" oidvector[],
+                        --""ColumnOIdVector"" oidvector,
+                        --""ColumnOIdVectorAsArray"" oidvector[],
                         ""ColumnPath"" path,
                         ""ColumnPathAsArray"" path[],
-                        ""ColumnPgDependencies"" pg_dependencies COLLATE pg_catalog.""default"",
-                        ""ColumnPgLsn"" pg_lsn,
-                        ""ColumnPgLsnAsArray"" pg_lsn[],
-                        ""ColumnPgMcvList"" pg_mcv_list COLLATE pg_catalog.""default"",
-                        ""ColumnPgNDistinct"" pg_ndistinct COLLATE pg_catalog.""default"",
-                        ""ColumnPgNodeTree"" pg_node_tree COLLATE pg_catalog.""default"",
+                        --""ColumnPgDependencies"" pg_dependencies COLLATE pg_catalog.""default"",
+                        --""ColumnPgLsn"" pg_lsn,
+                        --""ColumnPgLsnAsArray"" pg_lsn[],
+                        --""ColumnPgMcvList"" pg_mcv_list COLLATE pg_catalog.""default"",
+                        --""ColumnPgNDistinct"" pg_ndistinct COLLATE pg_catalog.""default"",
+                        --""ColumnPgNodeTree"" pg_node_tree COLLATE pg_catalog.""default"",
                         ""ColumnPoint"" point,
                         ""ColumnPointAsArray"" point[],
                         ""ColumnPolygon"" polygon,
                         ""ColumnPolygonAsArray"" polygon[],
                         ""ColumnReal"" real,
                         ""ColumnRealAsArray"" real[],
-                        ""ColumnRefCursor"" refcursor,
-                        ""ColumnRefCursorAsArray"" refcursor[],
-                        ""ColumnRegClass"" regclass,
-                        ""ColumnRegClassAsArray"" regclass[],
-                        ""ColumnRegConfig"" regconfig,
-                        ""ColumnRegConfigAsArray"" regconfig[],
-                        ""ColumnRegDictionary"" regdictionary,
-                        ""ColumnRegDictionaryAsArray"" regdictionary[],
-                        ""ColumnRegNamespace"" regnamespace,
-                        ""ColumnRegNamespaceAsArray"" regnamespace[],
-                        ""ColumnRegOper"" regoper,
-                        ""ColumnRegOperAsArray"" regoper[],
-                        ""ColumnRegOperator"" regoperator,
-                        ""ColumnRegOperationAsArray"" regoperator[],
-                        ""ColumnRegProc"" regproc,
-                        ""ColumnRegProcAsArray"" regproc[],
-                        ""ColumnRegProcedure"" regprocedure,
-                        ""ColumnRegProcedureAsArray"" regprocedure[],
-                        ""ColumnRegRole"" regrole,
-                        ""ColumnRegRoleAsArray"" regrole[],
-                        ""ColumnRegType"" regtype,
-                        ""ColumnRegTypeAsArray"" regtype[],
+                        --""ColumnRefCursor"" refcursor,
+                        --""ColumnRefCursorAsArray"" refcursor[],
+                        --""ColumnRegClass"" regclass,
+                        --""ColumnRegClassAsArray"" regclass[],
+                        --""ColumnRegConfig"" regconfig,
+                        --""ColumnRegConfigAsArray"" regconfig[],
+                        --""ColumnRegDictionary"" regdictionary,
+                        --""ColumnRegDictionaryAsArray"" regdictionary[],
+                        --""ColumnRegNamespace"" regnamespace,
+                        --""ColumnRegNamespaceAsArray"" regnamespace[],
+                        --""ColumnRegOper"" regoper,
+                        --""ColumnRegOperAsArray"" regoper[],
+                        --""ColumnRegOperator"" regoperator,
+                        --""ColumnRegOperationAsArray"" regoperator[],
+                        --""ColumnRegProc"" regproc,
+                        --""ColumnRegProcAsArray"" regproc[],
+                        --""ColumnRegProcedure"" regprocedure,
+                        --""ColumnRegProcedureAsArray"" regprocedure[],
+                        --""ColumnRegRole"" regrole,
+                        --""ColumnRegRoleAsArray"" regrole[],
+                        --""ColumnRegType"" regtype,
+                        --""ColumnRegTypeAsArray"" regtype[],
                         ""ColumnSerial"" integer,
                         ""ColumnSmallInt"" smallint,
                         ""ColumnSmallIntAsArray"" smallint[],
                         ""ColumnSmallSerial"" smallint,
                         ""ColumnText"" text COLLATE pg_catalog.""default"",
                         ""ColumnTextAsArray"" text[] COLLATE pg_catalog.""default"",
-                        ""ColumnTId"" tid,
-                        ""ColumnTidAsArray"" tid[],
+                        --""ColumnTId"" tid,
+                        --""ColumnTidAsArray"" tid[],
                         ""ColumnTimeWithTimeZoneAsArray"" time with time zone[],
                         ""ColumnTimeWithTimeZone"" time with time zone,
                         ""ColumnTimeWithoutTimeZone"" time without time zone,
@@ -236,8 +232,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         --""ColumnTXIDSnapshotAsArray"" txid_snapshot[],
                         ""ColumnUUID"" uuid,
                         ""ColumnUUIDAsArray"" uuid[],
-                        ""ColumnXID"" xid,
-                        ""ColumnXIDAsArray"" xid[],
+                        --""ColumnXID"" xid,
+                        --""ColumnXIDAsArray"" xid[],
                         ""ColumnXML"" xml,
                         ""ColumnXMLAsArray"" xml[],
                         CONSTRAINT ""CompleteTable_pkey"" PRIMARY KEY (""Id"")
@@ -247,6 +243,48 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
                     ALTER TABLE public.""CompleteTable""
                         OWNER to postgres;");
+
+                // System catalog types no longer readable as System.Object in Npgsql 10.
+                // Drop them from existing tables that were created before this fix.
+                connection.ExecuteNonQuery(@"
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgDependencies"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgLsn"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgLsnAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgMcvList"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgNDistinct"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgNodeTree"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegClass"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegClassAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegDictionary"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegDictionaryAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegNamespace"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegNamespaceAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOper"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperator"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperationAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProc"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcedure"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcedureAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegRole"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegRoleAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegType"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegTypeAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnCid"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnCidAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnInt2Vector"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnInt2VectorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnOIdVector"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnOIdVectorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRefCursor"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRefCursorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegConfig"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegConfigAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnTId"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnTidAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnXID"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnXIDAsArray"";");
             }
         }
 

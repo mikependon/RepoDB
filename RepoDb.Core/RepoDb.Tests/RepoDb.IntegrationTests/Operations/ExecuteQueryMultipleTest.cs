@@ -37,7 +37,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -116,7 +116,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -156,7 +156,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -198,7 +198,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -242,7 +242,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -281,7 +281,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -321,7 +321,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -361,7 +361,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -450,7 +450,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -489,7 +489,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -529,7 +529,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -569,7 +569,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -611,7 +611,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -655,7 +655,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -694,7 +694,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -734,7 +734,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await connection.InsertAllAsync(tables);
@@ -774,7 +774,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -815,7 +815,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            await using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -860,7 +860,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithoutParameters()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
@@ -871,12 +871,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -899,7 +899,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = "USER"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
@@ -910,12 +910,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(param.Value2, value2);
 
@@ -938,7 +938,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = 3
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
@@ -949,17 +949,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
 
                     // Assert
-                    var value3 = result.Scalar<int>();
+                    int? value3 = result.Scalar<int>();
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
@@ -979,7 +979,7 @@ namespace RepoDb.IntegrationTests.Operations
                 output
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
@@ -990,12 +990,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param[0].Parameter.Value, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
                 }
@@ -1008,7 +1008,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithoutParametersAndWithManualNextResultCall()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
@@ -1019,13 +1019,13 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>(false);
+                    DateTime? value1 = result.Scalar<DateTime>(false);
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
                     result.NextResult();
-                    var value2 = result.Scalar<int>(false);
+                    int? value2 = result.Scalar<int>(false);
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -1045,7 +1045,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarWithoutParameters()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
@@ -1084,7 +1084,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = "USER"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
@@ -1123,7 +1123,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = 3
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
@@ -1154,7 +1154,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarWithoutParametersAndWithManualNextResultCall()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
@@ -1195,7 +1195,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithoutParameters()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
@@ -1206,12 +1206,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -1234,7 +1234,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = "USER"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
@@ -1245,12 +1245,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<int>();
+                    int? value2 = result.Scalar<int>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(param.Value2, value2);
 
@@ -1273,7 +1273,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = 3
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
@@ -1284,17 +1284,17 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param.Value1, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
 
                     // Assert
-                    var value3 = result.Scalar<int>();
+                    int? value3 = result.Scalar<int>();
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
@@ -1314,7 +1314,7 @@ namespace RepoDb.IntegrationTests.Operations
                 output
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
@@ -1325,12 +1325,12 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>();
+                    DateTime? value1 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(param[0].Parameter.Value, value1);
 
                     // Assert
-                    var value2 = result.Scalar<DateTime>();
+                    DateTime? value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
                 }
@@ -1343,7 +1343,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithoutParametersAndWithManualNextResultCall()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
@@ -1354,13 +1354,13 @@ namespace RepoDb.IntegrationTests.Operations
                     var index = result.Position + 1;
 
                     // Assert
-                    var value1 = result.Scalar<DateTime>(false);
+                    DateTime? value1 = result.Scalar<DateTime>(false);
                     Assert.IsNotNull(value1);
                     Assert.AreEqual(typeof(DateTime), value1.GetType());
 
                     // Assert
                     result.NextResult();
-                    var value2 = result.Scalar<int>(false);
+                    int? value2 = result.Scalar<int>(false);
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(14, value2);
 
@@ -1380,7 +1380,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithoutParameters()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
@@ -1419,7 +1419,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = "USER"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
@@ -1458,7 +1458,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value3 = 3
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
@@ -1489,7 +1489,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithoutParametersAndWithManualNextResultCall()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
@@ -1532,7 +1532,7 @@ namespace RepoDb.IntegrationTests.Operations
             var identityTables = Helper.CreateIdentityTables(10).AsList();
             var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 connection.InsertAll(identityTables);
@@ -1570,7 +1570,7 @@ namespace RepoDb.IntegrationTests.Operations
             var identityTables = Helper.CreateIdentityTables(10).AsList();
             var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
 
-            using (var connection = await new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpenAsync())
+            using (var connection = await new SqlConnection(Database.ConnectionString).EnsureOpenAsync())
             {
                 // Act
                 connection.InsertAll(identityTables);

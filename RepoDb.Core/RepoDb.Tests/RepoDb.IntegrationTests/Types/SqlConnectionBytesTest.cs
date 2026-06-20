@@ -42,7 +42,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = bytes
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -72,7 +72,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -104,7 +104,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -134,7 +134,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -166,7 +166,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -198,7 +198,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -232,7 +232,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -264,7 +264,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -302,7 +302,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = bytes
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -332,7 +332,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -364,7 +364,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -396,7 +396,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);

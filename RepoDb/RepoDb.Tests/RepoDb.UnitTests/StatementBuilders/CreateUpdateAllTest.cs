@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.UnitTests.CustomObjects;
 using System;
@@ -220,7 +220,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsNull()
         {
             // Setup
@@ -231,16 +231,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsEmpty()
         {
             // Setup
@@ -251,16 +252,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -271,16 +273,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -292,16 +295,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -313,16 +317,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: identifyField));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfAnyOfTheQualifierIsNotCovered()
         {
             // Setup
@@ -333,16 +338,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Id");
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<InvalidQualifiersException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfThereAreNoQualifiers()
         {
             // Setup
@@ -352,16 +358,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheBatchSizeIsGreaterThan1AndTheMultipleStatementExecutionIsNotSupported()
         {
             // Setup
@@ -372,13 +379,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var qualifiers = Field.From("Field1");
 
             // Act
-            statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 10,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 10,
+                    primaryField: null,
+                    identityField: null));
         }
     }
 }

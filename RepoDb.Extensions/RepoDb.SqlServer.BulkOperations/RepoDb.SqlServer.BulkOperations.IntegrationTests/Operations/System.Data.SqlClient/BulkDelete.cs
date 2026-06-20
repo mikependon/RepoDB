@@ -284,7 +284,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -305,7 +305,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.BulkDelete(tables, null, mappings);
+                Assert.Throws<InvalidOperationException>(() => connection.BulkDelete(tables, null, mappings));
             }
         }
 
@@ -395,7 +395,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -429,7 +429,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings);
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings));
                     }
                 }
             }
@@ -531,7 +531,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -569,19 +569,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings));
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullEntities()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null);
+                Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -594,23 +594,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         //    }
         //}
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullDataReader()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DbDataReader)null);
+                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullDataTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null);
+                Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null));
             }
         }
 
@@ -936,7 +936,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -970,13 +970,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             null,
-                            mappings);
-
-                        // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            mappings));
                     }
                 }
             }
@@ -1082,7 +1079,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1120,14 +1117,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 null,
                                 DataRowState.Unchanged,
-                                mappings);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                                mappings));
                         }
                     }
                 }
@@ -1392,7 +1386,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1413,12 +1407,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(tables,
                     null,
-                    mappings);
-
-                // Trigger
-                var result = bulkDeleteResult.Result;
+                    mappings).Result);
             }
         }
 
@@ -1510,7 +1501,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1544,12 +1535,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
                             null,
-                            mappings);
-
-                        // Trigger
-                        var result = bulkDeleteResult.Result;
+                            mappings).Result);
                     }
                 }
             }
@@ -1654,7 +1642,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1692,25 +1680,22 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
                                 null,
                                 DataRowState.Unchanged,
-                                mappings);
-
-                            // Trigger
-                            var result = bulkDeleteResult.Result;
+                                mappings).Result);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullEntities()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDeleteAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+                Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
             }
         }
 
@@ -1723,23 +1708,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         //    }
         //}
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullDataReader()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DbDataReader)null).Wait();
+                Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null).Wait());
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullDataTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null).Wait();
+                Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null).Wait());
             }
         }
 
@@ -2066,7 +2051,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2100,19 +2085,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             null,
-                            mappings);
-
-                        // Trigger
-                        var result = bulkDeleteResult.Result;
+                            mappings).Result);
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
@@ -2134,16 +2116,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", (DbDataReader)reader);
-
-                        // Trigger
-                        var result = bulkDeleteResult.Result;
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", (DbDataReader)reader).Result);
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
@@ -2165,10 +2144,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable", (DbDataReader)reader);
-
-                        // Trigger
-                        var result = bulkDeleteResult.Result;
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable", (DbDataReader)reader).Result);
                     }
                 }
             }
@@ -2274,7 +2250,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2312,21 +2288,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 null,
                                 DataRowState.Unchanged,
-                                mappings);
-
-                            // Trigger
-                            var result = bulkDeleteResult.Result;
+                                mappings).Result);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
@@ -2352,17 +2325,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", table);
-
-                            // Trigger
-                            var result = bulkDeleteResult.Result;
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
@@ -2388,13 +2358,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable",
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
                                 table,
                                 null,
-                                DataRowState.Unchanged);
-
-                            // Trigger
-                            var result = bulkDeleteResult.Result;
+                                DataRowState.Unchanged).Result);
                         }
                     }
                 }

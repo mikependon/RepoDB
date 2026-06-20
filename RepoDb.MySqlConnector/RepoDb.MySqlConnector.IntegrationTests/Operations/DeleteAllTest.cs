@@ -33,7 +33,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>();
@@ -50,7 +50,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>(primaryKeys);
@@ -67,7 +67,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>(primaryKeys);
@@ -87,7 +87,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>();
@@ -104,7 +104,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
@@ -121,7 +121,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
@@ -145,7 +145,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>());
@@ -162,7 +162,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -179,7 +179,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -199,7 +199,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
@@ -216,7 +216,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -233,7 +233,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);

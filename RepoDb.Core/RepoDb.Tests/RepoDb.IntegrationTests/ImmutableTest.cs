@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,7 +93,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -114,7 +114,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<ImmutableIdentityTable, long>(entity);
@@ -163,7 +163,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<ImmutableIdentityTable>(entities);
@@ -189,7 +189,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<ImmutableIdentityTable, long>(entity);
@@ -217,7 +217,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<ImmutableIdentityTable>(entities);
@@ -290,7 +290,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<IdentityTable>(entities);
@@ -333,7 +333,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -356,7 +356,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable, long>(entity);
@@ -393,7 +393,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -480,7 +480,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -501,7 +501,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -525,7 +525,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableWithFewerCtorArgumentsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity);
@@ -550,7 +550,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableWithFewerCtorArgumentsIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<ImmutableWithFewerCtorArgumentsIdentityTable>(entities);
@@ -576,7 +576,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableWithFewerCtorArgumentsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<ImmutableWithFewerCtorArgumentsIdentityTable, long>(entity);
@@ -604,7 +604,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -649,7 +649,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableWithFewerCtorArgumentsIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<ImmutableWithFewerCtorArgumentsIdentityTable>(entities);
@@ -679,7 +679,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<IdentityTable>(entities);
@@ -724,7 +724,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -747,7 +747,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable, long>(entity);
@@ -786,7 +786,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -829,7 +829,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -877,7 +877,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -898,7 +898,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -922,7 +922,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableWithWritablePropertiesIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
@@ -943,7 +943,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableWithWritablePropertiesIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<ImmutableWithWritablePropertiesIdentityTable>(entities);
@@ -967,7 +967,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateImmutableWithWritablePropertiesIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
@@ -993,7 +993,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -1047,7 +1047,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateImmutableWithWritablePropertiesIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<ImmutableWithWritablePropertiesIdentityTable>(entities);
@@ -1075,7 +1075,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<IdentityTable>(entities);
@@ -1129,7 +1129,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -1152,7 +1152,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable, long>(entity);
@@ -1200,7 +1200,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1252,7 +1252,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1330,7 +1330,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1354,7 +1354,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateMappedPropertiesImmutableIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<MappedPropertiesImmutableIdentityTable, long>(entity);
@@ -1374,7 +1374,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateMappedPropertiesImmutableIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<MappedPropertiesImmutableIdentityTable>(entities);
@@ -1395,7 +1395,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateMappedPropertiesImmutableIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<MappedPropertiesImmutableIdentityTable, long>(entity);
@@ -1418,7 +1418,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -1461,7 +1461,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateMappedPropertiesImmutableIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<MappedPropertiesImmutableIdentityTable>(entities);
@@ -1486,7 +1486,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<IdentityTable>(entities);
@@ -1529,7 +1529,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTable, long>(entity);
@@ -1552,7 +1552,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable, long>(entity);
@@ -1589,7 +1589,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1630,7 +1630,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -1686,7 +1686,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryForImmutableWithMatchedCtorArguments()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
@@ -1704,7 +1704,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArguments()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
@@ -1742,7 +1742,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
@@ -1760,7 +1760,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
@@ -1798,31 +1798,31 @@ namespace RepoDb.IntegrationTests
             public string Extra { get; set; }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        [TestMethod]
         public void ThrowExceptionOnSqlConnectionExecuteQueryForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                connection.ExecuteQuery<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
+                Assert.Throws<MissingMemberException>(() => connection.ExecuteQuery<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionExecuteQueryAsyncForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new { Value = DateTime.UtcNow.Date };
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
+                await Assert.ThrowsAsync<MissingMemberException>(async () => await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param));
             }
         }
 

@@ -32,7 +32,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -67,7 +67,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -86,7 +86,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -144,7 +144,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -163,7 +163,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateIdentityTables(10);
@@ -190,7 +190,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var table = Helper.CreateIdentityTables(1).First();
@@ -218,7 +218,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var table = Helper.CreateIdentityTables(1).First();

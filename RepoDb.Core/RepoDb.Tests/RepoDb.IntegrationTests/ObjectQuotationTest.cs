@@ -32,7 +32,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -50,7 +50,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -71,10 +71,10 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Insert<UnorganizedTable, long>(entity);
+                long? id = connection.Insert<UnorganizedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -93,7 +93,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -114,10 +114,10 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Merge<UnorganizedTable, long>(entity);
+                long? id = connection.Merge<UnorganizedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.MergeAll<UnorganizedTable>(entities);
@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<UnorganizedTable, long>(entity);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.InsertAll<UnorganizedTable>(entities);

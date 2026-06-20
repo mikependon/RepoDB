@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsNull()
         {
             // Setup
@@ -104,12 +104,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsEmpty()
         {
             // Setup
@@ -118,12 +119,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -132,12 +134,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIIfTheHintsAreNotSupported()
         {
             // Setup
@@ -146,9 +149,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: "Hints"));
         }
     }
 }

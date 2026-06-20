@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -137,7 +137,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -163,13 +163,13 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnBatchQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -178,10 +178,13 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.BatchQuery<ClassHandlerIdentityTableWithTestModel>(page: 0,
-                    rowsPerBatch: 10,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    where: (object)null);
+                Assert.Throws<InvalidTypeException>(() =>
+                {
+                    connection.BatchQuery<ClassHandlerIdentityTableWithTestModel>(page: 0,
+                        rowsPerBatch: 10,
+                        orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                        where: (object)null);
+                });
             }
         }
 
@@ -195,7 +198,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -218,13 +221,13 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnExecuteQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -233,7 +236,7 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.ExecuteQuery<ClassHandlerIdentityTableWithTestModel>("SELECT * FROM [sc].[IdentityTable];");
+                Assert.Throws<InvalidTypeException>(() => connection.ExecuteQuery<ClassHandlerIdentityTableWithTestModel>("SELECT * FROM [sc].[IdentityTable];"));
             }
         }
 
@@ -247,7 +250,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -267,7 +270,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -281,19 +284,19 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnMergeWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Merge(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Merge(table));
             }
         }
 
@@ -307,7 +310,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -321,19 +324,19 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnMergeAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.MergeAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.MergeAll(tables));
             }
         }
 
@@ -347,7 +350,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -367,7 +370,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -381,19 +384,19 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnInsertWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Insert(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Insert(table));
             }
         }
 
@@ -407,7 +410,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -421,19 +424,19 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnInsertAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.InsertAll(tables));
             }
         }
 
@@ -447,7 +450,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);
@@ -465,13 +468,13 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -480,7 +483,7 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Query<ClassHandlerIdentityTableWithTestModel>(e => e.Id > 0);
+                Assert.Throws<InvalidTypeException>(() => connection.Query<ClassHandlerIdentityTableWithTestModel>(e => e.Id > 0));
             }
         }
 
@@ -494,7 +497,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -517,13 +520,13 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -532,7 +535,7 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.QueryAll<ClassHandlerIdentityTableWithTestModel>();
+                Assert.Throws<InvalidTypeException>(() => connection.QueryAll<ClassHandlerIdentityTableWithTestModel>());
             }
         }
 
@@ -546,7 +549,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -569,7 +572,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -586,22 +589,22 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnUpdateWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Insert(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Insert(table));
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Update(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Update(table));
             }
         }
 
@@ -615,7 +618,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -632,22 +635,22 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnUpdateAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.InsertAll(tables));
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.UpdateAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.UpdateAll(tables));
             }
         }
 

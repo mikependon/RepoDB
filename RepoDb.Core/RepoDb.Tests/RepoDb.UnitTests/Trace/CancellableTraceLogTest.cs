@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -179,358 +179,423 @@ namespace RepoDb.UnitTests.Trace
 
         #region ExecuteNonQuery
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnExecuteNonQueryCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .ExecuteNonQuery("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .ExecuteNonQuery("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnExecuteNonQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .ExecuteNonQueryAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExecuteNonQueryAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region ExecuteQuery
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnExecuteQueryCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .ExecuteQuery("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .ExecuteQuery("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnExecuteQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .ExecuteQueryAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExecuteQueryAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region ExecuteScalar
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnExecuteScalarCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .ExecuteScalar("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .ExecuteScalar("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnExecuteScalarAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .ExecuteScalarAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExecuteScalarAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region ExecuteQueryMultiple
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnExecuteQueryMultipleCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .ExecuteQueryMultiple("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .ExecuteQueryMultiple("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionExecuteQueryMultipleAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .ExecuteQueryMultipleAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExecuteQueryMultipleAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Average
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnAverageCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Average("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Average("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnAverageAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .AverageAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .AverageAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region AverageAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnAverageAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .AverageAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .AverageAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnAverageAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .AverageAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .AverageAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region BatchQuery
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnBatchQueryCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .BatchQuery("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .BatchQuery("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnBatchQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .BatchQueryAsync("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .BatchQueryAsync("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Count
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnCountCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Count("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Count("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnCountAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .CountAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .CountAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region CountAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnCountAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .CountAll("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .CountAll("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnCountAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .CountAllAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .CountAllAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Delete
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnDeleteCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Delete("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Delete("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnDeleteAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .DeleteAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .DeleteAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region DeleteAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnDeleteAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .DeleteAll("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .DeleteAll("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnDeleteAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .DeleteAllAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .DeleteAllAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Exists
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnExistsCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Exists("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Exists("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnExistsAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .ExistsAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .ExistsAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Insert
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnInsertCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Insert("", null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Insert("", null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnInsertAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .InsertAsync("", null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .InsertAsync("", null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region InsertAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnInsertAllCancelledOperation()
         {
             // Prepare
@@ -542,11 +607,14 @@ namespace RepoDb.UnitTests.Trace
 
 
             // Act
-            connection
-                .InsertAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .InsertAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnInsertAllMultipleEntitiesCancelledOperation()
         {
             // Prepare
@@ -557,11 +625,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .InsertAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .InsertAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnInsertAllAsyncCancelledOperation()
         {
             // Prepare
@@ -574,11 +645,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnInsertAllAsyncMultipleEntitiesCancelledOperation()
         {
             // Prepare
@@ -591,97 +665,114 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Max
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMaxCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Max("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Max("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMaxAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .MaxAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MaxAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region MaxAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMaxAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .MaxAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .MaxAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMaxAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .MaxAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MaxAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Merge
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMergeCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Merge("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Merge("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMergeAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .MergeAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MergeAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region MergeAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMergeAllCancelledOperation()
         {
             // Prepare
@@ -692,11 +783,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .MergeAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .MergeAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMergeAllAsyncCancelledOperation()
         {
             // Prepare
@@ -707,12 +801,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMergeAllMultipleEntitiesCancelledOperation()
         {
             // Prepare
@@ -725,11 +821,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .MergeAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .MergeAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMergeAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
@@ -742,117 +841,139 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Min
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMinCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Min("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Min("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMinAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .MinAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MinAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region MaxAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnMinAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .MinAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .MinAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnMinAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .MinAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .MinAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Query
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Query("", (QueryField)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Query("", (QueryField)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryAsync("", (QueryField)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryAsync("", (QueryField)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region QueryAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryAll("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryAll("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryAllAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryAllAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
@@ -861,216 +982,246 @@ namespace RepoDb.UnitTests.Trace
 
         #region T2
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT2CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT2AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region T3
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT3CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT3AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region T4
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT4CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT4AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region T5
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT5CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT5AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region T6
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT6CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT6AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region T7
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnQueryMultipleForT7CancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .QueryMultiple("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .QueryMultiple("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnQueryMultipleForT7AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .QueryMultipleAsync("", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    "", (QueryField)null,
-                    trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .QueryMultipleAsync("", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        "", (QueryField)null,
+                        trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
@@ -1079,115 +1230,135 @@ namespace RepoDb.UnitTests.Trace
 
         #region Sum
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnSumCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Sum("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Sum("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSumAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .SumAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .SumAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region SumAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnSumAllCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .SumAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .SumAll("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnSumAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .SumAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .SumAllAsync("", (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Truncate
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnTruncateCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Truncate("", trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Truncate("", trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnTruncateAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .TruncateAsync("", trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .TruncateAsync("", trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region Update
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnUpdateCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
-                .Update("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .Update("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnUpdateAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            await connection
-                .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion
 
         #region UpdateAll
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnUpdateAllCancelledOperation()
         {
             // Prepare
@@ -1198,11 +1369,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnUpdateAllAsyncCancelledOperation()
         {
             // Prepare
@@ -1213,12 +1387,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public void ThrowExceptionOnUpdateAllMultipleEntitiesCancelledOperation()
         {
             // Prepare
@@ -1231,11 +1407,14 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
+            Assert.Throws<CancelledExecutionException>(() =>
+            {
+                connection
+                    .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        [TestMethod]
         public async Task ThrowExceptionOnUpdateAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
@@ -1248,9 +1427,11 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            await connection
-                .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                ;
+            await Assert.ThrowsAsync<CancelledExecutionException>(async () =>
+            {
+                await connection
+                    .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace());
+            });
         }
 
         #endregion

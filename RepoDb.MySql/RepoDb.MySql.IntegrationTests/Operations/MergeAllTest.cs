@@ -35,7 +35,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll<CompleteTable>(tables);
@@ -59,7 +59,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -90,7 +90,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -118,7 +118,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll<NonIdentityCompleteTable>(tables);
@@ -142,7 +142,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -172,7 +172,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -203,7 +203,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync<CompleteTable>(tables);
@@ -227,7 +227,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -258,7 +258,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -286,7 +286,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
@@ -310,7 +310,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -340,7 +340,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -375,7 +375,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -400,7 +400,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -426,7 +426,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -453,7 +453,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -486,7 +486,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -514,7 +514,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -538,7 +538,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -569,7 +569,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -597,7 +597,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -622,7 +622,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -653,7 +653,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -681,7 +681,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -708,7 +708,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -739,7 +739,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -771,7 +771,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -795,7 +795,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -821,7 +821,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -848,7 +848,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -881,7 +881,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -909,7 +909,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -933,7 +933,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -964,7 +964,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -992,7 +992,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -1016,7 +1016,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1047,7 +1047,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1075,7 +1075,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -1099,7 +1099,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1130,7 +1130,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));

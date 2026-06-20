@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using System;
 using RepoDb.Extensions;
 using RepoDb.Reflection;
 using RepoDb.PostgreSql.IntegrationTests.Models;
@@ -44,13 +45,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2);
+                        var columnDate = (DateOnly)reader.GetValue(2);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInteger);
-                        Assert.AreEqual(columnDateTime, table.ColumnDate);
+                        Assert.AreEqual(columnDate, table.ColumnDate);
                     }
                 }
             }
@@ -74,13 +75,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2);
+                            var columnDate = (DateOnly)reader.GetValue(2);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInteger);
-                            Assert.AreEqual(columnDateTime, table.ColumnDate);
+                            Assert.AreEqual(columnDate, table.ColumnDate);
                         }
                     } while (reader.NextResult());
                 }
@@ -147,13 +148,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2);
+                        var columnDate = (DateOnly)reader.GetValue(2);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
                         Assert.IsNotNull(table);
                         Assert.AreEqual(columnInt, table.ColumnInteger);
-                        Assert.AreEqual(columnDateTime, table.ColumnDate);
+                        Assert.AreEqual(columnDate, table.ColumnDate);
                     }
                 }
             }
@@ -177,13 +178,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2);
+                            var columnDate = (DateOnly)reader.GetValue(2);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
                             Assert.IsNotNull(table);
                             Assert.AreEqual(columnInt, table.ColumnInteger);
-                            Assert.AreEqual(columnDateTime, table.ColumnDate);
+                            Assert.AreEqual(columnDate, table.ColumnDate);
                         }
                     } while (reader.NextResult());
                 }

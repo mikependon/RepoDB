@@ -85,11 +85,14 @@ namespace RepoDb.UnitTests.Caches
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExcpetionOnClassMappingCacheIfTheTypeIsNull()
         {
-            // Setup
-            ClassMappedNameCache.Get(null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                // Act
+                ClassMappedNameCache.Get(null);
+            });
         }
 
         #endregion

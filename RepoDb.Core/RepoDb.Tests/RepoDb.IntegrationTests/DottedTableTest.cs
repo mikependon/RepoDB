@@ -32,7 +32,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateDottedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -50,7 +50,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateDottedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -71,10 +71,10 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateDottedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Insert<DottedTable, long>(entity);
+                long? id = connection.Insert<DottedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -93,7 +93,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateDottedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -114,10 +114,10 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateDottedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Merge<DottedTable, long>(entity);
+                long? id = connection.Merge<DottedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateDottedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.MergeAll<DottedTable>(entities);
@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateDottedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateDottedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateDottedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<DottedTable>(entities);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateDottedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<DottedTable, long>(entity);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateDottedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.InsertAll<DottedTable>(entities);

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>RepoDb.PostgreSql</Title>
-    <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8;net10.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>A hybrid .NET ORM library for PostgreSQL.</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql npgsql</PackageTags>
@@ -13,8 +13,11 @@
     <Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Npgsql" />
-    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.9" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Remove="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

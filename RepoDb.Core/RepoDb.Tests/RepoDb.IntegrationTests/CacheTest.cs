@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionExecuteQueryCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -80,7 +80,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionExecuteQueryCacheAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -108,7 +108,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionExecuteQueryCacheAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -136,7 +136,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionExecuteQueryCacheAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -168,7 +168,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -196,7 +196,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncCacheAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -224,7 +224,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncCacheAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncCacheAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionExecuteScalarCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -299,7 +299,6 @@ namespace RepoDb.IntegrationTests.Caches
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
-                Assert.IsNotNull(result);
                 Assert.IsNotNull(item);
                 Assert.AreEqual(result, item.Value);
             }
@@ -312,7 +311,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionExecuteScalarAsyncCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -327,7 +326,6 @@ namespace RepoDb.IntegrationTests.Caches
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
-                Assert.IsNotNull(result);
                 Assert.IsNotNull(item);
                 Assert.AreEqual(result, item.Value);
             }
@@ -342,7 +340,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -378,7 +376,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryField()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -413,7 +411,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFields()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -447,7 +445,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaExpression()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -481,7 +479,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryGroup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -519,7 +517,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamicsAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -556,7 +554,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -592,7 +590,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldsAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -627,7 +625,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryGroupAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -666,7 +664,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamicsAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -703,7 +701,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -739,7 +737,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldsAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -774,7 +772,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryGroupAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -813,7 +811,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaDynamicsAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -850,7 +848,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -886,7 +884,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryFieldsAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -921,7 +919,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryGroupAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -964,7 +962,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1000,7 +998,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryField()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1034,7 +1032,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFields()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1068,7 +1066,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaExpression()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1102,7 +1100,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1140,7 +1138,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1177,7 +1175,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1213,7 +1211,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1248,7 +1246,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1287,7 +1285,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1324,7 +1322,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1360,7 +1358,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1395,7 +1393,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1434,7 +1432,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1471,7 +1469,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1507,7 +1505,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1542,7 +1540,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1583,7 +1581,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryAllCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1616,7 +1614,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryAllCacheAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1650,7 +1648,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryAllCacheAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1684,7 +1682,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public void TestSqlConnectionQueryAllCacheAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1722,7 +1720,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAllAsyncCache()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1755,7 +1753,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAllAsyncCacheAsDynamics()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1789,7 +1787,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAllAsyncCacheAsExpandoObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();
@@ -1823,7 +1821,7 @@ namespace RepoDb.IntegrationTests.Caches
         [TestMethod]
         public async Task TestSqlConnectionQueryAllAsyncCacheAsDictionaryStringObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var cache = new MemoryCache();

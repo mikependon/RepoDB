@@ -154,7 +154,7 @@ First, install the [SqLite](https://www.sqlite.org/) by downloading the package 
 
 Add the environment variables under `System`.
 
-- REPODB_IS_IN_MEMORY = `TRUE`
+- REPODB_SQLITE_IS_IN_MEMORY = `TRUE`
 
 Build the integration tests.
 

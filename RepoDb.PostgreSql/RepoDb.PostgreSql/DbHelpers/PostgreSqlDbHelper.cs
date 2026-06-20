@@ -311,10 +311,6 @@ namespace RepoDb.DbHelpers
         /// <param name="parameter"></param>
         private void HandleDbParameterPostCreation(NpgsqlParameter parameter)
         {
-            if (parameter?.Value is Enum)
-            {
-                parameter.NpgsqlDbType = NpgsqlDbType.Unknown;
-            }
         }
 
 #endregion

@@ -11,7 +11,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 {
     public static class Helper
     {
-        public const string DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        public const string DATE_FORMAT = "yyyy-MM-dd HH':'mm':'ss";
 
         static Helper()
         {

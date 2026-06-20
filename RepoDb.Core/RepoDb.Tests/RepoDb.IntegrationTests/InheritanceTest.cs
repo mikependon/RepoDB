@@ -31,7 +31,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<InheritedIdentityTable>(entity);
@@ -51,7 +51,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<InheritedIdentityTable>(entity);
@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<InheritedIdentityTable>(entities);
@@ -95,7 +95,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<InheritedIdentityTable>(entities);
@@ -120,7 +120,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<InheritedIdentityTable, long>(entity);
@@ -147,7 +147,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<InheritedIdentityTable>(entities);
@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<InheritedIdentityTable, long>(entity);
@@ -199,7 +199,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Merge<InheritedIdentityTable, long>(entity);
@@ -238,7 +238,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<InheritedIdentityTable>(entities);
@@ -262,7 +262,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<InheritedIdentityTable>(entities);
@@ -300,7 +300,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<InheritedIdentityTable, long>(entity);
@@ -324,7 +324,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<InheritedIdentityTable, long>(entity);
@@ -354,7 +354,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<InheritedIdentityTable, long>(entity);
@@ -388,7 +388,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<InheritedIdentityTable>(entities);

@@ -43,7 +43,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             public long ColumnBigInt { get; set; }
 
             [NpgsqlDbType(NpgsqlDbType.Date)]
-            public DateTime ColumnDate { get; set; }
+            public DateOnly ColumnDate { get; set; }
 
             [NpgsqlDbType(NpgsqlDbType.Text)]
             public string ColumnText { get; set; }
@@ -63,7 +63,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     Id = i,
                     ColumnBigInt = Convert.ToInt64(random.Next(int.MaxValue)),
                     ColumnByteA = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()),
-                    ColumnDate = DateTime.UtcNow.Date.AddDays(-random.Next(100)),
+                    ColumnDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-random.Next(100))),
                     ColumnText = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
                 };
             }
