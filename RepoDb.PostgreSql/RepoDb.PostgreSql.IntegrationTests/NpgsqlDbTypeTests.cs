@@ -87,7 +87,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForJson()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = GetCompleteTableForJsons(1).First();
@@ -106,7 +106,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForJsons()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entities = GetCompleteTableForJsons(10).AsList();
@@ -130,7 +130,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTime()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = GetCompleteTableForDateTimes(1).First();
@@ -149,7 +149,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTimes()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entities = GetCompleteTableForDateTimes(10).AsList();
@@ -169,7 +169,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTimeAsWhereExpression()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = GetCompleteTableForDateTimes(1).First();
@@ -193,7 +193,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTimeAsWhereExpressionFromVariable()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = GetCompleteTableForDateTimes(1).First();
@@ -217,7 +217,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTimeAsWhereExpressionWithAutomaticConversion()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 GlobalConfiguration
@@ -243,7 +243,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryForDateTimeAsWhereExpressionFromVariableWithAutomaticConversion()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 GlobalConfiguration

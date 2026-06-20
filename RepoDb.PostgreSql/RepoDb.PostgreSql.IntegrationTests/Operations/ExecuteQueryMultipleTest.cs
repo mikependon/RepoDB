@@ -33,7 +33,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; " +
@@ -61,7 +61,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
@@ -93,7 +93,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +
@@ -125,7 +125,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; " +
@@ -153,7 +153,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
@@ -185,7 +185,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +

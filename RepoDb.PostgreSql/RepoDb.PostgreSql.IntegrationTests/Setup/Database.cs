@@ -17,7 +17,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #endregion
 
@@ -28,12 +28,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             // Master connection
             ConnectionStringForPostgres =
                 Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR_POSTGRES") ??
-                "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=RepoDB@026;";
+                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb =
+            ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR") ??
-                "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
+                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
 
             // For >= v6.0.0: To reutilize the legacy behavior
             // https://github.com/abpframework/abp/issues/10273
@@ -53,7 +53,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
@@ -93,7 +93,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         private static void CreateCompleteTable()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""CompleteTable""
                     (
@@ -248,7 +248,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         private static void CreateNonIdentityCompleteTable()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""NonIdentityCompleteTable""
                     (
@@ -407,7 +407,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);
@@ -421,7 +421,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
@@ -435,7 +435,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         private static void CreateEnumTable()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"
                     DO $$

@@ -34,7 +34,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -59,7 +59,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -84,7 +84,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -109,7 +109,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -139,7 +139,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -170,7 +170,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -199,7 +199,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -224,7 +224,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -249,7 +249,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -274,7 +274,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -304,7 +304,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -335,7 +335,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -368,7 +368,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -395,7 +395,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -421,7 +421,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -448,7 +448,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -480,7 +480,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -513,7 +513,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -544,7 +544,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -571,7 +571,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -596,7 +596,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -621,7 +621,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -651,7 +651,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -682,7 +682,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);

@@ -33,7 +33,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll<CompleteTable>(tables);
@@ -57,7 +57,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll<NonIdentityCompleteTable>(tables);
@@ -84,7 +84,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync<CompleteTable>(tables);
@@ -108,7 +108,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync<NonIdentityCompleteTable>(tables);
@@ -139,7 +139,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -163,7 +163,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -187,7 +187,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -212,7 +212,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -236,7 +236,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -260,7 +260,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -289,7 +289,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -313,7 +313,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -337,7 +337,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -362,7 +362,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -386,7 +386,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -410,7 +410,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),

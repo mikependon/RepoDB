@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using Npgsql.NameTranslation;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.Extensions;
@@ -13,17 +14,24 @@ namespace RepoDb.PostgreSql.IntegrationTests
     [TestClass]
     public class EnumTests
     {
+        private NpgsqlDataSource _enumDataSource;
+
         [TestInitialize]
         public void Initialize()
         {
             Database.Initialize();
             Cleanup();
+            _enumDataSource = new NpgsqlDataSourceBuilder(Database.ConnectionString)
+                .MapEnum<Hands>("hand", new NpgsqlNullNameTranslator())
+                .Build();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
+            _enumDataSource?.Dispose();
+            _enumDataSource = null;
         }
 
         #region Enumerations
@@ -50,6 +58,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
+            [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Integer)]
             public Hands? ColumnInteger { get; set; }
         }
 
@@ -65,7 +74,6 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithEnum
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
             public Hands ColumnEnumHand { get; set; }
         }
 
@@ -73,7 +81,6 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithNullableEnum
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
             public Hands? ColumnEnumHand { get; set; }
         }
 
@@ -156,7 +163,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -176,7 +183,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -195,7 +202,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithText(10).AsList();
@@ -218,7 +225,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -238,7 +245,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -257,7 +264,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithInteger(10).AsList();
@@ -280,7 +287,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
@@ -299,7 +306,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();
@@ -322,7 +329,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsEnum()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
@@ -342,7 +349,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsEnumAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var people = GetPersonWithEnum(10).AsList();
@@ -366,7 +373,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsEnumViaEnum()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
@@ -386,7 +393,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsEnumViaDynamicEnum()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithEnum(1).First();
@@ -406,7 +413,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnumAsNull()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
@@ -427,7 +434,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnum()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
@@ -447,7 +454,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnumAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var people = GetPersonWithNullableEnum(10).AsList();
@@ -471,7 +478,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnumByEnum()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();

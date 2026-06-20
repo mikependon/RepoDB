@@ -30,7 +30,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Models
         ////public System.Nullable<System.ValueTuple`2[[System.Net.IPAddress, System.Net.Primitives, Version = 4.1.1.0, Culture = neutral, PublicKeyToken = b03f5f7f11d50a3a],[System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]> ColumnCidr { get; set; }
         //public System.Nullable<NpgsqlTypes.NpgsqlCircle> ColumnCircle { get; set; }
         //public System.Array ColumnCircleAsArray { get; set; }
-        public System.Nullable<System.DateTime> ColumnDate { get; set; }
+        public System.Nullable<System.DateOnly> ColumnDate { get; set; }
         public System.Array ColumnDateAsArray { get; set; }
         ////public System.Nullable<NpgsqlTypes.NpgsqlRange`1[[System.DateTime, System.Private.CoreLib, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = 7cec85d7bea7798e]]> ColumnDateRange { get; set; }
         //public System.Array ColumnDateRangeAsArray { get; set; }
