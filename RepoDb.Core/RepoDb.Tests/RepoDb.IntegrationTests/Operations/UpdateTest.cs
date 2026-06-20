@@ -35,7 +35,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -66,7 +66,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -98,7 +98,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -159,7 +159,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -221,7 +221,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -322,7 +322,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -354,7 +354,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -394,7 +394,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -429,7 +429,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -461,7 +461,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -493,7 +493,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -525,7 +525,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -559,7 +559,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -642,7 +642,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -673,7 +673,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -705,7 +705,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -735,7 +735,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -766,7 +766,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -797,7 +797,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -828,7 +828,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -858,7 +858,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -889,7 +889,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -923,7 +923,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -962,7 +962,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1002,7 +1002,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1037,7 +1037,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1069,7 +1069,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1101,7 +1101,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1133,7 +1133,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1168,7 +1168,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1208,7 +1208,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1253,7 +1253,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1290,7 +1290,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1329,7 +1329,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1359,7 +1359,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1393,7 +1393,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1422,7 +1422,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1452,7 +1452,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1482,7 +1482,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1508,7 +1508,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1540,7 +1540,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1575,7 +1575,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1615,7 +1615,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1656,7 +1656,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)table);
@@ -1683,7 +1683,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), table);
@@ -1710,7 +1710,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1740,7 +1740,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var data = Helper.CreateNonKeyedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<KeyFieldNotFoundException>(() => connection.Update<NonKeyedTable>(data));
@@ -1753,7 +1753,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var data = Helper.CreateDynamicNonKeyedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<KeyFieldNotFoundException>(() => connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), (object)data));
@@ -1770,7 +1770,7 @@ namespace RepoDb.IntegrationTests.Operations
                 AnyField = 1
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<EmptyException>(() => connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data));
@@ -1787,7 +1787,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1824,7 +1824,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1863,7 +1863,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1893,7 +1893,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1927,7 +1927,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1956,7 +1956,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -1986,7 +1986,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2016,7 +2016,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2042,7 +2042,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2074,7 +2074,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2109,7 +2109,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2149,7 +2149,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2190,7 +2190,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), table);
@@ -2217,7 +2217,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -2244,7 +2244,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThereIsNoKeyField()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var data = new
                 {
@@ -2260,7 +2260,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var data = new
                 {

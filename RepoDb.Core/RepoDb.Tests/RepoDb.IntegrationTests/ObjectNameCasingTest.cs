@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var repository = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -87,7 +87,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var repository = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.InsertAll(new[] { entity });
@@ -144,7 +144,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -178,7 +178,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.InsertAll(new[] { entity });
@@ -216,7 +216,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert("COMPLETETABLE", entity);
@@ -286,7 +286,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.InsertAll("COMPLETETABLE",

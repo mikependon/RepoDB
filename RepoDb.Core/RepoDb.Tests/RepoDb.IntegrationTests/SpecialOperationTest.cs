@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.Between, new[] { 4, 6 });
@@ -60,7 +60,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotBetween, new[] { 4, 6 });
@@ -91,7 +91,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -131,7 +131,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new long[] { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -155,7 +155,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -175,7 +175,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -195,7 +195,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new List<long>() { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -219,7 +219,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -243,7 +243,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -267,7 +267,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -295,7 +295,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -336,7 +336,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new long[] { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -357,7 +357,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new long[] { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -381,7 +381,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -422,7 +422,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new List<long>() { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -443,7 +443,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var values = new List<long>() { 4, 5 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -467,7 +467,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -487,7 +487,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -511,7 +511,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -531,7 +531,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -555,7 +555,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -575,7 +575,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -603,7 +603,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.In, new[] { 4, 7 });
@@ -627,7 +627,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var value = new List<int> { 4, 7 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.In, value);
@@ -654,7 +654,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, new[] { 4, 7 });
@@ -678,7 +678,7 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateIdentityTables(10);
             var value = new List<int> { 4, 7 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.Id), Operation.NotIn, value);
@@ -705,7 +705,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.Like, "NVARCHAR1%"); // Matching: NVARCHAR1, NVARCHAR10
@@ -732,7 +732,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var field = new QueryField(nameof(IdentityTable.ColumnNVarChar), Operation.NotLike, "NVARCHAR1%"); // Not Matching: NVARCHAR1, NVARCHAR10

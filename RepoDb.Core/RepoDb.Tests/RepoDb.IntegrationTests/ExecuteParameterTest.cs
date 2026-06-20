@@ -43,7 +43,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -68,7 +68,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -93,7 +93,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -118,7 +118,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -163,7 +163,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -188,7 +188,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
 
                 // Act
@@ -206,7 +206,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithParameterAsNullDecimal()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Query
                 var data = connection.ExecuteQuery<decimal?>("select @value", new { value = (decimal?)null }).First();
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -281,7 +281,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -306,7 +306,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -327,7 +327,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -352,7 +352,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -377,7 +377,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -406,7 +406,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -431,7 +431,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -456,7 +456,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -482,7 +482,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -502,7 +502,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new QueryField("ColumnInt", 5);
@@ -530,7 +530,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -555,7 +555,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -584,7 +584,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -609,7 +609,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -634,7 +634,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -659,7 +659,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -680,7 +680,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -705,7 +705,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -730,7 +730,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -759,7 +759,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -788,7 +788,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -817,7 +817,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -846,7 +846,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -871,7 +871,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -900,7 +900,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -929,7 +929,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -962,7 +962,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -991,7 +991,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1020,7 +1020,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1049,7 +1049,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1074,7 +1074,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1103,7 +1103,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1132,7 +1132,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1165,7 +1165,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1190,7 +1190,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1215,7 +1215,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1240,7 +1240,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1261,7 +1261,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1286,7 +1286,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1311,7 +1311,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1340,7 +1340,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1365,7 +1365,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1390,7 +1390,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1415,7 +1415,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1436,7 +1436,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1461,7 +1461,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1486,7 +1486,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1519,7 +1519,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1544,7 +1544,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1569,7 +1569,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1594,7 +1594,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1615,7 +1615,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1640,7 +1640,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1665,7 +1665,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1694,7 +1694,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1719,7 +1719,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1744,7 +1744,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1769,7 +1769,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1790,7 +1790,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1815,7 +1815,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1840,7 +1840,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1869,7 +1869,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1894,7 +1894,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1919,7 +1919,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1945,7 +1945,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1966,7 +1966,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1991,7 +1991,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2016,7 +2016,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2045,7 +2045,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2070,7 +2070,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2095,7 +2095,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2120,7 +2120,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2141,7 +2141,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2166,7 +2166,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2191,7 +2191,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2220,7 +2220,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2245,7 +2245,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2270,7 +2270,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2295,7 +2295,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2316,7 +2316,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2341,7 +2341,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2366,7 +2366,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2395,7 +2395,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = true
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2420,7 +2420,7 @@ namespace RepoDb.IntegrationTests
             param.ColumnInt = 5;
             param.ColumnBit = true;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2445,7 +2445,7 @@ namespace RepoDb.IntegrationTests
             param.Add("ColumnInt", 5);
             param.Add("ColumnBit", true);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2470,7 +2470,7 @@ namespace RepoDb.IntegrationTests
                 { "ColumnBit", true }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2491,7 +2491,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var param = new QueryField("ColumnInt", 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2516,7 +2516,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2541,7 +2541,7 @@ namespace RepoDb.IntegrationTests
                 new QueryField("ColumnBit", true)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));

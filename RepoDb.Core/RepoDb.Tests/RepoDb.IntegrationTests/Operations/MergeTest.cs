@@ -34,7 +34,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -58,7 +58,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -83,7 +83,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(entity);
@@ -106,7 +106,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(entity,
@@ -131,7 +131,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(entity);
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(entity,
@@ -178,7 +178,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(entity,
@@ -202,7 +202,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(entity,
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(entity,
@@ -250,7 +250,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable>(entity,
@@ -274,7 +274,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable, long>(entity);
@@ -297,7 +297,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable, Guid>(entity);
@@ -320,7 +320,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable, long>(entity,
@@ -344,7 +344,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable, Guid>(entity,
@@ -368,7 +368,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable, long>(entity,
@@ -392,7 +392,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<NonIdentityTable, Guid>(entity,
@@ -416,7 +416,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -442,7 +442,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -468,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -495,7 +495,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -522,7 +522,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -549,7 +549,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -576,7 +576,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -602,7 +602,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -628,7 +628,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -655,7 +655,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -682,7 +682,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -709,7 +709,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -736,7 +736,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<IdentityTable>(entity, hints: SqlServerTableHints.TabLock);
@@ -763,7 +763,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<WithExtraFieldsIdentityTable>(entity);
@@ -786,7 +786,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<WithExtraFieldsIdentityTable>(entity);
@@ -816,7 +816,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -840,7 +840,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -865,7 +865,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity);
@@ -888,7 +888,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
@@ -912,7 +912,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity);
@@ -935,7 +935,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
@@ -959,7 +959,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
@@ -983,7 +983,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
@@ -1007,7 +1007,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity,
@@ -1031,7 +1031,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable>(entity,
@@ -1055,7 +1055,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity);
@@ -1078,7 +1078,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity);
@@ -1101,7 +1101,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
@@ -1125,7 +1125,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
@@ -1149,7 +1149,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable, long>(entity,
@@ -1173,7 +1173,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<NonIdentityTable, Guid>(entity,
@@ -1197,7 +1197,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1223,7 +1223,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1249,7 +1249,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1276,7 +1276,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1303,7 +1303,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1330,7 +1330,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1357,7 +1357,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1383,7 +1383,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1409,7 +1409,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1436,7 +1436,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1463,7 +1463,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1490,7 +1490,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<NonIdentityTable>(entity);
@@ -1517,7 +1517,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<IdentityTable>(entity, hints: SqlServerTableHints.TabLock);
@@ -1544,7 +1544,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<WithExtraFieldsIdentityTable>(entity);
@@ -1567,7 +1567,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<WithExtraFieldsIdentityTable>(entity);
@@ -1597,7 +1597,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1621,7 +1621,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1646,7 +1646,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1670,7 +1670,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1695,7 +1695,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateExpandoObjectNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1719,7 +1719,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateExpandoObjectNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1744,7 +1744,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1769,7 +1769,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1794,7 +1794,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1818,7 +1818,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1843,7 +1843,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1868,7 +1868,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1896,7 +1896,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1925,7 +1925,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1957,7 +1957,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1990,7 +1990,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2019,7 +2019,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2047,7 +2047,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2076,7 +2076,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2105,7 +2105,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2129,7 +2129,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2154,7 +2154,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonKeyedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<KeyFieldNotFoundException>(() => connection.Merge<object>(ClassMappedNameCache.Get<NonKeyedTable>(), (object)entity));
@@ -2171,7 +2171,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2195,7 +2195,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2220,7 +2220,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2244,7 +2244,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2269,7 +2269,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateExpandoObjectNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2293,7 +2293,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateExpandoObjectNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2318,7 +2318,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2343,7 +2343,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2367,7 +2367,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2392,7 +2392,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2417,7 +2417,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2445,7 +2445,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2474,7 +2474,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2506,7 +2506,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2539,7 +2539,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2568,7 +2568,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2596,7 +2596,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2625,7 +2625,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2654,7 +2654,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2678,7 +2678,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -2703,7 +2703,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<InvalidQualifiersException>(async () =>

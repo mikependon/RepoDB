@@ -112,7 +112,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -181,7 +181,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -201,7 +201,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -225,7 +225,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -249,7 +249,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -269,7 +269,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -293,7 +293,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);
@@ -345,7 +345,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -378,7 +378,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -428,7 +428,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);

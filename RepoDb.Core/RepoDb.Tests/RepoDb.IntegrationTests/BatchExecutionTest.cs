@@ -25,7 +25,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestBatchExecutionForInsertAll()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var hasError = false;
                 for (var i = (Constant.DefaultBatchOperationSize * 2); i > 0; i--)
@@ -53,7 +53,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestBatchExecutionForUpdateAll()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var hasError = false;
                 for (var i = (Constant.DefaultBatchOperationSize + 2); i > 0; i--)
@@ -78,7 +78,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestBatchExecutionForMergeAllEmptyTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var hasError = false;
                 for (var i = (Constant.DefaultBatchOperationSize * 2); i > 0; i--)
@@ -102,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         [TestMethod]
         public async Task TestBatchExecutionForMergeAllNonEmptyTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 var hasError = false;
                 for (var i = (Constant.DefaultBatchOperationSize * 2); i > 0; i--)

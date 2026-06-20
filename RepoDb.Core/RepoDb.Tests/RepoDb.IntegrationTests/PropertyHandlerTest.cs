@@ -471,7 +471,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var model = CreateEntityModelForIntToStringTypes(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EntityModelForIntToStringType, long>(model);
@@ -495,7 +495,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForClasses(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -518,7 +518,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForClasses(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -541,7 +541,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForClasses(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -564,7 +564,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForClasses(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -591,7 +591,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateImmutableEntityModelForClasses(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -614,7 +614,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateImmutableEntityModelForClasses(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -637,7 +637,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateImmutableEntityModelForClasses(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -660,7 +660,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateImmutableEntityModelForClasses(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -687,7 +687,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = CreateCompleteTableWithPropertyHandlerForDictionary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.ExecuteScalar<Guid>("INSERT INTO [dbo].[CompleteTable] " +
@@ -713,7 +713,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForIntToStringTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -736,7 +736,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForIntToStringTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -759,7 +759,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForIntToStringTypes(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -782,7 +782,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForIntToStringTypes(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -812,7 +812,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -838,7 +838,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -864,7 +864,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -890,7 +890,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -920,7 +920,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -946,7 +946,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -972,7 +972,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -998,7 +998,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
@@ -1024,7 +1024,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKindForAnonymousTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll("[dbo].[PropertyHandler]", models);
@@ -1050,7 +1050,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateEntityModelForDateTimeKindForAnonymousTypes(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert<int>("[dbo].[PropertyHandler]", (object)e));
@@ -1077,7 +1077,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateCompleteTableWithPropertyHandlerForTimeSpans(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(models);
@@ -1100,7 +1100,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var models = CreateCompleteTableWithPropertyHandlerForTimeSpans(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));

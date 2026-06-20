@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.In, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -78,7 +78,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotIn, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -116,7 +116,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.In, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -150,7 +150,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotIn, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -192,7 +192,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.Between, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -225,7 +225,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -258,7 +258,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -310,7 +310,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -336,7 +336,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -366,7 +366,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.Between, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -399,7 +399,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -432,7 +432,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -458,7 +458,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -484,7 +484,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, values));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -513,7 +513,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.NotBetween, null));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -545,7 +545,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -575,7 +575,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -606,7 +606,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -644,7 +644,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 4));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -673,7 +673,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -702,7 +702,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 4));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -735,7 +735,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -767,7 +767,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -798,7 +798,7 @@ namespace RepoDb.IntegrationTests
             var table = Helper.CreateIdentityTables(1).First();
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<IdentityTable>(), null);
@@ -834,7 +834,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -864,7 +864,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -894,7 +894,7 @@ namespace RepoDb.IntegrationTests
             var table = Helper.CreateIdentityTables(1).First();
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);
@@ -937,7 +937,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 6));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -967,7 +967,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -998,7 +998,7 @@ namespace RepoDb.IntegrationTests
             var where = new QueryGroup(new QueryField("Id", Operation.In, new[] { 4, 6 }));
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1035,7 +1035,7 @@ namespace RepoDb.IntegrationTests
                 Conjunction.Or);
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1070,7 +1070,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1104,7 +1104,7 @@ namespace RepoDb.IntegrationTests
             var tables = Helper.CreateIdentityTables(10);
             var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 6));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1134,7 +1134,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1163,7 +1163,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1195,7 +1195,7 @@ namespace RepoDb.IntegrationTests
             var table = Helper.CreateIdentityTables(1).First();
             var fields = FieldCache.Get<IdentityTable>();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);

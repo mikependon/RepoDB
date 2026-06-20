@@ -37,7 +37,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -70,7 +70,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -104,7 +104,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -172,7 +172,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -206,7 +206,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -241,7 +241,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -271,7 +271,7 @@ namespace RepoDb.IntegrationTests.Operations
                 output
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -294,7 +294,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryViaDynamicsIfTheParametersAreNotDefined()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() => connection.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -304,7 +304,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryViaDynamicsIfThereAreSqlStatementProblems()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() => connection.ExecuteQuery("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -321,7 +321,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -354,7 +354,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -388,7 +388,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -422,7 +422,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -456,7 +456,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -490,7 +490,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -525,7 +525,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -555,7 +555,7 @@ namespace RepoDb.IntegrationTests.Operations
                 output
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -578,7 +578,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncViaDynamicsIfTheParametersAreNotDefined()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -588,7 +588,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncViaDynamicsIfThereAreSqlStatementProblems()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -605,7 +605,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -625,7 +625,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -646,7 +646,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -667,7 +667,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -688,7 +688,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -709,7 +709,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -731,7 +731,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -757,7 +757,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -789,7 +789,7 @@ namespace RepoDb.IntegrationTests.Operations
                 { "ColumnInt", last.ColumnInt }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -815,7 +815,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.Add("ColumnFloat", last.ColumnFloat);
             param.Add("ColumnInt", last.ColumnInt);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -841,7 +841,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.ColumnFloat = last.ColumnFloat;
             param.ColumnInt = last.ColumnInt;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -867,7 +867,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -893,7 +893,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -915,7 +915,7 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -932,7 +932,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new Dictionary<string, int>();
@@ -945,7 +945,7 @@ namespace RepoDb.IntegrationTests.Operations
         //[TestMethod, ExpectedException(typeof(InvalidOperationException))]
         //public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var param = new QueryField("Id", Operation.NotEqual, 1);
@@ -958,7 +958,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParametersAreNotDefined()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() => connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -968,7 +968,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfThereAreSqlStatementProblems()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() => connection.ExecuteQuery<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -985,7 +985,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1005,7 +1005,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1026,7 +1026,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1047,7 +1047,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1068,7 +1068,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1089,7 +1089,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1111,7 +1111,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1143,7 +1143,7 @@ namespace RepoDb.IntegrationTests.Operations
                 { "ColumnInt", last.ColumnInt }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1169,7 +1169,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.Add("ColumnFloat", last.ColumnFloat);
             param.Add("ColumnInt", last.ColumnInt);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1195,7 +1195,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.ColumnFloat = last.ColumnFloat;
             param.ColumnInt = last.ColumnInt;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1221,7 +1221,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             });
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1247,7 +1247,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1269,7 +1269,7 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1286,7 +1286,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new Dictionary<string, int>();
@@ -1299,7 +1299,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);"));
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests.Operations
         //[TestMethod, ExpectedException(typeof(AggregateException))]
         //public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var param = new QueryField("Id", Operation.NotEqual, 1);
@@ -1322,7 +1322,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public async Task ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<SqlException>(async () => await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);"));

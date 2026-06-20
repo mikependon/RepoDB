@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -73,7 +73,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -94,7 +94,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -119,7 +119,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -145,7 +145,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -165,7 +165,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -185,7 +185,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -205,7 +205,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -251,7 +251,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -277,7 +277,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -301,7 +301,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -321,7 +321,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -341,7 +341,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -362,7 +362,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -387,7 +387,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -413,7 +413,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -433,7 +433,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -453,7 +453,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -473,7 +473,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -494,7 +494,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -519,7 +519,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -545,7 +545,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -569,7 +569,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -590,7 +590,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -612,7 +612,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -638,7 +638,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -665,7 +665,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -686,7 +686,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -707,7 +707,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -729,7 +729,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -755,7 +755,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -782,7 +782,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -807,7 +807,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -828,7 +828,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -850,7 +850,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -876,7 +876,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -903,7 +903,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -924,7 +924,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -945,7 +945,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -967,7 +967,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -993,7 +993,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1020,7 +1020,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);

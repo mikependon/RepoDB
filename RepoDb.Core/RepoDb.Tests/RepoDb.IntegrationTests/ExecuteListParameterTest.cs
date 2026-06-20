@@ -41,7 +41,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -71,7 +71,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -101,7 +101,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -131,7 +131,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -158,7 +158,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -185,7 +185,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -243,7 +243,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -273,7 +273,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -303,7 +303,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -333,7 +333,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -360,7 +360,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -387,7 +387,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -414,7 +414,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -445,7 +445,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -470,7 +470,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -495,7 +495,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -520,7 +520,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -542,7 +542,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -564,7 +564,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -586,7 +586,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -612,7 +612,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -637,7 +637,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -662,7 +662,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -687,7 +687,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -709,7 +709,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -731,7 +731,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -753,7 +753,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -779,7 +779,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -813,7 +813,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -847,7 +847,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -881,7 +881,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -912,7 +912,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -943,7 +943,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -974,7 +974,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1009,7 +1009,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1043,7 +1043,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1077,7 +1077,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1111,7 +1111,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1142,7 +1142,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1173,7 +1173,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1204,7 +1204,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1239,7 +1239,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1264,7 +1264,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1289,7 +1289,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1314,7 +1314,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1336,7 +1336,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1358,7 +1358,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1380,7 +1380,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1406,7 +1406,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1431,7 +1431,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1456,7 +1456,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1481,7 +1481,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1503,7 +1503,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1525,7 +1525,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1547,7 +1547,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
@@ -1577,7 +1577,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1607,7 +1607,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1637,7 +1637,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1667,7 +1667,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1694,7 +1694,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1721,7 +1721,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1748,7 +1748,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1779,7 +1779,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1809,7 +1809,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1839,7 +1839,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1869,7 +1869,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1896,7 +1896,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1923,7 +1923,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1950,7 +1950,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -1981,7 +1981,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2006,7 +2006,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2031,7 +2031,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2056,7 +2056,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2078,7 +2078,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2100,7 +2100,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2122,7 +2122,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2148,7 +2148,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2173,7 +2173,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2198,7 +2198,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2223,7 +2223,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2245,7 +2245,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2267,7 +2267,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2289,7 +2289,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2315,7 +2315,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2340,7 +2340,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2365,7 +2365,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2390,7 +2390,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2412,7 +2412,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2434,7 +2434,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2456,7 +2456,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2482,7 +2482,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new { Values = values };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2507,7 +2507,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Values = values;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2532,7 +2532,7 @@ namespace RepoDb.IntegrationTests
             // Set the properties
             param.Add("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2557,7 +2557,7 @@ namespace RepoDb.IntegrationTests
                 {"Values", values }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2579,7 +2579,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2601,7 +2601,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryField("Values", values).AsEnumerable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
@@ -2623,7 +2623,7 @@ namespace RepoDb.IntegrationTests
             var values = new List<int?> { 1, 3, 4, 8 };
             var param = new QueryGroup(new QueryField("Values", values));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
