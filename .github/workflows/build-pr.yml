@@ -50,16 +50,22 @@ jobs:
             9.0.x
             10.0.x
 
-      - name: build
+      - name: Build
         run: dotnet build -c release RepoDb.Solutions.sln
 
-      - name: test for .NET 8.0
-        run: dotnet test -c release -f net8.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
+      # - name: Test for .NET 8.0
+      #   run: dotnet test -c release -f net8.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
 
-      - name: pack packages
+      # - name: Test for .NET 9.0
+      #   run: dotnet test -c release -f net9.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
+
+      - name: Test for .NET 10.0
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
+
+      - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-pr-${{ github.run_number }}" -o release RepoDb.Solutions.sln
 
-      - name: Package nupkg files
+      - name: Package Nuget
         uses: actions/upload-artifact@v4
         with:
           name: release
