@@ -34,7 +34,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>((object)null);
@@ -50,7 +50,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First().Id);
@@ -66,7 +66,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First());
@@ -82,7 +82,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(e => e.Id == tables.First().Id);
@@ -98,7 +98,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(new { Id = tables.First().Id });
@@ -114,7 +114,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -135,7 +135,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(queryFields);
@@ -157,7 +157,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(queryGroup);
@@ -177,7 +177,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>((object)null);
@@ -193,7 +193,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
@@ -209,7 +209,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(tables.First());
@@ -225,7 +225,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id);
@@ -241,7 +241,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id });
@@ -257,7 +257,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -278,7 +278,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(queryFields);
@@ -300,7 +300,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(queryGroup);
@@ -324,7 +324,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
@@ -340,7 +340,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First().Id);
@@ -356,7 +356,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
@@ -372,7 +372,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
@@ -393,7 +393,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
@@ -415,7 +415,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
@@ -435,7 +435,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
@@ -451,7 +451,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
@@ -467,7 +467,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
@@ -483,7 +483,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
@@ -504,7 +504,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
@@ -526,7 +526,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);

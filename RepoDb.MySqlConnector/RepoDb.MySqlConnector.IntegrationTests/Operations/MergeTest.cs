@@ -35,7 +35,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
@@ -53,7 +53,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -83,7 +83,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -116,7 +116,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table);
@@ -134,7 +134,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -164,7 +164,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -201,7 +201,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -220,7 +220,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -240,7 +240,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -267,7 +267,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -300,7 +300,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -330,7 +330,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -354,7 +354,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -385,7 +385,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -417,7 +417,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -436,7 +436,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -456,7 +456,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -483,7 +483,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -516,7 +516,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -544,7 +544,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -568,7 +568,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -599,7 +599,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);

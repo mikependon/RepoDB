@@ -35,7 +35,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnInt,
@@ -52,7 +52,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
@@ -70,7 +70,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -90,7 +90,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
@@ -107,7 +107,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
@@ -125,7 +125,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -149,7 +149,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -167,7 +167,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
@@ -186,7 +186,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -207,7 +207,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -225,7 +225,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
@@ -244,7 +244,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

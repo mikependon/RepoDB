@@ -32,7 +32,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable`;");
@@ -49,7 +49,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
@@ -71,7 +71,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;");
@@ -88,7 +88,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",

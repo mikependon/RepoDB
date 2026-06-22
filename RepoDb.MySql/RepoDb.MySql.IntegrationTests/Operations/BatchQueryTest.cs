@@ -35,7 +35,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
@@ -55,7 +55,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
@@ -75,7 +75,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
@@ -95,7 +95,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
@@ -115,7 +115,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -137,7 +137,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
@@ -157,7 +157,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
@@ -177,7 +177,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
@@ -197,7 +197,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
@@ -217,7 +217,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -243,7 +243,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -264,7 +264,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -285,7 +285,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -306,7 +306,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -327,7 +327,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -350,7 +350,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -371,7 +371,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -392,7 +392,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -413,7 +413,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -434,7 +434,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

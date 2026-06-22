@@ -35,7 +35,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -65,7 +65,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -99,7 +99,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -125,7 +125,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -157,7 +157,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -183,7 +183,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();

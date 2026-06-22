@@ -12,12 +12,12 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used for sys.
         /// </summary>
-        public static string ConnectionStringForSys { get; private set; }
+        public static string ConnectionStringForSystem { get; private set; }
 
         /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #endregion
 
@@ -26,11 +26,11 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         public static void Initialize()
         {
             // Set the connection string
-            ConnectionStringForSys =
-                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYS") ??
+            ConnectionStringForSystem =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYSTEM") ??
                 @"Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;";
 
-            ConnectionStringForRepoDb =
+            ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
                 @"Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;";
 
@@ -48,7 +48,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(ConnectionString))
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
@@ -61,7 +61,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(ConnectionString))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);
@@ -75,7 +75,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(ConnectionString))
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
@@ -89,7 +89,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForSys))
+            using (var connection = new MySqlConnection(ConnectionStringForSystem))
             {
                 connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDbTest`;");
                 connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDbTest.* to 'root'@'%';");
@@ -108,7 +108,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `CompleteTable`
                     (
@@ -161,7 +161,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateNonIdentityCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `NonIdentityCompleteTable`
                     (

@@ -77,7 +77,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<AttributeTable>(table);
@@ -99,7 +99,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);
@@ -121,7 +121,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<AttributeTable>(table);
@@ -140,7 +140,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);
