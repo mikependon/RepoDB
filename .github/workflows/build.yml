@@ -3,15 +3,12 @@ on:
   push
 
 env:
-  REPODB_SQLSVR_CONSTR_MASTER: "Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
-  REPODB_SQLSVR_CONSTR: "Server=tcp:127.0.0.1,41433;Database=RepoDb;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
-  REPODB_SQLSVR_CONSTRTEST: "Server=tcp:127.0.0.1,41433;Database=RepoDbTest;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;"
-  REPODB_PGSQL_CONSTR_POSTGRES: "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
-  REPODB_PGSQL_CONSTR: "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
-  REPODB_PGSQL_CONSTR_BULK: "Server=127.0.0.1;Port=45432;Database=RepoDbBulk;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
-  REPODB_MYSQL_CONSTR_SYSTEM: "Server=127.0.0.1;Port=43306;Database=sys;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
-  REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=43306;Database=RepoDb;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
-  REPODB_MYSQL_CONSTRTEST: "Server=127.0.0.1;Port=43306;Database=RepoDbTest;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;"
+  REPODB_SQLSVR_CONSTR_MASTER: "Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  REPODB_SQLSVR_CONSTR: "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  REPODB_PGSQL_CONSTR_POSTGRES: "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;"
+  REPODB_PGSQL_CONSTR: "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"
+  REPODB_MYSQL_CONSTR_SYSTEM: "Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;"
+  REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;"
 
 jobs:
   build:
@@ -20,26 +17,26 @@ jobs:
     # Services. See docker-compose.yml
     services:
         mssql:
-          image: mcr.microsoft.com/mssql/server:2022-latest
+          image: mcr.microsoft.com/mssql/server:2025-latest
           ports:
-            - 127.0.0.1:41433:1433
+            - 127.0.0.1:1433:1433
           env:
             ACCEPT_EULA: true
-            MSSQL_SA_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+            MSSQL_SA_PASSWORD: RepoDB2026
       
         postgresql:
           image: postgres:latest
           ports:
-            - 127.0.0.1:45432:5432
+            - 127.0.0.1:5432:5432
           env:
-            POSTGRES_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+            POSTGRES_PASSWORD: RepoDB2026
       
         mysql:
           image: mysql:latest
           ports:
-            - 127.0.0.1:43306:3306
+            - 127.0.0.1:3306:3306
           env:
-            MYSQL_ROOT_PASSWORD: ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2
+            MYSQL_ROOT_PASSWORD: RepoDB2026
 
     steps:
       - name: Check out repository code
@@ -49,18 +46,18 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            6.0.x
-            7.0.x
             8.0.x
+            9.0.x
+            10.0.x
 
       - name: build
-        run: dotnet build -c release RepoDb.Core/RepoDb.All.sln
+        run: dotnet build -c release RepoDb.Solutions.sln
         
-      - name: test for .Net 8.0
-        run: dotnet test -c release -f net8.0 --no-build -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Core/RepoDb.All.sln
+      - name: test for .NET 10.0
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
 
       - name: pack packages
-        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release RepoDb.Core/RepoDb.All.sln
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release RepoDb.Solutions.sln
 
       - name: Package nupkg files
         uses: actions/upload-artifact@v3
