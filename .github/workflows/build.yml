@@ -53,8 +53,8 @@ jobs:
       - name: build
         run: dotnet build -c release RepoDb.Solutions.sln
         
-      - name: test for .NET 10.0
-        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
+      - name: test for .NET 8.0
+        run: dotnet test -c release -f net8.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false RepoDb.Solutions.sln
 
       - name: pack packages
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release RepoDb.Solutions.sln
