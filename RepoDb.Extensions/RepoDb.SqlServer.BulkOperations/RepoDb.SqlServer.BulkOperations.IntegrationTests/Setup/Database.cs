@@ -16,7 +16,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             // Master connection
             ConnectionStringForMaster =
-                Environment.GetEnvironmentVariable("REPODB_CONSTR_SQLSVR_MASTER") ??
+                Environment.GetEnvironmentVariable("REPODB_SQLSVR_CONSTR_MASTER") ??
                 @"Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // RepoDb connection
