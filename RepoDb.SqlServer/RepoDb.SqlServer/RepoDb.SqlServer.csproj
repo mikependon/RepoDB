@@ -32,9 +32,11 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
-
+	
+	<!-- 
 	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
 		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\RepoDb.NuGet\Packages\$(Version)" />
 	</Target>
+	-->
 
 </Project>
