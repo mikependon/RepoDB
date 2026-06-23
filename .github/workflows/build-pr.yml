@@ -14,29 +14,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Services. See docker-compose.yml
     services:
-        mssql:
-          image: mcr.microsoft.com/mssql/server:2022-latest
-          ports:
-            - 127.0.0.1:1433:1433
-          env:
-            ACCEPT_EULA: true
-            MSSQL_SA_PASSWORD: RepoDB2026
-      
-        postgresql:
-          image: postgres:latest
-          ports:
-            - 127.0.0.1:5432:5432
-          env:
-            POSTGRES_PASSWORD: RepoDB2026
-      
-        mysql:
-          image: mysql:latest
-          ports:
-            - 127.0.0.1:3306:3306
-          env:
-            MYSQL_ROOT_PASSWORD: RepoDB2026
+
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2025-latest
+        ports:
+          - 127.0.0.1:1433:1433
+        env:
+          ACCEPT_EULA: true
+          MSSQL_SA_PASSWORD: RepoDB2026
+
+      postgresql:
+        image: postgres:latest
+        ports:
+          - 127.0.0.1:5432:5432
+        env:
+          POSTGRES_PASSWORD: RepoDB2026
+
+      mysql:
+        image: mysql:latest
+        ports:
+          - 127.0.0.1:3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: RepoDB2026
 
     steps:
       - name: Check out repository code
