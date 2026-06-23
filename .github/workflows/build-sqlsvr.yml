@@ -34,14 +34,18 @@ jobs:
         run: dotnet build -c release "RepoDb.SqlServer\RepoDb.SqlServer.sln"
         
       # - name: Test for .NET 8.0
+      #   working-directory: RepoDb.SqlServer
       #   run: dotnet test -c release -f net8.0 --no-build "RepoDb.SqlServer\RepoDb.SqlServer.sln"
       # - name: Test for .NET 9.0
+      #   working-directory: RepoDb.SqlServer
       #   run: dotnet test -c release -f net9.0 --no-build "RepoDb.SqlServer\RepoDb.SqlServer.sln"
 
       - name: Test for .NET 10.0
-        run: dotnet test -c release -f net10.0 --no-build "RepoDb.SqlServer\RepoDb.SqlServer.sln"
+        working-directory: RepoDb.SqlServer
+        run: dotnet test -c release -f net10.0 --no-build RepoDb.SqlServer.sln
 
       - name: Run Dotnet Pack
+        working-directory: RepoDb.SqlServer
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release RepoDb.SqlServer.sln
 
       - name: Package Nuget
