@@ -34,7 +34,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             // RepoDb connection
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_SQLSVR_CONSTR") ??
-                @"Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
+                @"Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             GlobalConfiguration
@@ -66,9 +66,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDbTest'))
+            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
                 BEGIN
-	                CREATE DATABASE [RepoDbTest];
+	                CREATE DATABASE [RepoDb];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
