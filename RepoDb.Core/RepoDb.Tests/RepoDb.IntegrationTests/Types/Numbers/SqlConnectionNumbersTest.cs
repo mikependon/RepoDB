@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -170,7 +170,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -300,7 +300,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -344,7 +344,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -392,7 +392,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = (decimal?)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -476,7 +476,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -520,7 +520,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = (decimal?)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);

@@ -40,7 +40,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -60,7 +60,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -80,7 +80,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -101,7 +101,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -126,7 +126,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -152,7 +152,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -176,7 +176,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -196,7 +196,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -216,7 +216,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -237,7 +237,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -262,7 +262,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -288,7 +288,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -312,7 +312,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -333,7 +333,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -355,7 +355,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -381,7 +381,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -408,7 +408,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -433,7 +433,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -454,7 +454,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -476,7 +476,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -502,7 +502,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -529,7 +529,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -558,7 +558,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -577,7 +577,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -601,7 +601,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -620,7 +620,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -644,7 +644,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -664,7 +664,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -689,7 +689,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -709,7 +709,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -738,7 +738,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -764,7 +764,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -790,7 +790,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -816,7 +816,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -842,7 +842,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -868,7 +868,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -894,7 +894,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -920,7 +920,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -946,7 +946,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -972,7 +972,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1003,7 +1003,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1035,7 +1035,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1065,7 +1065,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1091,7 +1091,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1122,7 +1122,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1154,7 +1154,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1184,7 +1184,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1210,7 +1210,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1236,7 +1236,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1262,7 +1262,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1288,7 +1288,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1314,7 +1314,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1340,7 +1340,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1366,7 +1366,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1392,7 +1392,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1418,7 +1418,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1449,7 +1449,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1481,7 +1481,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1511,7 +1511,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1537,7 +1537,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1568,7 +1568,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1600,7 +1600,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1630,7 +1630,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1655,7 +1655,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1680,7 +1680,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1705,7 +1705,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1730,7 +1730,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1759,7 +1759,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1788,7 +1788,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1817,7 +1817,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1846,7 +1846,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1871,7 +1871,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1901,7 +1901,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1932,7 +1932,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1961,7 +1961,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -1986,7 +1986,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2011,7 +2011,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2036,7 +2036,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2061,7 +2061,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2090,7 +2090,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2119,7 +2119,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2148,7 +2148,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(20);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2177,7 +2177,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2202,7 +2202,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2232,7 +2232,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2263,7 +2263,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -2296,7 +2296,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -2332,7 +2332,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -2370,7 +2370,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<InvalidOperationException>(() =>
@@ -2385,19 +2385,19 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsert<IdentityTable>((DbDataReader)reader);
@@ -2433,19 +2433,19 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsert<IdentityTable>((DbDataReader)reader, mappings);
@@ -2482,19 +2482,19 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         Assert.Throws<InvalidOperationException>(() =>
@@ -2511,13 +2511,13 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -2527,7 +2527,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsert<IdentityTable>(table);
@@ -2564,13 +2564,13 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -2580,7 +2580,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings);
@@ -2618,13 +2618,13 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -2634,7 +2634,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidOperationException>(() =>
@@ -2655,7 +2655,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -2691,7 +2691,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -2721,7 +2721,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), tables);
@@ -2748,19 +2748,19 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader);
@@ -2785,13 +2785,13 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -2801,7 +2801,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table);
@@ -2830,7 +2830,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -2866,7 +2866,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -2904,7 +2904,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -2922,19 +2922,19 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>((DbDataReader)reader).Result;
@@ -2970,19 +2970,19 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>((DbDataReader)reader, mappings).Result;
@@ -3019,19 +3019,19 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         Assert.Throws<AggregateException>(() =>
@@ -3051,13 +3051,13 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -3067,7 +3067,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>(table).Result;
@@ -3104,13 +3104,13 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -3120,7 +3120,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings).Result;
@@ -3158,13 +3158,13 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -3174,7 +3174,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() =>
@@ -3198,7 +3198,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -3234,7 +3234,7 @@ namespace RepoDb.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -3264,7 +3264,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
@@ -3291,19 +3291,19 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                    using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                     {
                         // Act
                         var bulkInsertResult = destinationRepository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), (DbDataReader)reader).Result;
@@ -3328,13 +3328,13 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
 
             // Insert the records first
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 repository.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
@@ -3344,7 +3344,7 @@ namespace RepoDb.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+                        using (var destinationRepository = new DbRepository<SqlConnection>(Database.ConnectionString))
                         {
                             // Act
                             var bulkInsertResult = destinationRepository.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table).Result;
@@ -3377,7 +3377,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3396,7 +3396,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3415,7 +3415,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3435,7 +3435,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3459,7 +3459,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3484,7 +3484,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3507,7 +3507,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3526,7 +3526,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3545,7 +3545,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3565,7 +3565,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3589,7 +3589,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3614,7 +3614,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3637,7 +3637,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3657,7 +3657,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3678,7 +3678,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3703,7 +3703,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3729,7 +3729,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3753,7 +3753,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3773,7 +3773,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3793,7 +3793,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3818,7 +3818,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3844,7 +3844,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3872,7 +3872,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3891,7 +3891,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3914,7 +3914,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3933,7 +3933,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3956,7 +3956,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3975,7 +3975,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -3999,7 +3999,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4018,7 +4018,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4046,7 +4046,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4070,7 +4070,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4091,7 +4091,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4111,7 +4111,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4132,7 +4132,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4152,7 +4152,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4177,7 +4177,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4203,7 +4203,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4227,7 +4227,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4251,7 +4251,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4272,7 +4272,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4292,7 +4292,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4313,7 +4313,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4334,7 +4334,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4359,7 +4359,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4385,7 +4385,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4409,7 +4409,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4430,7 +4430,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4451,7 +4451,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4477,7 +4477,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4504,7 +4504,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4529,7 +4529,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4550,7 +4550,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4572,7 +4572,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4598,7 +4598,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4625,7 +4625,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4654,7 +4654,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4678,7 +4678,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4702,7 +4702,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4726,7 +4726,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4754,7 +4754,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4773,7 +4773,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4792,7 +4792,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4812,7 +4812,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4836,7 +4836,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4861,7 +4861,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4884,7 +4884,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4903,7 +4903,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4922,7 +4922,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4942,7 +4942,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4966,7 +4966,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -4991,7 +4991,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5014,7 +5014,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5034,7 +5034,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5055,7 +5055,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5080,7 +5080,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5106,7 +5106,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5130,7 +5130,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5150,7 +5150,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5170,7 +5170,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5195,7 +5195,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5221,7 +5221,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5249,7 +5249,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = repository.Insert<IdentityTable, long>(item));
@@ -5269,7 +5269,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertForIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateIdentityTable();
@@ -5293,7 +5293,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertForNonIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateNonIdentityTable();
@@ -5324,7 +5324,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = repository.Insert<WithExtraFieldsIdentityTable, long>(item));
@@ -5351,7 +5351,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = repository.InsertAsync<IdentityTable, long>(item).Result);
@@ -5371,7 +5371,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertAsyncForIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateIdentityTable();
@@ -5395,7 +5395,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertAsyncForNonIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateNonIdentityTable();
@@ -5426,7 +5426,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item => item.Id = repository.InsertAsync<WithExtraFieldsIdentityTable, long>(item).Result);
@@ -5453,7 +5453,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item =>
@@ -5476,7 +5476,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertViaTableNameForIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateIdentityTable();
@@ -5497,7 +5497,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertViaTableNameForNonIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateNonIdentityTable();
@@ -5522,7 +5522,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var insertResult = repository.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(), item);
@@ -5549,7 +5549,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 tables.ForEach(item =>
@@ -5572,7 +5572,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertAsyncViaTableNameForIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateIdentityTable();
@@ -5593,7 +5593,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryInsertAsyncViaTableNameForNonIdentityTable()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateNonIdentityTable();
@@ -5618,7 +5618,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var insertResult = repository.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(), item).Result;
@@ -5649,7 +5649,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5674,7 +5674,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables, 1);
@@ -5699,7 +5699,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -5724,7 +5724,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables, 1);
@@ -5753,7 +5753,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<WithExtraFieldsIdentityTable>(tables);
@@ -5776,7 +5776,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<WithExtraFieldsIdentityTable>(tables, 1);
@@ -5803,7 +5803,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var value = repository.InsertAllAsync(tables).Result;
@@ -5828,7 +5828,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var value = repository.InsertAllAsync(tables, 1).Result;
@@ -5853,7 +5853,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(tables).Wait();
@@ -5878,7 +5878,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(tables, 1).Wait();
@@ -5907,7 +5907,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync<WithExtraFieldsIdentityTable>(tables).Wait();
@@ -5930,7 +5930,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync<WithExtraFieldsIdentityTable>(tables, 1).Wait();
@@ -5957,7 +5957,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
@@ -5976,7 +5976,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables, 1);
@@ -5995,7 +5995,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2);
@@ -6014,7 +6014,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2);
@@ -6033,7 +6033,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -6052,7 +6052,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1);
@@ -6071,7 +6071,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2);
@@ -6090,7 +6090,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2);
@@ -6114,7 +6114,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = repository.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
@@ -6142,7 +6142,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
@@ -6161,7 +6161,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables, 1).Wait();
@@ -6180,7 +6180,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
@@ -6199,7 +6199,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
@@ -6218,7 +6218,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Wait();
@@ -6237,7 +6237,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables, 1).Wait();
@@ -6256,7 +6256,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, Constant.DefaultBatchOperationSize, tables.Item2).Wait();
@@ -6275,7 +6275,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables.Item1, 1, fields: tables.Item2).Wait();
@@ -6299,7 +6299,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new {RowGuid = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = repository.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
@@ -6331,7 +6331,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6351,7 +6351,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6371,7 +6371,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6392,7 +6392,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6417,7 +6417,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6443,7 +6443,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6467,7 +6467,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6487,7 +6487,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6507,7 +6507,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6528,7 +6528,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6553,7 +6553,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6579,7 +6579,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6603,7 +6603,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6624,7 +6624,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6646,7 +6646,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6672,7 +6672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6699,7 +6699,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6724,7 +6724,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6745,7 +6745,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6767,7 +6767,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6793,7 +6793,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6820,7 +6820,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6849,7 +6849,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6868,7 +6868,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6892,7 +6892,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6911,7 +6911,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6935,7 +6935,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6955,7 +6955,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -6980,7 +6980,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -7000,7 +7000,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -7029,7 +7029,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable>(item);
@@ -7052,7 +7052,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable>(item);
@@ -7075,7 +7075,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt)));
@@ -7098,7 +7098,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
@@ -7121,7 +7121,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable>(item,
@@ -7145,7 +7145,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable>(item,
@@ -7169,7 +7169,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable, long>(item);
@@ -7192,7 +7192,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable, Guid>(item);
@@ -7215,7 +7215,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt)));
@@ -7238,7 +7238,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt)));
@@ -7261,7 +7261,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<IdentityTable, long>(item,
@@ -7285,7 +7285,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<NonIdentityTable, Guid>(item,
@@ -7309,7 +7309,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7335,7 +7335,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7361,7 +7361,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7387,7 +7387,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7413,7 +7413,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7440,7 +7440,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7467,7 +7467,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7493,7 +7493,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7519,7 +7519,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7545,7 +7545,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7571,7 +7571,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7598,7 +7598,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -7629,7 +7629,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<WithExtraFieldsIdentityTable>(item);
@@ -7652,7 +7652,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<WithExtraFieldsIdentityTable>(item);
@@ -7682,7 +7682,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable>(item).Result;
@@ -7705,7 +7705,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable>(item).Result;
@@ -7728,7 +7728,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
@@ -7751,7 +7751,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
@@ -7774,7 +7774,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable>(item,
@@ -7798,7 +7798,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable>(item,
@@ -7822,7 +7822,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable, long>(item).Result;
@@ -7845,7 +7845,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable, Guid>(item).Result;
@@ -7868,7 +7868,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable, long>(item, Field.From(nameof(IdentityTable.ColumnInt))).Result;
@@ -7891,7 +7891,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable, Guid>(item, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
@@ -7914,7 +7914,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<IdentityTable, long>(item,
@@ -7938,7 +7938,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<NonIdentityTable, Guid>(item,
@@ -7962,7 +7962,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -7988,7 +7988,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8014,7 +8014,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -8040,7 +8040,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8066,7 +8066,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -8093,7 +8093,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8120,7 +8120,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -8146,7 +8146,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8172,7 +8172,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -8198,7 +8198,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8224,7 +8224,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<IdentityTable>(item);
@@ -8251,7 +8251,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<NonIdentityTable>(item);
@@ -8282,7 +8282,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<WithExtraFieldsIdentityTable>(item).Result;
@@ -8305,7 +8305,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert<WithExtraFieldsIdentityTable>(item);
@@ -8335,7 +8335,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8358,7 +8358,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8382,7 +8382,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8406,7 +8406,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8429,7 +8429,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8453,7 +8453,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8477,7 +8477,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8503,7 +8503,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8530,7 +8530,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8557,7 +8557,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8583,7 +8583,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8610,7 +8610,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8637,7 +8637,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), item);
@@ -8660,7 +8660,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -8678,7 +8678,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
@@ -8701,7 +8701,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8725,7 +8725,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8749,7 +8749,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
@@ -8772,7 +8772,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8796,7 +8796,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -8820,7 +8820,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8846,7 +8846,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8873,7 +8873,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8900,7 +8900,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8926,7 +8926,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8953,7 +8953,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -8980,7 +8980,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = repository.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
@@ -9003,7 +9003,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = Helper.CreateDynamicIdentityTable();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -9025,7 +9025,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
@@ -9049,7 +9049,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt)));
@@ -9073,7 +9073,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables,
@@ -9098,7 +9098,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9125,7 +9125,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9152,7 +9152,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9180,7 +9180,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
@@ -9204,7 +9204,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt)));
@@ -9228,7 +9228,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables,
@@ -9253,7 +9253,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9280,7 +9280,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9307,7 +9307,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9339,7 +9339,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables, 1);
@@ -9363,7 +9363,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(19);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
@@ -9387,7 +9387,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, 1);
@@ -9411,7 +9411,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(99);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
@@ -9439,7 +9439,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
@@ -9463,7 +9463,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, Field.From(nameof(IdentityTable.ColumnInt))).Result;
@@ -9487,7 +9487,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables,
@@ -9512,7 +9512,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9539,7 +9539,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9566,7 +9566,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<IdentityTable>(tables);
@@ -9594,7 +9594,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
@@ -9618,7 +9618,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
@@ -9642,7 +9642,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables,
@@ -9667,7 +9667,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9694,7 +9694,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9721,7 +9721,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll<NonIdentityTable>(tables);
@@ -9753,7 +9753,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, 1).Result;
@@ -9777,7 +9777,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(19);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
@@ -9801,7 +9801,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
@@ -9825,7 +9825,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(99);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
@@ -9853,7 +9853,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -9877,7 +9877,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
@@ -9902,7 +9902,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
@@ -9927,7 +9927,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -9954,7 +9954,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -9982,7 +9982,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -10015,7 +10015,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
@@ -10039,7 +10039,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -10057,7 +10057,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables, 1);
@@ -10081,7 +10081,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(19);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<IdentityTable>(tables);
@@ -10105,7 +10105,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables, 1);
@@ -10129,7 +10129,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(99);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll<NonIdentityTable>(tables);
@@ -10157,7 +10157,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables).Result;
@@ -10181,7 +10181,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
@@ -10206,7 +10206,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(), tables,
@@ -10231,7 +10231,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -10258,7 +10258,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -10286,7 +10286,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -10319,7 +10319,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new {Id = Guid.NewGuid(),ColumnBit = true,ColumnInt = 3}
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
@@ -10343,7 +10343,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -10361,7 +10361,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables, 1).Result;
@@ -10385,7 +10385,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(19);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<IdentityTable>(tables).Result;
@@ -10409,7 +10409,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables, 1).Result;
@@ -10433,7 +10433,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(99);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = repository.MergeAllAsync<NonIdentityTable>(tables).Result;
@@ -10465,7 +10465,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10485,7 +10485,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10505,7 +10505,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10526,7 +10526,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10551,7 +10551,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10577,7 +10577,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10601,7 +10601,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10621,7 +10621,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10641,7 +10641,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10662,7 +10662,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10687,7 +10687,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10713,7 +10713,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10737,7 +10737,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10758,7 +10758,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10780,7 +10780,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10806,7 +10806,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10833,7 +10833,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10858,7 +10858,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10879,7 +10879,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10901,7 +10901,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10927,7 +10927,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10954,7 +10954,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -10983,7 +10983,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11002,7 +11002,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11026,7 +11026,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11045,7 +11045,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11069,7 +11069,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11089,7 +11089,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11114,7 +11114,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11134,7 +11134,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11163,7 +11163,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11188,7 +11188,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11214,7 +11214,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11237,7 +11237,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11261,7 +11261,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11282,7 +11282,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11303,7 +11303,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11324,7 +11324,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11349,7 +11349,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11379,7 +11379,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11409,7 +11409,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11436,7 +11436,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11464,7 +11464,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11495,7 +11495,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11526,7 +11526,7 @@ namespace RepoDb.IntegrationTests.Operations
             var queryGroup = new QueryGroup(fields);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11554,7 +11554,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11579,7 +11579,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11608,7 +11608,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11629,7 +11629,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11649,7 +11649,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11669,7 +11669,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11690,7 +11690,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11711,7 +11711,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11732,7 +11732,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11753,7 +11753,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11774,7 +11774,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11795,7 +11795,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11816,7 +11816,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11836,7 +11836,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11856,7 +11856,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11876,7 +11876,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11896,7 +11896,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11916,7 +11916,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11936,7 +11936,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11956,7 +11956,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11976,7 +11976,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -11995,7 +11995,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12015,7 +12015,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12034,7 +12034,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12054,7 +12054,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12074,7 +12074,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12094,7 +12094,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12118,7 +12118,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12143,7 +12143,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12169,7 +12169,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12192,7 +12192,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12216,7 +12216,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12237,7 +12237,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12258,7 +12258,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12279,7 +12279,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12304,7 +12304,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12334,7 +12334,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12364,7 +12364,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12391,7 +12391,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12419,7 +12419,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12450,7 +12450,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12481,7 +12481,7 @@ namespace RepoDb.IntegrationTests.Operations
             var queryGroup = new QueryGroup(fields);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12509,7 +12509,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12534,7 +12534,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12563,7 +12563,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12584,7 +12584,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12604,7 +12604,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12624,7 +12624,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12645,7 +12645,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12666,7 +12666,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12687,7 +12687,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12708,7 +12708,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12729,7 +12729,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12750,7 +12750,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12771,7 +12771,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var values = new[] { "NVARCHAR1", "NVARCHAR2" };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12791,7 +12791,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12811,7 +12811,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12831,7 +12831,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12851,7 +12851,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12871,7 +12871,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12891,7 +12891,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12911,7 +12911,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12931,7 +12931,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12950,7 +12950,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12970,7 +12970,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -12989,7 +12989,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13009,7 +13009,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13029,7 +13029,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13049,7 +13049,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13073,7 +13073,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13105,7 +13105,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13134,7 +13134,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13161,7 +13161,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13185,7 +13185,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13210,7 +13210,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13232,7 +13232,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13254,7 +13254,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13280,7 +13280,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13311,7 +13311,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13343,7 +13343,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13372,7 +13372,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13402,7 +13402,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13434,7 +13434,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13467,7 +13467,7 @@ namespace RepoDb.IntegrationTests.Operations
             var queryGroup = new QueryGroup(fields);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13497,7 +13497,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13518,7 +13518,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnDbRepositoryQueryViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -13537,7 +13537,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13569,7 +13569,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13598,7 +13598,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var top = 3;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13625,7 +13625,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13649,7 +13649,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13674,7 +13674,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateNonIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13696,7 +13696,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13718,7 +13718,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var last = tables.Last();
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13744,7 +13744,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13775,7 +13775,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13807,7 +13807,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13836,7 +13836,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13866,7 +13866,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields, Conjunction.Or);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13898,7 +13898,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13931,7 +13931,7 @@ namespace RepoDb.IntegrationTests.Operations
             var queryGroup = new QueryGroup(fields);
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13961,7 +13961,7 @@ namespace RepoDb.IntegrationTests.Operations
             var top = 3;
             var orderBy = new OrderField(nameof(IdentityTable.ColumnInt), Order.Descending);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -13982,7 +13982,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -14005,7 +14005,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14029,7 +14029,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14052,7 +14052,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14076,7 +14076,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14104,7 +14104,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14131,7 +14131,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14155,7 +14155,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14178,7 +14178,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14202,7 +14202,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14230,7 +14230,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14257,7 +14257,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14289,7 +14289,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14321,7 +14321,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14354,7 +14354,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14391,7 +14391,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14423,7 +14423,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14455,7 +14455,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14488,7 +14488,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var orderBy = OrderField.Parse(new { Id = Order.Ascending });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14531,7 +14531,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(2);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14557,7 +14557,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14585,7 +14585,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(4);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14615,7 +14615,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14647,7 +14647,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14681,7 +14681,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(7);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14721,7 +14721,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(2);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14747,7 +14747,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14775,7 +14775,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(4);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14805,7 +14805,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14837,7 +14837,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14871,7 +14871,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(7);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14911,7 +14911,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(2);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14937,7 +14937,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14965,7 +14965,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(4);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -14995,7 +14995,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15027,7 +15027,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15061,7 +15061,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(7);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15101,7 +15101,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(2);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15127,7 +15127,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(3);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15155,7 +15155,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(4);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15185,7 +15185,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15217,7 +15217,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(6);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15251,7 +15251,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(7);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15293,7 +15293,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15313,7 +15313,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15333,7 +15333,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15354,7 +15354,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15379,7 +15379,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15405,7 +15405,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15429,7 +15429,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15449,7 +15449,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15469,7 +15469,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15490,7 +15490,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15515,7 +15515,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15541,7 +15541,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15565,7 +15565,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15586,7 +15586,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15608,7 +15608,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15634,7 +15634,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15661,7 +15661,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15686,7 +15686,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15707,7 +15707,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15729,7 +15729,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15755,7 +15755,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15782,7 +15782,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15811,7 +15811,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15830,7 +15830,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15854,7 +15854,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15873,7 +15873,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15897,7 +15897,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15917,7 +15917,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15942,7 +15942,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15962,7 +15962,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -15991,7 +15991,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16017,7 +16017,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16044,7 +16044,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16070,7 +16070,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16101,7 +16101,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16136,7 +16136,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16171,7 +16171,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16206,7 +16206,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16242,7 +16242,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16279,7 +16279,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16318,7 +16318,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16355,7 +16355,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16391,7 +16391,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16427,7 +16427,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16464,7 +16464,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16504,7 +16504,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16546,7 +16546,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16586,7 +16586,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16621,7 +16621,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16656,7 +16656,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16691,7 +16691,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16727,7 +16727,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16764,7 +16764,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16803,7 +16803,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16840,7 +16840,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16876,7 +16876,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16912,7 +16912,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16949,7 +16949,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -16989,7 +16989,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17031,7 +17031,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17071,7 +17071,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17104,7 +17104,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17134,7 +17134,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17172,7 +17172,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17211,7 +17211,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17252,7 +17252,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17287,7 +17287,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
@@ -17309,7 +17309,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfThePrimaryKeyIsNotFound()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 var data = new
                 {
@@ -17323,7 +17323,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateViaTableNameIfTheFieldsAreNotFound()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 var data = new
                 {
@@ -17344,7 +17344,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<EmptyException>(() =>
@@ -17379,7 +17379,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17409,7 +17409,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17447,7 +17447,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), 10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17486,7 +17486,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), 10)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17527,7 +17527,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17562,7 +17562,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var item = new { Id = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), item);
@@ -17584,7 +17584,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 var data = new
                 {
@@ -17598,7 +17598,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnDbRepositoryUpdateAsyncViaTableNameIfTheFieldsAreNotFound()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 var data = new
                 {
@@ -17623,7 +17623,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -17660,7 +17660,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17695,7 +17695,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17730,7 +17730,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17769,7 +17769,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17804,7 +17804,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17839,7 +17839,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17874,7 +17874,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17913,7 +17913,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17946,7 +17946,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -17979,7 +17979,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18013,7 +18013,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18051,7 +18051,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18084,7 +18084,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18117,7 +18117,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18151,7 +18151,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18191,7 +18191,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18211,7 +18211,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18232,7 +18232,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18253,7 +18253,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18274,7 +18274,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18295,7 +18295,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18317,7 +18317,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18343,7 +18343,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18375,7 +18375,7 @@ namespace RepoDb.IntegrationTests.Operations
                 { "ColumnInt", last.ColumnInt }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18401,7 +18401,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.Add("ColumnFloat", last.ColumnFloat);
             param.Add("ColumnInt", last.ColumnInt);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18427,7 +18427,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.ColumnFloat = last.ColumnFloat;
             param.ColumnInt = last.ColumnInt;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18453,7 +18453,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18479,7 +18479,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18501,7 +18501,7 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18518,7 +18518,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var param = new Dictionary<string, int>();
@@ -18532,7 +18532,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var param = new QueryField("Id", Operation.NotEqual, 1);
@@ -18546,7 +18546,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -18557,7 +18557,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -18575,7 +18575,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18595,7 +18595,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18616,7 +18616,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18637,7 +18637,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18658,7 +18658,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18679,7 +18679,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18701,7 +18701,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18733,7 +18733,7 @@ namespace RepoDb.IntegrationTests.Operations
                 { "ColumnInt", last.ColumnInt }
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18759,7 +18759,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.Add("ColumnFloat", last.ColumnFloat);
             param.Add("ColumnInt", last.ColumnInt);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18785,7 +18785,7 @@ namespace RepoDb.IntegrationTests.Operations
             param.ColumnFloat = last.ColumnFloat;
             param.ColumnInt = last.ColumnInt;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18811,7 +18811,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             });
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18837,7 +18837,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField("ColumnInt", last.ColumnInt)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18859,7 +18859,7 @@ namespace RepoDb.IntegrationTests.Operations
             var last = tables.Last();
             var param = new QueryField("ColumnFloat", last.ColumnFloat);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18876,7 +18876,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var param = new Dictionary<string, int>();
@@ -18890,7 +18890,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Setup
                 var param = new QueryField("Id", Operation.NotEqual, 1);
@@ -18904,7 +18904,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -18915,7 +18915,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -18930,7 +18930,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteNonQueryWithNoAffectedTableRows()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteNonQuery("SELECT * FROM (SELECT 1 * 100 AS Value) TMP;");
@@ -18946,7 +18946,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18965,7 +18965,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -18985,7 +18985,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19005,7 +19005,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19024,7 +19024,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19043,7 +19043,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19063,7 +19063,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19083,7 +19083,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19102,7 +19102,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19123,7 +19123,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19145,7 +19145,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19163,7 +19163,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteNonQueryByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteNonQuery("[dbo].[sp_multiply]",
@@ -19178,7 +19178,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19189,7 +19189,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19204,7 +19204,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteNonQueryAsyncWithNoAffectedTableRows()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteNonQueryAsync("SELECT * FROM (SELECT 1 * 100 AS Value) TMP;").Result;
@@ -19220,7 +19220,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19239,7 +19239,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19259,7 +19259,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19279,7 +19279,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19298,7 +19298,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19317,7 +19317,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19337,7 +19337,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19357,7 +19357,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19376,7 +19376,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19397,7 +19397,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19419,7 +19419,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19437,7 +19437,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteNonQueryAsync("[dbo].[sp_multiply]",
@@ -19452,7 +19452,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -19463,7 +19463,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -19478,7 +19478,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarWithoutRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
@@ -19491,7 +19491,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarWithSingleRowAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT 1;");
@@ -19504,7 +19504,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarWithMultipleRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT 2 UNION ALL SELECT 1;");
@@ -19517,7 +19517,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarWithSingleRowAndWithMultipleColumnsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT 1 AS Value1, 2 AS Value2;");
@@ -19536,7 +19536,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value1 = DateTime.UtcNow
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT @Value1;", param);
@@ -19556,7 +19556,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = 1
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT @Value1, @Value2;", param);
@@ -19576,7 +19576,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = DateTime.UtcNow.AddDays(1)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
@@ -19592,7 +19592,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19610,7 +19610,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar("[dbo].[sp_multiply]",
@@ -19625,7 +19625,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19636,7 +19636,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19651,7 +19651,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarAsyncWithoutRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").Result;
@@ -19664,7 +19664,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarAsyncWithSingleRowAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT 1;").Result;
@@ -19677,7 +19677,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarAsyncWithMultipleRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT 2 UNION ALL SELECT 1;").Result;
@@ -19690,7 +19690,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarAsyncWithSingleRowAndWithMultipleColumnsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT 1 AS Value1, 2 AS Value2;").Result;
@@ -19709,7 +19709,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value1 = DateTime.UtcNow
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT @Value1;", param).Result;
@@ -19729,7 +19729,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = 1
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT @Value1, @Value2;", param).Result;
@@ -19749,7 +19749,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = DateTime.UtcNow.AddDays(1)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).Result;
@@ -19765,7 +19765,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19783,7 +19783,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync("[dbo].[sp_multiply]",
@@ -19798,7 +19798,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -19809,7 +19809,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -19824,7 +19824,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTWithoutRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
@@ -19837,7 +19837,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTWithSingleRowAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<int>("SELECT 1;");
@@ -19850,7 +19850,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTWithMultipleRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<int>("SELECT 2 UNION ALL SELECT 1;");
@@ -19863,7 +19863,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTWithSingleRowAndWithMultipleColumnsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<int>("SELECT 1 AS Value1, 2 AS Value2;");
@@ -19882,7 +19882,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value1 = DateTime.UtcNow
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<DateTime>("SELECT @Value1;", param);
@@ -19902,7 +19902,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = 1
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<DateTime>("SELECT @Value1, @Value2;", param);
@@ -19922,7 +19922,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = DateTime.UtcNow.AddDays(1)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
@@ -19938,7 +19938,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -19956,7 +19956,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalar<int>("[dbo].[sp_multiply]",
@@ -19971,7 +19971,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19982,7 +19982,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<SqlException>(() =>
@@ -19997,7 +19997,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTAsyncWithoutRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").Result;
@@ -20010,7 +20010,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTAsyncWithSingleRowAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<int>("SELECT 1;").Result;
@@ -20023,7 +20023,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTAsyncWithMultipleRowsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<int>("SELECT 2 UNION ALL SELECT 1;").Result;
@@ -20036,7 +20036,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTAsyncWithSingleRowAndWithMultipleColumnsAsResult()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<int>("SELECT 1 AS Value1, 2 AS Value2;").Result;
@@ -20055,7 +20055,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value1 = DateTime.UtcNow
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1;", param).Result;
@@ -20075,7 +20075,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = 1
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1, @Value2;", param).Result;
@@ -20095,7 +20095,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Value2 = DateTime.UtcNow.AddDays(1)
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).Result;
@@ -20111,7 +20111,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 repository.InsertAll(tables);
@@ -20129,7 +20129,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestDbRepositoryExecuteScalarTAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 var result = repository.ExecuteScalarAsync<int>("[dbo].[sp_multiply]",
@@ -20144,7 +20144,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTAsyncIfTheParametersAreNotDefined()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>
@@ -20155,7 +20155,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void ThrowExceptionOnTestDbRepositoryExecuteScalarTAsyncIfThereAreSqlStatementProblems()
         {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() =>

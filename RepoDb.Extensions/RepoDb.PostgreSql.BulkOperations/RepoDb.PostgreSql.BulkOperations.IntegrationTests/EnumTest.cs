@@ -28,7 +28,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         #region Methods
 
         private NpgsqlConnection GetConnection() =>
-            (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen());
+            (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionString).EnsureOpen());
 
         public static List<EnumTable> CreateEnumTablesWithNullValues(int count,
             bool hasId = false,

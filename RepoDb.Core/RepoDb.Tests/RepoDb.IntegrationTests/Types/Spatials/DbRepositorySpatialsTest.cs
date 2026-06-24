@@ -36,7 +36,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -62,7 +62,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -88,7 +88,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -114,7 +114,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -140,7 +140,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -168,7 +168,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -196,7 +196,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -224,7 +224,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<SpatialsClass>(), entity);
@@ -282,7 +282,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = (object)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<SpatialsClass>(), entity);
@@ -308,7 +308,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity);
@@ -336,7 +336,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = (object)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity);

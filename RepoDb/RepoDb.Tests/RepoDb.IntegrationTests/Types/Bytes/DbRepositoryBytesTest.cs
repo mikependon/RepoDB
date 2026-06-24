@@ -41,7 +41,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -71,7 +71,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -103,7 +103,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -133,7 +133,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -165,7 +165,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -197,7 +197,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -263,7 +263,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -301,7 +301,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -331,7 +331,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -363,7 +363,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -395,7 +395,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);

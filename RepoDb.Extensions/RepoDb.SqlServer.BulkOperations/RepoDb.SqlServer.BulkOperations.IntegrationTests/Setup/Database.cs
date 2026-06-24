@@ -20,7 +20,7 @@ namespace RepoDb.IntegrationTests.Setup
                 @"Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb =
+            ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_CONSTR_SQLSVR") ??
                 @"Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets the connection string for RepoDb.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #region Methods
 
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Truncate<BulkOperationIdentityTable>();
             }
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests.Setup
                         WITH (FILLFACTOR = 90) ON [PRIMARY]
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }

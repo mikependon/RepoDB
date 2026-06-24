@@ -22,7 +22,7 @@ namespace RepoDb.IntegrationTests.Setup
                 @"Server=(local)\SQL2017;Database=master;Integrated Security=False;User ID=sa;Password=Password12!;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb = (environment == "DEVELOPMENT") ?
+            ConnectionString = (environment == "DEVELOPMENT") ?
                 @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;;" :
                 @"Server=(local)\SQL2017;Database=RepoDb;Integrated Security=False;User ID=sa;Password=Password12!;";
 
@@ -50,7 +50,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets the connection string for RepoDb.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #region Methods
 
@@ -104,7 +104,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Truncate("[dbo].[CompleteTable]");
                 connection.Truncate("[sc].[IdentityTable]");
@@ -122,7 +122,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateScSchema()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[schemas] WHERE name = 'sc';");
                 if (exists == null)
@@ -157,7 +157,7 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -186,7 +186,7 @@ namespace RepoDb.IntegrationTests.Setup
 		                )
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -208,7 +208,7 @@ namespace RepoDb.IntegrationTests.Setup
 		                [Column.DateTime] DATETIME2(7) NULL
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -264,7 +264,7 @@ namespace RepoDb.IntegrationTests.Setup
 	                ) ON [PRIMARY];
 	                ALTER TABLE [dbo].[CompleteTable] ADD CONSTRAINT [DF_CompleteTable_SessionId] DEFAULT (NEWID()) FOR [SessionId];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -279,7 +279,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateGetIdentityTablesStoredProcedure()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_identity_tables';");
                 if (exists == null)
@@ -299,7 +299,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateGetIdentityTableByIdStoredProcedure()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_identity_table_by_id';");
                 if (exists == null)
@@ -322,7 +322,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateGetDatabaseDateTimeStoredProcedure()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_database_date_time';");
                 if (exists == null)
@@ -342,7 +342,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateMultiplyStoredProcedure()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_multiply';");
                 if (exists == null)

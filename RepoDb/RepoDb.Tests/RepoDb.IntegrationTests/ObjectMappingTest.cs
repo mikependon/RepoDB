@@ -147,7 +147,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -173,7 +173,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -199,7 +199,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -225,7 +225,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -250,7 +250,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -280,7 +280,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -350,7 +350,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -387,7 +387,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -424,7 +424,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -465,7 +465,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -504,7 +504,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedIdentityTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
@@ -540,7 +540,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedIdentityTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
@@ -595,7 +595,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -620,7 +620,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -645,7 +645,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -670,7 +670,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -695,7 +695,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -724,7 +724,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -758,7 +758,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -792,7 +792,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -828,7 +828,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -864,7 +864,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -904,7 +904,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -942,7 +942,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedCompleteTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
@@ -977,7 +977,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedCompleteTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);

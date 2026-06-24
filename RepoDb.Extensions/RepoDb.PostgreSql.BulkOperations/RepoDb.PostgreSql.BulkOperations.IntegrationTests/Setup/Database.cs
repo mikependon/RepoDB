@@ -19,7 +19,7 @@ namespace RepoDb.IntegrationTests.Setup
                 "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=RepoDB@026;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb =
+            ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR") ??
                 "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
 
@@ -41,7 +41,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #region Methods
 
@@ -77,7 +77,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.Truncate("BulkOperationIdentityTable");
                 connection.Truncate("EnumTable");
@@ -120,7 +120,7 @@ namespace RepoDb.IntegrationTests.Setup
 
                     ALTER TABLE public.""BulkOperationIdentityTable""
                         OWNER to postgres;";
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -132,7 +132,7 @@ namespace RepoDb.IntegrationTests.Setup
 
         private static void CreateEnumTable()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"
                     DO $$

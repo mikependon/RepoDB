@@ -46,7 +46,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -106,7 +106,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -136,7 +136,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -166,7 +166,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -198,7 +198,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -230,7 +230,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -262,7 +262,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);

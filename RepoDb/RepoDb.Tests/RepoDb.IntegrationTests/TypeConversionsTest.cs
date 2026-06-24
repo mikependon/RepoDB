@@ -48,7 +48,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.ToString()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -93,7 +93,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = bool.TrueString
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = "12345.55"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -163,7 +163,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = "12345.55"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -198,7 +198,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = "12345"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -233,7 +233,7 @@ namespace RepoDb.IntegrationTests
                 ColumnMoney = "12345.6789"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -268,7 +268,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNumeric = "12345.67"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -303,7 +303,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = "12345.67"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -338,7 +338,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = "12345"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -373,7 +373,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallMoney = "12345.6700"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -408,7 +408,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDate = "1970-01-01"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -443,7 +443,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDateTime = "1970-01-01 11:30 AM"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -478,7 +478,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDateTime2 = "2019-03-03 15:22:10.0500000"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -513,7 +513,7 @@ namespace RepoDb.IntegrationTests
                 ColumnUniqueIdentifier = Guid.NewGuid().ToString()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -548,7 +548,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = Guid.NewGuid()
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -583,7 +583,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = DateTime.UtcNow
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -618,7 +618,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -653,7 +653,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -688,7 +688,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = (int)short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -723,7 +723,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -758,7 +758,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -793,7 +793,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -828,7 +828,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -863,7 +863,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = long.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -898,7 +898,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -933,7 +933,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -968,7 +968,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1003,7 +1003,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1038,7 +1038,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1073,7 +1073,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1108,7 +1108,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1143,7 +1143,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1178,7 +1178,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1213,7 +1213,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1248,7 +1248,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1283,7 +1283,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1318,7 +1318,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1353,7 +1353,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = decimal.MaxValue
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1388,7 +1388,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1423,7 +1423,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1458,7 +1458,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1493,7 +1493,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67M
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1528,7 +1528,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67M
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1563,7 +1563,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1598,7 +1598,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = 12345
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1633,7 +1633,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1668,7 +1668,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1703,7 +1703,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1738,7 +1738,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1773,7 +1773,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1808,7 +1808,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1843,7 +1843,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1878,7 +1878,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = 12345.7F
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1913,7 +1913,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1948,7 +1948,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1983,7 +1983,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2018,7 +2018,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2053,7 +2053,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2088,7 +2088,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2123,7 +2123,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345.67
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);

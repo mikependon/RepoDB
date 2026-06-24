@@ -25,7 +25,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         private NpgsqlConnection GetConnection() =>
-            (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen());
+            (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionString).EnsureOpen());
 
         #region Sync
 

@@ -34,28 +34,28 @@ namespace RepoDb.IntegrationTests.Operations
         private class IdentityTableRepository : BaseRepository<IdentityTable, SqlConnection>
         {
             public IdentityTableRepository() :
-                base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
+                base(Database.ConnectionString, ConnectionPersistency.Instance)
             { }
         }
 
         private class LiteIdentityTableRepository : BaseRepository<LiteIdentityTable, SqlConnection>
         {
             public LiteIdentityTableRepository() :
-                base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
+                base(Database.ConnectionString, ConnectionPersistency.Instance)
             { }
         }
 
         private class NonIdentityTableRepository : BaseRepository<NonIdentityTable, SqlConnection>
         {
             public NonIdentityTableRepository() :
-                base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
+                base(Database.ConnectionString, ConnectionPersistency.Instance)
             { }
         }
 
         private class WithExtraFieldsIdentityTableRepository : BaseRepository<WithExtraFieldsIdentityTable, SqlConnection>
         {
             public WithExtraFieldsIdentityTableRepository() :
-                base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
+                base(Database.ConnectionString, ConnectionPersistency.Instance)
             { }
         }
 

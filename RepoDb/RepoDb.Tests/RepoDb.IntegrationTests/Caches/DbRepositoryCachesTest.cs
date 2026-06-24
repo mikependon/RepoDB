@@ -58,7 +58,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -95,7 +95,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -131,7 +131,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -167,7 +167,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -203,7 +203,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -243,7 +243,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -280,7 +280,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -353,7 +353,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -389,7 +389,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -425,7 +425,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
@@ -465,7 +465,7 @@ namespace RepoDb.IntegrationTests.Caches
             var cacheKey = "SimpleTables";
             var cacheItemExpiration = 60;
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb,
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString,
                 0,
                 ConnectionPersistency.PerCall,
                 cache,
