@@ -1,9 +1,9 @@
-[![SqLiteMicrosoftBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-94v1s?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-94v1s)
+[![SqLiteMicrosoftBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
 [![SqLiteMicrosoftHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqLiteMicrosoftVersion](https://img.shields.io/nuget/v/RepoDb.Sqlite.Microsoft?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft)
 [![SqLiteMicrosoftReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlite-microsoft)
-[![SqLiteMicrosoftUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-jvodo?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-jvodo/build/tests)
-[![SqLiteMicrosoftIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-9lhxq?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-9lhxq/build/tests)
+[![SqLiteMicrosoftUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
+[![SqLiteMicrosoftIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
 
 # [RepoDb.Sqlite.Microsoft](https://repodb.net/tutorial/get-started-sqlite) - a hybrid .NET ORM library for SQLite (using Microsoft.Data.Sqlite).
 

@@ -1,9 +1,9 @@
-[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
+[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
 [![SqlServerReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlserver)
-[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
-[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
+[![SqlServerUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![SqlServerIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 
 # [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) - a hybrid .NET ORM library for SQL Server.
 

@@ -1,9 +1,9 @@
-[![MySqlConnectorBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-7ooj1?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-7ooj1)
+[![MySqlConnectorBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml)
 [![MySqlConnectorHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MySqlConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
 [![MySqlConnectorReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/mysqlconnector)
-[![MySqlConnectorUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pqvj7?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pqvj7/build/tests)
-[![MySqlConnectorIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-4iutn?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-4iutn/build/tests)
+[![MySqlConnectorUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml)
+[![MySqlConnectorIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml)
 
 # [RepoDb.MySqlConnector](https://repodb.net/tutorial/get-started-mysql) - a hybrid .NET ORM library for MySQL (using MySqlConnector)
 

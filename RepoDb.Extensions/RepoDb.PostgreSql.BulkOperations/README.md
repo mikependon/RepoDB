@@ -1,8 +1,8 @@
-[![PostgreSqlBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ninm5?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-ninm5)
+[![PostgreSqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
 [![PostgreSqlBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlBulkVersion](https://img.shields.io/nuget/v/repodb.postgresql.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations)
 [![PostgreSqlBulkReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](https://repodb.net/release/postgresqlbulk)
-[![PostgreSqlBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-ck79r?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-ck79r/build/tests)
+[![PostgreSqlBulkIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
 
 # [RepoDb.PostgreSql.BulkOperations](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations)
 
