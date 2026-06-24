@@ -93,7 +93,7 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A and community chat.
 - [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
 
-### Contributor Resources
+### Resources
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md)
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md)
@@ -101,15 +101,17 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md)
 - [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md)
 
-## Credits
-
-Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+### Contributors
 
 <a href="https://github.com/mikependon/RepoDB/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=mikependon/RepoDB" />
 </a>
 
-And also, to the tools and projects that make RepoDB possible: [GitHub](https://github.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/).
+## Credits
+
+Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+
+ATools and projects that make RepoDB possible: [GitHub](https://github.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/).
 
 ## License
 
