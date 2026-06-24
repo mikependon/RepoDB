@@ -4,7 +4,7 @@
 [![Releases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/core)
 [![UnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![IntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?&logo=gitter&color=48B293)](https://gitter.im/RepoDb/community)
+[![MsTeams](https://img.shields.io/badge/chat-microsoft%20teams-6264A7?&logo=microsoftteams&logoColor=white)](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
 
 # [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.
 
@@ -205,7 +205,7 @@ Please get in touch with us via:
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
 
 Ensure to visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md) to get more details about our policies when handling the operational support for this library.
 
@@ -224,7 +224,7 @@ And also, thanks to these awesome OSS projects.
 
 - [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
 - [GitHub](https://github.com/) - for hosting this project.
-- [Gitter](https://gitter.im/) - for the community engagements.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for the community engagements.
 - [Jekyll](https://github.com/jekyll/jekyll) - for powering our website.
 - [Just-the-Docs](https://github.com/pmarsceill/just-the-docs) - for being the awesome library documentation template.
 - [Moq](https://github.com/moq/moq4) - for being the tests mocking framework.

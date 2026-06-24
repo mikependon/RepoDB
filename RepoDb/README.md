@@ -21,7 +21,7 @@ To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/Rep
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
 
 ## License
 

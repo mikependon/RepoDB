@@ -50,7 +50,7 @@ We are thanking you for this!
 
 **Deployment**
 
-Before the deployment, if there are existing collaborations (ie: [GitHub](https://github.com/mikependon/RepoDb/issues) or [Gitter](https://gitter.im/RepoDb/community)), we will contact you (the reporter) first. Otherwise, we will proceed with the deployment.
+Before the deployment, if there are existing collaborations (ie: [GitHub](https://github.com/mikependon/RepoDb/issues) or [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)), we will contact you (the reporter) first. Otherwise, we will proceed with the deployment.
 
 After the deployment, we will place a [deployed](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Adeployed) label. The label will be placed even the fix is deployed in a pre-release versions.
 
@@ -72,7 +72,7 @@ A question is not a strict issue, so you (as the asker) can contact us anytime i
 
 See below.
 
-- [Gitter](https://gitter.im/RepoDb/community)
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
 - [Email](https://repodb.readthedocs.io/en/latest/pages/contact.html)
 - [Twitter](https://twitter.com/home) - notifying the [author](https://twitter.com/mike_pendon) or placing a tag **#RepoDB**.
 
@@ -97,9 +97,9 @@ Below are some of the considerations for us to place an issue as a [for-grabs](h
 - If we found the issue is not a breaking-change.
 - If there is an agreement with you and/or the other parties.
 
-## Gitter and Twitter
+## Microsoft Teams and Twitter
 
-You can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitter](https://twitter.com/home) anytime. Usually, the issue reported here is [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion). However, depends on the outcome of the discussion, we will create an issue on our [GitHub](https://github.com/mikependon/RepoDb/issues) page and placing the right type-of-issue.
+You can contact us via [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) or [Twitter](https://twitter.com/home) anytime. Usually, the issue reported here is [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion). However, depends on the outcome of the discussion, we will create an issue on our [GitHub](https://github.com/mikependon/RepoDb/issues) page and placing the right type-of-issue.
 
 **We will do the following:**
 
