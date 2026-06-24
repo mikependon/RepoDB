@@ -20,7 +20,7 @@ namespace RepoDb.IntegrationTests.Setup
 
             // RepoDb connection
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR") ??
+                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR_BULK") ??
                 "Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;";
 
             // Initialize PostgreSql

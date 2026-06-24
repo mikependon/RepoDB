@@ -21,7 +21,7 @@ namespace RepoDb.IntegrationTests.Setup
 
             // RepoDb connection
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_CONSTR_SQLSVR") ??
+                Environment.GetEnvironmentVariable("REPODB_SQLSVR_CONSTR_BULK") ??
                 @"Server=tcp:127.0.0.1,1433;Database=RepoDbBulk;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
