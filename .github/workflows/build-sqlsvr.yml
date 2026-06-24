@@ -33,12 +33,13 @@ jobs:
       - name: Dotnet Build
         run: dotnet build -c release "RepoDb.SqlServer\RepoDb.SqlServer.sln"
         
-      # - name: Test for .NET 8.0
-      #   working-directory: RepoDb.SqlServer
-      #   run: dotnet test -c release -f net8.0 --no-build "RepoDb.SqlServer\RepoDb.SqlServer.sln"
-      # - name: Test for .NET 9.0
-      #   working-directory: RepoDb.SqlServer
-      #   run: dotnet test -c release -f net9.0 --no-build "RepoDb.SqlServer\RepoDb.SqlServer.sln"
+      - name: Test for .NET 8.0
+        working-directory: RepoDb.SqlServer
+        run: dotnet test -c release -f net8.0 --no-build RepoDb.SqlServer.sln
+
+      - name: Test for .NET 9.0
+        working-directory: RepoDb.SqlServer
+        run: dotnet test -c release -f net9.0 --no-build RepoDb.SqlServer.sln
 
       - name: Test for .NET 10.0
         working-directory: RepoDb.SqlServer
