@@ -21,7 +21,7 @@ namespace RepoDb.IntegrationTests.Setup
             // RepoDb connection
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR") ??
-                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;";
+                "Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;";
 
             // Initialize PostgreSql
             GlobalConfiguration.Setup().UsePostgreSql();
@@ -52,10 +52,10 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using (var connection = new NpgsqlConnection(ConnectionStringForPostgres))
             {
-                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
+                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDbBulk';");
                 if (recordCount <= 0)
                 {
-                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDb""
+                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDbBulk""
                         WITH OWNER = ""postgres""
                         ENCODING = ""UTF8""
                         CONNECTION LIMIT = -1;");

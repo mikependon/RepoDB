@@ -104,18 +104,6 @@ Whereas the fluent methods below only support the [SQL Server](https://www.nuget
  
 Click [here](http://repodb.net/operation) to see all the operations.
 
-## Package Referencing
-
-By default, .NET is auto-resolving the references, however, we strongly recommend that you always explicitly reference the [RepoDb](https://www.nuget.org/packages/RepoDb) core library. The rationale behind this is that, the [RepoDb](https://www.nuget.org/packages/RepoDb) core library is a fast-moving package in which all the alpha/beta releases, hotfixes and/or even the actual releases could happen without affecting the extension libraries.
-
-Please note that we are releasing an actual next released-version if the changes are having minimal impact but is important for the other users.
-
-You can always target the version when installing the library, even it is on a semantic release.
-
-```csharp
-> Install-Package RepoDb -version 1.x.x-betaX
-```
-
 ## .NET Type Coercion
 
 By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
@@ -136,58 +124,9 @@ As the compiler exception is a bit low-level and is not descriptive for the nati
 
 On the other hand, as part of the standard when writing code in RepoDB (i.e.: respect the default exception handling of .NET, ensure an unharmonized exception when bubbling up the exception messages), RepoDB does not contain a single line of code that catches and rethrowing any exception (try-catch statement). Any exception happens within the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the callers.
 
-## System.Data.SqlClient
-
-If you are working with this package, you are required to bootstrap the connection object on the startup.
-
-```csharp
-var dbSetting = new SqlServerDbSetting();
-
-DbSettingMapper
-	.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
-DbHelperMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
-StatementBuilderMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
-```
-
-Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class initializer method explicitly.
-
-## Trust Server Certificate
-
-For [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer) package, starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it seems to require a TLS 1.2 when connecting to the database via Integrated Security.
-
-In most cases, an exception below is thrown if the mentioned security chain is not enabled.
-
-```csharp
-A connection was successfully established with the server, but then an error occurred during the login process.
-(provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)
----> System.ComponentModel.Win32Exception: The certificate chain was issued by an authority that is not trusted..
-```
-
-The issue above can be rectified by simply enabling the TLS 1.2. Alternatively, the argument [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) can be used on the connection string.
-
-**Note:** By enabling the [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) argument, as per Microsoft, _the transport layer will use SSL to encrypt the channel and bypass walking the certificate chain to validate trust_. Therefore, only enable this flag if needed.
-
 ## Library Limitations
 
 It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) page before using the library.
-
-## Benchmark
-
-The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
-
-Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20201112_net5_ef5.txt).
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
-
-RepoDB shows an impressive performance and memory-efficiency if being compared with other ORMs available in the .NET ecosystem. It has positioned itself just right behind the logic-less hand-coded materializer if being benchmark with .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-coded materializer.
-
-### Important Note
-
-The AOT compilation (IL/Expression) has some degree of performance impact, even just for milliseconds, therefore, if you are to materialize RepoDB, it is highly recommended to always eliminate the first execution.
-
-To avoid the bias, you as well should exclude the first execution of the other ORMs during the benchmarking.
 
 ## Contributions
 
