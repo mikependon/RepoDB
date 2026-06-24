@@ -1,9 +1,6 @@
-[![PostgreSqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml)
+[![PostgreSqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml)
 [![PostgreSqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/postgresql)
-[![PostgreSqlUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml)
-[![PostgreSqlIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml)
 
 # [RepoDb.PostgreSql](https://repodb.net/tutorial/get-started-postgresql) - a hybrid .NET ORM library for PostgreSQL.
 

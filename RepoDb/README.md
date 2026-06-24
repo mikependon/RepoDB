@@ -1,8 +1,6 @@
-[![Build](https://img.shields.io/appveyor/ci/mikependon/repodb?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb)
+[![Build](https://img.shields.io/appveyor/ci/mikependon/repodb?style=flat-square&label=build%20and%20tests)](https://ci.appveyor.com/project/mikependon/repodb)
 [![Version](https://img.shields.io/nuget/v/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
 [![DL](https://img.shields.io/nuget/dt/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
-[![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-g4ml5?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5/build/tests)
-[![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-neg8t?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-neg8t/build/tests)
 
 ## RepoDb - a hybrid ORM library for .NET.
 

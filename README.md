@@ -1,9 +1,6 @@
 
-[![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)
-[![Releases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/core)
-[![UnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![IntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![MsTeams](https://img.shields.io/badge/chat-microsoft%20teams-6264A7?&logo=microsoftteams&logoColor=white)](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
 
 # [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.

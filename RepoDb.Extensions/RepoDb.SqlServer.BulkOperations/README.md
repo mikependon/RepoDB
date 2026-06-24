@@ -1,8 +1,6 @@
-[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
+[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
 [![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
-[![SqlServerBulkReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](https://repodb.net/release/sqlserverbulk)
-[![SqlServerBulkIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
 
 # [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 

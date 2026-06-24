@@ -1,9 +1,6 @@
-[![MySqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
+[![MySqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
 [![MySqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql)
-[![MySqlReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/mysql)
-[![MySqlUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
-[![MySqlIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
 
 # [RepoDb.MySql](https://repodb.net/tutorial/get-started-mysql) - a hybrid .NET ORM library for MySQL (using MySql.Data).
 

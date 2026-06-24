@@ -1,9 +1,6 @@
-[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
-[![SqlServerReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlserver)
-[![SqlServerUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![SqlServerIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 
 # [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) - a hybrid .NET ORM library for SQL Server.
 

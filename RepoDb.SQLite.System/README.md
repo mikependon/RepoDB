@@ -1,9 +1,6 @@
-[![SqLiteSystemBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
+[![SqLiteSystemBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
 [![SqLiteSystemHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqLiteSystemVersion](https://img.shields.io/nuget/v/RepoDb.SQLite.System?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SQLite.System)
-[![SqLiteSystemReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlite)
-[![SqLiteSystemUnitTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=unit%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
-[![SqLiteSystemIntegrationTests](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=integration%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
 
 # [RepoDb.SQLite.System](https://repodb.net/tutorial/get-started-sqlite) - a hybrid .NET ORM library for SQLite (using System.Data.SQLite.Core).
 
