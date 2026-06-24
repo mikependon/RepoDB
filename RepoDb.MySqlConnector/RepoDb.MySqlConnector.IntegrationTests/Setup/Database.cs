@@ -91,8 +91,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionStringForSystem))
             {
-                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDbTest`;");
-                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDbTest.* to 'root'@'%';");
+                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDb`;");
+                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDb.* to 'root'@'%';");
             }
         }
 
