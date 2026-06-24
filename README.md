@@ -101,13 +101,11 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md)
 - [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md)
 
-## Contributors
+## Credits
 
 <a href="https://github.com/mikependon/RepoDB/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=mikependon/RepoDB" />
 </a>
-
-## Credits
 
 Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
