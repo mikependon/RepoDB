@@ -9,6 +9,20 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 
 To get the latest updates about this library, follow us on [Twitter](https://twitter.com/mike_pendon)!
 
+## Packages and Build Status
+
+| Project | Status | Unit Tests | Integration Tests |
+|---------|--------|:----------:|:-----------------:|
+| [RepoDb](https://www.nuget.org/packages/RepoDb) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml) | 2,467 | 2,661 |
+| [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml) | 200 | 563 |
+| [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml) | 179 | 535 |
+| [RepoDb.MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml) | 179 | 556 |
+| [RepoDb.PostgreSql](https://www.nuget.org/packages/RepoDb.PostgreSql) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql.yml) | 195 | 571 |
+| [RepoDb.SQLite.System](https://www.nuget.org/packages/RepoDb.SQLite.System) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml) | 112 | 556 |
+| [RepoDb.Sqlite.Microsoft](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml) | 112 | 556 |
+| [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml) | - | 663 |
+| [RepoDb.PostgreSql.BulkOperations](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml) | - | 587 |
+
 ## Benefits/Advantages
 
 Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations. The good thing is, it also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
