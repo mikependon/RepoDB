@@ -1,23 +1,15 @@
-﻿[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
+[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
 [![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 
 # [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 
-An extension library that contains the official Bulk Operations of RepoDB for SQL Server.
+High-performance bulk operations for RepoDB on SQL Server. Process millions of rows in a single pass — up to 90% faster than row-by-row or batch operations.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
-
-## Why use the Bulk Operations?
-
-Basically, we do the normal [Delete](https://repodb.net/operation/delete), [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge) and [Update](https://repodb.net/operation/update) operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
-
-With bulk operations, all data is brought from the client application to the database via [BulkInsert](https://repodb.net/operation/bulkinsert) process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
-
-The bulk operations can hugely improve the performance by more than 90% when processing a large datasets.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
 ## Core Features
 
@@ -29,68 +21,58 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 - [BulkMerge](#bulkmerge)
 - [BulkUpdate](#bulkupdate)
 
-## Community Engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2020 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2020 [Michael Camara Pendon](https://twitter.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
-```csharp
-> Install-Package RepoDb.SqlServer.BulkOperations
+```
+Install-Package RepoDb.SqlServer.BulkOperations
 ```
 
-Then call the bootstrapper once.
+Then initialize the bootstrapper once at application startup:
 
 ```csharp
 RepoDb.SqlServerBootstrap.Initialize();
 ```
 
-Or, visit our [installation](https://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](https://repodb.net/tutorial/installation) page for more options.
 
 ## Special Arguments
 
-The arguments `qualifiers`, `isReturnIdentity` and `usePhysicalPseudoTempTable` is provided at [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) operations.
+**`qualifiers`** — defines the fields used in the `WHERE` clause for delete, merge, and update operations. Defaults to the primary key or identity column.
 
-The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the `WHERE` expression of SQL Statements. If not given, the primary key (or identity) field will be used.
+**`isReturnIdentity`** — when enabled, newly generated identity values are written back to the entity objects after the operation completes.
 
-The argument `isReturnIdentity` is used to define the behaviour of the execution whether the newly generated identity will be set-back to the data entities. By default, it is disabled.
-
-The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: `#TableName`) is used.
+**`usePhysicalPseudoTempTable`** — controls whether a physical temp table or a session-scoped `#TempTable` is used internally. Defaults to session-scoped.
 
 ### Identity Setting Alignment
 
-The library has enforced an additional logic to ensure the identity setting alignment if the `isReturnIdentity` is enabled during the calls. This affects both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations.
-
-Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying target table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
-
-During the bulk operation, a dedicated `DbParameter` object is created that targets this additional column with a value of the entity model index, thus ensuring that the index value is really equating the index of the entity data from the `IEnumerable<T>` object. The resultsets of the pseudo-temporary table are being ordered using this newly generated column prior the actual merge to the underlying table.
-
-When the newly generated identity value is being set back to the data model, the value of the `__RepoDb_OrderColumn` column is being used to look-up the proper index of the equating entity model from the `IEnumerable<T>` object, then, the compiled identity-setter function is used to assign back the identity value into the identity property.
+When `isReturnIdentity` is enabled, RepoDB adds an internal `__RepoDb_OrderColumn` to the pseudo-temporary table. This column preserves the original index of each entity in the `IEnumerable<T>` collection, ensuring that identity values are mapped back to the correct objects after the bulk operation completes.
 
 ## Async Methods
 
-All synchronous methods has an equivalent asynchronous (Async) methods.
+Every synchronous operation has a corresponding `Async` overload.
 
 ## Caveats
 
-RepoDB is automatically setting the value of `options` argument to `SqlBulkCopyOptions.KeepIdentity` when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) if you have not passed any `qualifiers` and if your table has an `IDENTITY` primary key column. The same logic will apply if there is no primary key but has an `IDENTITY` column defined in the table.
+RepoDB automatically sets `SqlBulkCopyOptions.KeepIdentity` for BulkDelete, BulkMerge, and BulkUpdate when no qualifiers are provided and the target table has an `IDENTITY` primary key column.
 
-In addition, when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) operations, the library is creating a pseudo temporary table behind the scene. It requires your user to have the correct privilege to create a table in the database, otherwise a `SqlException` will be thrown.
+These operations require the connected user to have CREATE TABLE permission in the target database, since a pseudo-temporary table is created internally during execution.
 
 ## BulkDelete
 
-Bulk delete a list of data entity objects (or via primary keys) from the database. It returns the number of rows deleted from the database.
+Deletes a list of entities or primary keys from the database in bulk. Returns the number of deleted rows.
 
 ### BulkDelete via PrimaryKeys
 
@@ -102,7 +84,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or
+Or:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -122,7 +104,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -132,7 +114,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name
+Or via table-name:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -142,7 +124,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name with qualifiers
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -162,7 +144,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -184,7 +166,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -198,7 +180,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkInsert
 
-Bulk insert a list of data entity objects into the database. All data entities will be inserted as new records in the database. It returns the number of rows inserted in the database.
+Inserts a list of entities into the database in bulk. Returns the number of inserted rows.
 
 ### BulkInsert via DataEntities
 
@@ -210,7 +192,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name
+Or via table-name:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -244,7 +226,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkMerge
 
-Bulk merge a list of data entity objects into the database. A record is being inserted in the database if it is not exists using the defined qualifiers. It returns the number of rows inserted/updated in the database.
+Upserts a list of entities in bulk — inserts new rows and updates existing ones based on the defined qualifiers. Returns the number of affected rows.
 
 ### BulkMerge via DataEntities
 
@@ -256,7 +238,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -266,7 +248,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name
+Or via table-name:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -276,7 +258,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name with qualifiers
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -296,7 +278,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -318,7 +300,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -332,7 +314,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkUpdate
 
-Bulk update a list of data entity objects into the database. It returns the number of rows updated in the database.
+Updates existing rows in the database in bulk. Returns the number of updated rows.
 
 ### BulkUpdate via DataEntities
 
@@ -344,7 +326,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -354,7 +336,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name
+Or via table-name:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -364,7 +346,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name with qualifiers
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -384,7 +366,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -406,7 +388,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
+Or with qualifiers:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))

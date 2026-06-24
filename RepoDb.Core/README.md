@@ -1,25 +1,25 @@
-﻿[![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 
-# [RepoDB](http://repodb.net) - a hybrid ORM library for .NET.
+# [RepoDB](http://repodb.net) — a Hybrid ORM for .NET
 
-RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDB is a fast, lightweight, open-source .NET ORM that bridges micro-ORM simplicity with full-ORM power. Use raw SQL when you need control; use fluent methods when you want productivity — all from the same `IDbConnection`.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
 ## Core Features
- 
+
 - [Batch Operations](http://repodb.net/feature/batchoperations)
 - [Bulk Operations](http://repodb.net/feature/bulkoperations)
 - [Caching](http://repodb.net/feature/caching)
 - [Class Handlers](http://repodb.net/feature/classhandlers)
 - [Class Mapping](http://repodb.net/feature/classmapping)
-- [Dynamics](http://repodb.net/feature/dynamics)
 - [Connection Persistency](http://repodb.net/feature/connectionpersistency)
+- [Dynamics](http://repodb.net/feature/dynamics)
 - [Enumeration](http://repodb.net/feature/enumeration)
 - [Expression Trees](http://repodb.net/feature/expressiontrees)
 - [Hints](http://repodb.net/feature/hints)
@@ -32,32 +32,30 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-## Community Engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://twitter.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
 ```
 Install-Package RepoDB
 ```
 
-Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.
 
 ## Get Started
 
-After the installation, any library operation can then be called. Please see below for the samples.
+All RepoDB operations are extension methods on `IDbConnection` — no repository classes or extra setup required.
 
 ### Query
 
@@ -107,16 +105,16 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### StoredProcedure
+### Stored Procedure
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcdure).FirstOrDefault();
+	var customer = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure).FirstOrDefault();
 }
 ```
 
-Or via direct calls.
+Or via inline SQL:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -125,4 +123,4 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for SQL Server.
+Visit the [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for the full SQL Server guide.

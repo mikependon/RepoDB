@@ -1,101 +1,80 @@
-﻿[![PostgreSqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
+[![PostgreSqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
 [![PostgreSqlBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlBulkVersion](https://img.shields.io/nuget/v/repodb.postgresql.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations)
 
 # [RepoDb.PostgreSql.BulkOperations](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations)
 
-An extension library that contains the official Bulk Operations of RepoDB for PostgreSQL.
+High-performance bulk operations for RepoDB on PostgreSQL. Uses PostgreSQL's native binary import protocol to transfer data in a single pass — up to 90% faster than row-by-row or batch operations.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
-
-## Why use the Bulk Operations?
-
-Basically, you do the normal [Delete](https://repodb.net/operation/delete), [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge) and [Update](https://repodb.net/operation/update) operations when interacting with the database. Through this, the data is processed in an atomic way.
-
-If you use the [Batch Operations](https://repodb.net/feature/batchoperations) (the process of wrapping the multiple single operations and executing one-go), it does not completely eliminate the round-trips between your application and your database, thus does not give you the maximum performance during the CRUD operations.
-
-With the [Bulk Operations](https://repodb.net/feature/bulkoperations), all data is brought from your client application towards your database in one-go via the [BinaryImport](https://repodb.net/operation/binaryimport) operation (a real bulk process). It then post processed the data altogether in the database server to maximize the performance.
-
-During the operation, the process ignores the audit, logs, constraints and any other database special handling. It hugely improve the performance of your application by more than 90%, especially when processing the large datasets.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
 ## Core Features
 
 - [Special Arguments](#special-arguments)
 - [Async Methods](#async-methods)
-- [Caveats](#caveats)
 - [BinaryBulkDelete](#binarybulkdelete)
 - [BinaryBulkDeleteByKey](#binarybulkdeletebykey)
 - [BinaryBulkInsert](#binarybulkinsert)
 - [BinaryBulkMerge](#binarybulkmerge)
 - [BinaryBulkUpdate](#binarybulkupdate)
 
-## Community Engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2020 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2020 [Michael Camara Pendon](https://twitter.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
-```csharp
-> Install-Package RepoDb.PostgreSql.BulkOperations
+```
+Install-Package RepoDb.PostgreSql.BulkOperations
 ```
 
-Then call the bootstrapper once.
+Then initialize the bootstrapper once at application startup:
 
 ```csharp
 RepoDb.PostgreSqlBootstrap.Initialize();
 ```
 
-Or, visit our [installation](https://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](https://repodb.net/tutorial/installation) page for more options.
 
 ## Special Arguments
 
-The arguments `qualifiers`, `keepIdentity`, `identityBehavior`, `pseudoTableType` and `mergeCommanType` were provided in most operations.
+**`qualifiers`** — defines the fields used in the matching criteria for delete, merge, and update operations. Defaults to the primary key column.
 
-The argument `qualifiers` is used to define the qualifier fields to be used in the operations. It usually refers to the `WHERE` expression of SQL Statements. If not given, the primary key field will be used.
+**`keepIdentity`** — when enabled, the identity property value on the entity is preserved during the operation.
 
-The argument `keepIdentity` is used to define a value whether the identity property of the entity/model will be kept during the operation.
+**`identityBehavior`** — controls identity handling and whether newly generated identity values are returned and written back to the entities.
 
-The argument `identityBehavior` is used to define a value like with the `keepIdentity` argument, together-with, a value that is used to return the newly generated identity values from the database. 
+**`pseudoTableType`** — controls whether a physical or session-scoped temporary table is created internally during the operation.
 
-The argument `pseudoTableType` is used to define a value whether a physical pseudo-table will be created during the operation. By default, a temporary table is used.
-
-The argument `mergedCommandType` is used to define a value whether the existing `ON CONFLICT DO UPDATE` will be used over the `UPDATE/INSERT` SQL commands during operations.
+**`mergeCommandType`** — controls whether `ON CONFLICT DO UPDATE` or separate `UPDATE`/`INSERT` SQL commands are used during merge.
 
 ### Identity Setting Alignment
 
-Behind the scene, the library has enforced an additional logic to ensure the identity setting alignment. Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
-
-During the bulk operation, a dedicated index (entity model index) value is passed to this column, thus ensuring that the index value is really equating to the index of the item from the `IEnumerable<T>` object. The resultsets of the pseudo-temporary table are being ordered using this column, prior the actual merge to the underlying table.
-
-For both the [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) and [BinaryBulkMerge](https://repodb.net/operation/binarybulkmerge) operations, when the newly generated identity value is being set back to the data model, the value of the `__RepoDb_OrderColumn` column is being used to look-up the proper index of the equating item from the `IEnumerable<T>` object, then, the compiled identity-setter function is used to assign back the identity value into the identity property.
+RepoDB adds an internal `__RepoDb_OrderColumn` to the pseudo-temporary table when identity fields are present. This column preserves the original index of each entity in the `IEnumerable<T>` collection, ensuring generated identity values are mapped back to the correct objects after the operation completes.
 
 ## BatchSize
 
-All the provided operations has a `batchSize` attribute that enables you to override the size of the items being wired-up to the server during the operation. By default it is `null`, all the items are being sent together in one-go.
-
-Use this attribute if you wish to optimize the operation based on certain sitution (i.e.: No. of Columns, Type/Size of Data, Network Latency).
+All operations accept a `batchSize` argument to control how many rows are sent to the server per round-trip. Defaults to `null` (all rows in one pass). Tune this based on column count, data size, and network characteristics.
 
 ## Async Methods
 
-All the provided synchronous operations has its equivalent asynchronous (Async) operations.
+Every synchronous operation has a corresponding `Async` overload.
 
 ## BinaryBulkDelete
 
-Delete the existing rows from the database by bulk. It returns the number of rows that has been deleted during the operation.
+Deletes existing rows from the database in bulk. Returns the number of deleted rows.
 
 ### BinaryBulkDelete via DataEntities
 
@@ -107,7 +86,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -117,7 +96,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name.
+Or via table-name:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -127,7 +106,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-And with qualifiers.
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -147,7 +126,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -162,19 +141,19 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var deletedRows = connection.BinaryBulkDelete("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var deletedRows = connection.BinaryBulkDelete("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
@@ -183,7 +162,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 
 ## BinaryBulkDeleteByKey
 
-Delete the existing rows from the database by bulk via a list of primary keys. It returns the number of rows that has been deleted during the operation.
+Deletes existing rows from the database in bulk via a list of primary keys. Returns the number of deleted rows.
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -195,7 +174,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 
 ## BinaryBulkInsert
 
-Insert a list of entities into the database by bulk. It returns the number of rows that has been inserted in the database.
+Inserts a list of entities into the database in bulk. Returns the number of inserted rows.
 
 ### BinaryBulkInsert via DataEntities
 
@@ -207,7 +186,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name.
+Or via table-name:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -232,7 +211,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var insertedRows = connection.BinaryBulkInsert("Customer", reader);
 	}
@@ -241,7 +220,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 
 ## BinaryBulkMerge
 
-Merge a list of entities into the database by bulk. A new row is being inserted (if not present) and an existing row is being updated (if present) through the defined qualifiers. It returns the number of rows that has been inserted/updated in the database.
+Upserts a list of entities in bulk — inserts new rows and updates existing ones based on the defined qualifiers. Returns the number of affected rows.
 
 ### BinaryBulkMerge via DataEntities
 
@@ -253,7 +232,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -263,7 +242,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name.
+Or via table-name:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -273,7 +252,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-And with qualifiers.
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -293,7 +272,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -308,19 +287,19 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var mergedRows = connection.BinaryBulkMerge("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var mergedRows = connection.BinaryBulkMerge("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
@@ -329,7 +308,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 
 ## BinaryBulkUpdate
 
-Update the existing rows from the database by bulk. The affected rows are strongly bound to the values of the qualifier fields when calling the operation. It returns the number of rows that has been updated in the database.
+Updates existing rows in the database in bulk. Returns the number of updated rows.
 
 ### BinaryBulkUpdate via DataEntities
 
@@ -341,7 +320,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -351,7 +330,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or via table-name.
+Or via table-name:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -361,7 +340,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-And with qualifiers.
+Or via table-name with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -381,7 +360,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
@@ -396,19 +375,19 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var rows = connection.BinaryBulkUpdate("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers.
+Or with qualifiers:
 
 ```csharp
 using (var connection = new NpgsqlConnection(ConnectionString))
 {
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+	using (var reader = connection.ExecuteReader("SELECT * FROM \"Customer\";"))
 	{
 		var rows = connection.BinaryBulkUpdate("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
