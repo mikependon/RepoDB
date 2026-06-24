@@ -1,7 +1,12 @@
 name: Build & Run Tests - RepoDb.MySql (Push)
 
 on:
-  push
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MySql/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-mysql.yml'
 
 jobs:
   build:

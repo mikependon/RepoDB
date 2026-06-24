@@ -1,7 +1,12 @@
 name: Build & Run Tests - RepoDb.SQLite.System (Push)
 
 on:
-  push
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.SQLite.System/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-sqlite-system.yml'
 
 jobs:
   build:

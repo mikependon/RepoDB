@@ -1,7 +1,13 @@
 name: Build & Run Tests - RepoDb.SqlServer.BulkOperations (Push)
 
 on:
-  push
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.SqlServer/**'
+      - 'RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-sqlsvr-bulk.yml'
 
 jobs:
   build:

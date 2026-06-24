@@ -20,7 +20,7 @@ env:
   # SQL Server
   REPODB_SQLSVR_CONSTR_MASTER: "Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
   REPODB_SQLSVR_CONSTR: "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
-  REPODB_CONSTR_SQLSVR: "Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  REPODB_CONSTR_SQLSVR: "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
   # PostgreSQL
   REPODB_PGSQL_CONSTR_POSTGRES: "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;"
   REPODB_PGSQL_CONSTR: "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"

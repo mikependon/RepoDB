@@ -1,7 +1,12 @@
 name: Build & Run Tests - RepoDb.PostgreSql (Push)
 
 on:
-  push
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.PostgreSql/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-pgsql.yml'
 
 jobs:
   build:

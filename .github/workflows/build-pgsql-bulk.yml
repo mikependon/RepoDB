@@ -1,7 +1,13 @@
 name: Build & Run Tests - RepoDb.PostgreSql.BulkOperations (Push)
 
 on:
-  push
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.PostgreSql/**'
+      - 'RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-pgsql-bulk.yml'
 
 jobs:
   build:
