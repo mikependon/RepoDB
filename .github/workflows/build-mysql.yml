@@ -1,0 +1,12 @@
+name: Build & Run Tests - RepoDb.MySql (Push)
+
+on:
+  push
+
+jobs:
+  build:
+    uses: ./.github/workflows/_base.yml
+    with:
+      solution-dir: RepoDb.MySql
+      solution-file: RepoDb.MySql.sln
+      artifact-name: release-mysql

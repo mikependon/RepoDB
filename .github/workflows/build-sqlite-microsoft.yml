@@ -1,0 +1,12 @@
+name: Build & Run Tests - RepoDb.Sqlite.Microsoft (Push)
+
+on:
+  push
+
+jobs:
+  build:
+    uses: ./.github/workflows/_base.yml
+    with:
+      solution-dir: RepoDb.Sqlite.Microsoft
+      solution-file: RepoDb.Sqlite.Microsoft.sln
+      artifact-name: release-sqlite-microsoft

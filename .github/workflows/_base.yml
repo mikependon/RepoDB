@@ -1,0 +1,93 @@
+name: Build and Test (Reusable Base)
+
+on:
+  workflow_call:
+    inputs:
+      solution-dir:
+        description: 'Directory containing the solution file, relative to repo root (e.g. RepoDb.MySql or RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations)'
+        required: true
+        type: string
+      solution-file:
+        description: 'Name of the .sln file (e.g. RepoDb.MySql.sln)'
+        required: true
+        type: string
+      artifact-name:
+        description: 'Name for the uploaded NuGet artifact'
+        required: true
+        type: string
+
+env:
+  # SQL Server
+  REPODB_SQLSVR_CONSTR_MASTER: "Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  REPODB_SQLSVR_CONSTR: "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  REPODB_CONSTR_SQLSVR: "Server=tcp:127.0.0.1,1433;Database=RepoDbTest;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+  # PostgreSQL
+  REPODB_PGSQL_CONSTR_POSTGRES: "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;"
+  REPODB_PGSQL_CONSTR: "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=RepoDB2026;"
+  # MySQL
+  REPODB_MYSQL_CONSTR_SYSTEM: "Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;"
+  REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;"
+  # SQLite — set to in-memory so no file-system setup is required on the runner
+  REPODB_SQLITE_IS_IN_MEMORY: "true"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2025-latest
+        ports:
+          - 127.0.0.1:1433:1433
+        env:
+          ACCEPT_EULA: true
+          MSSQL_SA_PASSWORD: RepoDB2026
+
+      postgresql:
+        image: postgres:latest
+        ports:
+          - 127.0.0.1:5432:5432
+        env:
+          POSTGRES_PASSWORD: RepoDB2026
+
+      mysql:
+        image: mysql:latest
+        ports:
+          - 127.0.0.1:3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: RepoDB2026
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg

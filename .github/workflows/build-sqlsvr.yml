@@ -1,58 +1,12 @@
-name: Build & Run Tests (Push)
-on: 
-  push
+name: Build & Run Tests - RepoDb.SqlServer (Push)
 
-env:
-  REPODB_SQLSVR_CONSTR_MASTER: "Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
-  REPODB_SQLSVR_CONSTR: "Server=tcp:127.0.0.1,1433;Database=RepoDb;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;"
+on:
+  push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    services:
-
-      mssql:
-        image: mcr.microsoft.com/mssql/server:2025-latest
-        ports:
-          - 127.0.0.1:1433:1433
-        env:
-          ACCEPT_EULA: true
-          MSSQL_SA_PASSWORD: RepoDB2026
-
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET Versions
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-            10.0.x
-
-      - name: Dotnet Build
-        run: dotnet build -c release "RepoDb.SqlServer\RepoDb.SqlServer.sln"
-        
-      - name: Test for .NET 8.0
-        working-directory: RepoDb.SqlServer
-        run: dotnet test -c release -f net8.0 --no-build RepoDb.SqlServer.sln
-
-      - name: Test for .NET 9.0
-        working-directory: RepoDb.SqlServer
-        run: dotnet test -c release -f net9.0 --no-build RepoDb.SqlServer.sln
-
-      - name: Test for .NET 10.0
-        working-directory: RepoDb.SqlServer
-        run: dotnet test -c release -f net10.0 --no-build RepoDb.SqlServer.sln
-
-      - name: Run Dotnet Pack
-        working-directory: RepoDb.SqlServer
-        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release RepoDb.SqlServer.sln
-
-      - name: Package Nuget
-        uses: actions/upload-artifact@v4
-        with:
-          name: release
-          path: release/*nupkg
+    uses: ./.github/workflows/_base.yml
+    with:
+      solution-dir: RepoDb.SqlServer
+      solution-file: RepoDb.SqlServer.sln
+      artifact-name: release-sqlsvr
