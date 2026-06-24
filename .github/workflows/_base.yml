@@ -73,7 +73,7 @@ jobs:
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}
-        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+        run: dotnet test -c release -f net8.0 --no-build --logger trx --results-directory TestResults ${{ inputs.solution-file }}
 
       - name: Test for .NET 9.0
         working-directory: ${{ inputs.solution-dir }}
@@ -82,6 +82,81 @@ jobs:
       - name: Test for .NET 10.0
         working-directory: ${{ inputs.solution-dir }}
         run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Update test badges
+        if: always() && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BADGE_KEY=$(echo "${{ inputs.artifact-name }}" | sed 's/^release-//')
+          RESULTS_DIR="${{ inputs.solution-dir }}/TestResults"
+
+          # Parse TRX files produced by the net8 test step
+          parse_trx() {
+            local pattern="$1"
+            python3 -c '
+import xml.etree.ElementTree as ET, sys, glob, os
+ns = "{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}"
+pattern, results_dir = sys.argv[1], sys.argv[2]
+passed = total = 0
+for trx in glob.glob(results_dir + "/*.trx"):
+ if pattern.lower() in os.path.basename(trx).lower():
+  try:
+   c = ET.parse(trx).getroot().find(".//" + ns + "Counters")
+   if c is not None:
+    passed += int(c.get("passed", 0))
+    total  += int(c.get("total",  0))
+  except:
+   pass
+print(str(passed) + "/" + str(total) if total > 0 else "N/A")
+' "$pattern" "$RESULTS_DIR"
+          }
+
+          unit_result=$(parse_trx "unittest")
+          intg_result=$(parse_trx "integrationtest")
+
+          make_badge() {
+            local msg="$1" color="brightgreen"
+            if [ "$msg" = "N/A" ]; then
+              color="lightgrey"
+            else
+              local p t
+              p=$(echo "$msg" | cut -d/ -f1)
+              t=$(echo "$msg" | cut -d/ -f2)
+              [ "$p" -lt "$t" ] 2>/dev/null && color="red"
+            fi
+            printf '{"schemaVersion":1,"label":"","message":"%s","color":"%s"}\n' "$msg" "$color"
+          }
+
+          unit_json=$(make_badge "$unit_result")
+          intg_json=$(make_badge "$intg_result")
+
+          # Push badge JSON files to the badges branch
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
+          TMP=$(mktemp -d)
+
+          if git ls-remote --heads "$REPO_URL" badges | grep -q badges; then
+            git clone --depth 1 --branch badges "$REPO_URL" "$TMP"
+          else
+            git clone --depth 1 "$REPO_URL" "$TMP"
+            git -C "$TMP" checkout --orphan badges
+            git -C "$TMP" rm -rf . 2>/dev/null || true
+          fi
+
+          git -C "$TMP" config user.name "github-actions[bot]"
+          git -C "$TMP" config user.email "github-actions[bot]@users.noreply.github.com"
+
+          printf '%s\n' "$unit_json" > "$TMP/badge-${BADGE_KEY}-unit.json"
+          printf '%s\n' "$intg_json" > "$TMP/badge-${BADGE_KEY}-intg.json"
+
+          git -C "$TMP" add "badge-${BADGE_KEY}-unit.json" "badge-${BADGE_KEY}-intg.json"
+          git -C "$TMP" diff --staged --quiet || \
+            git -C "$TMP" commit -m "ci: update ${BADGE_KEY} badges [skip ci]"
+          git -C "$TMP" push origin badges
+          rm -rf "$TMP"
 
       - name: Run Dotnet Pack
         run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"

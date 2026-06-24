@@ -1,0 +1,16 @@
+name: Build & Run Tests - RepoDb.Core (Push)
+
+on:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-core.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/_base.yml
+    with:
+      solution-dir: RepoDb.Core
+      solution-file: RepoDb.sln
+      artifact-name: release-core
