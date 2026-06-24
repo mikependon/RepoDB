@@ -1,6 +1,6 @@
-[![SqLiteMicrosoftBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build%20and%20tests)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
-[![SqLiteMicrosoftHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
-[![SqLiteMicrosoftVersion](https://img.shields.io/nuget/v/RepoDb.Sqlite.Microsoft?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft)
+﻿[![SqLiteMicrosoftBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml)
+[![SqLiteMicrosoftHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
+[![SqLiteMicrosoftVersion](https://img.shields.io/nuget/v/RepoDb.Sqlite.Microsoft?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft)
 
 # [RepoDb.Sqlite.Microsoft](https://repodb.net/tutorial/get-started-sqlite) - a hybrid .NET ORM library for SQLite (using Microsoft.Data.Sqlite).
 
