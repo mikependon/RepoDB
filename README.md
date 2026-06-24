@@ -115,4 +115,4 @@ ATools and projects that make RepoDB possible: [GitHub](https://github.com/), [M
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://twitter.com/mike_pendon)
