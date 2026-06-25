@@ -1,6 +1,5 @@
 ﻿using System;
 using Npgsql;
-using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -9,12 +8,6 @@ namespace RepoDb.IntegrationTests.Setup
     /// </summary>
     public static class Database
     {
-        /// <summary>
-        /// Gets a data source with enum type mappings registered, suitable for creating
-        /// connections that can handle PostgreSQL custom enum types (e.g. the 'hand' type).
-        /// </summary>
-        public static NpgsqlDataSource DataSource { get; private set; }
-
         /// <summary>
         /// Initialize the creation of the database.
         /// </summary>
@@ -38,13 +31,6 @@ namespace RepoDb.IntegrationTests.Setup
 
             // Create tables
             CreateTables();
-
-            // Build a data source with the 'hand' PostgreSQL enum mapped to the Hands .NET enum.
-            // Npgsql 8+ requires enum mappings to be registered on the data source rather than
-            // via the removed global type mapper, and connections must originate from that source.
-            var builder = new NpgsqlDataSourceBuilder(ConnectionString);
-            builder.MapEnum<Hands>("hand");
-            DataSource = builder.Build();
         }
 
         /// <summary>
