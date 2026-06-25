@@ -1174,7 +1174,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     keepIdentity: true).Wait();
 
                 // Act (Trigger)
-                Assert.Throws<PostgresException>(() =>
+                Assert.Throws<AggregateException>(() =>
                     NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                         tableName,
                         entities: entities,
