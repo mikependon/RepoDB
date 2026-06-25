@@ -1,28 +1,36 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using Npgsql.NameTranslation;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 {
     [TestClass]
     public class EnumTest
     {
+        private NpgsqlDataSource _enumDataSource;
+
         [TestInitialize]
         public void Initialize()
         {
             Database.Initialize();
             Cleanup();
+            _enumDataSource = new NpgsqlDataSourceBuilder(Database.ConnectionString)
+                .MapEnum<Hands>("hand", new NpgsqlNullNameTranslator())
+                .Build();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
+            _enumDataSource?.Dispose();
+            _enumDataSource = null;
         }
 
         #region Methods
