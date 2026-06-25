@@ -195,7 +195,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         [TestMethod]
         public void TestBinaryBulkDeleteForEnum()
         {
-            using (var connection = GetConnection())
+            using (var connection = _enumDataSource.OpenConnection())
             {
                 // Prepare
                 var entities = Helper.CreateEnumTables(10, false);
