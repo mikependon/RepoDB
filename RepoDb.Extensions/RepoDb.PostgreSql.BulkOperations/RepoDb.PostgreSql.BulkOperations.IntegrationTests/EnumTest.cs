@@ -1,10 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
-using NpgsqlTypes;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
-using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -30,7 +28,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         #region Methods
 
         private NpgsqlConnection GetConnection() =>
-            (NpgsqlConnection)Database.DataSource.OpenConnection().EnsureOpen();
+            (NpgsqlConnection)Database.DataSource.OpenConnection();
 
         public static List<EnumTable> CreateEnumTablesWithNullValues(int count,
             bool hasId = false,
@@ -126,54 +124,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return tables;
         }
 
-        // Npgsql 8+ requires explicit NpgsqlDbType or DataTypeName on parameters whose CLR
-        // type is not a natively-understood type (e.g. a .NET enum). The test setup calls that
-        // previously relied on RepoDB's InsertAll would produce bare parameters for Hands columns
-        // and trigger an InvalidCastException. These helpers bypass InsertAll and use direct
-        // NpgsqlCommand execution with the correct per-column type hints.
-
-        private static void SetupEnumTableRows(NpgsqlConnection connection, IEnumerable<EnumTable> entities)
-        {
-            const string sql = @"INSERT INTO ""EnumTable"" (""ColumnEnumText"", ""ColumnEnumInt"", ""ColumnEnumHand"") " +
-                               @"VALUES (@t, @i, @h) RETURNING ""Id""";
-            foreach (var entity in entities)
-            {
-                using var cmd = new NpgsqlCommand(sql, connection);
-                cmd.Parameters.Add(new NpgsqlParameter("t", NpgsqlDbType.Text)
-                    { Value = entity.ColumnEnumText.HasValue ? (object)entity.ColumnEnumText.Value.ToString() : DBNull.Value });
-                cmd.Parameters.Add(new NpgsqlParameter("i", NpgsqlDbType.Integer)
-                    { Value = entity.ColumnEnumInt.HasValue ? (object)(int)entity.ColumnEnumInt.Value : DBNull.Value });
-                cmd.Parameters.Add(new NpgsqlParameter { ParameterName = "h", DataTypeName = "hand",
-                    Value = entity.ColumnEnumHand.HasValue ? (object)entity.ColumnEnumHand.Value : DBNull.Value });
-                entity.Id = (long)cmd.ExecuteScalar();
-            }
-        }
-
-        private static void SetupEnumTableRows(NpgsqlConnection connection, IEnumerable<dynamic> entities)
-        {
-            const string sql = @"INSERT INTO ""EnumTable"" (""ColumnEnumText"", ""ColumnEnumInt"", ""ColumnEnumHand"") " +
-                               @"VALUES (@t, @i, @h)";
-            foreach (var entity in entities)
-            {
-                IDictionary<string, object> dict = entity as IDictionary<string, object> ??
-                    ((object)entity).GetType().GetProperties()
-                        .ToDictionary(p => p.Name, p => p.GetValue(entity));
-
-                dict.TryGetValue("ColumnEnumText", out var rawText);
-                dict.TryGetValue("ColumnEnumInt", out var rawInt);
-                dict.TryGetValue("ColumnEnumHand", out var rawHand);
-
-                using var cmd = new NpgsqlCommand(sql, connection);
-                cmd.Parameters.Add(new NpgsqlParameter("t", NpgsqlDbType.Text)
-                    { Value = rawText is Hands ht ? (object)ht.ToString() : rawText ?? (object)DBNull.Value });
-                cmd.Parameters.Add(new NpgsqlParameter("i", NpgsqlDbType.Integer)
-                    { Value = rawInt is Hands hi ? (object)(int)hi : rawInt ?? (object)DBNull.Value });
-                cmd.Parameters.Add(new NpgsqlParameter { ParameterName = "h", DataTypeName = "hand",
-                    Value = rawHand is Hands hh ? (object)hh : DBNull.Value });
-                cmd.ExecuteNonQuery();
-            }
-        }
-
         #endregion
 
         #region Sync
@@ -244,7 +194,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete<EnumTable>(connection,
@@ -270,7 +220,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete<EnumTable>(connection,
@@ -352,7 +302,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate<EnumTable>(connection,
@@ -379,7 +329,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate<EnumTable>(connection,
@@ -466,7 +416,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -492,7 +442,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -574,7 +524,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -601,7 +551,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -688,7 +638,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -714,7 +664,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -796,7 +746,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -823,7 +773,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -908,7 +858,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -935,7 +885,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
@@ -1018,7 +968,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -1041,7 +991,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
@@ -1127,7 +1077,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync<EnumTable>(connection,
@@ -1153,7 +1103,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync<EnumTable>(connection,
@@ -1235,7 +1185,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync<EnumTable>(connection,
@@ -1262,7 +1212,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll<EnumTable>(entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync<EnumTable>(connection,
@@ -1349,7 +1299,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1375,7 +1325,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1457,7 +1407,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
@@ -1484,7 +1434,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
@@ -1571,7 +1521,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1597,7 +1547,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1679,7 +1629,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
@@ -1706,7 +1656,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
@@ -1791,7 +1741,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1818,7 +1768,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
@@ -1901,7 +1851,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
@@ -1924,7 +1874,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                SetupEnumTableRows(connection, entities);
+                connection.InsertAll(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
