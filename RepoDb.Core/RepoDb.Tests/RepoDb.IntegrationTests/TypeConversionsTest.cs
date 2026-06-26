@@ -362,7 +362,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
 
                     // Assert
-                    Assert.AreEqual("1/1/1970 12:00:00 AM", data);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
                 }
             }
         }
@@ -1122,7 +1122,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1/1/1970 12:00:00 AM", data.ColumnDate);
+                    Assert.AreEqual("1970-01-01T00:00:00.000000", DateTime.Parse(data.ColumnDate).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
                 }
             }
         }
@@ -1160,7 +1160,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("1/1/1970 11:30:00 AM", data.ColumnDateTime);
+                    Assert.AreEqual("1970-01-01T11:30:00.000000", DateTime.Parse(data.ColumnDateTime).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
                 }
             }
         }
@@ -1198,7 +1198,7 @@ namespace RepoDb.IntegrationTests
                     var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                     // Assert
-                    Assert.AreEqual("3/3/2019 3:22:10 PM", data.ColumnDateTime2);
+                    Assert.AreEqual("2019-03-03T15:22:10.000000", DateTime.Parse(data.ColumnDateTime2).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
                 }
             }
         }
