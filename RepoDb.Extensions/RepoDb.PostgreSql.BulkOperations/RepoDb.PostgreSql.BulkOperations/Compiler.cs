@@ -93,7 +93,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                 BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
-                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
                 var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
@@ -150,6 +150,10 @@ namespace RepoDb.PostgreSql.BulkOperations
                 {
                     var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
                     var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
+
+                    // TODO: We need to add a value for the DataTypeName attribute
+                    // Check it first before we do the assignment of the NpgsqlDbType.
+                    // If the DataTypeName is provided, we will use it instead of the NpgsqlDbType.
                     var parameters = mapping.NpgsqlDbType.HasValue ?
                         new Expression[]
                         {

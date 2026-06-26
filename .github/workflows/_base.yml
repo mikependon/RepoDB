@@ -1,4 +1,4 @@
-name: Build and Test (Reusable Base)
+name: Build & Run Tests - Base
 
 on:
   workflow_call:
