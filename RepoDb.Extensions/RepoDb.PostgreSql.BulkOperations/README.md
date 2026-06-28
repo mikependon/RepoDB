@@ -68,6 +68,22 @@ RepoDB adds an internal `__RepoDb_OrderColumn` to the pseudo-temporary table whe
 
 All operations accept a `batchSize` argument to control how many rows are sent to the server per round-trip. Defaults to `null` (all rows in one pass). Tune this based on column count, data size, and network characteristics.
 
+## Enum Types
+
+Npgsql supports the following .NET enum mappings:
+
+- .NET Enum → PostgreSQL text-based types (e.g. `text`, `varchar`)
+- .NET Enum → PostgreSQL integer types (e.g. `int4`, `int8`)
+- .NET Enum → Native PostgreSQL enum type, when mapped via `NpgsqlDataSource.MapEnum()`
+
+These mappings work correctly with standard fluent operations such as [Insert](https://repodb.net/operation/insert) and [InsertAll](https://repodb.net/operation/insertall). However, bulk operations such as [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) may fail with the following error when an enum column is involved:
+
+```
+'RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations.Hands' is not supported for parameters having NpgsqlDbType 'Unknown'.
+```
+
+A fix for this is currently in progress. This section will be updated once a resolution is available.
+
 ## Async Methods
 
 Every synchronous operation has a corresponding `Async` overload.
