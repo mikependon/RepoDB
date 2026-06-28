@@ -42,7 +42,7 @@ jobs:
 
       - name: Login to NuGet
         id: login
-        uses: NuGet/login@v2
+        uses: NuGet/login@v1
         with:
           user: mikependon
 
