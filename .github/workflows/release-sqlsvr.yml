@@ -1,6 +1,7 @@
 name: Release - RepoDb.SqlServer (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

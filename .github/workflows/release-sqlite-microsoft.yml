@@ -1,6 +1,7 @@
 name: Release - RepoDb.Sqlite.Microsoft (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

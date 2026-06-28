@@ -1,6 +1,7 @@
 name: Release - RepoDb.SqlServer.BulkOperations (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

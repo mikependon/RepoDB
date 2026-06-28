@@ -1,6 +1,7 @@
 name: Release - RepoDb.MySqlConnector (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

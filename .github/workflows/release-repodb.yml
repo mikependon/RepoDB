@@ -1,6 +1,7 @@
 name: Release - RepoDb (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

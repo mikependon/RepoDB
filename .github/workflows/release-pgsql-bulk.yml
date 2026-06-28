@@ -1,6 +1,7 @@
 name: Release - RepoDb.PostgreSql.BulkOperations (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 

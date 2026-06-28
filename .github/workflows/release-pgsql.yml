@@ -1,6 +1,7 @@
 name: Release - RepoDb.PostgreSql (Manual)
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
