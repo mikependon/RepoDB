@@ -7,6 +7,7 @@
     <PackageTags>orm hybrid-orm micro-orm postgresql npgsql</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/postgresql</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
   </PropertyGroup>

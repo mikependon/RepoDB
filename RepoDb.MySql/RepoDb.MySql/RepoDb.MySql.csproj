@@ -8,6 +8,7 @@
     <PackageTags>orm hybrid-orm micro-orm mysql</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
   </PropertyGroup>

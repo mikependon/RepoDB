@@ -10,6 +10,7 @@
     <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\**" />
