@@ -44,7 +44,7 @@ jobs:
         id: login
         uses: NuGet/login@v2
         with:
-          user: RepoDB
+          user: mikependon
 
       - name: Publish
         run: |
