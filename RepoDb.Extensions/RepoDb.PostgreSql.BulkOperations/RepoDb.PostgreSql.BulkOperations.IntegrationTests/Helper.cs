@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
@@ -236,6 +237,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         #endregion
 
         #region Entity
+
+        #region Helpers
+
+        public static List<NpgsqlBulkInsertMapItem> GetEnumTableMappings()
+        {
+            return new[]
+            {
+                new NpgsqlBulkInsertMapItem(nameof(EnumTable.Id), nameof(EnumTable.Id), NpgsqlTypes.NpgsqlDbType.Bigint),
+                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumText), nameof(EnumTable.ColumnEnumText), NpgsqlTypes.NpgsqlDbType.Text),
+                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumInt), nameof(EnumTable.ColumnEnumInt), NpgsqlTypes.NpgsqlDbType.Integer),
+                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumHand), nameof(EnumTable.ColumnEnumHand), "hand")
+            }
+            .AsList();
+        }
+
+        #endregion
 
         #region BulkOperationIdentityTable
 

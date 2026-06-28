@@ -76,13 +76,41 @@ Npgsql supports the following .NET enum mappings:
 - .NET Enum → PostgreSQL integer types (e.g. `int4`, `int8`)
 - .NET Enum → Native PostgreSQL enum type, when mapped via `NpgsqlDataSource.MapEnum()`
 
-These mappings work correctly with standard fluent operations such as [Insert](https://repodb.net/operation/insert) and [InsertAll](https://repodb.net/operation/insertall). However, bulk operations such as [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) may fail with the following error when an enum column is involved:
+These mappings work correctly with standard fluent operations such as [Insert](https://repodb.net/operation/insert) and [InsertAll](https://repodb.net/operation/insertall). However, bulk operations such as [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) may fail with the following error when an enum property towards Native PostgreSQL enum type (item 3) is involved:
 
 ```
 'RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations.Hands' is not supported for parameters having NpgsqlDbType 'Unknown'.
 ```
 
-A fix for this is currently in progress. This section will be updated once a resolution is available.
+To fix this, you have to follow the steps below.
+
+Use the `NpgsqlDataSource.MapEnum()` method to map the PostgreSQL enum type on the current data source. Use the `NpgsqlDataSourceBuilder` class and then use the connection object created from this builder.
+
+```csharp
+var dataSource = new NpgsqlDataSourceBuilder(Database.ConnectionString)
+	.MapEnum<Hands>("hand", new NpgsqlNullNameTranslator())
+	.Build();
+var connection = dataSource.CreateConnection();
+
+// Do your bulk stuffs here
+```
+
+Then, map the column to the right data type as seen in the `ColumnEnumHand` property below.
+
+```csharp
+var mappings = return new[]
+{
+    ...
+    new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumInt), nameof(EnumTable.ColumnEnumInt), NpgsqlTypes.NpgsqlDbType.Integer),
+    new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumHand), nameof(EnumTable.ColumnEnumHand), "hand")
+}
+
+// Pass to 'mappings' argument
+var result = NpgsqlConnectionExtension.BinaryBulkInsert<EnumTable>(connection,
+    tableName,
+    entities: entities,
+    mappings: Helper.GetEnumTableMappings());
+```
 
 ## Async Methods
 
