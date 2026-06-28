@@ -151,18 +151,32 @@ namespace RepoDb.PostgreSql.BulkOperations
                     var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
                     var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
 
-                    // TODO: We need to add a value for the DataTypeName attribute
-                    // Check it first before we do the assignment of the NpgsqlDbType.
-                    // If the DataTypeName is provided, we will use it instead of the NpgsqlDbType.
-                    var parameters = mapping.NpgsqlDbType.HasValue ?
-                        new Expression[]
+                    Expression[] parameters;
+                    MethodInfo writeMethod;
+
+                    if (mapping.DataTypeName != null)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.DataTypeName)
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod();
+                    }
+                    else if (mapping.NpgsqlDbType.HasValue)
+                    {
+                        parameters = new Expression[]
                         {
                             propertyExpression,
                             Expression.Constant(mapping.NpgsqlDbType)
-                        } :
-                        new[] { propertyExpression };
-                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
-                        GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteMethod();
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod();
+                    }
+                    else
+                    {
+                        parameters = new[] { propertyExpression };
+                        writeMethod = GetNpgsqlBinaryImporterWriteMethod();
+                    }
 
                     expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
                 }
@@ -327,11 +341,35 @@ namespace RepoDb.PostgreSql.BulkOperations
                 {
                     var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
                     var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
-                    var parameters = mapping.NpgsqlDbType.HasValue ?
-                        new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType), cancellationTokenExpression } :
-                        new Expression[] { propertyExpression, cancellationTokenExpression };
-                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
-                        GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteAsyncMethod();
+
+                    Expression[] parameters;
+                    MethodInfo writeMethod;
+
+                    if (mapping.DataTypeName != null)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.DataTypeName),
+                            cancellationTokenExpression
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod();
+                    }
+                    else if (mapping.NpgsqlDbType.HasValue)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.NpgsqlDbType),
+                            cancellationTokenExpression
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod();
+                    }
+                    else
+                    {
+                        parameters = new Expression[] { propertyExpression, cancellationTokenExpression };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncMethod();
+                    }
 
                     expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
                 }
@@ -395,7 +433,25 @@ namespace RepoDb.PostgreSql.BulkOperations
                 });
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length == 2 &&
+                    parameters[1].ParameterType == typeof(string);
+            });
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod()
@@ -413,7 +469,26 @@ namespace RepoDb.PostgreSql.BulkOperations
         }
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length == 3 &&
+                    parameters[1].ParameterType == typeof(string) &&
+                    parameters[2].ParameterType == typeof(CancellationToken);
+            });
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod()
@@ -451,8 +526,8 @@ namespace RepoDb.PostgreSql.BulkOperations
 
             var propertyExpression = (Expression)Expression.Property(entityExpression, mapping.SourceColumn);
 
-            // Enum
-            if (TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
+            // Enum — skip conversion when DataTypeName is set; Npgsql resolves native PG enum types by name directly
+            if (mapping.DataTypeName == null && TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
             {
                 propertyExpression = GetEntityPropertyExpressionForEnum(propertyExpression, mapping.NpgsqlDbType);
             }
