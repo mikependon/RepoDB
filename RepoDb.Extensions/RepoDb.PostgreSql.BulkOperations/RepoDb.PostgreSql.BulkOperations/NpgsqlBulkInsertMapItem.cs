@@ -1,4 +1,4 @@
-﻿using NpgsqlTypes;
+using NpgsqlTypes;
 using RepoDb.Resolvers;
 using System;
 
@@ -43,6 +43,20 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
         /// <param name="destinationColumn">The name of the destination column in the database.</param>
+        /// <param name="dataTypeName">The PostgreSQL data type name (e.g. a custom enum type name) to be used when writing. Takes precedence over <see cref="NpgsqlDbType"/> when set.</param>
+        public NpgsqlBulkInsertMapItem(string sourceColumn,
+            string destinationColumn,
+            string dataTypeName) :
+            base(sourceColumn, destinationColumn)
+        {
+            DataTypeName = dataTypeName;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="NpgsqlBulkInsertMapItem"/> object.
+        /// </summary>
+        /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
+        /// <param name="destinationColumn">The name of the destination column in the database.</param>
         /// <param name="npgsqlDbType">The <see cref="NpgsqlTypes.NpgsqlDbType"/> value to be used when writing.</param>
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
@@ -61,6 +75,12 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         public NpgsqlDbType? NpgsqlDbType { get; }
 
+        /// <summary>
+        /// Gets the PostgreSQL data type name (e.g. a custom enum type name) to be used when writing.
+        /// When set, this takes precedence over <see cref="NpgsqlDbType"/>.
+        /// </summary>
+        public string DataTypeName { get; }
+
         #endregion
 
         #region Methods
@@ -70,7 +90,9 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <returns>The string representation of the current object.</returns>
         public override string ToString() =>
-            $"{base.ToString()} ({NpgsqlDbType})";
+            DataTypeName != null
+                ? $"{base.ToString()} ({DataTypeName})"
+                : $"{base.ToString()} ({NpgsqlDbType})";
 
         #endregion
 
@@ -95,6 +117,9 @@ namespace RepoDb.PostgreSql.BulkOperations
 
             // NpgsqlDbType
             hashCode = HashCode.Combine(hashCode, NpgsqlDbType);
+
+            // DataTypeName
+            hashCode = HashCode.Combine(hashCode, DataTypeName);
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
