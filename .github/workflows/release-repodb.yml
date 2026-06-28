@@ -1,0 +1,12 @@
+name: Release - RepoDb (Manual)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      project-name: RepoDb
+      project-path: RepoDb.Core/RepoDb/RepoDb.csproj

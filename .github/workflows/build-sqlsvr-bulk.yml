@@ -6,12 +6,12 @@ on:
       - 'RepoDb.Core/**'
       - 'RepoDb.SqlServer/**'
       - 'RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/**'
-      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-base.yml'
       - '.github/workflows/build-sqlsvr-bulk.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/_base.yml
+    uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: RepoDb.Extensions/RepoDb.SqlServer.BulkOperations
       solution-file: RepoDb.SqlServer.BulkOperations.sln

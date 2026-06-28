@@ -5,12 +5,12 @@ on:
     paths:
       - 'RepoDb.Core/**'
       - 'RepoDb.MySql/**'
-      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-base.yml'
       - '.github/workflows/build-mysql.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/_base.yml
+    uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: RepoDb.MySql
       solution-file: RepoDb.MySql.sln

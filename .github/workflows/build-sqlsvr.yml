@@ -5,12 +5,12 @@ on:
     paths:
       - 'RepoDb.Core/**'
       - 'RepoDb.SqlServer/**'
-      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-base.yml'
       - '.github/workflows/build-sqlsvr.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/_base.yml
+    uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: RepoDb.SqlServer
       solution-file: RepoDb.SqlServer.sln

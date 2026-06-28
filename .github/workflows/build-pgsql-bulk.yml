@@ -6,12 +6,12 @@ on:
       - 'RepoDb.Core/**'
       - 'RepoDb.PostgreSql/**'
       - 'RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/**'
-      - '.github/workflows/_base.yml'
+      - '.github/workflows/build-base.yml'
       - '.github/workflows/build-pgsql-bulk.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/_base.yml
+    uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations
       solution-file: RepoDb.PostgreSql.BulkOperations.sln

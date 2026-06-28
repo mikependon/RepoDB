@@ -1,0 +1,12 @@
+name: Release - RepoDb.PostgreSql (Manual)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      project-name: RepoDb.PostgreSql
+      project-path: RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj

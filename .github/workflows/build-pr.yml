@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/_base.yml
+    uses: ./.github/workflows/build-base.yml
     with:
       solution-dir: .
       solution-file: RepoDb.Solutions.sln

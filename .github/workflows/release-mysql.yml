@@ -1,0 +1,12 @@
+name: Release - RepoDb.MySql (Manual)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      project-name: RepoDb.MySql
+      project-path: RepoDb.MySql/RepoDb.MySql/RepoDb.MySql.csproj

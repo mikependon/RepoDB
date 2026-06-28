@@ -1,0 +1,53 @@
+name: Release - Base
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        description: 'Display name of the project (e.g. RepoDb.SqlServer)'
+        required: true
+        type: string
+      project-path:
+        description: 'Path to the .csproj file relative to repo root (e.g. RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj)'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    name: Publish ${{ inputs.project-name }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Restore
+        run: dotnet restore ${{ inputs.project-path }}
+
+      - name: Build
+        run: dotnet build ${{ inputs.project-path }} -c Release --no-restore
+
+      - name: Pack
+        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts
+
+      - name: Login to NuGet
+        id: login
+        uses: NuGet/login@v2
+        with:
+          user: RepoDB
+
+      - name: Publish
+        run: |
+          dotnet nuget push artifacts/*.nupkg \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }}

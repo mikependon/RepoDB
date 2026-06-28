@@ -1,0 +1,12 @@
+name: Release - RepoDb.SqlServer.BulkOperations (Manual)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      project-name: RepoDb.SqlServer.BulkOperations
+      project-path: RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.csproj

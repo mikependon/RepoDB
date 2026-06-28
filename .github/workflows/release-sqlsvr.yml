@@ -1,0 +1,12 @@
+name: Release - RepoDb.SqlServer (Manual)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      project-name: RepoDb.SqlServer
+      project-path: RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj
