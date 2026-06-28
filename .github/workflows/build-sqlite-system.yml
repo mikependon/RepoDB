@@ -1,6 +1,7 @@
 name: Build & Run Tests - RepoDb.SQLite.System (Push)
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'RepoDb.Core/**'

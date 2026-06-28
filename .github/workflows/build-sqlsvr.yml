@@ -1,6 +1,7 @@
 name: Build & Run Tests - RepoDb.SqlServer (Push)
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'RepoDb.Core/**'

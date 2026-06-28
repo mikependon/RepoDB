@@ -1,6 +1,7 @@
 name: Build & Run Tests - RepoDb.Sqlite.Microsoft (Push)
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'RepoDb.Core/**'

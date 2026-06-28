@@ -1,6 +1,7 @@
 name: Build & Run Tests - RepoDb.PostgreSql (Push)
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'RepoDb.Core/**'
