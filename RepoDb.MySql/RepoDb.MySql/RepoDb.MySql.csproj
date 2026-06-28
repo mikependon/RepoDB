@@ -7,6 +7,7 @@
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm mysql</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
   </PropertyGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

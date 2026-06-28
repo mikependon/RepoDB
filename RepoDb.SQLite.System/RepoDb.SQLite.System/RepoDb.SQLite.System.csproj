@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\**" />
@@ -24,5 +25,6 @@
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 </Project>
