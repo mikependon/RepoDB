@@ -2,6 +2,11 @@ name: Release - RepoDb.PostgreSql (Manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version to publish (e.g. 1.14.0)"
+        required: true
+        type: string
   release:
     types: [published]
 
@@ -9,5 +14,6 @@ jobs:
   publish:
     uses: ./.github/workflows/release-base.yml
     with:
+      version: ${{ inputs.version }}
       project-name: RepoDb.PostgreSql
       project-path: RepoDb.PostgreSql/RepoDb.PostgreSql/RepoDb.PostgreSql.csproj
