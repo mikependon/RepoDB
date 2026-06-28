@@ -11,6 +11,11 @@ on:
         description: 'Path to the .csproj file relative to repo root (e.g. RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj)'
         required: true
         type: string
+      version:
+        description: 'Package version to publish (e.g. 1.14.0). Defaults to the Git tag when not specified.'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   publish:
@@ -38,8 +43,17 @@ jobs:
       - name: Build
         run: dotnet build ${{ inputs.project-path }} -c Release --no-restore
 
+      - name: Resolve Version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "value=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "value=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Pack
-        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts
+        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.value }}
 
       - name: Login to NuGet
         id: login
