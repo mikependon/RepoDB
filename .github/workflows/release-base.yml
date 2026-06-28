@@ -16,6 +16,7 @@ jobs:
   publish:
     name: Publish ${{ inputs.project-name }}
     runs-on: ubuntu-latest
+    environment: production
 
     permissions:
       contents: read
