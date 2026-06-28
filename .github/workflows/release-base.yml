@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       version:
-        description: 'Package version to publish (e.g. 1.14.0). Defaults to the Git tag when not specified.'
+        description: 'Package version to publish (e.g. 1.x.x). Defaults to the Git tag when not specified.'
         required: false
         type: string
         default: ''
@@ -47,10 +47,18 @@ jobs:
         id: version
         run: |
           if [ -n "${{ inputs.version }}" ]; then
-            echo "value=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            VERSION="${{ inputs.version }}"
+          elif [[ "$GITHUB_REF_NAME" =~ ^v?[0-9]+\.[0-9]+\.[0-9] ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
           else
-            echo "value=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+            VERSION="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
           fi
+          if [ -z "$VERSION" ] || ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9] ]]; then
+            echo "::error::Could not resolve a valid semver version. Got: '${VERSION}'. Pass the version input explicitly or run from a tag."
+            exit 1
+          fi
+          echo "value=$VERSION" >> $GITHUB_OUTPUT
+          echo "Resolved version: $VERSION"
 
       - name: Pack
         run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.value }}
