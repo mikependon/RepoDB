@@ -40,7 +40,6 @@ namespace RepoDb.Telemetry.Default.Models
         /// <summary>
         /// 
         /// </summary>
-        public bool IsCancelled{ get; set; }
-
+        public bool IsCancelled { get; set; }
     }
 }
