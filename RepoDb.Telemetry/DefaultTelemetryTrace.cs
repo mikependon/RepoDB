@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Interfaces;
 using RepoDb.Telemetry.Default.Models;
+using RepoDb.Telemetry.Default.Repositories;
 
 namespace RepoDb.Telemetry
 {
     /// <summary>
-    /// 
+    /// A class that is used to capture the telemetry of the library and send it to the insights solution.
+    /// This is the default telemetry capturing of the library.
     /// </summary>
     public class DefaultTelemetryTrace : ITrace
     {
@@ -20,6 +22,7 @@ namespace RepoDb.Telemetry
         private IDictionary<Guid, Tuple<DateTime, TimeSpan, object>> _afterTraceLogs;
         private string _applicationName;
         private readonly Timer _timer;
+        private readonly PublisherRepository _publisherRepository;
 
         #endregion
 
@@ -28,9 +31,15 @@ namespace RepoDb.Telemetry
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="applicationName"></param>
+        /// <param name="frequency"></param>
+        /// <param name="errorCallback"></param>
         private DefaultTelemetryTrace(
+            string endpoint,
             string applicationName,
-            TimeSpan frequency)
+            TimeSpan frequency,
+            Action<Exception> errorCallback = null)
         {
             _applicationName = applicationName;
             _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, DefaultTelemetryItem>>();
@@ -40,6 +49,7 @@ namespace RepoDb.Telemetry
                 state: null,
                 dueTime: frequency,
                 period: frequency);
+            _publisherRepository = new PublisherRepository(endpoint, errorCallback);
         }
 
         #endregion
@@ -49,21 +59,27 @@ namespace RepoDb.Telemetry
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="applicationName"></param>
+        /// <param name="frequency"></param>
+        /// <param name="errorCallback"></param>
         internal static void Create(
+            string endpoint,
             string applicationName,
-            TimeSpan frequency)
+            TimeSpan frequency,
+            Action<Exception> errorCallback = null)
         {
             lock (_instanceLock)
             {
                 if (Instance == null)
                 {
-                    new DefaultTelemetryTrace(applicationName, frequency);
+                    Instance = new DefaultTelemetryTrace(endpoint, applicationName, frequency, errorCallback);
                 }
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static DefaultTelemetryTrace Instance { get; private set; }
 
@@ -72,7 +88,7 @@ namespace RepoDb.Telemetry
         #region Implementations
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="log"></param>
         public void BeforeExecution(
@@ -82,12 +98,11 @@ namespace RepoDb.Telemetry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="log"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task BeforeExecutionAsync(
             CancellableTraceLog log,
             CancellationToken cancellationToken = default)
@@ -97,11 +112,10 @@ namespace RepoDb.Telemetry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="log"></param>
-        /// <exception cref="NotImplementedException"></exception>
         public void AfterExecution<TResult>(
             ResultTraceLog<TResult> log)
         {
@@ -109,13 +123,12 @@ namespace RepoDb.Telemetry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="log"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task AfterExecutionAsync<TResult>(
             ResultTraceLog<TResult> log,
             CancellationToken cancellationToken = default)
@@ -151,6 +164,7 @@ namespace RepoDb.Telemetry
                 // TODO: How about the result?
                 items.Add(item);
             }
+            _publisherRepository.PublishMany(items);
         }
 
         private Tuple<IDictionary<Guid, Tuple<CancellableTraceLog, DefaultTelemetryItem>>, IDictionary<Guid, Tuple<DateTime, TimeSpan, object>>> Switch()

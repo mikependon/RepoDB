@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using RepoDb.Telemetry.Default.Models;
 
 namespace RepoDb.Telemetry.Default.Repositories
@@ -18,7 +17,8 @@ namespace RepoDb.Telemetry.Default.Repositories
         #region Privates
 
         private static readonly HttpClient _httpClient = new HttpClient();
-        private readonly string _host;
+        private readonly string _endpoint;
+        private readonly Action<Exception> _errorCallback;
 
         #endregion
 
@@ -27,11 +27,13 @@ namespace RepoDb.Telemetry.Default.Repositories
         /// <summary>
         ///
         /// </summary>
-        /// <param name="host"></param>
+        /// <param name="endpoint"></param>
         public PublisherRepository(
-            string host)
+            string endpoint,
+            Action<Exception> errorCallback = null)
         {
-            _host = host;
+            _endpoint = endpoint;
+            _errorCallback = errorCallback;
         }
 
         #endregion
@@ -51,16 +53,24 @@ namespace RepoDb.Telemetry.Default.Repositories
         /// <param name="telemetryItems"></param>
         public void PublishMany(IEnumerable<DefaultTelemetryItem> telemetryItems)
         {
-            var json = JsonSerializer.Serialize(telemetryItems);
-            var compressed = Compress(json);
-            var base64 = Convert.ToBase64String(compressed);
-
-            using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
+            try
             {
-                _httpClient
-                    .PostAsync($"{_host}/telemetry/publish", content)
-                    .GetAwaiter()
-                    .GetResult();
+                var json = JsonSerializer.Serialize(telemetryItems);
+                var compressed = Compress(json);
+                var base64 = Convert.ToBase64String(compressed);
+
+                using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
+                {
+                    _httpClient
+                        .PostAsync($"{_endpoint}/telemetry/publish", content)
+                        .GetAwaiter()
+                        .GetResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = new InvalidOperationException("Failed to compress the telemetry data.", ex);
+                _errorCallback?.Invoke(error);
             }
         }
 
@@ -68,7 +78,7 @@ namespace RepoDb.Telemetry.Default.Repositories
 
         #region Helpers
 
-        private static byte[] Compress(string value)
+        private byte[] Compress(string value)
         {
             var bytes = Encoding.UTF8.GetBytes(value);
             using (var output = new MemoryStream())

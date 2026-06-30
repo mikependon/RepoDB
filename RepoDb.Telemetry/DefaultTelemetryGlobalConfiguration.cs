@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RepoDb.Telemetry
 {
@@ -11,15 +11,19 @@ namespace RepoDb.Telemetry
         /// Initializes all the necessary settings for SQL Server.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="endpoint">The endpoint to where to publish the telemetries.</param>
         /// <param name="applicationName">The name of the application that produces the telemetry.</param>
         /// <param name="frequencyInSeconds">The threshold of how often to publish the buffered telemetry.</param>
+        /// <param name="errorCallback">An optional callback invoked with any exception that occurs internally (e.g. during telemetry publishing).</param>
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseDefaultTelemetry(
             this GlobalConfiguration globalConfiguration,
+            string endpoint,
             string applicationName,
-            int frequencyInSeconds = 5)
+            int frequencyInSeconds = 5,
+            Action<Exception> errorCallback = null)
         {
-            DefaultTelemetryBootstrap.InitializeInternal(applicationName, TimeSpan.FromSeconds(5));
+            DefaultTelemetryBootstrap.InitializeInternal(endpoint, applicationName, TimeSpan.FromSeconds(frequencyInSeconds), errorCallback);
             return globalConfiguration;
         }
 
@@ -27,15 +31,19 @@ namespace RepoDb.Telemetry
         /// Initializes all the necessary settings for SQL Server.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="endpoint">The endpoint to where to publish the telemetries.</param>
         /// <param name="applicationName">The name of the application that produces the telemetry.</param>
         /// <param name="frequency">The threshold of how often to publish the buffered telemetry.</param>
+        /// <param name="errorCallback">An optional callback invoked with any exception that occurs internally (e.g. during telemetry publishing).</param>
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseDefaultTelemetry(
             this GlobalConfiguration globalConfiguration,
+            string endpoint,
             string applicationName,
-            TimeSpan frequency)
+            TimeSpan frequency,
+            Action<Exception> errorCallback = null)
         {
-            DefaultTelemetryBootstrap.InitializeInternal(applicationName, frequency);
+            DefaultTelemetryBootstrap.InitializeInternal(endpoint, applicationName, frequency, errorCallback);
             return globalConfiguration;
         }
     }

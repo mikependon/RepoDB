@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RepoDb.Telemetry
 {
@@ -21,9 +21,15 @@ namespace RepoDb.Telemetry
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="applicationName"></param>
+        /// <param name="frequency"></param>
+        /// <param name="errorCallback"></param>
         internal static void InitializeInternal(
+            string endpoint,
             string applicationName,
-            TimeSpan frequency)
+            TimeSpan frequency,
+            Action<Exception> errorCallback = null)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -32,7 +38,7 @@ namespace RepoDb.Telemetry
             }
 
             // Initialize
-            DefaultTelemetryTrace.Create(applicationName, frequency);
+            DefaultTelemetryTrace.Create(endpoint, applicationName, frequency, errorCallback);
 
             // Set the flag
             IsInitialized = true;
