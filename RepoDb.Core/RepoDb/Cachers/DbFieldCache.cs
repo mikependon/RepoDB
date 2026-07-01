@@ -191,10 +191,10 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                result = new DbFieldCollection(await connection
+                var dbFields = await connection
                     .GetDbHelper()
-                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken),
-                    connection.GetDbSetting());
+                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken);
+                result = new DbFieldCollection(dbFields, connection.GetDbSetting());
 
                 // Validate
                 if (enableValidation)
