@@ -55,7 +55,7 @@ namespace RepoDb.DbHelpers
         private string GetCommandText()
         {
             return """
-                   SELECT C.column_name,
+                   SELECT DISTINCT C.column_name,
                        COALESCE(I.indisprimary, FALSE) AS IsPrimary,
                        CASE
                            WHEN C.is_identity = 'YES'
