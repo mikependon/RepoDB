@@ -21,11 +21,8 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
-    <None Include="..\README.md" Pack="True" PackagePath="\" />
-    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
-  </ItemGroup>
-</Project>
+    <!--
+      GlobalPropertiesToRemove strips the inherited Version/PackageVersion (set globally via
+      "dotnet pack -p:Version=..." for THIS package) before building RepoDb.Core as a project
+      reference. AdditionalProperties then re-applies the correct, already-published RepoDb.Core
+      version via $(RepoDbCoreVersion),

@@ -16,6 +16,18 @@ on:
         required: false
         type: string
         default: ''
+      dependency-overrides:
+        description: >
+          Semicolon-separated Property=Version pairs pinning the version declared for this
+          project's local ProjectReference dependencies (e.g. 'RepoDbCoreVersion=1.14.0').
+          Without this, dotnet pack's -p:Version applies as a global MSBuild property to the
+          whole build graph, so any ProjectReference (like RepoDb.Core) gets stamped with THIS
+          package's version too - producing a NuGet dependency on a version of the dependency
+          that was never published. Set this whenever project-path is not the RepoDb core
+          project itself and it was not released at the same version this run.
+        required: false
+        type: string
+        default: ''
 
 jobs:
   publish:
@@ -37,11 +49,25 @@ jobs:
             9.0.x
             8.0.x
 
+      - name: Resolve Dependency Overrides
+        id: overrides
+        run: |
+          RAW="${{ inputs.dependency-overrides }}"
+          PROPS=""
+          if [ -n "$RAW" ]; then
+            IFS=';' read -ra PAIRS <<< "$RAW"
+            for PAIR in "${PAIRS[@]}"; do
+              [ -n "$PAIR" ] && PROPS="$PROPS -p:${PAIR}"
+            done
+          fi
+          echo "props=$PROPS" >> $GITHUB_OUTPUT
+          echo "Resolved MSBuild property overrides: $PROPS"
+
       - name: Restore
-        run: dotnet restore ${{ inputs.project-path }}
+        run: dotnet restore ${{ inputs.project-path }} ${{ steps.overrides.outputs.props }}
 
       - name: Build
-        run: dotnet build ${{ inputs.project-path }} -c Release --no-restore
+        run: dotnet build ${{ inputs.project-path }} -c Release --no-restore ${{ steps.overrides.outputs.props }}
 
       - name: Resolve Version
         id: version
@@ -61,7 +87,7 @@ jobs:
           echo "Resolved version: $VERSION"
 
       - name: Pack
-        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.value }}
+        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.value }} ${{ steps.overrides.outputs.props }}
 
       - name: Login to NuGet
         id: login

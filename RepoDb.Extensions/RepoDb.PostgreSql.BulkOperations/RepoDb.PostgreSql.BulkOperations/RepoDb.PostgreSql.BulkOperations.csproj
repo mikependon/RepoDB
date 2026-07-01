@@ -17,7 +17,7 @@
     <None Include="..\..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
-  </ItemGroup>
-</Project>
+    <!--
+      GlobalPropertiesToRemove strips the inherited Version/PackageVersion (set globally via
+      "dotnet pack -p:Version=..." for THIS package) before building each project reference.
+      Addition
