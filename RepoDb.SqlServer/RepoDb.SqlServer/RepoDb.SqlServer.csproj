@@ -24,12 +24,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--
-			GlobalPropertiesToRemove strips the inherited Version/PackageVersion (set globally
-			via "dotnet pack -p:Version=..." for THIS package) before building RepoDb.Core as a
-			project reference. AdditionalProperties then re-applies the correct, already-published
-			RepoDb.Core version via $(RepoDbCoreVersion), so the generated nuspec depends on the
-			right RepoDb version instead of being force-bumped to this package's own version.
-		-->
-		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" GlobalPropertiesToRemove="Version;PackageVersion;VersionPrefix;VersionSuffix">
-			<AdditionalProperties Condition="'$(RepoDbCoreVersion)' != ''">
+		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\icon.png" Pack="True" PackagePath="\" />
+		<None Include="..\README.md" Pack="True" PackagePath="\" />
+		<None Include="..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+	
+</Project>

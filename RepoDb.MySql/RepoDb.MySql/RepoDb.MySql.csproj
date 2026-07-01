@@ -25,5 +25,6 @@
     <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <!--
-      GlobalPropertiesToRemove strips the inherited Version/PackageVersion (set globally via
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+</Project>
