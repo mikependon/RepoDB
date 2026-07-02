@@ -104,8 +104,7 @@ namespace RepoDb
                 // Get from DB
                 result = new DbFieldCollection(connection
                     .GetDbHelper()
-                    .GetFields(connection, tableName, transaction),
-                    connection.GetDbSetting());
+                    .GetFields(connection, tableName, transaction), connection.GetDbSetting());
 
                 // Validate
                 if (enableValidation)
