@@ -32,7 +32,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
-                @"Server=127.0.0.1;Port=3306;Database=RepoDb_MySqlConnector;User ID=root;Password=RepoDB2026;";
+                @"Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;";
 
             // Initialize MySqlConnector
             GlobalConfiguration
@@ -91,8 +91,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionStringForSystem))
             {
-                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDb_MySqlConnector`;");
-                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDb_MySqlConnector.* to 'root'@'%';");
+                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDb`;");
+                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDb.* to 'root'@'%';");
             }
         }
 
