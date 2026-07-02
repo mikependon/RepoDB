@@ -10,6 +10,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/postgresql</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.PostgreSql.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbPostgreSqlVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbPostgreSqlVersion)' != ''">$(RepoDbPostgreSqlVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
