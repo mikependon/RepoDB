@@ -24,11 +24,16 @@ public class DbFieldCollection
     /// </summary>
     /// <param name="dbFields">A collection of column definitions of the table.</param>
     /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-    public DbFieldCollection(IEnumerable<DbField> dbFields, IDbSetting dbSetting)
+    public DbFieldCollection(
+        IEnumerable<DbField> dbFields,
+        IDbSetting dbSetting)
     {
         this.dbSetting = dbSetting;
-        this.dbFields = dbFields.AsList();
-
+        this.dbFields = dbFields
+            .AsList()
+            .GroupBy(f => f.Name.AsUnquoted(true, dbSetting), StringComparer.OrdinalIgnoreCase)
+            .Select(f => f.Last())
+            .ToList();
         lazyPrimary = new Lazy<DbField>(GetPrimaryDbField);
         lazyIdentity = new Lazy<DbField>(GetIdentityDbField);
         lazyMapByName = new Lazy<Dictionary<string, DbField>>(GetDbFieldsMappedByName);
