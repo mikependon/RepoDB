@@ -53,9 +53,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOpera
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqlServer.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.IntegrationTests\RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj", "{ECB2BCC1-7306-7EF0-D542-F8BB263DD477}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Telemetry.Default", "RepoDb.Telemetry\RepoDb.Telemetry.Default.csproj", "{D1D864D7-B116-43AF-A938-9640B9F2A08E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Telemetries", "Telemetries", "{22118217-0C37-4EDC-8569-48E4DE6C7BCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Telemetry.Core", "RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj", "{B0C59250-6BB0-43F1-BB48-1285F7543FAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Telemetry.Default", "RepoDb.Telemetry.Default\RepoDb.Telemetry.Default.csproj", "{E50497AF-1BB2-8421-1459-F043909C617D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,10 +157,14 @@ Global
 		{ECB2BCC1-7306-7EF0-D542-F8BB263DD477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECB2BCC1-7306-7EF0-D542-F8BB263DD477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECB2BCC1-7306-7EF0-D542-F8BB263DD477}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1D864D7-B116-43AF-A938-9640B9F2A08E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1D864D7-B116-43AF-A938-9640B9F2A08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1D864D7-B116-43AF-A938-9640B9F2A08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1D864D7-B116-43AF-A938-9640B9F2A08E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C59250-6BB0-43F1-BB48-1285F7543FAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C59250-6BB0-43F1-BB48-1285F7543FAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C59250-6BB0-43F1-BB48-1285F7543FAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C59250-6BB0-43F1-BB48-1285F7543FAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E50497AF-1BB2-8421-1459-F043909C617D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E50497AF-1BB2-8421-1459-F043909C617D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E50497AF-1BB2-8421-1459-F043909C617D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E50497AF-1BB2-8421-1459-F043909C617D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,7 +193,8 @@ Global
 		{14CDFE11-7793-1D27-3055-793204139FE0} = {487CE4EA-BD6C-43C3-9731-02F23C9E2658}
 		{DEEF08FD-2509-C82C-FD89-4CC30D5B90C9} = {487CE4EA-BD6C-43C3-9731-02F23C9E2658}
 		{ECB2BCC1-7306-7EF0-D542-F8BB263DD477} = {487CE4EA-BD6C-43C3-9731-02F23C9E2658}
-		{D1D864D7-B116-43AF-A938-9640B9F2A08E} = {22118217-0C37-4EDC-8569-48E4DE6C7BCC}
+		{B0C59250-6BB0-43F1-BB48-1285F7543FAF} = {22118217-0C37-4EDC-8569-48E4DE6C7BCC}
+		{E50497AF-1BB2-8421-1459-F043909C617D} = {22118217-0C37-4EDC-8569-48E4DE6C7BCC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
