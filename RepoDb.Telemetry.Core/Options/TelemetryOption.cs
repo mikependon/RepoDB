@@ -10,16 +10,17 @@ namespace RepoDb.Telemetry.Core
         /// <summary>
         /// Creates a new instance of <see cref="TelemetryOption"/> object.
         /// </summary>
-        /// <param name="applicationName">The name of the application that produces the telemetry.</param>
-        public TelemetryOption(string applicationName)
+        /// <param name="application">The name of the application that produces the telemetry.</param>
+        public TelemetryOption(
+            string application)
         {
-            ApplicationName = applicationName;
+            Application = application;
         }
 
         /// <summary>
         /// Gets the name of the application that produces the telemetry.
         /// </summary>
-        public string ApplicationName { get; }
+        public string Application { get; }
 
         /// <summary>
         /// Gets or sets the group to where the application will be categorized. This is optional and can be used to group the applications that produce the telemetry.

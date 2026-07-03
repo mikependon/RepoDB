@@ -125,11 +125,11 @@ namespace RepoDb.Telemetry.Core
                 if (afterTraceLogs.ContainsKey(kvp.Key))
                 {
                     var afterLog = afterTraceLogs[kvp.Key];
-                    item.Elapsed = afterLog.Item2;
+                    item.Elapsed = afterLog.Item2.TotalSeconds;
                 }
                 else
                 {
-                    item.Elapsed = DateTime.UtcNow - log.StartTime;
+                    item.Elapsed = (DateTime.UtcNow - log.StartTime).TotalSeconds;
                 }
                 // TODO: How about the result?
                 items.Add(item);
@@ -166,10 +166,10 @@ namespace RepoDb.Telemetry.Core
                 {
                     var item = new TelemetryItem
                     {
-                        ApplicationName = _option.ApplicationName,
+                        Application = _option.Application,
                         Group = _option.Group,
                         SessionId = log.SessionId,
-                        Key = log.Key,
+                        Operation = log.Key,
                         StartTime = log.StartTime,
                         Statement = log.Statement
                     };

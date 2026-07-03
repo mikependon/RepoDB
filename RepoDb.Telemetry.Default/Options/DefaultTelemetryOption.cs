@@ -10,10 +10,10 @@ namespace RepoDb.Telemetry.Default
         /// <summary>
         /// Creates a new instance of <see cref="DefaultTelemetryOption"/> object.
         /// </summary>
-        /// <param name="applicationName">The name of the application that produces the telemetry.</param>
+        /// <param name="application">The name of the application that produces the telemetry.</param>
 
         public DefaultTelemetryOption(
-            string applicationName) : base(applicationName)
+            string application): base(application)
         {
         }
     }
