@@ -7,6 +7,11 @@ on:
         description: "Package version to publish (e.g. 1.14.0)"
         required: true
         type: string
+      dependency-overrides:
+        description: "Set RepoDbCoreVersion=<version> if RepoDb.Core is not being released at the same version this run (e.g. RepoDbCoreVersion=1.14.0)"
+        required: false
+        type: string
+        default: ''
   release:
     types: [published]
 
@@ -15,5 +20,6 @@ jobs:
     uses: ./.github/workflows/release-base.yml
     with:
       version: ${{ inputs.version }}
+      dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Sqlite.Microsoft
       project-path: RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.csproj

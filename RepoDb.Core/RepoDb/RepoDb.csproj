@@ -11,6 +11,14 @@
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
+    <!--
+      When a dependent package (e.g. RepoDb.SqlServer) is packed with a global -p:Version, that
+      version flows to this ProjectReference and gets stamped as the dependency version too. Pass
+      -p:RepoDbCoreVersion=<version> to pin the version this project is referenced as, independently
+      of the consuming package's own version. PackageVersion is used (not Version) because it is not
+      overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbCoreVersion)' != ''">$(RepoDbCoreVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Reflection\DataCommand.cs" />
