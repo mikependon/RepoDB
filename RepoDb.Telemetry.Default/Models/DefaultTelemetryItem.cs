@@ -1,5 +1,5 @@
 ﻿using System;
-using RepoDb.Telemetry.Core.Models;
+using RepoDb.Telemetry.Core;
 
 namespace RepoDb.Telemetry.Default
 {

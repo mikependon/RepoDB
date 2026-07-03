@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
-using RepoDb.Telemetry.Core.Models;
 
-namespace RepoDb.Telemetry.Core.Repositories
+namespace RepoDb.Telemetry.Core
 {
     /// <summary>
     /// An interface that is used to publish the telemetry items to the insights solution.

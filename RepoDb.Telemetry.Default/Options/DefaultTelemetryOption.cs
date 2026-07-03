@@ -1,4 +1,4 @@
-using RepoDb.Telemetry.Core.Options;
+using RepoDb.Telemetry.Core;
 
 namespace RepoDb.Telemetry.Default
 {
@@ -7,5 +7,14 @@ namespace RepoDb.Telemetry.Default
     /// </summary>
     public class DefaultTelemetryOption : TelemetryOption
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="DefaultTelemetryOption"/> object.
+        /// </summary>
+        /// <param name="applicationName">The name of the application that produces the telemetry.</param>
+
+        public DefaultTelemetryOption(
+            string applicationName) : base(applicationName)
+        {
+        }
     }
 }

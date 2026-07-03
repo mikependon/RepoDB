@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using RepoDb.Interfaces;
-using RepoDb.Telemetry.Core.Models;
-using RepoDb.Telemetry.Core.Options;
-using RepoDb.Telemetry.Core.Repositories;
 using Serilog;
 
 namespace RepoDb.Telemetry.Core
@@ -44,7 +41,7 @@ namespace RepoDb.Telemetry.Core
             _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
             _afterTraceLogs = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
             _timer = new Timer(callback: Callback);
-            _publisherRepository = new TelemetryPublisherRepository(option.Endpoint, errorCallback);
+            _publisherRepository = new TelemetryPublisherRepository(option.Host, errorCallback);
         }
 
         #endregion

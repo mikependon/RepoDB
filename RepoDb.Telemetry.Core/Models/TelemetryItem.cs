@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RepoDb.Telemetry.Core.Models
+namespace RepoDb.Telemetry.Core
 {
     /// <summary>
     /// 

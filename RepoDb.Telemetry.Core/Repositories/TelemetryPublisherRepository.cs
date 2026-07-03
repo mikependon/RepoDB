@@ -7,10 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
-using RepoDb.Telemetry.Core.Models;
 using Serilog;
 
-namespace RepoDb.Telemetry.Core.Repositories
+namespace RepoDb.Telemetry.Core
 {
     /// <summary>
     /// A class that is used to publish the telemetry data to the insights solution.
@@ -20,7 +19,7 @@ namespace RepoDb.Telemetry.Core.Repositories
         #region Privates
 
         private static readonly HttpClient _httpClient = new HttpClient();
-        private readonly string _endpoint;
+        private readonly string _host;
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
 
@@ -31,15 +30,15 @@ namespace RepoDb.Telemetry.Core.Repositories
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryPublisherRepository"/> class.
         /// </summary>
-        /// <param name="endpoint">The endpoint to where to publish the telemetry data.</param>
+        /// <param name="host">The host to where to publish the telemetry data.</param>
         /// <param name="errorCallback">The callback function to call in the case of any exception.</param>
         /// <param name="logger">The logger instance to use when logging messages or events.</param>
         public TelemetryPublisherRepository(
-            string endpoint = "http://localhost:5000/telemetry",
+            string host = "http://localhost:5000",
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
-            _endpoint = endpoint;
+            _host = host;
             _errorCallback = errorCallback;
             _logger = logger;
         }
@@ -78,9 +77,9 @@ namespace RepoDb.Telemetry.Core.Repositories
                 var base64 = ToBase64JsonString(telemetryItems);
                 using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
                 {
-                    _logger.Debug("Publishing telemetry data to {Endpoint}.", _endpoint);
+                    _logger.Debug("Publishing telemetry data to {Host}.", _host);
                     _httpClient
-                        .PostAsync ($"{_endpoint}/publish", content)
+                        .PostAsync ($"{_host}/telemetry/publish", content)
                         .GetAwaiter()
                         .GetResult();
                     _logger.Debug("{Count} data has been published.", telemetryItems.Count());
@@ -108,9 +107,9 @@ namespace RepoDb.Telemetry.Core.Repositories
                 var base64 = ToBase64JsonString(telemetryItems);
                 using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
                 {
-                    _logger.Debug("Publishing telemetry data to {Endpoint}.", _endpoint);
+                    _logger.Debug("Publishing telemetry data to {Host}.", _host);
                     await _httpClient
-                        .PostAsync($"{_endpoint}/publish", content, cancellationToken);
+                        .PostAsync($"{_host}/telemetry/publish", content, cancellationToken);
                     _logger.Debug("{Count} data has been published.", telemetryItems.Count());
                 }
             }

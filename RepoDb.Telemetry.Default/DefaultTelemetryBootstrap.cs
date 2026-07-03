@@ -6,7 +6,7 @@ namespace RepoDb.Telemetry.Default
     /// <summary>
     /// A class that is being used to initialize the necessary settings to capture the library telemetries.
     /// </summary>
-    internal static class DefaultTelemetryBootstrap
+    public static class DefaultTelemetryBootstrap
     {
         #region Properties
 
@@ -23,7 +23,7 @@ namespace RepoDb.Telemetry.Default
         /// 
         /// </summary>
         /// <param name="option"></param>
-        public static void InitializeInternal(
+        internal static void InitializeInternal(
             DefaultTelemetryOption option,
             Action<Exception> errorCallback = null,
             ILogger logger = null)

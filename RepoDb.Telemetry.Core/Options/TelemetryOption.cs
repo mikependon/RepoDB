@@ -1,7 +1,6 @@
 using System;
-using Serilog;
 
-namespace RepoDb.Telemetry.Core.Options
+namespace RepoDb.Telemetry.Core
 {
     /// <summary>
     /// A class that is being used to define the necessary settings to capture the library telemetries.
@@ -9,9 +8,18 @@ namespace RepoDb.Telemetry.Core.Options
     public class TelemetryOption
     {
         /// <summary>
-        /// Gets or sets the name of the application that produces the telemetry.
+        /// Creates a new instance of <see cref="TelemetryOption"/> object.
         /// </summary>
-        public string ApplicationName { get; set; }
+        /// <param name="applicationName">The name of the application that produces the telemetry.</param>
+        public TelemetryOption(string applicationName)
+        {
+            ApplicationName = applicationName;
+        }
+
+        /// <summary>
+        /// Gets the name of the application that produces the telemetry.
+        /// </summary>
+        public string ApplicationName { get; }
 
         /// <summary>
         /// Gets or sets the group to where the application will be categorized. This is optional and can be used to group the applications that produce the telemetry.
@@ -19,9 +27,9 @@ namespace RepoDb.Telemetry.Core.Options
         public string Group { get; set; } = "Default";
 
         /// <summary>
-        /// Gets or sets the endpoint to where to publish the telemetries.
+        /// Gets or sets the host to where to publish the telemetries.
         /// </summary>
-        public string Endpoint { get; set; } = "http://localhost:5000/telemetry";
+        public string Host { get; set; } = "http://localhost:5000";
 
         /// <summary>
         /// Gets or sets the threshold of how often to publish the buffered telemetry.

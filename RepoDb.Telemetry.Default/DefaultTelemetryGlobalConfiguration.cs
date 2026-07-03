@@ -12,7 +12,7 @@ namespace RepoDb.Telemetry.Default
         /// Initializes all the necessary settings for SQL Server.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
-        /// <param name="endpoint">The endpoint to where to publish the telemetries.</param>
+        /// <param name="host">The host to where to publish the telemetries.</param>
         /// <param name="applicationName">The name of the application that produces the telemetry.</param>
         /// <param name="frequency">The threshold of how often to publish the buffered telemetry.</param>
         /// <param name="errorCallback">An optional callback invoked with any exception that occurs internally (e.g. during telemetry publishing).</param>
@@ -20,16 +20,15 @@ namespace RepoDb.Telemetry.Default
         /// <returns>The used global configuration instance itself.</returns>
         public static GlobalConfiguration UseDefaultTelemetry(
             this GlobalConfiguration globalConfiguration,
-            string endpoint,
+            string host,
             string applicationName,
             TimeSpan frequency,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
-            return globalConfiguration.UseDefaultTelemetry(new DefaultTelemetryOption
+            return globalConfiguration.UseDefaultTelemetry(new DefaultTelemetryOption(applicationName)
             {
-                Endpoint = endpoint,
-                ApplicationName = applicationName,
+                Host = host,
                 Frequency = frequency
             },
             errorCallback, logger);
