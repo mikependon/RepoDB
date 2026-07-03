@@ -1,11 +1,12 @@
 using System;
+using Serilog;
 
-namespace RepoDb.Telemetry
+namespace RepoDb.Telemetry.Default
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings to capture the library telemetries.
     /// </summary>
-    public static class DefaultTelemetryBootstrap
+    internal static class DefaultTelemetryBootstrap
     {
         #region Properties
 
@@ -21,15 +22,11 @@ namespace RepoDb.Telemetry
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="applicationName"></param>
-        /// <param name="frequency"></param>
-        /// <param name="errorCallback"></param>
-        internal static void InitializeInternal(
-            string endpoint,
-            string applicationName,
-            TimeSpan frequency,
-            Action<Exception> errorCallback = null)
+        /// <param name="option"></param>
+        public static void InitializeInternal(
+            DefaultTelemetryOption option,
+            Action<Exception> errorCallback = null,
+            ILogger logger = null)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -38,7 +35,7 @@ namespace RepoDb.Telemetry
             }
 
             // Initialize
-            DefaultTelemetryTrace.Create(endpoint, applicationName, frequency, errorCallback);
+            new DefaultTelemetryTrace(option).Start();
 
             // Set the flag
             IsInitialized = true;
