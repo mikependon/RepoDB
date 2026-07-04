@@ -6,6 +6,10 @@
 
 The SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Backed by `System.Data.SQLite.Core`.
 
+```diff
+- This code-line will be out-of-support soon. The final version would be v1.13.1. Please start moving to [RepoDb.Sqlite.Microsoft](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft) package.
+```
+
 ## Important Pages
 
 - [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
