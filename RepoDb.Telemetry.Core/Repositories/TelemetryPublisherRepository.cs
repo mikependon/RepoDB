@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -22,6 +23,7 @@ namespace RepoDb.Telemetry.Core
         private static readonly HttpClient _httpClient = new HttpClient();
         private readonly string _host;
         private readonly string _endpoint;
+        private readonly string _apiKey;
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
 
@@ -44,6 +46,7 @@ namespace RepoDb.Telemetry.Core
         {
             _host = host;
             _endpoint = $"{_host}/v1";
+            _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
         }
@@ -81,10 +84,11 @@ namespace RepoDb.Telemetry.Core
             {
                 var compressed = ToCompressedJsonBytes(telemetryItems);
                 using (var content = CreateCompressedContent(compressed))
+                using (var request = CreateRequest(content))
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", _host);
                     var result = _httpClient
-                        .PostAsync ($"{_endpoint}/telemetry/publish", content)
+                        .SendAsync(request)
                         .GetAwaiter()
                         .GetResult();
                     result.EnsureSuccessStatusCode();
@@ -112,10 +116,11 @@ namespace RepoDb.Telemetry.Core
             {
                 var compressed = ToCompressedJsonBytes(telemetryItems);
                 using (var content = CreateCompressedContent(compressed))
+                using (var request = CreateRequest(content))
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", _host);
                     var result = await _httpClient
-                        .PostAsync($"{_endpoint}/telemetry/publish", content, cancellationToken);
+                        .SendAsync(request, cancellationToken);
                     result.EnsureSuccessStatusCode();
                     _logger?.Debug("{Count} data has been published.", telemetryItems.Count());
                 }
@@ -145,23 +150,42 @@ namespace RepoDb.Telemetry.Core
         }
 
         /// <summary>
-        /// Wraps the gzip-compressed bytes in an HTTP content whose body is the raw compressed
-        /// bytes (not a base64 string), tagged with a Content-Encoding: gzip header so the
-        /// receiving API can decompress and parse it as JSON.
+        /// Wraps the gzip-compressed bytes in an HTTP content whose body is the Base64-encoded
+        /// string of the compressed bytes, so the receiving API can decode, decompress, and
+        /// parse it as JSON.
         /// </summary>
         /// <param name="compressed"></param>
         /// <returns></returns>
         private HttpContent CreateCompressedContent(
             byte[] compressed)
         {
-            var content = new ByteArrayContent(compressed);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            content.Headers.ContentEncoding.Add("gzip");
+            var base64 = Convert.ToBase64String(compressed);
+            var content = new StringContent(base64, Encoding.UTF8, "text/plain");
             return content;
         }
 
         /// <summary>
-        /// 
+        /// Builds the HTTP request used to publish the telemetry data, tagging it with the
+        /// X-API-Key header when an API key has been configured.
+        /// </summary>
+        /// <param name="content">The content to publish.</param>
+        /// <returns></returns>
+        private HttpRequestMessage CreateRequest(
+            HttpContent content)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_endpoint}/telemetry/publish")
+            {
+                Content = content
+            };
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                request.Headers.Add("X-API-Key", _apiKey);
+            }
+            return request;
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>

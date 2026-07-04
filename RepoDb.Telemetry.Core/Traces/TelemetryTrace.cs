@@ -27,11 +27,11 @@ namespace RepoDb.Telemetry.Core
 
         // The assembly that hosts/consumes the library (i.e. the client application), falling back to the
         // immediate caller if an entry assembly cannot be resolved (e.g. some test hosts or plugin scenarios).
-        private static readonly Assembly _callingAssembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+        private static readonly Assembly _assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
 
         // The machine/host name on which the application is running. Resolved once and cached, since it
         // does not change during the lifetime of the process.
-        private static readonly string _clientMachineName = GetClientMachineName();
+        private static readonly string _client = GetClientMachineName();
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace RepoDb.Telemetry.Core
             _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
             _afterTraceLogs = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
             _timer = new Timer(callback: Callback);
-            _publisherRepository = new TelemetryPublisherRepository(option.Host, option.ApiKey, errorCallback);
+            _publisherRepository = new TelemetryPublisherRepository(option.Host, option.ApiKey, errorCallback, logger);
         }
 
         #endregion
@@ -188,9 +188,9 @@ namespace RepoDb.Telemetry.Core
                         Operation = log.Key,
                         StartTime = log.StartTime,
                         Statement = log.Statement,
-                        Client = _clientMachineName,
-                        Assembly = _callingAssembly?.FullName,
-                        Version = _callingAssembly?.GetName().Version?.ToString()
+                        Client = _client,
+                        Source = _assembly?.GetName().Name,
+                        Version = _assembly?.GetName().Version?.ToString()
                     };
                     _beforeTraceLogs[log.SessionId] = Tuple.Create(log, item);
                 }
