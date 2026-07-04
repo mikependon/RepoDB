@@ -9,7 +9,4 @@
   <ItemGroup>
     <PackageReference Include="MSTest" Version="4.2.3" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RepoDb.SQLite.System\RepoDb.SQLite.System.csproj" />
-  </ItemGroup>
 </Project>

@@ -13,13 +13,15 @@ namespace RepoDb.Telemetry.Default
         /// Initializes a new instance of the <see cref="TelemetryPublisherRepository"/> class.
         /// </summary>
         /// <param name="host">The host to where to publish the telemetry data.</param>
+        /// <param name="apiKey">The API key to be used for authentication.</param>"
         /// <param name="errorCallback">The callback function to call in any exception.</param>
         /// <param name="logger">The logger instance to use when logging messages or events.</param>
         public DefaultTelemetryPublisherRepository(
             string host = "http://localhost:5000",
+            string apiKey = null,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
-            : base(host, errorCallback, logger)
+            : base(host, apiKey, errorCallback, logger)
         { }
     }
 }

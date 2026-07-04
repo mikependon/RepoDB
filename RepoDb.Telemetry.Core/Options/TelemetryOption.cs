@@ -33,6 +33,11 @@ namespace RepoDb.Telemetry.Core
         public string Host { get; set; } = "http://localhost:5000";
 
         /// <summary>
+        /// The API key to be used for authentication.
+        /// </summary>
+        public string ApiKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the threshold of how often to publish the buffered telemetry.
         /// </summary>
         public TimeSpan Frequency { get; set; } = TimeSpan.FromSeconds(5);

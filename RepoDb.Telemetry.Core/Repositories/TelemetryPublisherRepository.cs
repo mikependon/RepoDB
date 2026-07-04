@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace RepoDb.Telemetry.Core
 
         private static readonly HttpClient _httpClient = new HttpClient();
         private readonly string _host;
+        private readonly string _endpoint;
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
 
@@ -31,14 +33,17 @@ namespace RepoDb.Telemetry.Core
         /// Initializes a new instance of the <see cref="TelemetryPublisherRepository"/> class.
         /// </summary>
         /// <param name="host">The host to where to publish the telemetry data.</param>
+        /// <param name="apiKey">The API key to be used for authentication.</param>
         /// <param name="errorCallback">The callback function to call in the case of any exception.</param>
         /// <param name="logger">The logger instance to use when logging messages or events.</param>
         public TelemetryPublisherRepository(
             string host = "http://localhost:5000",
+            string apiKey = null,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
             _host = host;
+            _endpoint = $"{_host}/v1";
             _errorCallback = errorCallback;
             _logger = logger;
         }
@@ -74,15 +79,16 @@ namespace RepoDb.Telemetry.Core
         {
             try
             {
-                var base64 = ToBase64JsonString(telemetryItems);
-                using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
+                var compressed = ToCompressedJsonBytes(telemetryItems);
+                using (var content = CreateCompressedContent(compressed))
                 {
-                    _logger.Debug("Publishing telemetry data to {Host}.", _host);
-                    _httpClient
-                        .PostAsync ($"{_host}/telemetry/publish", content)
+                    _logger?.Debug("Publishing telemetry data to {Host}.", _host);
+                    var result = _httpClient
+                        .PostAsync ($"{_endpoint}/telemetry/publish", content)
                         .GetAwaiter()
                         .GetResult();
-                    _logger.Debug("{Count} data has been published.", telemetryItems.Count());
+                    result.EnsureSuccessStatusCode();
+                    _logger?.Debug("{Count} data has been published.", telemetryItems.Count());
                 }
             }
             catch (Exception ex)
@@ -104,13 +110,14 @@ namespace RepoDb.Telemetry.Core
         {
             try
             {
-                var base64 = ToBase64JsonString(telemetryItems);
-                using (var content = new StringContent(base64, Encoding.UTF8, "application/json"))
+                var compressed = ToCompressedJsonBytes(telemetryItems);
+                using (var content = CreateCompressedContent(compressed))
                 {
-                    _logger.Debug("Publishing telemetry data to {Host}.", _host);
-                    await _httpClient
-                        .PostAsync($"{_host}/telemetry/publish", content, cancellationToken);
-                    _logger.Debug("{Count} data has been published.", telemetryItems.Count());
+                    _logger?.Debug("Publishing telemetry data to {Host}.", _host);
+                    var result = await _httpClient
+                        .PostAsync($"{_endpoint}/telemetry/publish", content, cancellationToken);
+                    result.EnsureSuccessStatusCode();
+                    _logger?.Debug("{Count} data has been published.", telemetryItems.Count());
                 }
             }
             catch (Exception ex)
@@ -126,16 +133,31 @@ namespace RepoDb.Telemetry.Core
         #region Helpers
 
         /// <summary>
-        /// 
+        /// Serializes the telemetry items to JSON and gzip-compresses the resulting bytes.
         /// </summary>
         /// <param name="telemetryItems"></param>
         /// <returns></returns>
-        private string ToBase64JsonString(
+        private byte[] ToCompressedJsonBytes(
             IEnumerable<TelemetryItem> telemetryItems)
         {
             var json = JsonSerializer.Serialize(telemetryItems);
-            var compressed = Compress(json);
-            return Convert.ToBase64String(compressed);
+            return Compress(json);
+        }
+
+        /// <summary>
+        /// Wraps the gzip-compressed bytes in an HTTP content whose body is the raw compressed
+        /// bytes (not a base64 string), tagged with a Content-Encoding: gzip header so the
+        /// receiving API can decompress and parse it as JSON.
+        /// </summary>
+        /// <param name="compressed"></param>
+        /// <returns></returns>
+        private HttpContent CreateCompressedContent(
+            byte[] compressed)
+        {
+            var content = new ByteArrayContent(compressed);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            content.Headers.ContentEncoding.Add("gzip");
+            return content;
         }
 
         /// <summary>
@@ -153,7 +175,7 @@ namespace RepoDb.Telemetry.Core
                 {
                     gzip.Write(bytes, 0, bytes.Length);
                 }
-                _logger.Debug("Json data with length {Length} has been compressed to {Bytes}.", value.Length, ToBytesString(output.Length));
+                _logger?.Debug($"Json data with length {value.Length} has been compressed to {ToBytesString(bytes.Length)}.");
                 return output.ToArray();
             }
         }

@@ -54,9 +54,9 @@ namespace RepoDb.Telemetry.Core
         public string Client { get; set; }
 
         /// <summary>
-        /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
+        /// The assembly name of the application that has executed the operation. This is used to identify the application that has executed the operation.
         /// </summary>
-        public string Package { get; set; }
+        public string Assembly { get; set; }
 
         /// <summary>
         /// The client machine name that has executed the operation. This is used to identify the machine that has executed the operation.
