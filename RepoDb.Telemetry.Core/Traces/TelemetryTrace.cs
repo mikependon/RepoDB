@@ -138,8 +138,8 @@ namespace RepoDb.Telemetry.Core
                     (var log, var item) = kvp.Value;
                     item.IsCancelled = log.IsCancelled;
                     item.Elapsed = afterTraceLogs.ContainsKey(kvp.Key) ?
-                        afterTraceLogs[kvp.Key].Item2.TotalSeconds :
-                            (DateTime.UtcNow - log.StartTime).TotalSeconds;
+                        afterTraceLogs[kvp.Key].Item2.TotalMilliseconds :
+                            (DateTime.UtcNow - log.StartTime).TotalMilliseconds;
                     items.Add(item);
                 }
                 if (items.Count > 0)

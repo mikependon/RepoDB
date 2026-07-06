@@ -13,7 +13,7 @@ namespace RepoDb.Telemetry.Default
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
         /// <param name="host">The host to where to publish the telemetries.</param>
-        /// <param name="apiKey">The API key to be used for authentication.</param>
+        /// <param name="apiKey">The API key to be used for authentication. Leave this to empty if not provided in the collector API.</param>"
         /// <param name="applicationName">The name of the application that produces the telemetry.</param>
         /// <param name="groupName">
         /// The name of the group to where the application will be placed.
