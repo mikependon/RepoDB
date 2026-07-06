@@ -39,7 +39,7 @@ namespace RepoDb.Telemetry.Core
         public string Statement { get; set; }
 
         /// <summary>
-        /// The total elapsed time of the operation that has been executed. This is calculated by subtracting the <see cref="StartTime"/> from the current time.
+        /// The recorded total elapsed time (in milliseconds) of the operation that has been executed. This is calculated by subtracting the <see cref="StartTime"/> from the current time.
         /// </summary>
         public double Elapsed { get; set; }
 
