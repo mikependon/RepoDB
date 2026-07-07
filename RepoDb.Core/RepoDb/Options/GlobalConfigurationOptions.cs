@@ -38,5 +38,10 @@ namespace RepoDb.Options
         /// Gets or sets the default value of how the push operations (i.e.: Insert, InsertAll, Merge and MergeAll) behaves when returning the value from the key columns (i.e.: Primary and Identity).
         /// </summary>
         public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.IdentityOrElsePrimary;
+
+        /// <summary>
+        /// Gets or sets the default value whether the operations should use the registered global traces from all operations.
+        /// </summary>
+        public bool UseRegisteredGlobalTraces { get; set; } = false;
     }
 }

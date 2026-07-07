@@ -1,4 +1,6 @@
 using System;
+using System.Reflection;
+using RepoDb.Telemetry.Core;
 using Serilog;
 
 namespace RepoDb.Telemetry.Default
@@ -8,6 +10,8 @@ namespace RepoDb.Telemetry.Default
     /// </summary>
     public static partial class DefaultTelemetryGlobalConfiguration
     {
+        #region Methods
+
         /// <summary>
         /// Initializes all the necessary settings for capturing the telemetries.
         /// </summary>
@@ -55,8 +59,37 @@ namespace RepoDb.Telemetry.Default
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
-            DefaultTelemetryTrace.Create(option, errorCallback, logger).Start();
+            var trace = DefaultTelemetryTrace.Create(option, errorCallback, logger);
+            trace.Start();
+            RegisterTrace(trace);
             return globalConfiguration;
         }
-    }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Register the given trace as the default tracer via the 'RepoDb.GlobalTraceRegistration' class (if present).
+        /// This class is not yet available in all versions of 'RepoDb.Core'; the lookup is done via reflection
+        /// to keep backward compatibility with those versions.
+        /// </summary>
+        /// <param name="trace">The trace object to assign as the default tracer.</param>
+        private static void RegisterTrace(
+            TelemetryTrace trace)
+        {
+            var globalTraceRegistrationType = typeof(GlobalConfiguration)
+                .Assembly
+                .GetType("RepoDb.GlobalTraceRegistration");
+            if (globalTraceRegistrationType == null)
+            {
+                return;
+            }
+            var registerDefaultTracerMethod = globalTraceRegistrationType
+                .GetMethod("Register", BindingFlags.Public | BindingFlags.Static);
+            registerDefaultTracerMethod?.Invoke(null, [trace]);
+        }
+
+        #endregion
+}
 }

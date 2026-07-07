@@ -25,7 +25,7 @@ namespace RepoDb
             ITrace trace,
             DbCommand command)
         {
-            if (string.IsNullOrEmpty(key) || trace == null)
+            if (string.IsNullOrEmpty(key) || (trace == null && GlobalConfiguration.Options.UseRegisteredGlobalTraces == false))
             {
                 return null;
             }
@@ -34,8 +34,15 @@ namespace RepoDb
 
             trace.BeforeExecution(result.CancellableTraceLog);
 
-            ValidateCancellation(key, result.CancellableTraceLog);
+            if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
+            {
+                foreach (var globalTrace in GlobalTraceRegistration.GetTracers())
+                {
+                    globalTrace.BeforeExecution(result.CancellableTraceLog);
+                }
+            }
 
+            ValidateCancellation(key, result.CancellableTraceLog);
             return result;
         }
 
@@ -56,7 +63,7 @@ namespace RepoDb
             DbCommand command,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(key) || trace == null)
+            if (string.IsNullOrEmpty(key) || (trace == null && GlobalConfiguration.Options.UseRegisteredGlobalTraces == false))
             {
                 return null;
             }
@@ -64,6 +71,14 @@ namespace RepoDb
             var result = TraceResult.Create(key, command);
 
             await trace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
+
+            if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
+            {
+                foreach (var globalTrace in GlobalTraceRegistration.GetTracers())
+                {
+                    await globalTrace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
+                }
+            }
 
             ValidateCancellation(key, result.CancellableTraceLog);
 
@@ -85,12 +100,17 @@ namespace RepoDb
             ITrace trace,
             TResult value)
         {
-            if (trace == null || result == null)
+            if (result == null)
             {
                 return;
             }
 
-            if (result.CancellableTraceLog?.IsCancelled == true)
+            var globalTraces = GlobalTraceRegistration.GetTracers();
+            if (trace == null &&
+                (
+                    GlobalConfiguration.Options.UseRegisteredGlobalTraces == false ||
+                    globalTraces.Count == 0)
+                )
             {
                 return;
             }
@@ -101,12 +121,17 @@ namespace RepoDb
                 value,
                 result.CancellableTraceLog);
 
-            trace.AfterExecution(log);
+            trace?.AfterExecution(log);
+
+            foreach (var globalTrace in globalTraces)
+            {
+                globalTrace.AfterExecution(log);
+            }
         }
 
         #endregion
 
-        #region AfterExecution
+        #region AfterExecutionAsync
 
         /// <summary>
         /// 
@@ -122,7 +147,17 @@ namespace RepoDb
             TResult value,
             CancellationToken cancellationToken = default)
         {
-            if (trace == null || result == null)
+            if (result == null)
+            {
+                return;
+            }
+
+            var globalTraces = GlobalTraceRegistration.GetTracers();
+            if (trace == null &&
+                (
+                    GlobalConfiguration.Options.UseRegisteredGlobalTraces == false ||
+                    globalTraces.Count == 0)
+                )
             {
                 return;
             }
@@ -133,7 +168,12 @@ namespace RepoDb
                 value,
                 result.CancellableTraceLog);
 
-            await trace.AfterExecutionAsync(log, cancellationToken);
+            await trace?.AfterExecutionAsync(log, cancellationToken);
+
+            foreach (var globalTrace in globalTraces)
+            {
+                await globalTrace.AfterExecutionAsync(log, cancellationToken);
+            }
         }
 
         #endregion
