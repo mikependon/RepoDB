@@ -22,4 +22,4 @@ jobs:
       version: ${{ inputs.version }}
       dependency-overrides: ${{ inputs.dependency-overrides }}
       project-name: RepoDb.Telemetry.Core
-      project-path: RepoDb.Telemetry.Core/RepoDb.Telemetry.Core.csproj
+      project-path: RepoDb.Telemetry.Core/RepoDb.Telemetry.Core/RepoDb.Telemetry.Core.csproj
