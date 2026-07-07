@@ -1,0 +1,18 @@
+name: Build & Run Tests - RepoDb.Telemetry.Core (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Telemetry.Core/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-telemetry-core.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Telemetry.Core
+      solution-file: RepoDb.Telemetry.Core.sln
+      artifact-name: release-telemetry-core

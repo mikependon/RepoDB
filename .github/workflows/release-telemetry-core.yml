@@ -1,0 +1,25 @@
+name: Release - RepoDb.Telemetry.Core (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version to publish (e.g. 1.14.0)"
+        required: true
+        type: string
+      dependency-overrides:
+        description: "Set RepoDbCoreVersion=<version> if RepoDb.Core is not being released at the same version this run (e.g. RepoDbCoreVersion=1.14.0)"
+        required: false
+        type: string
+        default: ''
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    uses: ./.github/workflows/release-base.yml
+    with:
+      version: ${{ inputs.version }}
+      dependency-overrides: ${{ inputs.dependency-overrides }}
+      project-name: RepoDb.Telemetry.Core
+      project-path: RepoDb.Telemetry.Core/RepoDb.Telemetry.Core.csproj

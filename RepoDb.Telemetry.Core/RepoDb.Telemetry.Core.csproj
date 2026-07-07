@@ -6,6 +6,13 @@
     <Description>The telemetry's core package of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.Telemetry.Default), independently of the consuming package's own -p:Version.
+      Pass -p:RepoDbTelemetryCoreVersion=<version> to set it. PackageVersion is used (not Version)
+      because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbTelemetryCoreVersion)' != ''">$(RepoDbTelemetryCoreVersion)</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
