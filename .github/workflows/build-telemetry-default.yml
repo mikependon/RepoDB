@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.Telemetry.Default (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Telemetry.Core/**'
+      - 'RepoDb.Telemetry.Default/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-telemetry-default.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Telemetry.Default
+      solution-file: RepoDb.Telemetry.Default.sln
+      artifact-name: release-telemetry-default
