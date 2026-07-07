@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 
 </Project>

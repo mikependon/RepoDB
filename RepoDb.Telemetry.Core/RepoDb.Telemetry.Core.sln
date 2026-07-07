@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Telemetry.Core", "RepoDb.Telemetry.Core.csproj", "{1C7BF0CC-03A4-4CF4-B280-DFF27852CB2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Telemetry.Core", "RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj", "{1C7BF0CC-03A4-4CF4-B280-DFF27852CB2C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{0251437F-0782-4C26-8D79-E72C4B8C48CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Telemetry.Core.UnitTests", "RepoDb.Telemetry.Core.UnitTests\RepoDb.Telemetry.Core.UnitTests\RepoDb.Telemetry.Core.UnitTests.csproj", "{21B9652F-45DE-4DAB-993B-01CCEC6FB934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0251437F-0782-4C26-8D79-E72C4B8C48CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0251437F-0782-4C26-8D79-E72C4B8C48CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0251437F-0782-4C26-8D79-E72C4B8C48CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B9652F-45DE-4DAB-993B-01CCEC6FB934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B9652F-45DE-4DAB-993B-01CCEC6FB934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B9652F-45DE-4DAB-993B-01CCEC6FB934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B9652F-45DE-4DAB-993B-01CCEC6FB934}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

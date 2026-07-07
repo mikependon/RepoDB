@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj" />
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj" />
   </ItemGroup>
 
 </Project>
