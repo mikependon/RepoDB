@@ -6,6 +6,13 @@
     <Description>The telemetry's core package of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm telemetry</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Telemetry.Core</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/telemetrycore</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <!--
       Pins the version this project is stamped as when it is a ProjectReference dependency of another
       package (e.g. RepoDb.Telemetry.Default), independently of the consuming package's own -p:Version.
@@ -22,6 +29,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 
 </Project>

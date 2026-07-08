@@ -6,6 +6,13 @@
     <Description>The default telemetry package for RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm telemetry</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Telemetry.Default</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/telemetrydefault</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +22,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core\RepoDb.Telemetry.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
   </ItemGroup>
 
 </Project>
