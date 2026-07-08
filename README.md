@@ -78,6 +78,31 @@ RepoDB uses ADO.NET's native coercion by default, keeping type mismatches visibl
 RepoDb.Converter.ConversionType = ConversionType.Automatic;
 ```
 
+## Telemetry
+
+RepoDB ships with opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md), built on top of [`RepoDb.Telemetry.Core`](RepoDb.Telemetry.Core/README.md). It wires up a default `ITrace` that captures every operation (Insert, Query, Update, Delete, etc.) and publishes it to an insights collector — no custom `ITrace` implementation required.
+
+```csharp
+GlobalConfiguration
+    .Setup(new GlobalConfigurationOptions { UseRegisteredGlobalTraces = true })
+    .UseDefaultTelemetry(
+        host: "https://your-collector-host",
+        apiKey: "YOUR_API_KEY",
+        applicationName: "MyApp",
+        groupName: "Default");
+```
+
+**Benefits:**
+
+- **Zero-effort visibility** — every operation across every connection is traced automatically once enabled, with no per-call instrumentation.
+- **Lightweight by design** — captures a handful of properties per operation (statement, elapsed time, session id, client, source assembly, etc.) and buffers them in memory; nothing allocates spans or contexts per call.
+- **Non-intrusive** — items are batched, gzip-compressed, and flushed on an interval; publish failures never throw and are routed to an optional error callback and logger instead.
+- **Configurable** — application name, group, collector host, API key, and flush frequency are all adjustable via `DefaultTelemetryOption`.
+
+**Why not OpenTelemetry (OTel)?** This is a deliberate tradeoff, not an oversight. RepoDB's telemetry hooks directly into its own before/after execution events and serializes a lightweight payload straight to HTTP — skipping OTel's `Span`/`Activity` machinery, resource/attribute mapping, and collector protocol overhead in the hot path. For a library whose value proposition is being a thin, fast layer over ADO.NET, that overhead matters, and the capture shape mirrors RepoDB's own operation model rather than a generalized industry-wide schema.
+
+An OTel-based collector is planned as a separate, opt-in package for enterprise-grade scenarios (distributed tracing across services, vendor-neutral export to existing observability stacks). Until then, `RepoDb.Telemetry.Default` is the fast, zero-fuss path to seeing what your RepoDB operations are doing.
+
 ## Contributions
 
 We welcome contributions of all kinds — code, docs, bug reports, and ideas.
