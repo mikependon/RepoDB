@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.Telemetry.Default (Pull Request)
+name: PR - Build & Run Tests - RepoDb.Telemetry.Default
 
 on:
   workflow_dispatch:

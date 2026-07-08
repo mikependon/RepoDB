@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.MySqlConnector (Pull Request)
+name: PR - Build & Run Tests - RepoDb.MySqlConnector
 
 on:
   workflow_dispatch:

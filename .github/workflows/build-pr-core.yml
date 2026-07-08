@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.Core (Pull Request)
+name: PR - Build & Run Tests - RepoDb.Core
 
 on:
   workflow_dispatch:

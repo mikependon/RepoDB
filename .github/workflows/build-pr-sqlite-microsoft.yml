@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.Sqlite.Microsoft (Pull Request)
+name: PR - Build & Run Tests - RepoDb.Sqlite.Microsoft
 
 on:
   workflow_dispatch:

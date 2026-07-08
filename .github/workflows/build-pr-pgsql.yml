@@ -1,4 +1,4 @@
-name: Build & Run Tests - RepoDb.PostgreSql (Pull Request)
+name: PR - Build & Run Tests - RepoDb.PostgreSql
 
 on:
   workflow_dispatch:
