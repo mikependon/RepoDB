@@ -4,6 +4,10 @@ Drop-in telemetry for RepoDB. Wires up a default `ITrace` that captures every op
 
 Built on top of [`RepoDb.Telemetry.Core`](../RepoDb.Telemetry.Core/README.md).
 
+<img width="2556" height="1135" alt="image" src="https://github.com/user-attachments/assets/7ffdeb46-ebf8-4547-ab5e-974250d526e6" />
+
+<img width="2554" height="699" alt="image" src="https://github.com/user-attachments/assets/4a26150a-45da-4870-a4c5-377510f3ba2f" />
+
 ## Getting Started
 
 Install the package:
