@@ -47,6 +47,24 @@ Write raw SQL when you need full control. Use fluent methods when you want produ
 
 </details>
 
+### How It Compares
+
+RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different tradeoffs — pick the one that fits your project:
+
+| | RepoDB | Dapper | Entity Framework |
+|---|---|---|---|
+| **Abstraction level** | Hybrid — fluent CRUD + raw SQL | Micro-ORM — raw SQL mapping | Full ORM — LINQ, change tracking |
+| **Fluent CRUD API** | Yes (Insert, Query, Update, Delete, Merge, and [more](http://repodb.net/operation)) | No — write SQL per call | Yes, via LINQ and `DbSet` |
+| **Raw SQL, when needed** | Yes, freely mixed with fluent calls | Yes — its core model | Yes, via `FromSql`/raw queries |
+| **Change tracking** | None | None | Yes |
+| **Migrations tooling** | None built-in | None built-in | Yes (EF Migrations) |
+| **Bulk operations** | Built-in, cross-provider | Via extensions | Via extensions/third-party |
+| **Insights / telemetry** | Built-in, drop-in package ([`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md)) capturing per-operation metrics out of the box | None built-in — relies on manual instrumentation or third-party profilers (e.g. MiniProfiler) | Built-in logging/interceptors (`ILogger`, `DbCommandInterceptor`); broader APM/OTel support via community packages |
+| **Performance profile** | Close to raw ADO.NET | Close to raw ADO.NET | Overhead from change tracking/materialization |
+| **Best fit** | Teams wanting EF-like productivity without giving up SQL control | Teams wanting the thinnest possible SQL-to-object mapper | Teams wanting rich object graphs, LINQ, and migrations |
+
+Dapper and Entity Framework are both excellent, mature tools — this table reflects design tradeoffs, not a ranking. Choosing between them comes down to how much abstraction your team wants versus how much control you need over the SQL that runs.
+
 ## Get Started
 
 Choose your database and follow the quick-start guide:
