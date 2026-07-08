@@ -1,0 +1,18 @@
+name: Build & Run Tests - RepoDb.PostgreSql (Pull Request)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.PostgreSql/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-pgsql.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.PostgreSql
+      solution-file: RepoDb.PostgreSql.sln
+      artifact-name: release-pr

@@ -1,0 +1,17 @@
+name: Build & Run Tests - RepoDb.Core (Pull Request)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-core.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Core
+      solution-file: RepoDb.sln
+      artifact-name: release-pr
