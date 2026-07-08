@@ -47,24 +47,6 @@ Write raw SQL when you need full control. Use fluent methods when you want produ
 
 </details>
 
-### How It Compares
-
-RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different tradeoffs — pick the one that fits your project:
-
-| | RepoDB | Dapper | Entity Framework |
-|---|---|---|---|
-| **Abstraction level** | Hybrid — fluent CRUD + raw SQL | Micro-ORM — raw SQL mapping | Full ORM — LINQ, change tracking |
-| **Fluent CRUD API** | Yes (Insert, Query, Update, Delete, Merge, and [more](http://repodb.net/operation)) | No — write SQL per call | Yes, via LINQ and `DbSet` |
-| **Raw SQL, when needed** | Yes, freely mixed with fluent calls | Yes — its core model | Yes, via `FromSql`/raw queries |
-| **Change tracking** | None | None | Yes |
-| **Migrations tooling** | None built-in | None built-in | Yes (EF Migrations) |
-| **Bulk operations** | Built-in, cross-provider | Via extensions | Via extensions/third-party |
-| **Insights / telemetry** | Built-in, drop-in package ([`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md)) capturing per-operation metrics out of the box | None built-in — relies on manual instrumentation or third-party profilers (e.g. MiniProfiler) | Built-in logging/interceptors (`ILogger`, `DbCommandInterceptor`); broader APM/OTel support via community packages |
-| **Performance profile** | Close to raw ADO.NET | Close to raw ADO.NET | Overhead from change tracking/materialization |
-| **Best fit** | Teams wanting EF-like productivity without giving up SQL control | Teams wanting the thinnest possible SQL-to-object mapper | Teams wanting rich object graphs, LINQ, and migrations |
-
-Dapper and Entity Framework are both excellent, mature tools — this table reflects design tradeoffs, not a ranking. Choosing between them comes down to how much abstraction your team wants versus how much control you need over the SQL that runs.
-
 ## Get Started
 
 Choose your database and follow the quick-start guide:
@@ -96,9 +78,27 @@ RepoDB uses ADO.NET's native coercion by default, keeping type mismatches visibl
 RepoDb.Converter.ConversionType = ConversionType.Automatic;
 ```
 
+## How RepoDB Compares
+
+RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different tradeoffs — pick the one that fits your project:
+
+| | RepoDB | Dapper | Entity Framework |
+|---|---|---|---|
+| **Abstraction level** | Hybrid — fluent CRUD + raw SQL | Micro-ORM — raw SQL mapping | Full ORM — LINQ, change tracking |
+| **Fluent CRUD API** | Yes (Insert, Query, Update, Delete, Merge, [more](http://repodb.net/operation)) | No — SQL per call | Yes, via LINQ/`DbSet` |
+| **Raw SQL** | Yes, mixed freely with fluent calls | Yes — its core model | Yes, via `FromSql` |
+| **Change tracking** | None | None | Yes |
+| **Migrations** | None built-in | None built-in | Yes (EF Migrations) |
+| **Bulk operations** | Built-in, cross-provider | Via extensions | Via extensions/third-party |
+| **Insights / telemetry** | Built-in ([`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md)) | None built-in — manual or third-party (e.g. MiniProfiler) | Built-in logging/interceptors; OTel via community packages |
+| **Performance** | Close to raw ADO.NET | Close to raw ADO.NET | Overhead from tracking/materialization |
+| **Best fit** | EF-like productivity without losing SQL control | Thinnest possible SQL-to-object mapper | Rich object graphs, LINQ, migrations |
+
+Dapper and Entity Framework are both excellent, mature tools — this reflects design tradeoffs, not a ranking.
+
 ## Telemetry
 
-RepoDB ships with opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md), built on top of [`RepoDb.Telemetry.Core`](RepoDb.Telemetry.Core/README.md). It wires up a default `ITrace` that captures every operation (Insert, Query, Update, Delete, etc.) and publishes it to an insights collector — no custom `ITrace` implementation required.
+RepoDB includes opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
 
 ```csharp
 GlobalConfiguration
@@ -110,16 +110,7 @@ GlobalConfiguration
         groupName: "Default");
 ```
 
-**Benefits:**
-
-- **Zero-effort visibility** — every operation across every connection is traced automatically once enabled, with no per-call instrumentation.
-- **Lightweight by design** — captures a handful of properties per operation (statement, elapsed time, session id, client, source assembly, etc.) and buffers them in memory; nothing allocates spans or contexts per call.
-- **Non-intrusive** — items are batched, gzip-compressed, and flushed on an interval; publish failures never throw and are routed to an optional error callback and logger instead.
-- **Configurable** — application name, group, collector host, API key, and flush frequency are all adjustable via `DefaultTelemetryOption`.
-
-**Why not OpenTelemetry (OTel)?** This is a deliberate tradeoff, not an oversight. RepoDB's telemetry hooks directly into its own before/after execution events and serializes a lightweight payload straight to HTTP — skipping OTel's `Span`/`Activity` machinery, resource/attribute mapping, and collector protocol overhead in the hot path. For a library whose value proposition is being a thin, fast layer over ADO.NET, that overhead matters, and the capture shape mirrors RepoDB's own operation model rather than a generalized industry-wide schema.
-
-An OTel-based collector is planned as a separate, opt-in package for enterprise-grade scenarios (distributed tracing across services, vendor-neutral export to existing observability stacks). Until then, `RepoDb.Telemetry.Default` is the fast, zero-fuss path to seeing what your RepoDB operations are doing.
+It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.
 
 ## Contributions
 
@@ -155,7 +146,7 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 
 Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
-ATools and projects that make RepoDB possible: [GitHub](https://github.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/).
+Tools and projects that make RepoDB possible: [GitHub](https://github.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/).
 
 ## License
 
