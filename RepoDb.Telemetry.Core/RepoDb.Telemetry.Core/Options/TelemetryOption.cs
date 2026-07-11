@@ -33,7 +33,7 @@ namespace RepoDb.Telemetry.Core
         public string Host { get; set; } = "http://localhost:5000";
 
         /// <summary>
-        /// <param name="apiKey">The API key to be used for authentication. Leave this to empty if not provided in the collector API.</param>"
+        /// The API key to be used for authentication. Leave this to empty if not provided in the collector API.
         /// </summary>
         public string ApiKey { get; set; }
 
