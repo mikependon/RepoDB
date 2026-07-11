@@ -34,6 +34,17 @@ namespace RepoDb.Telemetry.Default
 
         #endregion
 
+        #region Overrides
+
+        /// <summary>
+        /// Gets the instance of <see cref="TelemetryPublisherRepository"/> that is used for publishing the telemetry data.
+        /// </summary>
+        /// <returns>Returns the instance of <see cref="DefaultTelemetryPublisherRepository"/> class.</returns>
+        public override TelemetryPublisherRepository GetPublisherRepository()
+            => new DefaultTelemetryPublisherRepository(Option.Host, Option.ApiKey, ErrorCallback, Logger);
+
+        #endregion
+
         #region Properties
 
         /// <summary>

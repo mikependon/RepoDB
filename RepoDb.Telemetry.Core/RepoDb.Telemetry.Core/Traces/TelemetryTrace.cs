@@ -13,7 +13,7 @@ namespace RepoDb.Telemetry.Core
     /// A class that is used to capture the telemetry of the library and send it to the insights solution.
     /// This is the default telemetry capturing of the library.
     /// </summary>
-    public class TelemetryTrace : ITrace
+    public abstract class TelemetryTrace : ITrace
     {
         #region Privates
 
@@ -21,7 +21,6 @@ namespace RepoDb.Telemetry.Core
         private static bool _isPublishing = false;
         private IDictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>> _beforeTraceLogs;
         private IDictionary<Guid, Tuple<DateTime, TimeSpan, object>> _afterTraceLogs;
-        private readonly TelemetryOption _option;
         private readonly Timer _timer;
         private readonly IPublisherRepository _publisherRepository;
 
@@ -38,21 +37,23 @@ namespace RepoDb.Telemetry.Core
         #region Constructors
 
         /// <summary>
-        /// 
+        /// Create an instance of <see cref="TelemetryTrace"/> class.
         /// </summary>
-        /// <param name="option"></param>
-        /// <param name="errorCallback"></param>
-        /// <param name="logger"></param>
+        /// <param name="option">The option object that contains the information about the telemetry emitting.</param>
+        /// <param name="errorCallback">The callback function to trigger when any error occurs.</param>
+        /// <param name="logger">The instance of logger to use to where to log the internal events.</param>
         public TelemetryTrace(
             TelemetryOption option,
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
-            _option = option;
+            Option = option;
+            ErrorCallback = errorCallback;
+            Logger = logger;
             _beforeTraceLogs = new Dictionary<Guid, Tuple<CancellableTraceLog, TelemetryItem>>();
             _afterTraceLogs = new Dictionary<Guid, Tuple<DateTime, TimeSpan, object>>();
             _timer = new Timer(callback: Callback);
-            _publisherRepository = new TelemetryPublisherRepository(option.Host, option.ApiKey, errorCallback, logger);
+            _publisherRepository = GetPublisherRepository();
         }
 
         #endregion
@@ -64,7 +65,7 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         public void Start()
         {
-            _timer.Change(_option.Frequency, _option.Frequency);
+            _timer.Change(Option.Frequency, Option.Frequency);
         }
 
         /// <summary>
@@ -112,6 +113,35 @@ namespace RepoDb.Telemetry.Core
             AddResultTraceLog(log);
             return Task.CompletedTask;
         }
+
+        #endregion
+
+        #region Abstracts
+
+        /// <summary>
+        /// Gets the instance of <see cref="TelemetryPublisherRepository"/> that is used for publishing the telemetry data.
+        /// </summary>
+        /// <returns>Returns the instance of <see cref="TelemetryPublisherRepository"/> class.</returns>
+        public abstract TelemetryPublisherRepository GetPublisherRepository();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the option object that contains the information about the telemetry emitting.
+        /// </summary>
+        public TelemetryOption Option { get; }
+
+        /// <summary>
+        /// Gets the callback function to trigger when any error occurs.
+        /// </summary>
+        public Action<Exception> ErrorCallback { get; }
+
+        /// <summary>
+        /// Gets the instance of logger to use to where to log the internal events.
+        /// </summary>
+        public ILogger Logger { get;  }
 
         #endregion
 
@@ -182,8 +212,8 @@ namespace RepoDb.Telemetry.Core
                 {
                     var item = new TelemetryItem
                     {
-                        Application = _option.Application,
-                        Group = _option.Group,
+                        Application = Option.Application,
+                        Group = Option.Group,
                         SessionId = log.SessionId,
                         Operation = log.Key,
                         StartTime = log.StartTime,
