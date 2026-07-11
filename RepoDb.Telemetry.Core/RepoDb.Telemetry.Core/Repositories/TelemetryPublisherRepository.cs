@@ -16,13 +16,11 @@ namespace RepoDb.Telemetry.Core
     /// <summary>
     /// A class that is used to publish the telemetry data to the insights solution.
     /// </summary>
-    public class TelemetryPublisherRepository : IPublisherRepository
+    public abstract class TelemetryPublisherRepository : IPublisherRepository
     {
         #region Privates
 
         private static readonly HttpClient _httpClient = new HttpClient();
-        private readonly string _host;
-        private readonly string _endpoint;
         private readonly string _apiKey;
         private readonly Action<Exception> _errorCallback;
         private readonly ILogger _logger;
@@ -44,12 +42,29 @@ namespace RepoDb.Telemetry.Core
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
-            _host = host;
-            _endpoint = $"{_host}/v1";
             _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
         }
+
+        #endregion
+
+        #region Abstract
+
+        /// <summary>
+        /// Gets the request URI where to publish the telemetry data. The URI will be appended after the <see cref="Host"/> to compose the target endpoint.
+        /// </summary>
+        /// <returns>The URI to where to publish the telemetry data.</returns>
+        public abstract string GetRequestUri();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the host of the teleemtry collector API.
+        /// </summary>
+        public string Host { get; private set;  }
 
         #endregion
 
@@ -86,7 +101,7 @@ namespace RepoDb.Telemetry.Core
                 using (var content = CreateCompressedContent(compressed))
                 using (var request = CreateRequest(content))
                 {
-                    _logger?.Debug("Publishing telemetry data to {Host}.", _host);
+                    _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = _httpClient
                         .SendAsync(request)
                         .GetAwaiter()
@@ -118,7 +133,7 @@ namespace RepoDb.Telemetry.Core
                 using (var content = CreateCompressedContent(compressed))
                 using (var request = CreateRequest(content))
                 {
-                    _logger?.Debug("Publishing telemetry data to {Host}.", _host);
+                    _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = await _httpClient
                         .SendAsync(request, cancellationToken);
                     result.EnsureSuccessStatusCode();
@@ -173,7 +188,7 @@ namespace RepoDb.Telemetry.Core
         private HttpRequestMessage CreateRequest(
             HttpContent content)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_endpoint}/telemetry/publish")
+            var request = new HttpRequestMessage(HttpMethod.Post, GetRequestUri())
             {
                 Content = content
             };
