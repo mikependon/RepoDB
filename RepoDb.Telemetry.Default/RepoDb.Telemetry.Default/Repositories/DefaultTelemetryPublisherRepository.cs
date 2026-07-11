@@ -28,6 +28,6 @@ namespace RepoDb.Telemetry.Default
         /// Gets the request URI where to publish the telemetry data. The URI will be appended after the <see cref="Host"/> to compose the target endpoint.
         /// </summary>
         /// <returns>The URI to where to publish the telemetry data.</returns>
-        public override string GetRequestUri() => $"v1/telemetry/default/publish";
+        public override string GetRequestUri() => $"v1/telemetry/default";
     }
 }

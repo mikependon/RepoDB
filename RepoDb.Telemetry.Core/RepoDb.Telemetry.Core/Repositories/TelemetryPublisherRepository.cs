@@ -1,11 +1,10 @@
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -42,6 +41,7 @@ namespace RepoDb.Telemetry.Core
             Action<Exception> errorCallback = null,
             ILogger logger = null)
         {
+            Host = host;
             _apiKey = apiKey;
             _errorCallback = errorCallback;
             _logger = logger;
@@ -99,7 +99,7 @@ namespace RepoDb.Telemetry.Core
             {
                 var compressed = ToCompressedJsonBytes(telemetryItems);
                 using (var content = CreateCompressedContent(compressed))
-                using (var request = CreateRequest(content))
+                using (var request = CreatePublishRequest(content))
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = _httpClient
@@ -131,7 +131,7 @@ namespace RepoDb.Telemetry.Core
             {
                 var compressed = ToCompressedJsonBytes(telemetryItems);
                 using (var content = CreateCompressedContent(compressed))
-                using (var request = CreateRequest(content))
+                using (var request = CreatePublishRequest(content))
                 {
                     _logger?.Debug("Publishing telemetry data to {Host}.", Host);
                     var result = await _httpClient
@@ -185,10 +185,11 @@ namespace RepoDb.Telemetry.Core
         /// </summary>
         /// <param name="content">The content to publish.</param>
         /// <returns></returns>
-        private HttpRequestMessage CreateRequest(
+        private HttpRequestMessage CreatePublishRequest(
             HttpContent content)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, GetRequestUri())
+            var requestUri = $"{Host}/{GetRequestUri()}/publish";
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
                 Content = content
             };
