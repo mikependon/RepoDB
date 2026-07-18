@@ -107,7 +107,7 @@ namespace RepoDb.Telemetry.Core
                         .GetAwaiter()
                         .GetResult();
                     result.EnsureSuccessStatusCode();
-                    _logger?.Debug("{Count} data has been published.", telemetryItems.Count());
+                    _logger?.Information("{Count} telemetry data has been published.", telemetryItems.Count());
                 }
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace RepoDb.Telemetry.Core
                     var result = await _httpClient
                         .SendAsync(request, cancellationToken);
                     result.EnsureSuccessStatusCode();
-                    _logger?.Debug("{Count} data has been published.", telemetryItems.Count());
+                    _logger?.Information("{Count} telemetry data has been published.", telemetryItems.Count());
                 }
             }
             catch (Exception ex)

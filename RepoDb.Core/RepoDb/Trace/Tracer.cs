@@ -32,7 +32,7 @@ namespace RepoDb
 
             var result = TraceResult.Create(key, command);
 
-            trace.BeforeExecution(result.CancellableTraceLog);
+            trace?.BeforeExecution(result.CancellableTraceLog);
 
             if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
             {
@@ -70,7 +70,7 @@ namespace RepoDb
 
             var result = TraceResult.Create(key, command);
 
-            await trace.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
+            await trace?.BeforeExecutionAsync(result.CancellableTraceLog, cancellationToken);
 
             if (GlobalConfiguration.Options.UseRegisteredGlobalTraces)
             {
