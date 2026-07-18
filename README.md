@@ -100,6 +100,14 @@ Dapper and Entity Framework are both excellent, mature tools — this reflects d
 
 RepoDB includes opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
 
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/repodb-insights-default-telemetry-banner.png" />
+
+It comes with great and simple dashboards visualization.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/announcements/2026-07-17/grafana-welcome-dashboard.png" />
+
+Integrating your code.
+
 ```csharp
 GlobalConfiguration
     .Setup(new GlobalConfigurationOptions { UseRegisteredGlobalTraces = true })
