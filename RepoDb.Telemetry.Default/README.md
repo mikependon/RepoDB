@@ -94,3 +94,75 @@ GlobalConfiguration
 | `Frequency` | How often buffered telemetry is flushed. | `5` seconds |
 
 `UseDefaultTelemetry` is idempotent — calling it again reuses the same underlying tracer instance rather than starting a new one.
+
+## What's with Docker Compose
+
+The `docker-compose.yml` at the root of this project spins up a complete, self-hosted telemetry stack: a Postgres database, the HTTP collector your app publishes to, a query API, two background workers (a file data sinker and a purger), and a Grafana-based visualization dashboard.
+
+Most settings are supplied as environment variables using the `${VAR:-default}` pattern, so they can be overridden without touching the compose file — either by exporting them in your shell or by placing a `.env` file next to `docker-compose.yml`. A few values (like the Postgres password on the `pgsql` service itself) are hardcoded and would need a direct edit to the compose file to change.
+
+### pgsql
+
+The Postgres database backing the entire stack — the collector writes to it, and the query, filedatasinker, purger, and visualization services all read from it.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `POSTGRES_PASSWORD` | Password for the Postgres superuser, used to initialize the database. Hardcoded in the compose file rather than sourced from a `${...}` variable, so changing it means editing `docker-compose.yml` directly — and keeping it in sync with `REPODB_PG_PASSWORD` used elsewhere. | `RepoDB2026` |
+
+### collector
+
+The HTTP endpoint your application publishes telemetry to (this is the `host` you pass to `UseDefaultTelemetry`). It validates the API key and writes incoming batches to Postgres.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `API_KEY` | API key required via the `X-API-Key` header on publish requests. Should match the `apiKey` your app passes to `UseDefaultTelemetry`. Sourced from `REPODB_API_KEY`. | `RepoDB2026` |
+| `CONNECTION_STRING` | PostgreSQL connection string used to persist published telemetry into the `repodb_insights` database. The password segment is sourced from `REPODB_PG_PASSWORD`. | `postgresql://postgres:RepoDB2026@pgsql:5432/repodb_insights` |
+
+### query
+
+The read API that serves telemetry data to the visualization dashboard.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `API_KEY` | API key required to authenticate query requests. Sourced from `REPODB_API_KEY`. | `RepoDB2026` |
+| `CONNECTION_STRING` | PostgreSQL connection string used to read telemetry data. The password segment is sourced from `REPODB_PG_PASSWORD`. | `postgresql://postgres:RepoDB2026@pgsql:5432/repodb_insights` |
+| `DIRECTORY_PATH` | Path inside the container where telemetry files (staged by `filedatasinker`) are read from. Backed by the shared `telemetry_data` volume. | `/tmp/repodb/telemetry` |
+| `ALLOWED_ORIGINS` | CORS-allowed origin permitted to call the query API — normally the URL the visualization dashboard is served from. Sourced from `REPODB_VISUALIZATION_ORIGIN`. | `http://localhost:3000` |
+
+### filedatasinker
+
+A background worker that periodically exports telemetry data from Postgres into flat files for downstream consumption by the `query` service.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `CONNECTION_STRING` | PostgreSQL connection string the sinker reads telemetry from. The password segment is sourced from `REPODB_PG_PASSWORD`. | `postgresql://postgres:RepoDB2026@pgsql:5432/repodb_insights` |
+| `DIRECTORY_PATH` | Path inside the container where exported telemetry files are written. Backed by the shared `telemetry_data` volume. | `/tmp/repodb/telemetry` |
+| `FREQUENCY_IN_MINUTES` | How often, in minutes, the sinker runs its export pass. Sourced from `REPODB_FILEDATASINKER_FREQUENCY_IN_MINUTES`. | `60` |
+
+### purger
+
+A background worker that deletes telemetry records older than a configured retention window, keeping the Postgres database from growing unbounded.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `CONNECTION_STRING` | PostgreSQL connection string the purger deletes records through. The password segment is sourced from `REPODB_PG_PASSWORD`. | `postgresql://postgres:RepoDB2026@pgsql:5432/repodb_insights` |
+| `RETENTION_PERIOD_IN_MINUTES` | How long, in minutes, telemetry records are kept before being eligible for deletion. Sourced from `REPODB_PURGER_RETENTION_PERIOD_IN_MINUTES`. | `10080` (7 days) |
+| `FREQUENCY_IN_MINUTES` | How often, in minutes, the purger runs its cleanup pass. Sourced from `REPODB_PURGER_FREQUENCY_IN_MINUTES`. | `5` |
+
+### visualization
+
+The Grafana-based dashboard used to browse and chart the telemetry your app has published.
+
+| Environment Variable | Description | Default |
+|---|---|---|
+| `GF_SECURITY_ADMIN_PASSWORD` | Admin password for signing into the Grafana dashboard. | `RepoDB2026` |
+| `REPODB_PG_HOST` | Postgres host the dashboard's data source connects to. | `pgsql` |
+| `REPODB_PG_PORT` | Postgres port the dashboard's data source connects to. | `5432` |
+| `REPODB_PG_PASSWORD` | Postgres password used by the dashboard's data source connection. | `RepoDB2026` |
+| `REPODB_COMPANY_NAME` | Company name shown in the dashboard's branding. | `Your Company Name` |
+| `REPODB_COMPANY_LOGO` | URL of the logo shown in the dashboard's branding. | RepoDB's logo on GitHub |
+| `REPODB_API_KEY` | API key the dashboard uses when calling the collector/query API. | `RepoDB2026` |
+
+### Volumes and networks
+
+Two named volumes persist state across restarts: `pgdata` (the Postgres data directory) and `telemetry_data` (the shared directory `filedatasinker` writes to and `query` reads from). All services share a single bridge network, `repodb`, so they can reach each other by service name (e.g. `pgsql`, `collector`).
