@@ -16,7 +16,7 @@ services:
     container_name: collector
     environment:
       API_KEY: ${REPODB_API_KEY:-RepoDB2026}
-      CONNECTION_STRING: postgresql://postgres:${REPODB_PG_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
     ports:
       - "5000:5000"
     depends_on:
@@ -29,7 +29,7 @@ services:
     container_name: query
     environment:
       API_KEY: ${REPODB_API_KEY:-RepoDB2026}
-      CONNECTION_STRING: postgresql://postgres:${REPODB_PG_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
       DIRECTORY_PATH: /tmp/repodb/telemetry
       ALLOWED_ORIGINS: ${REPODB_VISUALIZATION_ORIGIN:-http://localhost:3000}
     volumes:
@@ -46,7 +46,7 @@ services:
     container_name: filedatasinker
     cpus: 0.25
     environment:
-      CONNECTION_STRING: postgresql://postgres:${REPODB_PG_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
       DIRECTORY_PATH: /tmp/repodb/telemetry
       FREQUENCY_IN_MINUTES: ${REPODB_FILEDATASINKER_FREQUENCY_IN_MINUTES:-60}
     volumes:
@@ -61,7 +61,7 @@ services:
     container_name: purger
     cpus: 0.25
     environment:
-      CONNECTION_STRING: postgresql://postgres:${REPODB_PG_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
+      CONNECTION_STRING: postgresql://postgres:${REPODB_PGSQL_PASSWORD:-RepoDB2026}@pgsql:5432/repodb_insights
       RETENTION_PERIOD_IN_MINUTES: ${REPODB_PURGER_RETENTION_PERIOD_IN_MINUTES:-10080}
       FREQUENCY_IN_MINUTES: ${REPODB_PURGER_FREQUENCY_IN_MINUTES:-5}
     depends_on:
@@ -73,12 +73,12 @@ services:
     image: repodb/insights-visualization:latest
     container_name: visualization
     environment:
-      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:-RepoDB2026}
-      REPODB_PG_HOST: ${REPODB_PG_HOST:-pgsql}
-      REPODB_PG_PORT: ${REPODB_PG_PORT:-5432}
-      REPODB_PG_PASSWORD: ${REPODB_PG_PASSWORD:-RepoDB2026}
-      REPODB_COMPANY_NAME: ${REPODB_COMPANY_NAME:-Your Company Name}
-      REPODB_COMPANY_LOGO: ${REPODB_COMPANY_LOGO:-https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/128x128.png}
+      GF_SECURITY_ADMIN_PASSWORD: ${REPODB_VISUALIZATION_ADMIN_PASSWORD:-RepoDB2026}
+      REPODB_PG_HOST: pgsql
+      REPODB_PG_PORT: 5432
+      REPODB_PG_PASSWORD: ${REPODB_PGSQL_PASSWORD:-RepoDB2026}
+      REPODB_COMPANY_NAME: ${REPODB_VISUALIZATION_COMPANY_NAME:-Your Company Name}
+      REPODB_COMPANY_LOGO: ${REPODB_VISUALIZATION_COMPANY_LOGO:-https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/128x128.png}
       REPODB_API_KEY: ${REPODB_API_KEY:-RepoDB2026}
     ports:
       - "3000:3000"
