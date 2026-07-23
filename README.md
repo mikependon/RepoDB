@@ -104,8 +104,6 @@ RepoDB includes opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoD
 
 It comes with great and simple dashboards visualization.
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/announcements/2026-07-17/grafana-welcome-dashboard.png" />
-
 Integrating your code.
 
 ```csharp
