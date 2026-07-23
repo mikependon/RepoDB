@@ -2,9 +2,11 @@
 [![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 
-# [RepoDB](http://repodb.net) — a Hybrid ORM for .NET
+# [RepoDB](http://repodb.net) — a production-ready data access platform for .NET applications.
 
-RepoDB is a fast, lightweight, open-source .NET ORM that bridges micro-ORM simplicity with full-ORM power. Use raw SQL when you need control; use fluent methods when you want productivity — all from the same `IDbConnection`.
+RepoDB is a high-performance, open-source data access platform for .NET applications. It combines the simplicity of a micro-ORM with the productivity of a full ORM, giving developers the freedom to use raw SQL for precise control or fluent operations for faster development—all through the same IDbConnection.
+
+Write raw SQL when you need full control. Use fluent methods when you want productivity. Switch between them freely, in the same codebase.
 
 ## Important Pages
 
