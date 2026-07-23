@@ -33,12 +33,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>((object)null);
+                var result = connection.Count<IdentityCompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -49,13 +49,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>(e => ids.Contains(e.Id));
+                var result = connection.Count<IdentityCompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -66,12 +66,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>(new { tables.First().Id });
+                var result = connection.Count<IdentityCompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -82,12 +82,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = connection.Count<IdentityCompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -98,7 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -108,7 +108,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>(queryFields);
+                var result = connection.Count<IdentityCompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -119,7 +119,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -130,7 +130,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>(queryGroup);
+                var result = connection.Count<IdentityCompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -141,12 +141,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<CompleteTable>((object)null,
+                var result = connection.Count<IdentityCompleteTable>((object)null,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -162,12 +162,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>((object)null);
+                var result = await connection.CountAsync<IdentityCompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -178,13 +178,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
+                var result = await connection.CountAsync<IdentityCompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -195,12 +195,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
+                var result = await connection.CountAsync<IdentityCompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -211,12 +211,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
+                var result = await connection.CountAsync<IdentityCompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -227,7 +227,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -237,7 +237,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryFields);
+                var result = await connection.CountAsync<IdentityCompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -248,7 +248,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -259,7 +259,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>(queryGroup);
+                var result = await connection.CountAsync<IdentityCompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -270,12 +270,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync<CompleteTable>((object)null,
+                var result = await connection.CountAsync<IdentityCompleteTable>((object)null,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -295,12 +295,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null);
 
                 // Assert
@@ -312,12 +312,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new { tables.First().Id });
 
                 // Assert
@@ -329,12 +329,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -346,7 +346,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -356,7 +356,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     queryFields);
 
                 // Assert
@@ -368,7 +368,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -379,7 +379,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     queryGroup);
 
                 // Assert
@@ -391,12 +391,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -413,12 +413,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null);
 
                 // Assert
@@ -430,12 +430,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new { tables.First().Id });
 
                 // Assert
@@ -447,12 +447,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -464,7 +464,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -474,7 +474,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     queryFields);
 
                 // Assert
@@ -486,7 +486,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -497,7 +497,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     queryGroup);
 
                 // Assert
@@ -509,12 +509,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     (object)null,
                     SqlServerTableHints.NoLock);
 

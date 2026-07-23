@@ -33,12 +33,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT2()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2);
@@ -55,12 +55,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT3()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
@@ -81,12 +81,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT4()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -111,12 +111,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT5()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -145,12 +145,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT6()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -183,12 +183,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT7()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -225,12 +225,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryMultipleForT2WithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
@@ -253,12 +253,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT2()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2);
@@ -275,12 +275,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT3()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
@@ -301,12 +301,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT4()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -331,12 +331,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT5()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -365,12 +365,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT6()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -403,12 +403,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT7()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -445,12 +445,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryMultipleAsyncForT2WithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<IdentityCompleteTable, IdentityCompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,

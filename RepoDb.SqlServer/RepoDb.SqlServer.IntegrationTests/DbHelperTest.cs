@@ -37,14 +37,14 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "CompleteTable", null);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
 	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "IdentityCompleteTable" }))
                 {
                     var fieldCount = 0;
 
@@ -74,7 +74,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "CompleteTable", null);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -92,7 +92,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFields(connection, "CompleteTable", null);
+                var fields = helper.GetFields(connection, "IdentityCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -114,14 +114,14 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
                     FROM INFORMATION_SCHEMA.COLUMNS
                     WHERE
 	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                    ORDER BY ORDINAL_POSITION;", new { TableName = "IdentityCompleteTable" }))
                 {
                     var fieldCount = 0;
 
@@ -151,7 +151,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -169,7 +169,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
+                var fields = await helper.GetFieldsAsync(connection, "IdentityCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -193,10 +193,10 @@ namespace RepoDb.SqlServer.IntegrationTests
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var table = Helper.CreateCompleteTables(1).First();
+                var table = Helper.CreateIdentityCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<CompleteTable, long>(table);
+                var insertResult = connection.Insert<IdentityCompleteTable, long>(table);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
@@ -221,10 +221,10 @@ namespace RepoDb.SqlServer.IntegrationTests
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var table = Helper.CreateCompleteTables(1).First();
+                var table = Helper.CreateIdentityCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<CompleteTable, long>(table);
+                var insertResult = connection.Insert<IdentityCompleteTable, long>(table);
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);

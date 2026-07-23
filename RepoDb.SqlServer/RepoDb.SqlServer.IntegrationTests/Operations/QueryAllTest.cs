@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -49,12 +49,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAllWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>(hints: SqlServerTableHints.NoLock);
+                var queryResult = connection.QueryAll<IdentityCompleteTable>(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -70,12 +70,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -87,12 +87,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAllAsyncWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>(hints: SqlServerTableHints.NoLock);
+                var queryResult = connection.QueryAll<IdentityCompleteTable>(hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -112,12 +112,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<CompleteTable>());
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityCompleteTable>());
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -129,12 +129,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionQueryAllViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     hints: SqlServerTableHints.NoLock);
 
                 // Assert
@@ -151,12 +151,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -168,12 +168,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     hints: SqlServerTableHints.NoLock);
 
                 // Assert
