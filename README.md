@@ -3,9 +3,9 @@
 [![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![MsTeams](https://img.shields.io/badge/chat-microsoft%20teams-6264A7?&logo=microsoftteams&logoColor=white&style=for-the-badge)](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
 
-# RepoDB — a Hybrid ORM for .NET
+# RepoDB — a production-ready data access platform for .NET applications.
 
-RepoDB is a fast, lightweight, and open-source .NET ORM that gives you the best of both worlds: the simplicity of a micro-ORM and the power of a full ORM — without the overhead.
+RepoDB is a high-performance, open-source data access platform for .NET applications. It combines the simplicity of a micro-ORM with the productivity of a full ORM, giving developers the freedom to use raw SQL for precise control or fluent operations for faster development—all through the same IDbConnection.
 
 Write raw SQL when you need full control. Use fluent methods when you want productivity. Switch between them freely, in the same codebase.
 
