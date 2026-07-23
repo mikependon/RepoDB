@@ -30,13 +30,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionTruncate()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Truncate<CompleteTable>();
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = connection.Truncate<IdentityCompleteTable>();
+                var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -51,13 +51,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionTruncateAsyncWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync<CompleteTable>();
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = await connection.TruncateAsync<IdentityCompleteTable>();
+                var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -76,13 +76,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionTruncateViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Truncate(ClassMappedNameCache.Get<CompleteTable>());
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = connection.Truncate(ClassMappedNameCache.Get<IdentityCompleteTable>());
+                var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -97,13 +97,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
+                var countResult = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);

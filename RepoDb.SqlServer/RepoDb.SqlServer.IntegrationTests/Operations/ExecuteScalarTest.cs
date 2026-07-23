@@ -29,12 +29,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteScalar()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -45,12 +45,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteScalarWithReturnType()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -65,12 +65,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteScalarAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -81,12 +81,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteScalarAsyncWithReturnType()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

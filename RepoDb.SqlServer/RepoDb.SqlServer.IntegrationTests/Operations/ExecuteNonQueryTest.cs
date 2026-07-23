@@ -28,12 +28,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteNonQuery()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\";");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -44,12 +44,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteNonQueryWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                var result = connection.ExecuteNonQuery("DELETE FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -61,12 +61,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteNonQueryWithMultipleStatement()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"IdentityCompleteTable\"; DELETE FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -81,12 +81,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteNonQueryAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -97,12 +97,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteNonQueryAsyncWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -114,12 +114,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"IdentityCompleteTable\"; DELETE FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

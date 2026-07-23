@@ -33,12 +33,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -50,13 +50,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -68,12 +68,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -102,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -112,7 +112,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -124,7 +124,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -135,7 +135,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -147,12 +147,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -169,12 +169,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -186,13 +186,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -204,12 +204,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -221,12 +221,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -238,7 +238,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -248,7 +248,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -260,7 +260,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -271,7 +271,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -283,12 +283,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -309,12 +309,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -327,12 +327,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -345,12 +345,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -363,7 +363,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -373,7 +373,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -397,7 +397,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -410,12 +410,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);
@@ -433,12 +433,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -451,12 +451,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -469,12 +469,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -487,7 +487,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -497,7 +497,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -510,7 +510,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -521,7 +521,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -534,12 +534,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MinAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);

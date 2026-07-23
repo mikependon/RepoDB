@@ -1,6 +1,6 @@
 ﻿namespace RepoDb.SqlServer.IntegrationTests.Models
 {
-    public class CompleteTable
+    public class IdentityCompleteTable
     {
         public System.Int32 Id { get; set; }
         public System.Guid SessionId { get; set; }

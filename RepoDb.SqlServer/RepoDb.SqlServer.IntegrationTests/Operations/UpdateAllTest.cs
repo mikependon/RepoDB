@@ -32,7 +32,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionUpdateAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -40,13 +40,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAll<CompleteTable>(tables);
+                var result = connection.UpdateAll<IdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -62,7 +62,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionUpdateAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -70,13 +70,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+                var result = await connection.UpdateAllAsync<IdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -96,7 +96,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionUpdateAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -104,14 +104,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.UpdateAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -123,7 +123,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionUpdateAllViaExpandoObjectTableName()
         {
             // Setup
-            Database.CreateCompleteTables(10);
+            Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -131,14 +131,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.UpdateAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.UpdateAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionUpdateAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -162,14 +162,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -181,7 +181,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionUpdateAllAsyncViaExpandoObjectTableName()
         {
             // Setup
-            Database.CreateCompleteTables(10);
+            Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -189,14 +189,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 tables.AsList().ForEach(table =>

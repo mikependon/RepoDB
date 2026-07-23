@@ -49,14 +49,18 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
             // Create tables
             CreateTables();
+
+            // Create the table used to prove trigger compatibility
+            CreateTablesWithTrigger();
         }
 
         public static void Cleanup()
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                connection.Truncate<CompleteTable>();
+                connection.Truncate<IdentityCompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate<TriggerCompatibilityTable>();
             }
         }
 
@@ -82,15 +86,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
         private static void CreateTables()
         {
-            CreateCompleteTable();
+            CreateIdentityCompleteTable();
             CreateNonIdentityCompleteTable();
         }
 
-        private static void CreateCompleteTable()
+        private static void CreateIdentityCompleteTable()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'CompleteTable'))
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'IdentityCompleteTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[CompleteTable]
+	                CREATE TABLE [dbo].[IdentityCompleteTable]
 	                (
                         [Id] INT IDENTITY(1, 1),
 		                [SessionId] UNIQUEIDENTIFIER NOT NULL,
@@ -194,13 +198,47 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
         #endregion
 
+        #region CreateTablesWithTrigger
+
+        /// <summary>
+        /// Creates a table that has an enabled AFTER INSERT trigger, used to prove that
+        /// InsertAll/Merge/MergeAll no longer throw the SQL Server "OUTPUT clause without
+        /// INTO" error on tables that have enabled triggers.
+        /// </summary>
+        public static void CreateTablesWithTrigger()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TriggerCompatibilityTable'))
+                BEGIN
+	                CREATE TABLE [dbo].[TriggerCompatibilityTable]
+	                (
+                        [Id] INT IDENTITY(1, 1) NOT NULL,
+		                [Name] NVARCHAR(128) NULL,
+		                CONSTRAINT [TriggerCompatibilityTable_Id] PRIMARY KEY
+		                (
+			                [Id] ASC
+		                )
+	                ) ON [PRIMARY];
+                END";
+            var triggerCommandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[triggers] WHERE name = 'trg_TriggerCompatibilityTable_AfterInsert'))
+                BEGIN
+	                EXEC('CREATE TRIGGER [dbo].[trg_TriggerCompatibilityTable_AfterInsert] ON [dbo].[TriggerCompatibilityTable] AFTER INSERT AS BEGIN SET NOCOUNT ON; END');
+                END";
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+                connection.ExecuteNonQuery(triggerCommandText);
+            }
+        }
+
+        #endregion
+
         #region CompleteTable
 
-        public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
+        public static IEnumerable<IdentityCompleteTable> CreateIdentityCompleteTables(int count)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                var tables = Helper.CreateCompleteTables(count);
+                var tables = Helper.CreateIdentityCompleteTables(count);
                 connection.InsertAll(tables);
                 return tables;
             }

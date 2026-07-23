@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAll<CompleteTable>();
+                var result = connection.CountAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -48,12 +48,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountAllWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAll<CompleteTable>(SqlServerTableHints.NoLock);
+                var result = connection.CountAll<IdentityCompleteTable>(SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -68,12 +68,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync<CompleteTable>();
+                var result = await connection.CountAllAsync<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -84,12 +84,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAllAsyncWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync<CompleteTable>(SqlServerTableHints.NoLock);
+                var result = await connection.CountAllAsync<IdentityCompleteTable>(SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -108,12 +108,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAll(ClassMappedNameCache.Get<CompleteTable>());
+                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityCompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -124,12 +124,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionCountAllViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.CountAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -145,12 +145,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -161,12 +161,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     SqlServerTableHints.NoLock);
 
                 // Assert

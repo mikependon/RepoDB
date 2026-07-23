@@ -146,15 +146,15 @@ namespace RepoDb.SqlServer.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static List<CompleteTable> CreateCompleteTables(int count)
+        public static List<IdentityCompleteTable> CreateIdentityCompleteTables(int count)
         {
-            var tables = new List<CompleteTable>();
+            var tables = new List<IdentityCompleteTable>();
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
-                tables.Add(new CompleteTable
+                tables.Add(new IdentityCompleteTable
                 {
                     Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
@@ -200,7 +200,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         /// 
         /// </summary>
         /// <param name="table"></param>
-        public static void UpdateCompleteTableProperties(CompleteTable table)
+        public static void UpdateCompleteTableProperties(IdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),

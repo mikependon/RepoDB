@@ -30,7 +30,7 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #region Classes
 
-        [Table("CompleteTable")]
+        [Table("IdentityCompleteTable")]
         public class MdsAttributeTable
         {
             public int Id { get; set; }

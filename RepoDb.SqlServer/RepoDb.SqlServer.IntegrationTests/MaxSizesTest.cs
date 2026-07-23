@@ -28,14 +28,14 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #region SubClasses
 
-        [Map("[dbo].[CompleteTable]")]
+        [Map("[dbo].[IdentityCompleteTable]")]
         private class MaxNVarCharClass
         {
             public Guid SessionId { get; set; }
             public string ColumnNVarChar { get; set; }
         }
 
-        [Map("[dbo].[CompleteTable]")]
+        [Map("[dbo].[IdentityCompleteTable]")]
         private class MaxVarBinaryClass
         {
             public Guid SessionId { get; set; }
