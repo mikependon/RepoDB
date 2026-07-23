@@ -49,6 +49,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
             // Create tables
             CreateTables();
+
+            // Create the table used to prove trigger compatibility
+            CreateTablesWithTrigger();
         }
 
         public static void Cleanup()
@@ -57,6 +60,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate<TriggerCompatibilityTable>();
             }
         }
 
@@ -189,6 +193,40 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        #endregion
+
+        #region CreateTablesWithTrigger
+
+        /// <summary>
+        /// Creates a table that has an enabled AFTER INSERT trigger, used to prove that
+        /// InsertAll/Merge/MergeAll no longer throw the SQL Server "OUTPUT clause without
+        /// INTO" error on tables that have enabled triggers.
+        /// </summary>
+        public static void CreateTablesWithTrigger()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TriggerCompatibilityTable'))
+                BEGIN
+	                CREATE TABLE [dbo].[TriggerCompatibilityTable]
+	                (
+                        [Id] INT IDENTITY(1, 1) NOT NULL,
+		                [Name] NVARCHAR(128) NULL,
+		                CONSTRAINT [TriggerCompatibilityTable_Id] PRIMARY KEY
+		                (
+			                [Id] ASC
+		                )
+	                ) ON [PRIMARY];
+                END";
+            var triggerCommandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[triggers] WHERE name = 'trg_TriggerCompatibilityTable_AfterInsert'))
+                BEGIN
+	                EXEC('CREATE TRIGGER [dbo].[trg_TriggerCompatibilityTable_AfterInsert] ON [dbo].[TriggerCompatibilityTable] AFTER INSERT AS BEGIN SET NOCOUNT ON; END');
+                END";
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+                connection.ExecuteNonQuery(triggerCommandText);
             }
         }
 

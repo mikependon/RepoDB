@@ -285,8 +285,16 @@ namespace RepoDb.StatementBuilders
                     string.IsNullOrWhiteSpace(databaseType) ?
                         string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
                             string.Concat("CONVERT(", databaseType, ", [INSERTED].", keyColumn.Name.AsQuoted(DbSetting), ")");
-                var result = string.Concat("OUTPUT ", returnValue, $" AS [Result] ");
-                commandText = commandText.Insert(commandText.IndexOf("SELECT"), result);
+
+                // SQL Server disallows an OUTPUT clause without INTO on a target table that has
+                // any enabled triggers. Route the OUTPUT into a table variable instead of
+                // returning it directly, then SELECT it back out as a second statement.
+                var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
+                var declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Id] INT IDENTITY(1,1), [Result] ", resultType, " ) ; ");
+                var output = string.Concat("OUTPUT ", returnValue, " INTO @__RepoDb_OutputTable ( [Result] ) ");
+
+                commandText = commandText.Insert(commandText.IndexOf("SELECT"), output);
+                commandText = string.Concat(declare, commandText, " SELECT [Result] FROM @__RepoDb_OutputTable ORDER BY [Id] ;");
             }
 
             // Return the query
@@ -419,20 +427,39 @@ namespace RepoDb.StatementBuilders
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            string declare = null;
 
             // Set the output
             if (keyColumn != null)
             {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
+
+                // SQL Server disallows an OUTPUT clause without INTO on a target table that has
+                // any enabled triggers. Route the OUTPUT into a table variable instead of
+                // returning it directly, then SELECT it back out as a second statement.
+                declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Result] ", resultType, " ) ; ");
+
                 builder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
-                    .As("[Result]");
+                    .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting),
+                        " INTO @__RepoDb_OutputTable ( [Result] )"));
             }
 
             // End the builder
             builder.End();
 
+            // Get the command text
+            var commandText = builder.GetString();
+
+            // Wrap with the declare/select if needed
+            if (declare != null)
+            {
+                commandText = string.Concat(declare, commandText, " SELECT [Result] FROM @__RepoDb_OutputTable ;");
+            }
+
             // Return the query
-            return builder.GetString();
+            return commandText;
         }
 
         #endregion
@@ -523,6 +550,20 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear();
 
+            // SQL Server disallows an OUTPUT clause without INTO on a target table that has
+            // any enabled triggers. Route the OUTPUT of every batched MERGE statement into a
+            // shared table variable instead of returning it directly, then SELECT it back out
+            // as a final statement.
+            string declare = null;
+            if (keyColumn != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var resultType = string.IsNullOrWhiteSpace(databaseType) ? "SQL_VARIANT" : databaseType;
+
+                declare = string.Concat("DECLARE @__RepoDb_OutputTable TABLE ( [Result] ", resultType, ", [__RepoDb_OrderColumn] INT ) ; ");
+            }
+
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
             {
@@ -569,19 +610,28 @@ namespace RepoDb.StatementBuilders
                 // Set the output
                 if (keyColumn != null)
                 {
-                    builder
-                        .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
-                            .As("[Result],")
-                        .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
-                            .As("[__RepoDb_OrderColumn]");
+                    builder.WriteText(string.Concat(
+                        "OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting),
+                        ", ", DbSetting.ParameterPrefix, "__RepoDb_OrderColumn_", index,
+                        " INTO @__RepoDb_OutputTable ( [Result], [__RepoDb_OrderColumn] )"));
                 }
 
                 // End the builder
                 builder.End();
             }
 
+            // Get the command text
+            var commandText = builder.GetString();
+
+            // Wrap with the declare/select if needed
+            if (declare != null)
+            {
+                commandText = string.Concat(declare, commandText,
+                    " SELECT [Result], [__RepoDb_OrderColumn] FROM @__RepoDb_OutputTable ORDER BY [__RepoDb_OrderColumn] ;");
+            }
+
             // Return the query
-            return builder.GetString();
+            return commandText;
         }
 
         #endregion
