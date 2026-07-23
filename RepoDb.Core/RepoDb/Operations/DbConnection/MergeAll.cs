@@ -1441,7 +1441,7 @@ namespace RepoDb
                                 var position = 0;
                                 do
                                 {
-                                    if (reader.Read())
+                                    while (reader.Read())
                                     {
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
@@ -1828,15 +1828,15 @@ namespace RepoDb
                                 var position = 0;
                                 do
                                 {
-                                    if (await reader.ReadAsync(cancellationToken))
+                                    while (await reader.ReadAsync(cancellationToken))
                                     {
                                         // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
                                         context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
                                         result++;
+                                        position++;
                                     }
-                                    position++;
                                 }
                                 while (await reader.NextResultAsync(cancellationToken));
 
