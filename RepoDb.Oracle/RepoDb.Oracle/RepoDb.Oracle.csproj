@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Title>RepoDb.Oracle</Title>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+		<Description>A hybrid .NET ORM library for Oracle Database.</Description>
+		<LangVersion>preview</LangVersion>
+		<Nullable>annotations</Nullable>
+		<PackageTags>orm hybrid-orm micro-orm oracle odp.net</PackageTags>
+		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Oracle</RepositoryUrl>
+		<PackageReleaseNotes>http://repodb.net/release/oracle</PackageReleaseNotes>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageProjectUrl>https://repodb.net/tutorial/get-started-oracle</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<!--
+			Pins the version this project is stamped as when it is a ProjectReference dependency of another
+			package, independently of the consuming package's own -p:Version. Pass
+			-p:RepoDbOracleVersion=<version> to set it. PackageVersion is used (not Version) because it is
+			not overridden by the global Version property.
+		-->
+		<PackageVersion Condition="'$(RepoDbOracleVersion)' != ''">$(RepoDbOracleVersion)</PackageVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.9.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\icon.png" Pack="True" PackagePath="\" />
+		<None Include="..\README.md" Pack="True" PackagePath="\" />
+		<None Include="..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

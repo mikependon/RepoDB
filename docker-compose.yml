@@ -34,6 +34,17 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: RepoDB2026
 
+
+  oracle:
+    container_name: oracle
+    image: container-registry.oracle.com/database/free:latest
+    ports:
+      - 127.0.0.1:1521:1521
+    networks:
+      - repodb
+    environment:
+      ORACLE_PWD: RepoDB2026
+
 networks:
   repodb:
     driver: bridge
