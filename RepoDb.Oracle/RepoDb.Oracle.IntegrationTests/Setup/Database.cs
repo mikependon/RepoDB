@@ -62,6 +62,13 @@ namespace RepoDb.Oracle.IntegrationTests.Setup
             // Oracle has no "CREATE TABLE IF NOT EXISTS"; guard with a PL/SQL block instead.
             var commandText = @"
                 BEGIN
+                    -- The 'system' user's default tablespace ('SYSTEM') doesn't support Automatic
+                    -- Segment Space Management, which SecureFiles LOBs require (ORA-43853). The
+                    -- explicit 'STORE AS BASICFILE' clauses below are the actual fix; this just
+                    -- relaxes DB_SECUREFILE to PERMITTED for the session as a defensive measure in
+                    -- case it's set more strictly than its documented PREFERRED/PERMITTED default.
+                    EXECUTE IMMEDIATE 'ALTER SESSION SET DB_SECUREFILE = PERMITTED';
+
                     EXECUTE IMMEDIATE '
                         CREATE TABLE ""CompleteTable""
                         (
@@ -71,8 +78,29 @@ namespace RepoDb.Oracle.IntegrationTests.Setup
                             ""ColumnNumber"" NUMBER(18,12) NULL,
                             ""ColumnDate"" DATE NULL,
                             ""ColumnTimestamp"" TIMESTAMP(7) NULL,
+                            ""ColumnVarchar2"" VARCHAR2(500) NULL,
+                            ""ColumnChar"" CHAR(10) NULL,
+                            ""ColumnNChar"" NCHAR(10) NULL,
+                            ""ColumnInt"" NUMBER(10,0) NULL,
+                            ""ColumnBigInt"" NUMBER(19,0) NULL,
+                            ""ColumnSmallInt"" NUMBER(5,0) NULL,
+                            ""ColumnTinyInt"" NUMBER(3,0) NULL,
+                            ""ColumnBinaryFloat"" BINARY_FLOAT NULL,
+                            ""ColumnBinaryDouble"" BINARY_DOUBLE NULL,
+                            ""ColumnTimestampTz"" TIMESTAMP(7) WITH TIME ZONE NULL,
+                            ""ColumnTimestampLtz"" TIMESTAMP(7) WITH LOCAL TIME ZONE NULL,
+                            ""ColumnRaw"" RAW(500) NULL,
+                            ""ColumnClob"" CLOB NULL,
+                            ""ColumnNClob"" NCLOB NULL,
+                            ""ColumnBlob"" BLOB NULL,
+                            ""ColumnIntervalDs"" INTERVAL DAY(2) TO SECOND(6) NULL,
+                            ""ColumnXml"" XMLTYPE NULL,
                             CONSTRAINT ""CompleteTable_Id"" PRIMARY KEY (""Id"")
-                        )';
+                        )
+                        LOB (""ColumnClob"") STORE AS BASICFILE,
+                        LOB (""ColumnNClob"") STORE AS BASICFILE,
+                        LOB (""ColumnBlob"") STORE AS BASICFILE,
+                        XMLTYPE COLUMN ""ColumnXml"" STORE AS BASICFILE BINARY XML';
                 EXCEPTION
                     WHEN OTHERS THEN
                         IF SQLCODE != -955 THEN -- ORA-00955: name is already used by an existing object
