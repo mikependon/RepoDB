@@ -20,7 +20,7 @@ namespace RepoDb
         /// <param name="value">The value of the parameter.</param>
         public Parameter(string name,
             object value)
-            : this(name, value, null, false)
+            : this(name, value, null, null)
         { }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace RepoDb
         public Parameter(string name,
             object value,
             DbType? dbType)
-            : this(name, value, dbType, false)
+            : this(name, value, dbType, null)
         { }
 
         /// <summary>
@@ -41,11 +41,11 @@ namespace RepoDb
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
         /// <param name="dbType">The database type of the parameter.</param>
-        /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
+        /// <param name="prefix">The text that will be prepended on the name of the parameter.</param>
         internal Parameter(string name,
             object value,
             DbType? dbType,
-            bool prependUnderscore)
+            string prefix = null)
         {
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
@@ -59,9 +59,9 @@ namespace RepoDb
             OriginalValue = value;
             Value = value;
             DbType = dbType;
-            if (prependUnderscore)
+            if (!string.IsNullOrEmpty(prefix))
             {
-                PrependAnUnderscore();
+                PrependText(prefix);
             }
         }
 
@@ -99,13 +99,14 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Prepend an underscore on the current parameter object.
+        /// Prepend a text on the current parameter object.
         /// </summary>
-        internal void PrependAnUnderscore()
+        /// <param name="prefix">The text to prepend on the name of the parameter.</param>
+        internal void PrependText(string prefix)
         {
-            if (!Name.StartsWith("_", StringComparison.OrdinalIgnoreCase))
+            if (!Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             {
-                Name = string.Concat("_", Name);
+                Name = string.Concat(prefix, Name);
             }
         }
 
