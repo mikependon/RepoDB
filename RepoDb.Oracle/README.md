@@ -1,22 +1,102 @@
-# RepoDb.Oracle
+[![OracleBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle.yml)
+[![OracleHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
+[![OracleVersion](https://img.shields.io/nuget/v/RepoDb.Oracle?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Oracle)
 
-A hybrid .NET ORM library for Oracle Database, built on top of [RepoDb](https://repodb.net) and [ODP.NET (Oracle.ManagedDataAccess.Core)](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core).
+# RepoDb.Oracle — RepoDB for Oracle Database
+
+The Oracle provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [ODP.NET (Oracle.ManagedDataAccess.Core)](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core).
 
 ## Target
 
 Oracle Database 12c and later. Earlier versions are not supported (the provider relies on native `IDENTITY` columns, `OFFSET/FETCH` paging, and implicit result sets, all of which require 12c+).
 
+## Important Pages
+
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
+
+## Community
+
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
+
+## Dependencies
+
+- [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/) — ODP.NET Oracle data provider.
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://twitter.com/mike_pendon)
+
+--------
+
+## Installation
+
+```
+Install-Package RepoDb.Oracle
+```
+
+Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.
+
 ## Get Started
 
-```csharp
-using Oracle.ManagedDataAccess.Client;
+Initialize the bootstrapper once at application startup:
 
+```csharp
 GlobalConfiguration
     .Setup()
     .UseOracle();
+```
 
-using var connection = new OracleConnection(connectionString);
-var customers = connection.QueryAll<Customer>();
+Then use any RepoDB operation directly on your `OracleConnection`:
+
+### Query
+
+```csharp
+using (var connection = new OracleConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(c => c.Id == 10045);
+}
+```
+
+### Insert
+
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true
+};
+using (var connection = new OracleConnection(ConnectionString))
+{
+	var id = connection.Insert<Customer>(customer);
+}
+```
+
+### Update
+
+```csharp
+using (var connection = new OracleConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	customer.FirstName = "John";
+	customer.LastUpdatedUtc = DateTime.UtcNow;
+	var affectedRows = connection.Update<Customer>(customer);
+}
+```
+
+### Delete
+
+```csharp
+using (var connection = new OracleConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	var deletedCount = connection.Delete<Customer>(customer);
+}
 ```
 
 ## QueryMultiple Behavior
