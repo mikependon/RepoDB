@@ -2,7 +2,20 @@
 
 Drop-in telemetry for RepoDB. Wires up a default `ITrace` that captures every operation (Insert, Query, Update, Delete, etc.) and publishes it to an insights collector — no custom `ITrace` implementation required.
 
-Built on top of [`RepoDb.Telemetry.Core`](../RepoDb.Telemetry.Core/README.md).
+Built on top of [`RepoDb.Telemetry.Core`](../RepoDb.Telemetry.Core/README.md). See more at [Telemetry feature](https://repodb.net/feature/telemetry) for more details.
+
+## Setting up Docker
+
+Download the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/.env) files into any directory and run the command below:
+
+```bash
+cd c:/folder-location
+docker compose up -d
+```
+
+Once the stack is up, the collector Collector API runs at [`http://localhost:5000`](http://localhost:5000) by default and the Grafana dashboard is at [`http://localhost:3000`](http://localhost:3000).
+
+> Everything runs with local defaults (`RepoDB2026` as the shared password/API key) meant for trying things out, not production. Override them with environment variables in a `.env` file before deploying to production.
 
 ## Getting Started
 

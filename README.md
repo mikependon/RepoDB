@@ -120,7 +120,7 @@ RepoDB includes opt-in, drop-in telemetry via [`RepoDb.Telemetry.Default`](RepoD
 
 It comes with great and simple dashboards visualization.
 
-Integrating your code.
+Simply `docker compose up -d` the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/.env) files and integrate your code.
 
 ```csharp
 GlobalConfiguration
