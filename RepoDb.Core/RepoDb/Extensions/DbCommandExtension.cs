@@ -770,9 +770,10 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            // In RepoDb, the only way the parameter has '@_' is when the time you call the QueryField.IsForUpdate()
-            // method and it is only happening on update operations.
-            var isForUpdate = parameter.ParameterName.StartsWith("_") || parameter.ParameterName.StartsWith("@_");
+            // In RepoDb, the only way the parameter has the 'StringConstant.UpdateParameterPrefix' prefix is when the
+            // time you call the QueryField.IsForUpdate() method and it is only happening on update operations.
+            var isForUpdate = parameter.ParameterName.StartsWith(StringConstant.UpdateParameterPrefix, StringComparison.OrdinalIgnoreCase) ||
+                parameter.ParameterName.StartsWith(string.Concat("@", StringConstant.UpdateParameterPrefix), StringComparison.OrdinalIgnoreCase);
 
             foreach (var attribute in attributes)
             {

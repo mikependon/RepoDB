@@ -37,10 +37,8 @@ namespace RepoDb.Extensions
         /// <param name="queryField"></param>
         /// <param name="prefix"></param>
         internal static void PrependTextToParameter(this QueryField queryField,
-            string prefix)
-        {
-            queryField.Parameter?.PrependText("_");
-        }
+            string prefix) =>
+            queryField.Parameter?.PrependText(prefix);
 
         /// <summary>
         /// 

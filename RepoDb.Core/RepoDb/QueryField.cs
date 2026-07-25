@@ -209,7 +209,7 @@ namespace RepoDb
         /// </summary>
         public void IsForUpdate()
         {
-            this.PrependTextToParameter("m_");
+            this.PrependTextToParameter(StringConstant.UpdateParameterPrefix);
         }
 
         /// <summary>
