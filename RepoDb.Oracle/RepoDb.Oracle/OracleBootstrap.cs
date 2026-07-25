@@ -23,12 +23,6 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Initializes all the necessary settings for Oracle.
-        /// </summary>
-        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UseOracle()' method instead.")]
-        public static void Initialize() => InitializeInternal();
-
-        /// <summary>
         ///
         /// </summary>
         internal static void InitializeInternal()
