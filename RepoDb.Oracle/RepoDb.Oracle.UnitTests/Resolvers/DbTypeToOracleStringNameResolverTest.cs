@@ -110,5 +110,36 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         {
             Assert.AreEqual("XMLTYPE", m_resolver.Resolve(DbType.Xml));
         }
+
+        [TestMethod]
+        public void TestDbTypeToOracleStringNameResolverForAnsiStringFixedLength()
+        {
+            Assert.AreEqual("CHAR(2000)", m_resolver.Resolve(DbType.AnsiStringFixedLength));
+        }
+
+        [TestMethod]
+        public void TestDbTypeToOracleStringNameResolverForStringFixedLength()
+        {
+            Assert.AreEqual("NCHAR(2000)", m_resolver.Resolve(DbType.StringFixedLength));
+        }
+
+        [TestMethod]
+        public void TestDbTypeToOracleStringNameResolverForObject()
+        {
+            Assert.AreEqual("BLOB", m_resolver.Resolve(DbType.Object));
+        }
+
+        [TestMethod]
+        public void TestDbTypeToOracleStringNameResolverForTime()
+        {
+            Assert.AreEqual("INTERVAL DAY(0) TO SECOND(7)", m_resolver.Resolve(DbType.Time));
+        }
+
+        [TestMethod]
+        public void TestDbTypeToOracleStringNameResolverFallsBackToNVarchar2ForUnmappedDbTypes()
+        {
+            // DbType.Currency has no explicit case in the switch, so it should hit the default arm.
+            Assert.AreEqual("NVARCHAR2(2000)", m_resolver.Resolve(DbType.Currency));
+        }
     }
 }

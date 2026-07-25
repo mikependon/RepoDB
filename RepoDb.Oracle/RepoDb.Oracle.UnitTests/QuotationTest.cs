@@ -44,6 +44,19 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleQuotationForQuotedNonTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = " Field ".AsQuoted(setting);
+
+            // Assert
+            Assert.AreEqual("\" Field \"", result);
+        }
+
+        [TestMethod]
         public void TestOracleQuotationForQuotedForPreQuoted()
         {
             // Setup
@@ -54,6 +67,32 @@ namespace RepoDb.Oracle.UnitTests
 
             // Assert
             Assert.AreEqual("\"Field\"", result);
+        }
+
+        [TestMethod]
+        public void TestOracleQuotationForQuotedForPreQuotedWithSpace()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = "\" Field \"".AsQuoted(setting);
+
+            // Assert
+            Assert.AreEqual("\" Field \"", result);
+        }
+
+        [TestMethod]
+        public void TestOracleQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = " \" Field \" ".AsQuoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("\" Field \"", result);
         }
 
         #endregion
@@ -74,6 +113,32 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleQuotationForUnquotedAndTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = " \" Field \" ".AsUnquoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("Field", result);
+        }
+
+        [TestMethod]
+        public void TestOracleQuotationForUnquotedNonTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = "\" Field \"".AsUnquoted(setting);
+
+            // Assert
+            Assert.AreEqual(" Field ", result);
+        }
+
+        [TestMethod]
         public void TestOracleQuotationForUnquotedForPlain()
         {
             // Setup
@@ -81,6 +146,32 @@ namespace RepoDb.Oracle.UnitTests
 
             // Act
             var result = "Field".AsUnquoted(setting);
+
+            // Assert
+            Assert.AreEqual("Field", result);
+        }
+
+        [TestMethod]
+        public void TestOracleQuotationForUnquotedForPlainWithSpace()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = " Field ".AsUnquoted(setting);
+
+            // Assert
+            Assert.AreEqual(" Field ", result);
+        }
+
+        [TestMethod]
+        public void TestOracleQuotationForUnquotedAndTrimmedForPlainWithSpace()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Act
+            var result = " Field ".AsUnquoted(true, setting);
 
             // Assert
             Assert.AreEqual("Field", result);

@@ -88,6 +88,120 @@ namespace RepoDb.Oracle.UnitTests.Resolvers
         }
 
         [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForNClob()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("NCLOB"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForChar()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("CHAR"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForNChar()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("NCHAR"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForVarchar()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("VARCHAR"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForLong()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("LONG"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForRowId()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("ROWID"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForURowId()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("UROWID"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForXmlType()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("XMLTYPE"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForFloat()
+        {
+            Assert.AreEqual(typeof(decimal), m_resolver.Resolve("FLOAT"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForDec()
+        {
+            Assert.AreEqual(typeof(decimal), m_resolver.Resolve("DEC"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForDecimal()
+        {
+            Assert.AreEqual(typeof(decimal), m_resolver.Resolve("DECIMAL"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForNumeric()
+        {
+            Assert.AreEqual(typeof(decimal), m_resolver.Resolve("NUMERIC"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForLongRaw()
+        {
+            Assert.AreEqual(typeof(byte[]), m_resolver.Resolve("LONG RAW"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForBFile()
+        {
+            Assert.AreEqual(typeof(byte[]), m_resolver.Resolve("BFILE"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForBoolean()
+        {
+            Assert.AreEqual(typeof(bool), m_resolver.Resolve("BOOLEAN"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForBareTimestampWithNoScale()
+        {
+            Assert.AreEqual(typeof(DateTime), m_resolver.Resolve("TIMESTAMP"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverForIntervalYearToMonth()
+        {
+            Assert.AreEqual(typeof(TimeSpan), m_resolver.Resolve("INTERVAL YEAR(2) TO MONTH"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverFallsBackToObjectForAnUnmappedType()
+        {
+            Assert.AreEqual(typeof(object), m_resolver.Resolve("SOME_UNKNOWN_TYPE"));
+        }
+
+        [TestMethod]
+        public void TestOracleDbTypeNameToClientTypeResolverIsCaseInsensitiveAndTrimsWhitespace()
+        {
+            Assert.AreEqual(typeof(string), m_resolver.Resolve("  varchar2  "));
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnOracleDbTypeNameToClientTypeResolverIfTheDbTypeIsNull()
         {
             Assert.Throws<NullReferenceException>(() => m_resolver.Resolve(null));

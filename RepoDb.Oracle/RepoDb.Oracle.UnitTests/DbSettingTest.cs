@@ -95,6 +95,16 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
+        public void TestOracleDbSettingIsPreparableProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsPreparable);
+        }
+
+        [TestMethod]
         public void TestOracleDbSettingOpeningQuoteProperty()
         {
             // Setup

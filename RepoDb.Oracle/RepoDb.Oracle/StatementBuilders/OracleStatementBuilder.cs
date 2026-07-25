@@ -605,22 +605,189 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateAverage
+
+        /// <summary>
+        /// Creates a SQL Statement for average operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for average operation.</returns>
+        public override string CreateAverage(string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateAverage(tableName, field, where, hints));
+
+        #endregion
+
+        #region CreateAverageAll
+
+        /// <summary>
+        /// Creates a SQL Statement for average-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for average-all operation.</returns>
+        public override string CreateAverageAll(string tableName,
+            Field field,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateAverageAll(tableName, field, hints));
+
+        #endregion
+
+        #region CreateCount
+
+        /// <summary>
+        /// Creates a SQL Statement for count operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for count operation.</returns>
+        public override string CreateCount(string tableName,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateCount(tableName, where, hints));
+
+        #endregion
+
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public override string CreateCountAll(string tableName,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateCountAll(tableName, hints));
+
+        #endregion
+
+        #region CreateMax
+
+        /// <summary>
+        /// Creates a SQL Statement for max operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for max operation.</returns>
+        public override string CreateMax(string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateMax(tableName, field, where, hints));
+
+        #endregion
+
+        #region CreateMaxAll
+
+        /// <summary>
+        /// Creates a SQL Statement for max-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for max-all operation.</returns>
+        public override string CreateMaxAll(string tableName,
+            Field field,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateMaxAll(tableName, field, hints));
+
+        #endregion
+
+        #region CreateMin
+
+        /// <summary>
+        /// Creates a SQL Statement for min operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for min operation.</returns>
+        public override string CreateMin(string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateMin(tableName, field, where, hints));
+
+        #endregion
+
+        #region CreateMinAll
+
+        /// <summary>
+        /// Creates a SQL Statement for min-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for min-all operation.</returns>
+        public override string CreateMinAll(string tableName,
+            Field field,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateMinAll(tableName, field, hints));
+
+        #endregion
+
+        #region CreateSum
+
+        /// <summary>
+        /// Creates a SQL Statement for sum operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summed.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum operation.</returns>
+        public override string CreateSum(string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateSum(tableName, field, where, hints));
+
+        #endregion
+
+        #region CreateSumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for sum-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be summed.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
+        public override string CreateSumAll(string tableName,
+            Field field,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateSumAll(tableName, field, hints));
+
+        #endregion
+
         #region Helpers
 
         /// <summary>
-        /// RepoDb.Core's <c>Update</c> operation unconditionally prepends an underscore to every
-        /// WHERE-clause parameter name before any <see cref="IStatementBuilder"/> runs (see
-        /// <c>Parameter.PrependAnUnderscore()</c> in RepoDb.Core), to guarantee it can never collide
-        /// with a same-named SET-clause bind parameter. SQL Server/PostgreSQL tolerate the resulting
-        /// name (e.g. <c>@_Id</c> is a legal parameter name in both dialects), but Oracle bind
-        /// variables must start with a letter - <c>:_Id</c> is illegal and fails with
-        /// <c>ORA-00911: invalid character after</c>.
+        /// RepoDb.Core's <c>Update</c> operation prepends <c>StringConstant.UpdateParameterPrefix</c>
+        /// ("m_") to every WHERE-clause parameter name before any <see cref="IStatementBuilder"/> runs
+        /// (<c>QueryField.IsForUpdate()</c> -&gt; <c>Parameter.PrependText(...)</c> in RepoDb.Core), to
+        /// guarantee a WHERE-clause bind variable can never collide with a same-named SET-clause one.
+        /// This prefix starts with a letter, so it is legal for every provider's bind-variable syntax,
+        /// including Oracle's (<c>:m_Id</c> is fine; an earlier, no-longer-current version of this
+        /// constant was a bare underscore, which Oracle rejected with
+        /// <c>ORA-00911: invalid character after</c> since Oracle bind variables must start with a letter).
         /// <para>
-        /// Renaming here (before calling <c>base.CreateUpdate</c>) mutates the same <see cref="Parameter"/>
-        /// instance that RepoDb.Core reads again afterward when it creates the actual bound
-        /// <c>OracleParameter</c>, so the SQL text and the bound parameter name stay in sync. This
-        /// requires <c>Parameter.SetName</c> (internal), hence the <c>InternalsVisibleTo</c> entry for
-        /// "RepoDb.Oracle" added to RepoDb.Core's csproj.
+        /// This call is a defensive no-op in the normal end-to-end path (<c>Parameter.PrependText</c> is
+        /// idempotent - it only prepends if the name doesn't already start with the prefix, and Core has
+        /// already applied it by the time this statement builder runs). It's kept here so
+        /// <see cref="CreateUpdate"/> also behaves correctly if ever invoked directly against a
+        /// <see cref="QueryGroup"/> that hasn't been through <c>IsForUpdate()</c> yet.
         /// </para>
         /// </summary>
         private static void EnsureParameters(QueryGroup where)
