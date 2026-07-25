@@ -51,6 +51,15 @@ namespace RepoDb.Oracle.IntegrationTests
                         DateTime.SpecifyKind(d1, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture),
                         DateTime.SpecifyKind(d2, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture));
                 }
+                else if (value1 is byte[] bytes1 && value2 is byte[] bytes2)
+                {
+                    // Arrays use reference equality under Equals()/object.Equals() unless overridden,
+                    // so a plain Equals(value1, value2) below would always fail for two distinct byte[]
+                    // instances even when their contents are identical (e.g. RAW(16) round-trips).
+                    // Compare element-by-element instead.
+                    Assert(bytes1.SequenceEqual(bytes2), property.Name, value1, value2);
+                    continue;
+                }
                 Assert(Equals(value1, value2), property.Name, value1, value2);
             }
         }
