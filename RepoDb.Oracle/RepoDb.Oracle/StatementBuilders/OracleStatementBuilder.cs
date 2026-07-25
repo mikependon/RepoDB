@@ -66,10 +66,11 @@ namespace RepoDb.StatementBuilders
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
-                .WriteText("FETCH FIRST 1 ROWS ONLY")
-                .End();
+                .WriteText("FETCH FIRST 1 ROWS ONLY");
 
-            // Return the query
+            // Return the query. NOTE: deliberately no ".End()" here - it appends a trailing " ;",
+            // which Oracle rejects with "ORA-00911: invalid character after" on any plain
+            // (non-PL/SQL-block) statement, SELECT included, regardless of execute method.
             return builder.GetString();
         }
 
@@ -121,9 +122,9 @@ namespace RepoDb.StatementBuilders
             {
                 builder.WriteText(string.Concat("FETCH FIRST ", top, " ROWS ONLY"));
             }
-            builder.End();
 
-            // Return the query
+            // Return the query. Deliberately no ".End()" - see the comment in CreateExists for why
+            // a trailing " ;" breaks Oracle regardless of statement type.
             return builder.GetString();
         }
 
@@ -192,10 +193,9 @@ namespace RepoDb.StatementBuilders
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
                 .WriteText(string.Concat("OFFSET ", page * rowsPerBatch))
-                .WriteText(string.Concat("ROWS FETCH NEXT ", rowsPerBatch, " ROWS ONLY"))
-                .End();
+                .WriteText(string.Concat("ROWS FETCH NEXT ", rowsPerBatch, " ROWS ONLY"));
 
-            // Return the query
+            // Return the query. Deliberately no ".End()" - see the comment in CreateExists.
             return builder.GetString();
         }
 
@@ -264,10 +264,9 @@ namespace RepoDb.StatementBuilders
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
                 .WriteText(string.Concat("OFFSET ", skip))
-                .WriteText(string.Concat("ROWS FETCH NEXT ", take, " ROWS ONLY"))
-                .End();
+                .WriteText(string.Concat("ROWS FETCH NEXT ", take, " ROWS ONLY"));
 
-            // Return the query
+            // Return the query. Deliberately no ".End()" - see the comment in CreateExists.
             return builder.GetString();
         }
 
@@ -304,17 +303,15 @@ namespace RepoDb.StatementBuilders
             if (keyColumn == null)
             {
                 // No key column requested. A plain INSERT executed via ExecuteScalar() simply
-                // yields no rows in Oracle (no error), so no further wrapping is necessary.
-                return insertStatement;
+                // yields no rows in Oracle (no error), so no further wrapping is necessary - but
+                // the base statement still ends in " ;", which Oracle rejects on any plain
+                // (non-PL/SQL-block) statement (ORA-00911), so it still needs trimming.
+                return TrimTrailingSemicolon(insertStatement);
             }
-
-            // The base statement always ends in " ;" (see QueryBuilder.End()); drop the
-            // semicolon so the RETURNING clause can be appended before it.
-            var withoutTrailingSemicolon = insertStatement.Substring(0, insertStatement.Length - 1).TrimEnd();
 
             // Return the query, wrapped so the generated key can flow back through the same
             // ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
-            return WrapWithReturningResult(withoutTrailingSemicolon, tableName, keyColumn);
+            return WrapWithReturningResult(TrimTrailingSemicolon(insertStatement), tableName, keyColumn);
         }
 
         #endregion
@@ -456,7 +453,9 @@ namespace RepoDb.StatementBuilders
 
             if (keyColumn == null)
             {
-                return builder.End().GetString();
+                // Deliberately no ".End()" - see the comment in CreateExists/TrimTrailingSemicolon
+                // for why a trailing " ;" breaks Oracle regardless of statement type.
+                return builder.GetString();
             }
 
             // Return the query, wrapped so the generated/matched key can flow back through the
@@ -500,7 +499,148 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateUpdate
+
+        /// <summary>
+        /// Creates a SQL Statement for update operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for update operation.</returns>
+        public override string CreateUpdate(string tableName,
+            IEnumerable<Field> fields,
+            QueryGroup where = null,
+            DbField primaryField = null,
+            DbField identityField = null,
+            string hints = null)
+        {
+            RenameOracleIllegalWhereParameters(where);
+
+            return TrimTrailingSemicolon(base.CreateUpdate(tableName, fields, where, primaryField, identityField, hints));
+        }
+
+        #endregion
+
+        #region CreateUpdateAll
+
+        /// <summary>
+        /// Creates a SQL Statement for update-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The list of fields to be updated.</param>
+        /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the operation.</param>
+        /// <param name="primaryField">The primary field from the database.</param>
+        /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for update-all operation.</returns>
+        public override string CreateUpdateAll(string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            int batchSize = 1,
+            DbField primaryField = null,
+            DbField identityField = null,
+            string hints = null) =>
+            // The base implementation already calls ValidateMultipleStatementExecution(batchSize)
+            // internally, which throws given OracleDbSetting.IsMultiStatementExecutable == false
+            // and batchSize > 1 - no need to duplicate that guard here.
+            TrimTrailingSemicolon(base.CreateUpdateAll(tableName, fields, qualifiers, batchSize, primaryField, identityField, hints));
+
+        #endregion
+
+        #region CreateDelete
+
+        /// <summary>
+        /// Creates a SQL Statement for delete operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for delete operation.</returns>
+        public override string CreateDelete(string tableName,
+            QueryGroup where = null,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateDelete(tableName, where, hints));
+
+        #endregion
+
+        #region CreateDeleteAll
+
+        /// <summary>
+        /// Creates a SQL Statement for delete-all operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for delete-all operation.</returns>
+        public override string CreateDeleteAll(string tableName,
+            string hints = null) =>
+            TrimTrailingSemicolon(base.CreateDeleteAll(tableName, hints));
+
+        #endregion
+
+        #region CreateTruncate
+
+        /// <summary>
+        /// Creates a SQL Statement for truncate operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>A sql statement for truncate operation.</returns>
+        public override string CreateTruncate(string tableName) =>
+            TrimTrailingSemicolon(base.CreateTruncate(tableName));
+
+        #endregion
+
         #region Helpers
+
+        /// <summary>
+        /// RepoDb.Core's <c>Update</c> operation unconditionally prepends an underscore to every
+        /// WHERE-clause parameter name before any <see cref="IStatementBuilder"/> runs (see
+        /// <c>Parameter.PrependAnUnderscore()</c> in RepoDb.Core), to guarantee it can never collide
+        /// with a same-named SET-clause bind parameter. SQL Server/PostgreSQL tolerate the resulting
+        /// name (e.g. <c>@_Id</c> is a legal parameter name in both dialects), but Oracle bind
+        /// variables must start with a letter - <c>:_Id</c> is illegal and fails with
+        /// <c>ORA-00911: invalid character after</c>.
+        /// <para>
+        /// Renaming here (before calling <c>base.CreateUpdate</c>) mutates the same <see cref="Parameter"/>
+        /// instance that RepoDb.Core reads again afterward when it creates the actual bound
+        /// <c>OracleParameter</c>, so the SQL text and the bound parameter name stay in sync. This
+        /// requires <c>Parameter.SetName</c> (internal), hence the <c>InternalsVisibleTo</c> entry for
+        /// "RepoDb.Oracle" added to RepoDb.Core's csproj.
+        /// </para>
+        /// </summary>
+        private static void RenameOracleIllegalWhereParameters(QueryGroup where)
+        {
+            if (where == null)
+            {
+                return;
+            }
+
+            foreach (var queryField in where.GetFields(true))
+            {
+                if (queryField.Parameter.Name.StartsWith("_", StringComparison.Ordinal))
+                {
+                    // "_Id" -> "w_Id" - still unique per the original collision-avoidance intent,
+                    // just with a leading letter so Oracle accepts it as a bind variable.
+                    queryField.Parameter.SetName(string.Concat("w", queryField.Parameter.Name));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Every <c>Create*</c> method in <see cref="BaseStatementBuilder"/> ends its generated SQL with
+        /// <c>QueryBuilder.End()</c>, which unconditionally appends <c>" ;"</c>. SQL Server/PostgreSQL's
+        /// drivers tolerate a trailing semicolon on an ordinary (non-PL/SQL-block) statement sent via
+        /// <c>ExecuteNonQuery()</c>/<c>ExecuteScalar()</c>, but Oracle's OCI/ODP.NET layer does not -
+        /// it fails with <c>ORA-00911: invalid character after</c>. Strip it for every base-inherited
+        /// method (Update/UpdateAll/Delete/DeleteAll/Truncate) and before manually appending the
+        /// RETURNING/DBMS_SQL.RETURN_RESULT wrapper on Insert/Merge.
+        /// </summary>
+        private static string TrimTrailingSemicolon(string sql) =>
+            sql?.TrimEnd().TrimEnd(';').TrimEnd();
 
         /// <summary>
         /// Wraps a single DML statement (INSERT or MERGE, without its trailing semicolon) so that
@@ -523,11 +663,19 @@ namespace RepoDb.StatementBuilders
             var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
             var resultAlias = "Result".AsQuoted(DbSetting);
 
+            // NOTE: DBMS_SQL.RETURN_RESULT takes a SYS_REFCURSOR argument. A `CURSOR(SELECT ...)`
+            // expression is a SQL-only construct (e.g. valid inside a SELECT's column list or as a
+            // table function argument) and is NOT allowed as a PL/SQL procedure-call argument -
+            // passing it directly here fails with "PLS-00405: subquery not allowed in this context".
+            // The cursor must instead be OPENed into a local SYS_REFCURSOR variable first, then that
+            // variable is passed to DBMS_SQL.RETURN_RESULT.
             return string.Concat(
                 "DECLARE l_repodb_result ", quotedTable, ".", quotedKeyColumn, "%TYPE; ",
+                "l_repodb_cursor SYS_REFCURSOR; ",
                 "BEGIN ",
                 dmlStatementWithoutTrailingSemicolon, " RETURNING ", quotedKeyColumn, " INTO l_repodb_result; ",
-                "DBMS_SQL.RETURN_RESULT(CURSOR(SELECT l_repodb_result AS ", resultAlias, " FROM DUAL)); ",
+                "OPEN l_repodb_cursor FOR SELECT l_repodb_result AS ", resultAlias, " FROM DUAL; ",
+                "DBMS_SQL.RETURN_RESULT(l_repodb_cursor); ",
                 "END;");
         }
 

@@ -33,7 +33,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"SELECT 1 AS \"ExistsValue\" " +
                 $"FROM \"Table\" " +
                 $"WHERE (\"Id\" = :Id) " +
-                $"FETCH FIRST 1 ROWS ONLY ;";
+                $"FETCH FIRST 1 ROWS ONLY";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -53,7 +53,7 @@ namespace RepoDb.Oracle.UnitTests
 
             // Act
             var actual = statementBuilder.CreateQuery(tableName: tableName, fields: fields);
-            var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\" ;";
+            var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\"";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -69,7 +69,7 @@ namespace RepoDb.Oracle.UnitTests
 
             // Act
             var actual = statementBuilder.CreateQuery(tableName: tableName, fields: fields, top: 10);
-            var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\" FETCH FIRST 10 ROWS ONLY ;";
+            var expected = "SELECT \"Field1\", \"Field2\" FROM \"Table\" FETCH FIRST 10 ROWS ONLY";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -100,7 +100,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"FROM \"Table\" " +
                 $"ORDER BY \"Field1\" ASC " +
                 $"OFFSET 0 " +
-                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
+                $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -127,7 +127,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"FROM \"Table\" " +
                 $"ORDER BY \"Field1\" ASC " +
                 $"OFFSET 10 " +
-                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
+                $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -176,7 +176,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"FROM \"Table\" " +
                 $"ORDER BY \"Field1\" ASC " +
                 $"OFFSET 20 " +
-                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
+                $"ROWS FETCH NEXT 10 ROWS ONLY";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -203,7 +203,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"INSERT INTO \"Table\" " +
                 $"( \"Field1\", \"Field2\", \"Field3\" ) " +
                 $"VALUES " +
-                $"( :Field1, :Field2, :Field3 ) ;";
+                $"( :Field1, :Field2, :Field3 )";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -225,10 +225,12 @@ namespace RepoDb.Oracle.UnitTests
                 identityField: identityField);
             var expected = $"" +
                 $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
+                $"l_repodb_cursor SYS_REFCURSOR; " +
                 $"BEGIN " +
                 $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
                 $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"DBMS_SQL.RETURN_RESULT(CURSOR(SELECT l_repodb_result AS \"Result\" FROM DUAL)); " +
+                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
+                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
                 $"END;";
 
             // Assert
@@ -268,10 +270,12 @@ namespace RepoDb.Oracle.UnitTests
                 identityField: identityField);
             var expected = $"" +
                 $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
+                $"l_repodb_cursor SYS_REFCURSOR; " +
                 $"BEGIN " +
                 $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
                 $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"DBMS_SQL.RETURN_RESULT(CURSOR(SELECT l_repodb_result AS \"Result\" FROM DUAL)); " +
+                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
+                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
                 $"END;";
 
             // Assert
@@ -320,7 +324,7 @@ namespace RepoDb.Oracle.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ) ;";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -362,6 +366,36 @@ namespace RepoDb.Oracle.UnitTests
                     fields: fields,
                     qualifiers: qualifiers,
                     batchSize: 2));
+        }
+
+        #endregion
+
+        #region CreateUpdate
+
+        [TestMethod]
+        public void TestOracleStatementBuilderCreateUpdateRenamesIllegalUnderscoreWhereParameter()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<OracleConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+
+            // RepoDb.Core's Update operation always prepends "_" to WHERE-clause parameter names
+            // (Parameter.PrependAnUnderscore) before the statement builder ever runs, to guard
+            // against a SET/WHERE bind-name collision. A leading "_" survives Parameter's own
+            // AsAlphaNumeric() normalization unchanged, so a QueryField constructed directly with
+            // an underscore-prefixed name reproduces that same post-prepend state here.
+            var where = new QueryGroup(new QueryField("_Id", 1));
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(tableName: tableName, fields: fields, where: where);
+            var expected = $"" +
+                $"UPDATE \"Table\" " +
+                $"SET \"Field1\" = :Field1, \"Field2\" = :Field2 " +
+                $"WHERE (\"_Id\" = :w_Id)";
+
+            // Assert - the bind variable is ":w_Id", not the Oracle-illegal ":_Id".
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion

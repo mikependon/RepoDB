@@ -40,11 +40,8 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Act
             var result = connection.Insert<CompleteTable>(table);
 
-            // Assert: the identity value must have come back through the RETURNING/implicit
-            // result set mechanism, not stayed at its CLR default.
-            Assert.IsTrue(System.Convert.ToInt64(result) > 0, "The generated identity was not " +
-                "returned - the DBMS_SQL.RETURN_RESULT mechanism in OracleStatementBuilder may not " +
-                "behave as expected on this Oracle version/ODP.NET combination.");
+            // Assert
+            Assert.IsTrue(System.Convert.ToInt64(result) > 0);
             Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
             // Act

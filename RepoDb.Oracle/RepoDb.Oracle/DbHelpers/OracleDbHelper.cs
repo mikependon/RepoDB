@@ -49,17 +49,13 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private string GetCommandText()
         {
-            // ALL_TAB_COLUMNS/ALL_CONSTRAINTS/ALL_TAB_IDENTITY_COLS store unquoted identifiers in
-            // the case they were created in (uppercase by default). The schema falls back to the
-            // session's current schema when none is specified on the mapped table name (Oracle has
-            // no fixed default schema the way SQL Server has 'dbo').
             return @"
                 SELECT C.COLUMN_NAME AS ColumnName
                     , CASE WHEN PK.COLUMN_NAME IS NOT NULL THEN 1 ELSE 0 END AS IsPrimary
                     , CASE WHEN IC.COLUMN_NAME IS NOT NULL THEN 1 ELSE 0 END AS IsIdentity
                     , CASE WHEN C.NULLABLE = 'Y' THEN 1 ELSE 0 END AS IsNullable
                     , C.DATA_TYPE AS DataType
-                    , COALESCE(C.CHAR_LENGTH, C.DATA_LENGTH, 0) AS Size
+                    , COALESCE(C.CHAR_LENGTH, C.DATA_LENGTH, 0) AS ColumnSize
                     , C.DATA_PRECISION AS Precision
                     , C.DATA_SCALE AS Scale
                     , CASE WHEN C.DATA_DEFAULT IS NOT NULL THEN 1 ELSE 0 END AS HasDefaultValue
@@ -149,8 +145,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting)?.AsUnquoted(setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting)?.AsUnquoted(setting)
             };
 
             // Iterate and extract
@@ -186,8 +182,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting)?.AsUnquoted(setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting)?.AsUnquoted(setting)
             };
 
             // Iterate and extract

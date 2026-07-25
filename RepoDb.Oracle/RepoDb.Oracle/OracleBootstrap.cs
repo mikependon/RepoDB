@@ -39,6 +39,11 @@ namespace RepoDb
                 return;
             }
 
+            // ODP.NET defaults OracleCommand.BindByName to 'false' (positional binding), which is
+            // incompatible with RepoDb's dynamically-generated, named bind variables. Force by-name
+            // binding globally; must be set before any connections are opened.
+            OracleConfiguration.BindByName = true;
+
             // Map the DbSetting
             var dbSetting = new OracleDbSetting();
             DbSettingMapper.Add<OracleConnection>(dbSetting, true);
