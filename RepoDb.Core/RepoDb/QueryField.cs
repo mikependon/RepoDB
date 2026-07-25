@@ -88,7 +88,7 @@ namespace RepoDb
         {
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.Name, value, dbType, prependUnderscore);
+            Parameter = new Parameter(field.Name, value, dbType, prependUnderscore ? "_" : null);
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace RepoDb
         /// </summary>
         public void IsForUpdate()
         {
-            this.PrependAnUnderscoreAtParameter();
+            this.PrependTextToParameter("m_");
         }
 
         /// <summary>
