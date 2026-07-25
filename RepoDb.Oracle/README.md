@@ -19,6 +19,12 @@ using var connection = new OracleConnection(connectionString);
 var customers = connection.QueryAll<Customer>();
 ```
 
+## QueryMultiple Behavior
+
+[`QueryMultiple`/`QueryMultipleAsync`](http://repodb.net/operation/executequerymultiple) return several result sets — one per target type — from a single call.
+
+ODP.NET rejects a command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Oracle`), so `QueryMultiple` automatically falls back to issuing one round trip per requested type instead of one combined command. This fallback is transparent — the same `QueryMultiple<T1, T2, ...>` call works unchanged against Oracle — but it means a call that costs 1 round trip on SQL Server/MySQL/PostgreSQL costs *N* round trips (one per type) on Oracle. Keep this in mind for latency-sensitive code paths that call `QueryMultiple` with many types against an Oracle database.
+
 ## Known limitations (v1)
 
 ### `InsertAll` / `MergeAll`
