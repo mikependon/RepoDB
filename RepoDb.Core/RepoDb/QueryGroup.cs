@@ -681,7 +681,7 @@ namespace RepoDb
         /// Make the current instance of <see cref="QueryGroup"/> object to become an expression for 'Update' operations.
         /// </summary>
         public void IsForUpdate() =>
-            PrependTextToAllParameters("m_");
+            PrependTextToAllParameters(StringConstant.UpdateParameterPrefix);
 
 
         /// <summary>

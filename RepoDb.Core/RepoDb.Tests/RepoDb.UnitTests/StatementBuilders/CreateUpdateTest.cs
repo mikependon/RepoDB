@@ -109,7 +109,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
+                $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -137,7 +137,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
+                $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -165,7 +165,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
+                $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -193,7 +193,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
+                $"WHERE ([Field1] = @m_Field1) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -221,7 +221,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Id] = @_Id) ;";
+                $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -249,7 +249,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Id] = @_Id) ;";
+                $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -277,7 +277,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Id] = @_Id) ;";
+                $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -305,7 +305,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Id] = @_Id) ;";
+                $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -333,7 +333,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"UPDATE [Table] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
-                $"WHERE ([Id] = @_Id) ;";
+                $"WHERE ([Id] = @m_Id) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
