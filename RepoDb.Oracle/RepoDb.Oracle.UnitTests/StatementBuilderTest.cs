@@ -317,9 +317,9 @@ namespace RepoDb.Oracle.UnitTests
                 primaryField: null,
                 identityField: null);
             var expected = $"" +
-                $"MERGE INTO \"Table\" AS T " +
+                $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
-                $"AS S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
+                $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +

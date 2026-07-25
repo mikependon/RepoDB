@@ -409,12 +409,19 @@ namespace RepoDb.StatementBuilders
 
             // Build the query. Oracle requires "MERGE INTO" (not just "MERGE") and requires the
             // USING source subquery to have a FROM clause even when only selecting bind
-            // variables/constants (hence "FROM DUAL").
+            // variables/constants (hence "FROM DUAL"). NOTE: unlike a SELECT's column aliases,
+            // Oracle's MERGE syntax does NOT accept the "AS" keyword before a table/subquery
+            // alias - "MERGE INTO t AS T" is illegal and fails to parse (every alias in Oracle's
+            // own MERGE examples is bare, e.g. "MERGE INTO bonuses D USING (...) S ON (...)").
+            // Using ".As(...)" here previously produced "AS T"/"AS S", which Oracle's parser
+            // rejected with a confusing "ORA-38107: Invalid syntax with MERGE without USING
+            // clause" pointing at the start of the statement - it aborts as soon as it hits the
+            // unexpected "AS" token, before it ever reaches the (perfectly valid) USING clause.
             builder.Clear()
                 .Merge()
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
-                .As("T")
+                .WriteText("T")
                 .Using()
                 .OpenParen()
                 .Select()
@@ -422,7 +429,7 @@ namespace RepoDb.StatementBuilders
                 .From()
                 .WriteText("DUAL")
                 .CloseParen()
-                .As("S")
+                .WriteText("S")
                 .On()
                 .OpenParen()
                 .WriteText(qualifiers
@@ -459,10 +466,15 @@ namespace RepoDb.StatementBuilders
             }
 
             // Return the query, wrapped so the generated/matched key can flow back through the
-            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider. Note: Oracle
-            // only supports a RETURNING clause on MERGE starting with 12.2, and only when the
-            // statement affects exactly one row (RepoDb's Merge() operation always targets one
-            // entity, so this holds) - verify against your own Oracle version.
+            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
+            // IMPORTANT: a RETURNING clause on MERGE is only supported starting with Oracle
+            // Database 23ai - NOT 12.2 as originally assumed here. On 12c/18c/19c/21c this will
+            // fail (with a different error, ORA-00933, since those versions don't parse RETURNING
+            // after MERGE at all). This provider targets 12c+ for every other operation, but
+            // Merge-with-identity-retrieval specifically requires 23ai+. If you're on an older
+            // version, either omit the primary/identity field from the qualifiers so no RETURNING
+            // is requested (see the keyColumn == null branch above), or avoid Merge for
+            // identity-generating tables and use Insert instead.
             return WrapWithReturningResult(builder.GetString(), tableName, keyColumn);
         }
 
@@ -518,8 +530,7 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            RenameOracleIllegalWhereParameters(where);
-
+            EnsureParameters(where);
             return TrimTrailingSemicolon(base.CreateUpdate(tableName, fields, where, primaryField, identityField, hints));
         }
 
@@ -612,21 +623,15 @@ namespace RepoDb.StatementBuilders
         /// "RepoDb.Oracle" added to RepoDb.Core's csproj.
         /// </para>
         /// </summary>
-        private static void RenameOracleIllegalWhereParameters(QueryGroup where)
+        private static void EnsureParameters(QueryGroup where)
         {
             if (where == null)
             {
                 return;
             }
-
             foreach (var queryField in where.GetFields(true))
             {
-                if (queryField.Parameter.Name.StartsWith("_", StringComparison.Ordinal))
-                {
-                    // "_Id" -> "w_Id" - still unique per the original collision-avoidance intent,
-                    // just with a leading letter so Oracle accepts it as a bind variable.
-                    queryField.Parameter.SetName(string.Concat("w", queryField.Parameter.Name));
-                }
+                queryField.Parameter.PrependText(StringConstant.UpdateParameterPrefix);
             }
         }
 
