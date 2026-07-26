@@ -1,21 +1,36 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
-using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Base;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
 {
+    /// <summary>
+    ///
+    /// </summary>
     public static partial class OracleConnectionExtension
     {
         #region Sync
 
         #region BulkInsertBase<TEntity>
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBase<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -25,48 +40,89 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
-
-            mappings = mappings?.Any() == true ? mappings :
-                isDictionary ?
-                    OracleHelpers.GetMappings(entityList.First() as IDictionary<string, object>, dbFields, includeIdentity, dbSetting) :
-                    OracleHelpers.GetMappings(dbFields, entityType, includeIdentity, dbSetting);
-            var mappingList = mappings.AsList();
-
-            var fields = mappingList.Select(m => new Field(m.DestinationColumn)).AsList();
-            var parameterNames = fields.Select(f => OracleText.GetParameterName(f, dbSetting)).AsList();
-            var oracleDbTypes = mappingList.Select(m => m.OracleDbType).AsList();
-            var sourceFields = mappingList.Select(m => new Field(m.SourceColumn)).AsList();
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, sourceFields, isDictionary, gettersByMappedName, false);
-
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
-            var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return connection.TransactionalExecute(transaction =>
+            if (returnIdentity)
             {
-                var (affected, returned) = OracleStagingTable.ExecuteArrayBind(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction);
-
-                if (returnIdentity && returned != null)
-                {
-                    OracleHelpers.SetIdentities(entityType, entityList, identityField, ToIndexMap(returned), dbSetting);
-                }
-
-                return affected;
-            }, transaction);
+                return connection.BulkInsertBaseForReturnIdentity(tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout,
+                    identityBehavior,
+                    transaction);
+            }
+            else
+            {
+                return connection.BulkInsertBaseNoReturnIdentity(tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout);
+            }
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseForReturnIdentity<TEntity>(this OracleConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleTransaction transaction = null)
+            where TEntity : class
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this OracleConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null)
+            where TEntity : class =>
+            WriteToServer.WriteToServerInternal(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout);
 
         #endregion
 
         #region BulkInsertBase<DataTable>
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBase(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -76,41 +132,77 @@ namespace RepoDb
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
         {
-            var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
-
-            mappings = mappings?.Any() == true ? mappings :
-                OracleHelpers.GetMappings(table, dbFields, includeIdentity, dbSetting);
-            var mappingList = mappings.AsList();
-
-            var fields = mappingList.Select(m => new Field(m.DestinationColumn)).AsList();
-            var parameterNames = fields.Select(f => OracleText.GetParameterName(f, dbSetting)).AsList();
-            var oracleDbTypes = mappingList.Select(m => m.OracleDbType).AsList();
-            var sourceFields = mappingList.Select(m => new Field(m.SourceColumn)).AsList();
-
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, sourceFields, false);
-
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
-            var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return connection.TransactionalExecute(transaction =>
+            if (returnIdentity)
             {
-                var (affected, returned) = OracleStagingTable.ExecuteArrayBind(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction);
-
-                if (returnIdentity && returned != null)
-                {
-                    OracleHelpers.SetDataTableIdentities(table, identityField, ToIndexMap(returned), dbSetting);
-                }
-
-                return affected;
-            }, transaction);
+                return connection.BulkInsertBaseForReturnIdentity(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    identityBehavior,
+                    transaction);
+            }
+            else
+            {
+                return connection.BulkInsertBaseNoReturnIdentity(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout);
+            }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static int BulkInsertBaseForReturnIdentity(this OracleConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleTransaction transaction = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseNoReturnIdentity(this OracleConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null) =>
+            WriteToServer.WriteToServerInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout);
 
         #endregion
 
@@ -120,6 +212,19 @@ namespace RepoDb
 
         #region BulkInsertBaseAsync<TEntity>
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -130,48 +235,99 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
-
-            mappings = mappings?.Any() == true ? mappings :
-                isDictionary ?
-                    OracleHelpers.GetMappings(entityList.First() as IDictionary<string, object>, dbFields, includeIdentity, dbSetting) :
-                    OracleHelpers.GetMappings(dbFields, entityType, includeIdentity, dbSetting);
-            var mappingList = mappings.AsList();
-
-            var fields = mappingList.Select(m => new Field(m.DestinationColumn)).AsList();
-            var parameterNames = fields.Select(f => OracleText.GetParameterName(f, dbSetting)).AsList();
-            var oracleDbTypes = mappingList.Select(m => m.OracleDbType).AsList();
-            var sourceFields = mappingList.Select(m => new Field(m.SourceColumn)).AsList();
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, sourceFields, isDictionary, gettersByMappedName, false);
-
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
-            var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return await connection.TransactionalExecuteAsync(async transaction =>
+            if (returnIdentity)
             {
-                var (affected, returned) = await OracleStagingTable.ExecuteArrayBindAsync(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                if (returnIdentity && returned != null)
-                {
-                    OracleHelpers.SetIdentities(entityType, entityList, identityField, ToIndexMap(returned), dbSetting);
-                }
-
-                return affected;
-            }, transaction, cancellationToken);
+                return await connection.BulkInsertBaseForReturnIdentityAsync(tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout,
+                    identityBehavior,
+                    transaction,
+                    cancellationToken);
+            }
+            else
+            {
+                return await connection.BulkInsertBaseNoReturnIdentityAsync(tableName,
+                    entities,
+                    mappings,
+                    bulkCopyTimeout,
+                    cancellationToken);
+            }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this OracleConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this OracleConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            await WriteToServer.WriteToServerAsyncInternal(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                cancellationToken);
 
         #endregion
 
         #region BulkInsertBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -182,59 +338,84 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
-
-            mappings = mappings?.Any() == true ? mappings :
-                OracleHelpers.GetMappings(table, dbFields, includeIdentity, dbSetting);
-            var mappingList = mappings.AsList();
-
-            var fields = mappingList.Select(m => new Field(m.DestinationColumn)).AsList();
-            var parameterNames = fields.Select(f => OracleText.GetParameterName(f, dbSetting)).AsList();
-            var oracleDbTypes = mappingList.Select(m => m.OracleDbType).AsList();
-            var sourceFields = mappingList.Select(m => new Field(m.SourceColumn)).AsList();
-
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, sourceFields, false);
-
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
-            var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return await connection.TransactionalExecuteAsync(async transaction =>
+            if (returnIdentity)
             {
-                var (affected, returned) = await OracleStagingTable.ExecuteArrayBindAsync(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                if (returnIdentity && returned != null)
-                {
-                    OracleHelpers.SetDataTableIdentities(table, identityField, ToIndexMap(returned), dbSetting);
-                }
-
-                return affected;
-            }, transaction, cancellationToken);
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Helpers
-
-        private static IReadOnlyDictionary<int, object> ToIndexMap(object[] values)
-        {
-            var map = new Dictionary<int, object>(values.Length);
-
-            for (var i = 0; i < values.Length; i++)
-            {
-                map[i] = values[i];
+                return await connection.BulkInsertBaseForReturnIdentityAsync(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    identityBehavior,
+                    transaction,
+                    cancellationToken);
             }
-
-            return map;
+            else
+            {
+                return await connection.BulkInsertBaseNoReturnIdentityAsync(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyTimeout,
+                    cancellationToken);
+            }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync(this OracleConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync(this OracleConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            CancellationToken cancellationToken = default) =>
+            await WriteToServer.WriteToServerAsyncInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                cancellationToken);
+
+        #endregion
 
         #endregion
     }

@@ -4,15 +4,16 @@
 
 # [RepoDb.Oracle.BulkOperations](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations)
 
-High-performance bulk operations for RepoDB on Oracle. Uses ODP.NET array binding to transfer data in a
-single round trip per operation.
+High-performance bulk operations for RepoDB on Oracle. Row loading goes through ODP.NET's `OracleBulkCopy`
+- the same genuine bulk-load primitive `SqlBulkCopy` is for SQL Server - with array binding reserved for
+the one case `OracleBulkCopy` cannot serve: reading back generated identity values.
 
 > **Verification status:** this package has been implemented and reviewed but not yet exercised against a
-> live Oracle instance. In particular, the array-bind `RETURNING ... INTO` identity read-back used by
-> `BulkInsert` and the Global Temporary Table staging strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete`
-> should be verified end-to-end before relying on this package in production. This mirrors the same
-> caveat already called out on `OracleStatementBuilder`'s `DBMS_SQL.RETURN_RESULT` identity trick in the
-> core `RepoDb.Oracle` package.
+> live Oracle instance. In particular, the `OracleBulkCopy`-based load path, the array-bind
+> `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the Global
+> Temporary Table staging strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` should be verified
+> end-to-end before relying on this package in production. This mirrors the same caveat already called out
+> on `OracleStatementBuilder`'s `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.Oracle` package.
 
 ## Important Pages
 
@@ -22,7 +23,7 @@ single round trip per operation.
 ## Core Features
 
 - [Special Arguments](#special-arguments)
-- [Why No Staging Table for BulkInsert](#why-no-staging-table-for-bulkinsert)
+- [How Rows Are Loaded: OracleBulkCopy and the Transaction Boundary](#how-rows-are-loaded-oraclebulkcopy-and-the-transaction-boundary)
 - [The Staging Table Lifecycle: Temporary vs Physical](#the-staging-table-lifecycle-temporary-vs-physical)
 - [Async Methods](#async-methods)
 - [BulkInsert](#bulkinsert)
@@ -66,14 +67,21 @@ Or visit the [installation](https://repodb.net/tutorial/installation) page for m
 source properties/columns map to which destination columns, and (optionally) which
 `Oracle.ManagedDataAccess.Client.OracleDbType` to bind each one as. When omitted, the matching
 properties/columns from the target table are used automatically, honoring each property's
-`[OracleDbType]`/`[OracleDbTypeEx]` attribute exactly like the rest of this Oracle provider.
+`[OracleDbType]`/`[OracleDbTypeEx]` attribute exactly like the rest of this Oracle provider. The explicit
+`OracleDbType` override only takes effect when `identityBehavior: ReturnIdentity` forces the array-bind
+path (see [How Rows Are Loaded](#how-rows-are-loaded-oraclebulkcopy-and-the-transaction-boundary)) -
+`OracleBulkCopy` has no equivalent per-column type override and instead infers the wire type from each
+value's own CLR type, which is sufficient for ordinary column types but is worth keeping in mind for
+LOB/interval/timestamp-with-local-time-zone columns that previously relied on an explicit override.
 
 **`identityBehavior`** — controls identity handling for `BulkInsert` and `BulkMerge`:
 
 - `Unspecified` *(default)* — the identity column is neither sent nor read back.
 - `KeepIdentity` — the identity property's existing value is sent and used as-is.
 - `ReturnIdentity` — the database-generated (or matched) identity value is read back and written onto
-  each entity/row.
+  each entity/row. On `BulkInsert`, requesting this switches the row-load itself from `OracleBulkCopy`
+  back to array binding with `RETURNING ... INTO`, since `OracleBulkCopy` has no way to report back
+  generated values - see [How Rows Are Loaded](#how-rows-are-loaded-oraclebulkcopy-and-the-transaction-boundary).
 
 **`pseudoTableType`** (`BulkMerge`, `BulkUpdate`, `BulkDelete` only) — an `OracleBulkImportPseudoTableType`
 controlling what kind of staging table backs the operation:
@@ -85,14 +93,49 @@ controlling what kind of staging table backs the operation:
 Unlike the PostgreSQL bulk package, there is no `BulkImportMergeCommandType` (Oracle has exactly one
 native upsert construct, `MERGE INTO`).
 
-## Why No Staging Table for BulkInsert
+## How Rows Are Loaded: OracleBulkCopy and the Transaction Boundary
 
 Every other provider's bulk insert loads rows into a staging table first. Oracle's `BulkInsert` skips
-that step entirely: ODP.NET's array binding supports a `RETURNING <col> INTO :out` clause directly on an
-array-bound `INSERT ... VALUES (...)` statement, and returns one identity value per bound row - in the
-same order the rows were bound - as a single output parameter array. That gives `BulkInsert` a true
-single-round-trip load with reliable per-row identity correlation, with no server-side table needed at
-all.
+that step entirely - it writes straight to the destination table (the real table for a plain `BulkInsert`
+call, or the staging table when `BulkMerge`/`BulkUpdate`/`BulkDelete` call it internally; see below) using
+one of two mechanisms:
+
+- **`OracleBulkCopy`** *(the default, used whenever identities aren't being returned)* - ODP.NET's genuine
+  bulk-load primitive, the same kind of API `SqlBulkCopy` is for SQL Server. This is what actually moves
+  the data in every bulk operation in this package.
+- **Array binding with `RETURNING ... INTO`** *(only when `identityBehavior: ReturnIdentity` is requested
+  on `BulkInsert`)* - `OracleBulkCopy` has no mechanism to report back generated or matched values, so
+  this one scenario still binds an array-bound `INSERT ... VALUES (...)` statement with a
+  `RETURNING <col> INTO :out` clause, which returns one identity value per bound row - in the same order
+  the rows were bound - as a single output parameter array.
+
+**`BulkMerge`, `BulkUpdate`, and `BulkDelete` call `BulkInsert` internally** to load their staging table -
+there is exactly one "write rows into an Oracle table" code path in this package, and every bulk operation
+uses it. Staging loads never request `ReturnIdentity` (identity correlation for `BulkMerge` is handled
+separately - see [BulkMerge](#bulkmerge)), so they always go through `OracleBulkCopy`.
+
+**The transaction boundary this creates.** Per Oracle's own ODP.NET documentation, *"all bulk copy
+operations are agnostic of any local or distributed transaction created by the application"* -
+`OracleBulkCopy` has no constructor or property that accepts an `OracleTransaction`, and rows it writes
+commit independently of whatever transaction the caller is in. Concretely:
+
+- Creating/clearing the staging table, and the final `MERGE`/`UPDATE`/`DELETE` statement that follows the
+  load, all still run inside your transaction exactly as before.
+- The row-load step itself (the `OracleBulkCopy` call) does **not** - if your transaction is later rolled
+  back, rows already bulk-copied into the real table (a plain `BulkInsert`) or into the staging table (for
+  `BulkMerge`/`BulkUpdate`/`BulkDelete`) are **not** undone.
+
+For a plain `BulkInsert` without `ReturnIdentity`, this means a rolled-back transaction will **not** remove
+rows that were already bulk-copied into the real table. For `BulkMerge`/`BulkUpdate`/`BulkDelete`, the
+practical impact is smaller: the final `MERGE`/`UPDATE`/`DELETE` statement against the real table is still
+fully transactional, so a rollback there behaves as expected for your actual data - the only thing that can
+be left behind is now-orphaned rows in the (ephemeral, reusable) staging table, which the next call against
+that staging table clears unconditionally before loading anything new. For `Temporary` staging tables this
+is invisible outside your own session; for `Physical` staging tables this is within the same
+already-documented concurrency caveat as [everything else about `Physical`](#the-staging-table-lifecycle-temporary-vs-physical).
+If a plain `BulkInsert`'s all-or-nothing behavior with respect to your transaction matters for your
+workload, request `identityBehavior: ReturnIdentity` to force the array-bind path, which does honor your
+transaction like every other command in this package.
 
 ## The Staging Table Lifecycle: Temporary vs Physical
 
@@ -165,7 +208,7 @@ Returning generated identities:
 using (var connection = new OracleConnection(ConnectionString))
 {
     var customers = GetCustomers(); // Id not set
-    connection.BulkInsert<Customer>(customers, identityBehavior: BulkImportIdentityBehavior.ReturnIdentity);
+    connection.BulkInsert<Customer>(customers, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity);
     // customers[i].Id now holds the generated identity for each row
 }
 ```
@@ -214,7 +257,7 @@ using (var connection = new OracleConnection(ConnectionString))
 ```
 
 `BulkMerge` never uses Oracle's `RETURNING` clause on the `MERGE` statement itself (that's only supported
-starting with Oracle Database 23ai). When `identityBehavior: BulkImportIdentityBehavior.ReturnIdentity` is
+starting with Oracle Database 23ai). When `identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity` is
 requested, a second, version-independent query correlates the staged rows back to the real table by the
 same qualifiers immediately after the `MERGE` completes.
 

@@ -106,36 +106,6 @@ namespace RepoDb
             }
         }
 
-        /// <summary>
-        /// Resolves an explicit <see cref="OracleDbType"/> (via each property's <c>[OracleDbType]</c>
-        /// attribute, when present) for every field in <paramref name="fields"/> - used by BulkMerge's and
-        /// BulkUpdate's staging-table load so that LOB/interval/timestamp-with-local-time-zone columns
-        /// (which need an explicit bind type - see the remarks on <see cref="CompleteTable"/>-style models
-        /// in the core Oracle provider's tests) work the same way through the staging table as they already
-        /// do through BulkInsert's direct array-bind path. Dictionary-based entities and <see cref="DataTable"/>
-        /// input carry no such attribute, so every entry is <c>null</c> (ODP.NET value-based inference) in
-        /// those cases.
-        /// </summary>
-        public static List<OracleDbType?> GetOracleDbTypes(IList<Field> fields,
-            Type entityType,
-            bool isDictionary)
-        {
-            if (isDictionary || entityType == null)
-            {
-                return fields.Select(_ => (OracleDbType?)null).AsList();
-            }
-
-            var propertiesByMappedName = PropertyCache.Get(entityType)
-                .GroupBy(property => property.GetMappedName(), StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(group => group.Key, group => group.First().PropertyInfo, StringComparer.OrdinalIgnoreCase);
-
-            return fields
-                .Select(field => propertiesByMappedName.TryGetValue(field.Name, out var propertyInfo) ?
-                    TryGetExplicitOracleDbType(propertyInfo) :
-                    null)
-                .AsList();
-        }
-
         #endregion
 
         #region Row Building
@@ -247,6 +217,34 @@ namespace RepoDb
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Converts already-extracted rows (see <see cref="BuildRows{TEntity}"/>/<see cref="BuildRows(IList{DataRow}, IList{Field}, bool)"/>)
+        /// into a <see cref="DataTable"/> suitable for <see cref="OracleBulkCopy"/>, with one column per
+        /// entry in <paramref name="columns"/> (in the same order the row values were extracted in). Every
+        /// column is typed as <see cref="object"/> so that whatever CLR value each row already carries
+        /// (string, byte[], DateTime, decimal, etc.) flows through to <see cref="OracleBulkCopy"/> as-is;
+        /// unlike the array-bind path this replaces, there is no per-column explicit <see cref="OracleDbType"/>
+        /// override available here - OracleBulkCopy infers the wire type from the value itself.
+        /// </summary>
+        public static DataTable ToDataTable(IList<object[]> rows,
+            IList<Field> columns,
+            IDbSetting dbSetting)
+        {
+            var table = new DataTable();
+
+            foreach (var column in columns)
+            {
+                table.Columns.Add(column.Name.AsUnquoted(true, dbSetting), typeof(object));
+            }
+
+            foreach (var row in rows)
+            {
+                table.Rows.Add(row);
+            }
+
+            return table;
         }
 
         #endregion

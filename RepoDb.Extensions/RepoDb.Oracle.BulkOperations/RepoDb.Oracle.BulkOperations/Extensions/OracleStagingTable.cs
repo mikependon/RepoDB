@@ -3,6 +3,7 @@ using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Base;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,10 +16,13 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// Owns the lifecycle of the per-table Global Temporary Table (GTT) used to stage rows for
-    /// BulkMerge/BulkUpdate/BulkDelete, plus the array-bind primitive used both to load that staging
-    /// table and (for BulkInsert, which needs no staging table at all - see the package README) to write
-    /// directly into the real table in a single round trip.
+    /// Owns the lifecycle of the per-table staging table (GTT or physical - see
+    /// <see cref="OracleBulkImportPseudoTableType"/>) used by BulkMerge/BulkUpdate/BulkDelete, plus the
+    /// array-bind primitive used to write a plain (no-staging-table) BulkInsert directly into the real
+    /// table with a single-round-trip <c>RETURNING ... INTO</c> identity read-back. Loading rows into a
+    /// staging table is no longer this class's job - every bulk operation's row-load step, staging or
+    /// otherwise, now goes through <c>BulkInsertBase</c> (see <c>Base/BulkInsert.cs</c>), which in turn
+    /// prefers <see cref="WriteToServer"/> over array binding wherever possible.
     /// </summary>
     internal static class OracleStagingTable
     {
@@ -26,8 +30,9 @@ namespace RepoDb
 
         /// <summary>
         /// The bind-variable name used for the <c>RETURNING ... INTO</c> output parameter on a direct
-        /// (staging-table-free) array-bound BulkInsert. Shared with <see cref="OracleText.GetInsertCommandText"/>,
-        /// which must emit the exact same name into the command text.
+        /// (staging-table-free), identity-returning array-bound BulkInsert. Shared with
+        /// <see cref="OracleText.GetInsertCommandText"/>, which must emit the exact same name into the
+        /// command text.
         /// </summary>
         internal const string ReturningParameterName = "__out_identity";
 
@@ -156,12 +161,14 @@ namespace RepoDb
 
         #endregion
 
-        #region Array-Bind Load/Insert
+        #region Array-Bind Insert (identity-returning BulkInsert only)
 
         /// <summary>
-        /// Executes an array-bound INSERT (into either the staging table or, for plain BulkInsert, the
-        /// real table directly) in a single round trip, optionally reading back a <c>RETURNING ... INTO</c>
-        /// array of generated/matched identity values aligned 1:1 with <paramref name="rows"/>'s order.
+        /// Executes an array-bound INSERT directly against the real table in a single round trip, reading
+        /// back a <c>RETURNING ... INTO</c> array of generated/matched identity values aligned 1:1 with
+        /// <paramref name="rows"/>'s order. Used exclusively by a plain BulkInsert called with
+        /// <c>identityBehavior: ReturnIdentity</c> - the one case <see cref="WriteToServer"/> cannot
+        /// serve, since <c>OracleBulkCopy</c> has no mechanism to report back generated/matched values.
         /// </summary>
         /// <param name="connection">The connection to use.</param>
         /// <param name="commandText">The INSERT command text, produced by <see cref="OracleText"/>.</param>

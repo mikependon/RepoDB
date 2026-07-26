@@ -3,6 +3,7 @@ using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace RepoDb
     /// </summary>
     internal static class OracleText
     {
-        #region Staging Table DDL/DML
+        #region Staging Table DDL
 
         /// <summary>
         /// Either <c>CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS AS SELECT ... WHERE 1 = 0</c>
@@ -24,7 +25,9 @@ namespace RepoDb
         /// <c>CREATE TABLE ... AS SELECT ... WHERE 1 = 0</c> (<see cref="OracleBulkImportPseudoTableType.Physical"/>).
         /// Either way, CTAS mirrors the real table's column set exactly (no per-column DDL needs to be
         /// hand-built from <see cref="DbField"/> metadata) plus a leading <c>__RepoDb_OrderColumn</c> used
-        /// to correlate staged rows back to their original position in the caller's input sequence.
+        /// to correlate staged rows back to their original position in the caller's input sequence. Rows
+        /// are loaded into the resulting table via <c>BulkInsertBase</c>/<see cref="WriteToServer"/>
+        /// - not hand-built INSERT text - so there is no staging-insert command-text builder here.
         /// </summary>
         public static string GetCreateStagingTableCommandText(string tableName,
             string stagingTableName,
@@ -46,39 +49,6 @@ namespace RepoDb
             return string.Concat(createClause, stagingTableName.AsQuoted(true, dbSetting), onCommitClause,
                 " AS SELECT 0 AS ", OracleStagingTable.OrderColumnName.AsQuoted(true, dbSetting),
                 ", ", columns, " FROM ", tableName.AsQuoted(true, dbSetting), " WHERE 1 = 0");
-        }
-
-        /// <summary>
-        /// <c>INSERT INTO staging (cols[, __RepoDb_OrderColumn]) VALUES (:cols[, :__RepoDb_OrderColumn])</c>,
-        /// used to array-bind-load rows into the staging table ahead of BulkMerge/BulkUpdate/BulkDelete.
-        /// </summary>
-        public static string GetStagingInsertCommandText(string stagingTableName,
-            IEnumerable<Field> fields,
-            bool includeOrderColumn,
-            IDbSetting dbSetting)
-        {
-            var allFields = includeOrderColumn ?
-                fields.Concat(new Field(OracleStagingTable.OrderColumnName).AsEnumerable()) :
-                fields;
-
-            var builder = new QueryBuilder();
-
-            builder
-                .Clear()
-                .Insert()
-                .Into()
-                .TableNameFrom(stagingTableName, dbSetting)
-                .OpenParen()
-                .FieldsFrom(allFields, dbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(allFields, 0, dbSetting)
-                .CloseParen();
-
-            // Deliberately no .End() - Oracle rejects a trailing " ;" on a plain (non-PL/SQL-block)
-            // statement with ORA-00911.
-            return builder.GetString();
         }
 
         #endregion
@@ -140,7 +110,8 @@ namespace RepoDb
                     .WriteText(OracleStagingTable.ReturningParameterName.AsParameter(dbSetting));
             }
 
-            // Deliberately no .End() - see the comment in GetStagingInsertCommandText.
+            // Deliberately no .End() - Oracle rejects a trailing " ;" on a plain (non-PL/SQL-block)
+            // statement with ORA-00911.
             commandText = builder.GetString();
 
             LocalCommandTextCache.Add(key, commandText, true);
@@ -225,7 +196,8 @@ namespace RepoDb
                 .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
                 .CloseParen();
 
-            // Deliberately no .End() - see the comment in GetStagingInsertCommandText.
+            // Deliberately no .End() - Oracle rejects a trailing " ;" on a plain (non-PL/SQL-block)
+            // statement with ORA-00911.
             commandText = builder.GetString();
 
             LocalCommandTextCache.Add(key, commandText, true);
@@ -325,7 +297,8 @@ namespace RepoDb
                 .Set()
                 .FieldsAndAliasFieldsFrom(updatableFields, "T", "S", dbSetting);
 
-            // Deliberately no .End() - see the comment in GetStagingInsertCommandText.
+            // Deliberately no .End() - Oracle rejects a trailing " ;" on a plain (non-PL/SQL-block)
+            // statement with ORA-00911.
             commandText = builder.GetString();
 
             LocalCommandTextCache.Add(key, commandText, true);
@@ -381,7 +354,8 @@ namespace RepoDb
                     .Join(" AND "))
                 .CloseParen();
 
-            // Deliberately no .End() - see the comment in GetStagingInsertCommandText.
+            // Deliberately no .End() - Oracle rejects a trailing " ;" on a plain (non-PL/SQL-block)
+            // statement with ORA-00911.
             commandText = builder.GetString();
 
             LocalCommandTextCache.Add(key, commandText, true);

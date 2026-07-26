@@ -2,6 +2,7 @@ using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,16 +11,28 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static partial class OracleConnectionExtension
     {
-        // BulkDelete only ever needs the qualifier columns staged (not the whole row) - the staging
-        // table's payload is just "which rows to delete", so this is intentionally the lightest of the
-        // four operations.
-
         #region Sync
 
         #region BulkDeleteBase<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static int BulkDeleteBase<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -29,39 +42,26 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            // GetDeleteCommandText validates (and throws a clear error if there are no usable qualifiers)
-            // before any of the resolved-qualifiers-dependent code below runs, so a table with neither an
-            // explicit qualifier nor a primary key fails fast with a helpful message instead of a bare NRE.
-            var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
-            var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, resolvedQualifiers, isDictionary, gettersByMappedName, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
-            var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-
-            return connection.TransactionalExecute(transaction =>
-            {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
-
-                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: transaction);
-            }, transaction);
+            throw new NotImplementedException();
         }
 
         #endregion
 
         #region BulkDeleteBase<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static int BulkDeleteBase(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -71,29 +71,7 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, resolvedQualifiers, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
-            var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
-
-            return connection.TransactionalExecute(transaction =>
-            {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
-
-                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: transaction);
-            }, transaction);
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -104,6 +82,20 @@ namespace RepoDb
 
         #region BulkDeleteBaseAsync<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkDeleteBaseAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -114,39 +106,27 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            // GetDeleteCommandText validates (and throws a clear error if there are no usable qualifiers)
-            // before any of the resolved-qualifiers-dependent code below runs, so a table with neither an
-            // explicit qualifier nor a primary key fails fast with a helpful message instead of a bare NRE.
-            var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
-            var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, resolvedQualifiers, isDictionary, gettersByMappedName, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
-            var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-
-            return await connection.TransactionalExecuteAsync(async transaction =>
-            {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
-            }, transaction, cancellationToken);
+            throw new NotImplementedException();
         }
 
         #endregion
 
         #region BulkDeleteBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkDeleteBaseAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -157,29 +137,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, resolvedQualifiers, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
-            var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
-
-            return await connection.TransactionalExecuteAsync(async transaction =>
-            {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
-            }, transaction, cancellationToken);
+            throw new NotImplementedException();
         }
 
         #endregion

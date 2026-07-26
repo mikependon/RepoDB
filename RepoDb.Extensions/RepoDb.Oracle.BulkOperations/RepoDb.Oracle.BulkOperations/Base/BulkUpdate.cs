@@ -1,21 +1,38 @@
-using Oracle.ManagedDataAccess.Client;
-using RepoDb.Enumerations.Oracle;
-using RepoDb.Extensions;
-using RepoDb.Oracle.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations.Oracle;
+using RepoDb.Extensions;
+using RepoDb.Oracle.BulkOperations;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static partial class OracleConnectionExtension
     {
         #region Sync
 
         #region BulkUpdateBase<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static int BulkUpdateBase<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -25,39 +42,25 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            var fields = isDictionary ?
-                OracleHelpers.GetDictionaryFields(entityList.First() as IDictionary<string, object>, dbFields, dbSetting) :
-                OracleHelpers.GetEntityFields(entityType, dbFields, dbSetting);
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, fields, isDictionary, gettersByMappedName, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, fields, false, dbSetting);
-            var stagingParameterNames = fields.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var stagingOracleDbTypes = OracleHelpers.GetOracleDbTypes(fields, entityType, isDictionary);
-            var updateText = OracleText.GetUpdateCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, dbSetting);
-
-            return connection.TransactionalExecute(transaction =>
-            {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, transaction);
-
-                return connection.ExecuteNonQuery(updateText, bulkCopyTimeout, transaction: transaction);
-            }, transaction);
+            throw new NotImplementedException();
         }
 
         #endregion
 
         #region BulkUpdateBase<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkUpdateBase(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -67,29 +70,8 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
 
-            var fields = OracleHelpers.GetDataTableFields(table, dbFields, dbSetting);
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, fields, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, fields, false, dbSetting);
-            var stagingParameterNames = fields.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var updateText = OracleText.GetUpdateCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, dbSetting);
-
-            return connection.TransactionalExecute(transaction =>
-            {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
-
-                return connection.ExecuteNonQuery(updateText, bulkCopyTimeout, transaction: transaction);
-            }, transaction);
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -100,6 +82,19 @@ namespace RepoDb
 
         #region BulkUpdateBaseAsync<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkUpdateBaseAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -110,39 +105,26 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            var fields = isDictionary ?
-                OracleHelpers.GetDictionaryFields(entityList.First() as IDictionary<string, object>, dbFields, dbSetting) :
-                OracleHelpers.GetEntityFields(entityType, dbFields, dbSetting);
-            var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
-            var rows = OracleHelpers.BuildRows(entityList, fields, isDictionary, gettersByMappedName, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, fields, false, dbSetting);
-            var stagingParameterNames = fields.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var stagingOracleDbTypes = OracleHelpers.GetOracleDbTypes(fields, entityType, isDictionary);
-            var updateText = OracleText.GetUpdateCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, dbSetting);
-
-            return await connection.TransactionalExecuteAsync(async transaction =>
-            {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                return await connection.ExecuteNonQueryAsync(updateText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
-            }, transaction, cancellationToken);
+            throw new NotImplementedException();
         }
 
         #endregion
 
         #region BulkUpdateBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="rowState"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkUpdateBaseAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -153,29 +135,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
-            var fields = OracleHelpers.GetDataTableFields(table, dbFields, dbSetting);
-            var dataRows = (rowState.HasValue ?
-                table.Rows.Cast<DataRow>().Where(row => row.RowState == rowState.Value) :
-                table.Rows.Cast<DataRow>()).AsList();
-            var rows = OracleHelpers.BuildRows(dataRows, fields, false);
-
-            var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, fields, false, dbSetting);
-            var stagingParameterNames = fields.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
-            var updateText = OracleText.GetUpdateCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, dbSetting);
-
-            return await connection.TransactionalExecuteAsync(async transaction =>
-            {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
-
-                return await connection.ExecuteNonQueryAsync(updateText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
-            }, transaction, cancellationToken);
+            throw new NotImplementedException();
         }
 
         #endregion
