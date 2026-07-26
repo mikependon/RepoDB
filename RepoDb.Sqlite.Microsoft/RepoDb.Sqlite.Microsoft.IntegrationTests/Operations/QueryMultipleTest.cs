@@ -52,6 +52,28 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT2ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    top1: 1,
+                    top2: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT3()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -74,6 +96,32 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item1.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item2.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item3.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT3ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
             }
         }
 
@@ -108,6 +156,36 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT4ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT5()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -138,6 +216,40 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item3.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item4.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item5.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT5ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
             }
         }
 
@@ -180,6 +292,44 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT6ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    e => e.Id == tables[5].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1,
+                    top6: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Assert.AreEqual(1, result.Item6.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
+                Helper.AssertPropertiesEquality(tables[5], result.Item6.First());
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT7()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -218,6 +368,48 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item5.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item6.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item7.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionQueryMultipleForT7ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = connection.QueryMultiple<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    e => e.Id == tables[5].Id,
+                    e => e.Id == tables[6].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1,
+                    top6: 1,
+                    top7: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Assert.AreEqual(1, result.Item6.Count());
+                Assert.AreEqual(1, result.Item7.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
+                Helper.AssertPropertiesEquality(tables[5], result.Item6.First());
+                Helper.AssertPropertiesEquality(tables[6], result.Item7.First());
             }
         }
 
@@ -267,6 +459,28 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT2ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    top1: 1,
+                    top2: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqLiteConnectionQueryMultipleAsyncForT3()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -289,6 +503,32 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item1.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item2.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item3.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT3ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
             }
         }
 
@@ -323,6 +563,36 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT4ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqLiteConnectionQueryMultipleAsyncForT5()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -353,6 +623,40 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item3.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item4.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item5.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT5ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
             }
         }
 
@@ -395,6 +699,44 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT6ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    e => e.Id == tables[5].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1,
+                    top6: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Assert.AreEqual(1, result.Item6.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
+                Helper.AssertPropertiesEquality(tables[5], result.Item6.First());
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqLiteConnectionQueryMultipleAsyncForT7()
         {
             using (var connection = new SqliteConnection(Database.ConnectionString))
@@ -433,6 +775,48 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 result.Item5.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item6.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
                 result.Item7.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqLiteConnectionQueryMultipleAsyncForT7ViaId()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Act
+                var result = await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(e => e.Id == tables[0].Id,
+                    e => e.Id == tables[1].Id,
+                    e => e.Id == tables[2].Id,
+                    e => e.Id == tables[3].Id,
+                    e => e.Id == tables[4].Id,
+                    e => e.Id == tables[5].Id,
+                    e => e.Id == tables[6].Id,
+                    top1: 1,
+                    top2: 1,
+                    top3: 1,
+                    top4: 1,
+                    top5: 1,
+                    top6: 1,
+                    top7: 1);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(1, result.Item2.Count());
+                Assert.AreEqual(1, result.Item3.Count());
+                Assert.AreEqual(1, result.Item4.Count());
+                Assert.AreEqual(1, result.Item5.Count());
+                Assert.AreEqual(1, result.Item6.Count());
+                Assert.AreEqual(1, result.Item7.Count());
+                Helper.AssertPropertiesEquality(tables[0], result.Item1.First());
+                Helper.AssertPropertiesEquality(tables[1], result.Item2.First());
+                Helper.AssertPropertiesEquality(tables[2], result.Item3.First());
+                Helper.AssertPropertiesEquality(tables[3], result.Item4.First());
+                Helper.AssertPropertiesEquality(tables[4], result.Item5.First());
+                Helper.AssertPropertiesEquality(tables[5], result.Item6.First());
+                Helper.AssertPropertiesEquality(tables[6], result.Item7.First());
             }
         }
 
