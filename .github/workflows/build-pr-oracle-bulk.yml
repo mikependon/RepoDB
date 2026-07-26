@@ -1,0 +1,19 @@
+name: PR - Build & Run Tests - RepoDb.Oracle.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Oracle/**'
+      - 'RepoDb.Extensions/RepoDb.Oracle.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-oracle-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.Oracle.BulkOperations
+      solution-file: RepoDb.Oracle.BulkOperations.sln
+      artifact-name: release-pr
