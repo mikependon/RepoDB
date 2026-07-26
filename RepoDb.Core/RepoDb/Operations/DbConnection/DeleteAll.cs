@@ -753,7 +753,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-            var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
             var deletedRows = 0;
@@ -777,7 +776,7 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
                         deletedRows += DeleteInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
@@ -951,7 +950,6 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
-            var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
             var deletedRows = 0;
@@ -975,7 +973,7 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
                         deletedRows += await DeleteAsyncInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
