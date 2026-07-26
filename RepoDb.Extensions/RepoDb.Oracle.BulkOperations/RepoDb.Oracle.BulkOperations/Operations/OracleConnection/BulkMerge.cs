@@ -25,6 +25,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
         public static int BulkMerge<TEntity>(this OracleConnection connection,
@@ -32,9 +33,10 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkMergeBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, identityBehavior, transaction);
+            BulkMergeBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
         /// Upserts a list of entities in bulk - inserts new rows and updates existing ones based on the
@@ -47,6 +49,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
         public static int BulkMerge<TEntity>(this OracleConnection connection,
@@ -55,9 +58,10 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkMergeBase(connection, tableName, entities, qualifiers, bulkCopyTimeout, identityBehavior, transaction);
+            BulkMergeBase(connection, tableName, entities, qualifiers, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
         /// Upserts the rows of a <see cref="DataTable"/> in bulk. Returns the number of affected rows.
@@ -69,6 +73,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
         public static int BulkMerge(this OracleConnection connection,
@@ -78,8 +83,9 @@ namespace RepoDb
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null) =>
-            BulkMergeBase(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, identityBehavior, transaction);
+            BulkMergeBase(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         #endregion
 
@@ -96,6 +102,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
@@ -104,10 +111,11 @@ namespace RepoDb
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkMergeBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, identityBehavior, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Upserts a list of entities in bulk in an asynchronous way - inserts new rows and updates
@@ -121,6 +129,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
@@ -130,10 +139,11 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkMergeBaseAsync(connection, tableName, entities, qualifiers, bulkCopyTimeout, identityBehavior, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, tableName, entities, qualifiers, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Upserts the rows of a <see cref="DataTable"/> in bulk in an asynchronous way. Returns the
@@ -146,6 +156,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
@@ -156,9 +167,10 @@ namespace RepoDb
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeBaseAsync(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, identityBehavior, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         #endregion
 

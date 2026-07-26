@@ -1,4 +1,5 @@
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
@@ -44,12 +45,17 @@ namespace RepoDb
         #region Naming
 
         /// <summary>
-        /// Deterministically derives the staging table's name from the real table's name. Kept short
-        /// (well within Oracle's pre-12.2 30-byte identifier limit) since it is always quoted and never
-        /// needs to be human-readable.
+        /// Deterministically derives the staging table's name from the real table's name and the
+        /// requested <see cref="OracleBulkImportPseudoTableType"/>. Kept short (well within Oracle's
+        /// pre-12.2 30-byte identifier limit) since it is always quoted and never needs to be
+        /// human-readable. The type-specific suffix ensures the Temporary and Physical staging tables for
+        /// the same real table never collide by name or in the <see cref="ensuredTables"/> cache.
         /// </summary>
-        public static string GetStagingTableName(string tableName) =>
-            "RB$" + unchecked((uint)tableName.GetHashCode()).ToString("X8", CultureInfo.InvariantCulture);
+        public static string GetStagingTableName(string tableName, OracleBulkImportPseudoTableType pseudoTableType)
+        {
+            var suffix = pseudoTableType == OracleBulkImportPseudoTableType.Physical ? "P" : "T";
+            return "RB$" + unchecked((uint)tableName.GetHashCode()).ToString("X8", CultureInfo.InvariantCulture) + suffix;
+        }
 
         #endregion
 
@@ -64,6 +70,7 @@ namespace RepoDb
             string tableName,
             string stagingTableName,
             DbFieldCollection dbFields,
+            OracleBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
             OracleTransaction transaction)
         {
@@ -76,7 +83,7 @@ namespace RepoDb
 
             if (StagingTableExists(connection, stagingTableName, transaction) == false)
             {
-                var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, dbSetting);
+                var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, pseudoTableType, dbSetting);
                 connection.ExecuteNonQuery(commandText, transaction: transaction);
             }
 
@@ -118,6 +125,7 @@ namespace RepoDb
             string tableName,
             string stagingTableName,
             DbFieldCollection dbFields,
+            OracleBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
             OracleTransaction transaction,
             CancellationToken cancellationToken = default)
@@ -131,7 +139,7 @@ namespace RepoDb
 
             if (await StagingTableExistsAsync(connection, stagingTableName, transaction, cancellationToken) == false)
             {
-                var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, dbSetting);
+                var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, pseudoTableType, dbSetting);
                 await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             }
 

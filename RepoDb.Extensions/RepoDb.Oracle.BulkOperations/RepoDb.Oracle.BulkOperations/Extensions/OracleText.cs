@@ -19,22 +19,32 @@ namespace RepoDb
         #region Staging Table DDL/DML
 
         /// <summary>
-        /// <c>CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS AS SELECT ... WHERE 1 = 0</c> -
-        /// mirrors the real table's column set exactly (via CTAS, so no per-column DDL needs to be
+        /// Either <c>CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS AS SELECT ... WHERE 1 = 0</c>
+        /// (<see cref="OracleBulkImportPseudoTableType.Temporary"/>) or a plain
+        /// <c>CREATE TABLE ... AS SELECT ... WHERE 1 = 0</c> (<see cref="OracleBulkImportPseudoTableType.Physical"/>).
+        /// Either way, CTAS mirrors the real table's column set exactly (no per-column DDL needs to be
         /// hand-built from <see cref="DbField"/> metadata) plus a leading <c>__RepoDb_OrderColumn</c> used
         /// to correlate staged rows back to their original position in the caller's input sequence.
         /// </summary>
         public static string GetCreateStagingTableCommandText(string tableName,
             string stagingTableName,
             DbFieldCollection dbFields,
+            OracleBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting)
         {
             var columns = dbFields.GetItems()
                 .Select(field => field.Name.AsQuoted(true, dbSetting))
                 .Join(", ");
 
-            return string.Concat("CREATE GLOBAL TEMPORARY TABLE ", stagingTableName.AsQuoted(true, dbSetting),
-                " ON COMMIT PRESERVE ROWS AS SELECT 0 AS ", OracleStagingTable.OrderColumnName.AsQuoted(true, dbSetting),
+            var createClause = pseudoTableType == OracleBulkImportPseudoTableType.Physical ?
+                "CREATE TABLE " :
+                "CREATE GLOBAL TEMPORARY TABLE ";
+            var onCommitClause = pseudoTableType == OracleBulkImportPseudoTableType.Physical ?
+                string.Empty :
+                " ON COMMIT PRESERVE ROWS";
+
+            return string.Concat(createClause, stagingTableName.AsQuoted(true, dbSetting), onCommitClause,
+                " AS SELECT 0 AS ", OracleStagingTable.OrderColumnName.AsQuoted(true, dbSetting),
                 ", ", columns, " FROM ", tableName.AsQuoted(true, dbSetting), " WHERE 1 = 0");
         }
 

@@ -1,4 +1,5 @@
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -33,7 +35,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName);
+            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
 
             // GetDeleteCommandText validates (and throws a clear error if there are no usable qualifiers)
             // before any of the resolved-qualifiers-dependent code below runs, so a table with neither an
@@ -48,7 +50,7 @@ namespace RepoDb
 
             return connection.TransactionalExecute(txn =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, dbSetting, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
                 OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
                 OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn);
 
@@ -66,12 +68,13 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName);
+            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
 
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
             var dataRows = (rowState.HasValue ?
@@ -85,7 +88,7 @@ namespace RepoDb
 
             return connection.TransactionalExecute(txn =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, dbSetting, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
                 OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
                 OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn);
 
@@ -106,6 +109,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -116,7 +120,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName);
+            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
 
             // GetDeleteCommandText validates (and throws a clear error if there are no usable qualifiers)
             // before any of the resolved-qualifiers-dependent code below runs, so a table with neither an
@@ -131,7 +135,7 @@ namespace RepoDb
 
             return await connection.TransactionalExecuteAsync(async txn =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, dbSetting, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
                 await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
                 await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn, cancellationToken);
 
@@ -149,13 +153,14 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryField = dbFields.GetPrimary()?.AsField();
-            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName);
+            var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
 
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField).AsList();
             var dataRows = (rowState.HasValue ?
@@ -169,7 +174,7 @@ namespace RepoDb
 
             return await connection.TransactionalExecuteAsync(async txn =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, dbSetting, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
                 await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
                 await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn, cancellationToken);
 

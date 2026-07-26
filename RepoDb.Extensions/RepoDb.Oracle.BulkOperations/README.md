@@ -23,7 +23,7 @@ single round trip per operation.
 
 - [Special Arguments](#special-arguments)
 - [Why No Staging Table for BulkInsert](#why-no-staging-table-for-bulkinsert)
-- [The Global Temporary Table Caveat](#the-global-temporary-table-caveat)
+- [The Staging Table Lifecycle: Temporary vs Physical](#the-staging-table-lifecycle-temporary-vs-physical)
 - [Async Methods](#async-methods)
 - [BulkInsert](#bulkinsert)
 - [BulkMerge](#bulkmerge)
@@ -75,9 +75,15 @@ properties/columns from the target table are used automatically, honoring each p
 - `ReturnIdentity` — the database-generated (or matched) identity value is read back and written onto
   each entity/row.
 
-There is only one enumeration in this package. Unlike the PostgreSQL bulk package, there is no
-`BulkImportPseudoTableType` (Oracle always stages through a Global Temporary Table - see below) and no
-`BulkImportMergeCommandType` (Oracle has exactly one native upsert construct, `MERGE INTO`).
+**`pseudoTableType`** (`BulkMerge`, `BulkUpdate`, `BulkDelete` only) — an `OracleBulkImportPseudoTableType`
+controlling what kind of staging table backs the operation:
+
+- `Temporary` *(default)* — a Global Temporary Table (GTT). Session-private rows, safe for concurrent
+  callers writing to the same table from different connections.
+- `Physical` — an ordinary heap table. No session isolation - see the caveat below before using this.
+
+Unlike the PostgreSQL bulk package, there is no `BulkImportMergeCommandType` (Oracle has exactly one
+native upsert construct, `MERGE INTO`).
 
 ## Why No Staging Table for BulkInsert
 
@@ -88,21 +94,34 @@ same order the rows were bound - as a single output parameter array. That gives 
 single-round-trip load with reliable per-row identity correlation, with no server-side table needed at
 all.
 
-## The Global Temporary Table Caveat
+## The Staging Table Lifecycle: Temporary vs Physical
 
-`BulkMerge`, `BulkUpdate`, and `BulkDelete` stage rows into a per-table Global Temporary Table (GTT)
-before running one set-based `MERGE INTO` / `DELETE ... WHERE EXISTS` statement against it. Oracle's
-`CREATE TABLE` and `DROP TABLE` are DDL and cause an **implicit COMMIT** - so unlike PostgreSQL, which
-creates and drops its pseudo table on every call, this package creates the GTT **once** per table (the
-first time it's needed in the process) with `ON COMMIT PRESERVE ROWS`, and merely `DELETE`s its contents
-(plain DML, transaction-safe) before every subsequent call.
+`BulkMerge`, `BulkUpdate`, and `BulkDelete` stage rows into a per-table pseudo table before running one
+set-based `MERGE INTO` / `DELETE ... WHERE EXISTS` statement against it. Oracle's `CREATE TABLE` and
+`DROP TABLE` are DDL and cause an **implicit COMMIT** - so unlike PostgreSQL, which creates and drops its
+pseudo table on every call, this package creates the staging table **once** per (table name, pseudo table
+type) the first time it's needed in the process, and merely `DELETE`s its contents (plain DML,
+transaction-safe) before every subsequent call. The `pseudoTableType` argument picks which kind of table
+backs this:
+
+- **`Temporary`** *(default)* — `CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS`. Rows are
+  private to each session, so concurrent connections bulk-writing to the same target table never see or
+  interfere with each other's staged data, even though they share one table definition. This is the safe
+  choice for concurrent/multi-connection workloads and should be left as the default in almost all cases.
+- **`Physical`** — `CREATE TABLE ... AS SELECT ...`, an ordinary heap table. It carries **no per-session
+  data isolation** - every session/connection reads and writes the *same* rows. Two connections
+  bulk-writing to the same target table concurrently with `Physical` will corrupt or race each other's
+  staged data. Only use this for workloads where calls against the same table are known to be sequential
+  (e.g. a single-threaded batch job), in exchange for avoiding whatever session-temporary-object overhead
+  your Oracle environment attaches to GTTs. `Temporary` and `Physical` staging tables for the same real
+  table are named distinctly, so switching between them for the same table is safe and won't collide.
 
 **Practical implication:** the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a given table
-in a process will issue a `CREATE GLOBAL TEMPORARY TABLE` statement. If that first call happens inside a
-transaction that already has other uncommitted work pending, that work will be implicitly committed at
-that point. Consider "warming up" the staging table for tables you'll bulk-write to (e.g. with a
-throwaway call at application startup, outside of any transaction you care about) if this matters for
-your workload.
+(for a given `pseudoTableType`) in a process will issue a `CREATE TABLE` or `CREATE GLOBAL TEMPORARY TABLE`
+statement. If that first call happens inside a transaction that already has other uncommitted work
+pending, that work will be implicitly committed at that point. Consider "warming up" the staging table for
+tables you'll bulk-write to (e.g. with a throwaway call at application startup, outside of any transaction
+you care about) if this matters for your workload.
 
 ## Async Methods
 
@@ -199,6 +218,20 @@ starting with Oracle Database 23ai). When `identityBehavior: BulkImportIdentityB
 requested, a second, version-independent query correlates the staged rows back to the real table by the
 same qualifiers immediately after the `MERGE` completes.
 
+`BulkMerge`, `BulkUpdate`, and `BulkDelete` also accept `pseudoTableType` (see
+[Special Arguments](#special-arguments) and
+[The Staging Table Lifecycle](#the-staging-table-lifecycle-temporary-vs-physical)) to pick between a
+session-isolated Global Temporary Table (the default) and a shared physical table:
+
+```csharp
+using (var connection = new OracleConnection(ConnectionString))
+{
+    var customers = GetCustomers();
+    // Only safe for sequential, single-threaded workloads against this table - see the caveat above.
+    var mergedRows = connection.BulkMerge<Customer>(customers, pseudoTableType: OracleBulkImportPseudoTableType.Physical);
+}
+```
+
 ## BulkUpdate
 
 Updates existing rows in the database in bulk, matched by the defined qualifiers. Returns the number of
@@ -233,7 +266,7 @@ using (var connection = new OracleConnection(ConnectionString))
 ```
 
 `BulkUpdate` has no identity-related arguments - like the PostgreSQL bulk package, this operation never
-generates or reports back identity values.
+generates or reports back identity values. It accepts `pseudoTableType` the same way `BulkMerge` does.
 
 ## BulkDelete
 
@@ -269,4 +302,4 @@ using (var connection = new OracleConnection(ConnectionString))
 ```
 
 `BulkDelete` only ever stages the qualifier columns (not the whole row) - it's the lightest of the four
-operations.
+operations. It accepts `pseudoTableType` the same way `BulkMerge` does.
