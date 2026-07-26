@@ -50,5 +50,15 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="RepoDb.UnitTests" />
+    <!--
+      RepoDb.Oracle needs to rename Parameter.Name (internal setter) on WHERE-clause QueryFields
+      before delegating to BaseStatementBuilder.CreateUpdate/CreateUpdateAll. Core unconditionally
+      prepends "_" to WHERE-clause parameter names on Update operations (Parameter.PrependAnUnderscore,
+      to avoid a SET/WHERE bind-name collision), which SQL Server/PostgreSQL tolerate (e.g. "@_Id" is a
+      legal parameter name) but Oracle rejects (":_Id" is not a legal bind variable - identifiers must
+      start with a letter), causing "ORA-00911: invalid character after". See RepoDb.Oracle's
+      OracleStatementBuilder.CreateUpdate for the rename-in-place fix that requires this access.
+    -->
+    <InternalsVisibleTo Include="RepoDb.Oracle" />
   </ItemGroup>
 </Project>

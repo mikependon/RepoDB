@@ -30,6 +30,8 @@ env:
   REPODB_MYSQL_CONSTR: "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;"
   # SQLite — set to in-memory so no file-system setup is required on the runner
   REPODB_SQLITE_IS_IN_MEMORY: "true"
+  # Oracle
+  REPODB_ORACLE_CONSTR: "User Id=system;Password=RepoDB2026;Data Source=127.0.0.1:1521/FREEPDB1;"
 
 jobs:
   build:
@@ -58,6 +60,19 @@ jobs:
           - 127.0.0.1:3306:3306
         env:
           MYSQL_ROOT_PASSWORD: RepoDB2026
+
+      oracle:
+        image: container-registry.oracle.com/database/free:latest
+        ports:
+          - 127.0.0.1:1521:1521
+        env:
+          ORACLE_PWD: RepoDB2026
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 20s
+          --health-timeout 10s
+          --health-retries 30
+          --health-start-period 60s
 
     steps:
       - name: Check out repository code

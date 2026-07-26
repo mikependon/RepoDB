@@ -1285,7 +1285,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -1670,7 +1670,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);

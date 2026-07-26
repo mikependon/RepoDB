@@ -938,9 +938,27 @@ namespace RepoDb.Reflection
             }
 
             // Casting
-            if (cachedType.GetUnderlyingType() != TypeCache.Get(toType).GetUnderlyingType())
+            var sourceUnderlyingType = cachedType.GetUnderlyingType();
+            var targetUnderlyingType = TypeCache.Get(toType).GetUnderlyingType();
+            if (sourceUnderlyingType != targetUnderlyingType)
             {
-                falseExpression = ConvertExpressionToTypeExpression(expression, toType);
+                if (sourceUnderlyingType?.IsEnum == true && Enum.GetUnderlyingType(sourceUnderlyingType) != targetUnderlyingType)
+                {
+                    // Expression.Convert() only recognizes a direct coercion between an enum and its
+                    // own underlying integral type (e.g. Hands -> Int32); there is no built-in (nor
+                    // user-defined) coercion from an enum straight to an unrelated numeric type like
+                    // Decimal/Double/Single, even though a plain C# cast silently chains the two
+                    // conversions for you. Chain them explicitly: enum -> its underlying integral type
+                    // -> the actually requested toType. Without this, binding an enum-typed property
+                    // to e.g. a NUMBER/DECIMAL column throws "No coercion operator is defined between
+                    // types 'TEnum' and 'Decimal'".
+                    var enumUnderlyingExpression = ConvertExpressionToTypeExpression(expression, Enum.GetUnderlyingType(sourceUnderlyingType));
+                    falseExpression = ConvertExpressionToTypeExpression(enumUnderlyingExpression, toType);
+                }
+                else
+                {
+                    falseExpression = ConvertExpressionToTypeExpression(expression, toType);
+                }
             }
 
             // Nullable
