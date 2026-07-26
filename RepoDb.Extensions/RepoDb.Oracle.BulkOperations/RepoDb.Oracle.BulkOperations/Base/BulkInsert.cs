@@ -21,7 +21,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -31,7 +31,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
 
             mappings = mappings?.Any() == true ? mappings :
                 isDictionary ?
@@ -46,13 +46,13 @@ namespace RepoDb
             var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
             var rows = OracleHelpers.BuildRows(entityList, sourceFields, isDictionary, gettersByMappedName, false);
 
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
                 var (affected, returned) = OracleStagingTable.ExecuteArrayBind(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, txn);
+                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction);
 
                 if (returnIdentity && returned != null)
                 {
@@ -73,13 +73,13 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
 
             mappings = mappings?.Any() == true ? mappings :
                 OracleHelpers.GetMappings(table, dbFields, includeIdentity, dbSetting);
@@ -95,13 +95,13 @@ namespace RepoDb
                 table.Rows.Cast<DataRow>()).AsList();
             var rows = OracleHelpers.BuildRows(dataRows, sourceFields, false);
 
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
                 var (affected, returned) = OracleStagingTable.ExecuteArrayBind(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, txn);
+                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction);
 
                 if (returnIdentity && returned != null)
                 {
@@ -125,7 +125,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -136,7 +136,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
 
             mappings = mappings?.Any() == true ? mappings :
                 isDictionary ?
@@ -151,13 +151,13 @@ namespace RepoDb
             var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
             var rows = OracleHelpers.BuildRows(entityList, sourceFields, isDictionary, gettersByMappedName, false);
 
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
                 var (affected, returned) = await OracleStagingTable.ExecuteArrayBindAsync(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, txn, cancellationToken);
+                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction, cancellationToken);
 
                 if (returnIdentity && returned != null)
                 {
@@ -178,14 +178,14 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var identityField = dbFields.GetIdentity();
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+            var includeIdentity = identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
 
             mappings = mappings?.Any() == true ? mappings :
                 OracleHelpers.GetMappings(table, dbFields, includeIdentity, dbSetting);
@@ -201,13 +201,13 @@ namespace RepoDb
                 table.Rows.Cast<DataRow>()).AsList();
             var rows = OracleHelpers.BuildRows(dataRows, sourceFields, false);
 
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var commandText = OracleText.GetInsertCommandText(tableName, fields, identityField?.AsField(), identityBehavior, dbSetting);
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
                 var (affected, returned) = await OracleStagingTable.ExecuteArrayBindAsync(connection, commandText, parameterNames, rows,
-                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, txn, cancellationToken);
+                    oracleDbTypes, returnIdentity ? identityField.Name : null, null, bulkCopyTimeout, transaction, cancellationToken);
 
                 if (returnIdentity && returned != null)
                 {

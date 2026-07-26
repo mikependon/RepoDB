@@ -21,26 +21,24 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            var entityList = entities as IList<TEntity> ?? entities.ToList();
-            var entityType = entityList.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var entityList = entities.AsList();
+            var entityType = entityList?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryField = dbFields.GetPrimary()?.AsField();
             var identityField = dbFields.GetIdentity();
             var stagingTableName = OracleStagingTable.GetStagingTableName(tableName, pseudoTableType);
-
             var fields = isDictionary ?
                 OracleHelpers.GetDictionaryFields(entityList.First() as IDictionary<string, object>, dbFields, dbSetting) :
                 OracleHelpers.GetEntityFields(entityType, dbFields, dbSetting);
             var gettersByMappedName = isDictionary ? null : Compiler.GetPropertyGettersByMappedName(entityType);
             var rows = OracleHelpers.BuildRows(entityList, fields, isDictionary, gettersByMappedName, true);
-
             var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, fields, true, dbSetting);
             var stagingParameterNames = fields
                 .Select(field => OracleText.GetParameterName(field, dbSetting))
@@ -49,23 +47,22 @@ namespace RepoDb
             var stagingOracleDbTypes = OracleHelpers.GetOracleDbTypes(fields, entityType, isDictionary)
                 .Concat(new OracleDbType?[] { null })
                 .AsList();
-
             var mergeText = OracleText.GetMergeCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, identityField?.AsField(), identityBehavior, dbSetting);
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField);
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
+                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
+                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, transaction);
 
-                var affected = connection.ExecuteNonQuery(mergeText, bulkCopyTimeout, transaction: txn);
+                var affected = connection.ExecuteNonQuery(mergeText, bulkCopyTimeout, transaction: transaction);
 
                 if (returnIdentity)
                 {
                     var lookupText = OracleText.GetMergeIdentityLookupCommandText(tableName, stagingTableName, resolvedQualifiers, identityField.AsField(), dbSetting);
-                    var identityResults = connection.ExecuteQuery<IdentityResult>(lookupText, transaction: txn);
+                    var identityResults = connection.ExecuteQuery<IdentityResult>(lookupText, transaction: transaction);
                     var byIndex = identityResults.ToDictionary(r => r.Index, r => (object)r.Identity);
                     OracleHelpers.SetIdentities(entityType, entityList, identityField, byIndex, dbSetting);
                 }
@@ -84,7 +81,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
@@ -107,21 +104,21 @@ namespace RepoDb
                 .AsList();
 
             var mergeText = OracleText.GetMergeCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, identityField?.AsField(), identityBehavior, dbSetting);
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField);
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
+                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
+                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
 
-                var affected = connection.ExecuteNonQuery(mergeText, bulkCopyTimeout, transaction: txn);
+                var affected = connection.ExecuteNonQuery(mergeText, bulkCopyTimeout, transaction: transaction);
 
                 if (returnIdentity)
                 {
                     var lookupText = OracleText.GetMergeIdentityLookupCommandText(tableName, stagingTableName, resolvedQualifiers, identityField.AsField(), dbSetting);
-                    var identityResults = connection.ExecuteQuery<IdentityResult>(lookupText, transaction: txn);
+                    var identityResults = connection.ExecuteQuery<IdentityResult>(lookupText, transaction: transaction);
                     var byIndex = identityResults.ToDictionary(r => r.Index, r => (object)r.Identity);
                     OracleHelpers.SetDataTableIdentities(table, identityField, byIndex, dbSetting);
                 }
@@ -143,7 +140,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -174,21 +171,21 @@ namespace RepoDb
                 .AsList();
 
             var mergeText = OracleText.GetMergeCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, identityField?.AsField(), identityBehavior, dbSetting);
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField);
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, stagingOracleDbTypes, null, null, bulkCopyTimeout, transaction, cancellationToken);
 
-                var affected = await connection.ExecuteNonQueryAsync(mergeText, bulkCopyTimeout, transaction: txn, cancellationToken: cancellationToken);
+                var affected = await connection.ExecuteNonQueryAsync(mergeText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 if (returnIdentity)
                 {
                     var lookupText = OracleText.GetMergeIdentityLookupCommandText(tableName, stagingTableName, resolvedQualifiers, identityField.AsField(), dbSetting);
-                    var identityResults = await connection.ExecuteQueryAsync<IdentityResult>(lookupText, transaction: txn, cancellationToken: cancellationToken);
+                    var identityResults = await connection.ExecuteQueryAsync<IdentityResult>(lookupText, transaction: transaction, cancellationToken: cancellationToken);
                     var byIndex = identityResults.ToDictionary(r => r.Index, r => (object)r.Identity);
                     OracleHelpers.SetIdentities(entityType, entityList, identityField, byIndex, dbSetting);
                 }
@@ -207,7 +204,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -231,21 +228,21 @@ namespace RepoDb
                 .AsList();
 
             var mergeText = OracleText.GetMergeCommandText(tableName, stagingTableName, fields, qualifiers, primaryField, identityField?.AsField(), identityBehavior, dbSetting);
-            var returnIdentity = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+            var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
             var resolvedQualifiers = OracleText.ResolveQualifiers(qualifiers, primaryField);
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
 
-                var affected = await connection.ExecuteNonQueryAsync(mergeText, bulkCopyTimeout, transaction: txn, cancellationToken: cancellationToken);
+                var affected = await connection.ExecuteNonQueryAsync(mergeText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 if (returnIdentity)
                 {
                     var lookupText = OracleText.GetMergeIdentityLookupCommandText(tableName, stagingTableName, resolvedQualifiers, identityField.AsField(), dbSetting);
-                    var identityResults = await connection.ExecuteQueryAsync<IdentityResult>(lookupText, transaction: txn, cancellationToken: cancellationToken);
+                    var identityResults = await connection.ExecuteQueryAsync<IdentityResult>(lookupText, transaction: transaction, cancellationToken: cancellationToken);
                     var byIndex = identityResults.ToDictionary(r => r.Index, r => (object)r.Identity);
                     OracleHelpers.SetDataTableIdentities(table, identityField, byIndex, dbSetting);
                 }

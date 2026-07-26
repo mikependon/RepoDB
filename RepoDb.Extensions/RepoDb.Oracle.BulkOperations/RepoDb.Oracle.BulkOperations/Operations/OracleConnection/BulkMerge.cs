@@ -32,7 +32,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
@@ -57,7 +57,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
@@ -82,7 +82,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null) =>
             BulkMergeBase(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
@@ -110,7 +110,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -138,7 +138,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -166,7 +166,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>

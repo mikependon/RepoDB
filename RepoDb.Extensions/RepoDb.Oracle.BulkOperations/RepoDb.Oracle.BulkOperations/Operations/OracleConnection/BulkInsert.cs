@@ -36,7 +36,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
             BulkInsertBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, transaction);
@@ -58,7 +58,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
             BulkInsertBase(connection, tableName, entities, mappings, bulkCopyTimeout, identityBehavior, transaction);
@@ -81,7 +81,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null) =>
             BulkInsertBase(connection, tableName, table, rowState, mappings, bulkCopyTimeout, identityBehavior, transaction);
 
@@ -106,7 +106,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -131,7 +131,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -157,7 +157,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, identityBehavior, transaction, cancellationToken);

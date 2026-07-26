@@ -19,20 +19,9 @@ namespace RepoDb
     /// BulkMerge/BulkUpdate/BulkDelete, plus the array-bind primitive used both to load that staging
     /// table and (for BulkInsert, which needs no staging table at all - see the package README) to write
     /// directly into the real table in a single round trip.
-    /// <para>
-    /// Why a GTT instead of PostgreSQL's per-call physical/TEMP pseudo table: Oracle's CREATE TABLE and
-    /// DROP TABLE are DDL and cause an implicit COMMIT, so creating/dropping a staging table on every
-    /// bulk call - the way the PostgreSQL package does - would silently commit whatever the caller's
-    /// transaction had pending. Instead, the staging table is created once per (connection database,
-    /// table name) the first time it is needed with <c>ON COMMIT PRESERVE ROWS</c> (so its rows survive
-    /// across commits within a session) and is then simply cleared with a plain <c>DELETE</c> - which is
-    /// DML, not DDL - before every subsequent load.
-    /// </para>
     /// </summary>
     internal static class OracleStagingTable
     {
-        private static readonly ConcurrentDictionary<string, bool> ensuredTables = new(StringComparer.Ordinal);
-
         internal const string OrderColumnName = "__RepoDb_OrderColumn";
 
         /// <summary>
@@ -48,10 +37,10 @@ namespace RepoDb
         /// Deterministically derives the staging table's name from the real table's name and the
         /// requested <see cref="OracleBulkImportPseudoTableType"/>. Kept short (well within Oracle's
         /// pre-12.2 30-byte identifier limit) since it is always quoted and never needs to be
-        /// human-readable. The type-specific suffix ensures the Temporary and Physical staging tables for
-        /// the same real table never collide by name or in the <see cref="ensuredTables"/> cache.
+        /// human-readable.
         /// </summary>
-        public static string GetStagingTableName(string tableName, OracleBulkImportPseudoTableType pseudoTableType)
+        public static string GetStagingTableName(string tableName,
+            OracleBulkImportPseudoTableType pseudoTableType)
         {
             var suffix = pseudoTableType == OracleBulkImportPseudoTableType.Physical ? "P" : "T";
             return "RB$" + unchecked((uint)tableName.GetHashCode()).ToString("X8", CultureInfo.InvariantCulture) + suffix;
@@ -75,19 +64,11 @@ namespace RepoDb
             OracleTransaction transaction)
         {
             var cacheKey = GetCacheKey(connection, stagingTableName);
-
-            if (ensuredTables.ContainsKey(cacheKey))
-            {
-                return;
-            }
-
             if (StagingTableExists(connection, stagingTableName, transaction) == false)
             {
                 var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, pseudoTableType, dbSetting);
                 connection.ExecuteNonQuery(commandText, transaction: transaction);
             }
-
-            ensuredTables.TryAdd(cacheKey, true);
         }
 
         /// <summary>
@@ -101,6 +82,13 @@ namespace RepoDb
                 string.Concat("DELETE FROM ", stagingTableName.AsQuoted(true, dbSetting)),
                 transaction: transaction);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="stagingTableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static bool StagingTableExists(OracleConnection connection,
             string stagingTableName,
             OracleTransaction transaction)
@@ -131,19 +119,11 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var cacheKey = GetCacheKey(connection, stagingTableName);
-
-            if (ensuredTables.ContainsKey(cacheKey))
-            {
-                return;
-            }
-
             if (await StagingTableExistsAsync(connection, stagingTableName, transaction, cancellationToken) == false)
             {
                 var commandText = OracleText.GetCreateStagingTableCommandText(tableName, stagingTableName, dbFields, pseudoTableType, dbSetting);
                 await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             }
-
-            ensuredTables.TryAdd(cacheKey, true);
         }
 
         /// <summary>

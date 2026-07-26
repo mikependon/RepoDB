@@ -4,14 +4,6 @@ namespace RepoDb.Enumerations.Oracle
     /// An enumeration that is being used to define the type of staging (pseudo) table to be created
     /// during the <c>BulkMerge</c>, <c>BulkUpdate</c>, and <c>BulkDelete</c> operations.
     /// </summary>
-    /// <remarks>
-    /// Unlike the PostgreSQL bulk package, both values here are created <b>once</b> (the first time they
-    /// are needed for a given table, within the process) and reused thereafter via a plain <c>DELETE</c> -
-    /// never dropped and recreated per call. Oracle's <c>CREATE TABLE</c>/<c>DROP TABLE</c> are DDL and
-    /// cause an implicit <c>COMMIT</c>, so recreating a staging table on every bulk call the way the
-    /// PostgreSQL package does would silently commit whatever the caller's transaction had pending. See
-    /// the package README for the full explanation.
-    /// </remarks>
     public enum OracleBulkImportPseudoTableType : short
     {
         /// <summary>

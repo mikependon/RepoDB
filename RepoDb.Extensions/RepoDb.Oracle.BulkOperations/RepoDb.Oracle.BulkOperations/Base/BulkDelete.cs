@@ -48,13 +48,13 @@ namespace RepoDb
             var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
             var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
+                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
+                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
 
-                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: txn);
+                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: transaction);
             }, transaction);
         }
 
@@ -86,13 +86,13 @@ namespace RepoDb
             var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
             var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
 
-            return connection.TransactionalExecute(txn =>
+            return connection.TransactionalExecute(transaction =>
             {
-                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn);
-                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, txn);
-                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn);
+                OracleStagingTable.EnsureStagingTable(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction);
+                OracleStagingTable.ClearStagingTable(connection, stagingTableName, dbSetting, transaction);
+                OracleStagingTable.ExecuteArrayBind(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction);
 
-                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: txn);
+                return connection.ExecuteNonQuery(deleteText, bulkCopyTimeout, transaction: transaction);
             }, transaction);
         }
 
@@ -133,13 +133,13 @@ namespace RepoDb
             var stagingInsertText = OracleText.GetStagingInsertCommandText(stagingTableName, resolvedQualifiers, false, dbSetting);
             var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
 
-                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: txn, cancellationToken: cancellationToken);
+                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
             }, transaction, cancellationToken);
         }
 
@@ -172,13 +172,13 @@ namespace RepoDb
             var stagingParameterNames = resolvedQualifiers.Select(field => OracleText.GetParameterName(field, dbSetting)).AsList();
             var deleteText = OracleText.GetDeleteCommandText(tableName, stagingTableName, qualifiers, primaryField, dbSetting);
 
-            return await connection.TransactionalExecuteAsync(async txn =>
+            return await connection.TransactionalExecuteAsync(async transaction =>
             {
-                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, txn, cancellationToken);
-                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, txn, cancellationToken);
+                await OracleStagingTable.EnsureStagingTableAsync(connection, tableName, stagingTableName, dbFields, pseudoTableType, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ClearStagingTableAsync(connection, stagingTableName, dbSetting, transaction, cancellationToken);
+                await OracleStagingTable.ExecuteArrayBindAsync(connection, stagingInsertText, stagingParameterNames, rows, null, null, null, bulkCopyTimeout, transaction, cancellationToken);
 
-                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: txn, cancellationToken: cancellationToken);
+                return await connection.ExecuteNonQueryAsync(deleteText, bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
             }, transaction, cancellationToken);
         }
 

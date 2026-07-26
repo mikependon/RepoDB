@@ -95,7 +95,7 @@ namespace RepoDb
         public static string GetInsertCommandText(string tableName,
             IEnumerable<Field> fields,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            OracleBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("Insert".GetHashCode(),
@@ -110,7 +110,7 @@ namespace RepoDb
                 return commandText;
             }
 
-            if (identityBehavior != BulkImportIdentityBehavior.KeepIdentity)
+            if (identityBehavior != OracleBulkImportIdentityBehavior.KeepIdentity)
             {
                 fields = fields?.Where(field =>
                     !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
@@ -131,7 +131,7 @@ namespace RepoDb
                 .ParametersFrom(fields, 0, dbSetting)
                 .CloseParen();
 
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
+            if (identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null)
             {
                 builder
                     .WriteText("RETURNING")
@@ -166,7 +166,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            OracleBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             qualifiers = ResolveQualifiers(qualifiers, primaryField);
@@ -412,12 +412,12 @@ namespace RepoDb
 
         private static IEnumerable<Field> GetInsertableFields(IEnumerable<Field> fields,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior) =>
+            OracleBulkImportIdentityBehavior identityBehavior) =>
             fields?
                 .Where(field =>
                 {
                     var isIdentity = string.Equals(identityField?.Name, field.Name, StringComparison.OrdinalIgnoreCase);
-                    return isIdentity == false || identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    return isIdentity == false || identityBehavior == OracleBulkImportIdentityBehavior.KeepIdentity;
                 });
 
         /// <summary>

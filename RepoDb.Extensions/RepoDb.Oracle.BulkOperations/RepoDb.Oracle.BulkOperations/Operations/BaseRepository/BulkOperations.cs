@@ -37,7 +37,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkInsert(ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, transaction);
@@ -59,7 +59,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
@@ -128,7 +128,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -153,7 +153,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
