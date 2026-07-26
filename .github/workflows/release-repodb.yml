@@ -1,4 +1,4 @@
-name: Release - RepoDb (Manual)
+name: Release - RepoDb.Core (Manual)
 
 on:
   workflow_dispatch:
