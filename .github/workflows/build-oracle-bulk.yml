@@ -17,3 +17,23 @@ jobs:
       solution-dir: RepoDb.Extensions/RepoDb.Oracle.BulkOperations
       solution-file: RepoDb.Oracle.BulkOperations.sln
       artifact-name: release-oracle-bulk
+name: Build & Run Tests - RepoDb.Oracle.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Oracle/**'
+      - 'RepoDb.Extensions/RepoDb.Oracle.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-oracle-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.Oracle.BulkOperations
+      solution-file: RepoDb.Oracle.BulkOperations.sln
+      artifact-name: release-oracle-bulk
+      db-engine: oracle

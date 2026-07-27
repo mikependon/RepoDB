@@ -17,3 +17,4 @@ jobs:
       solution-dir: RepoDb.Extensions/RepoDb.Oracle.BulkOperations
       solution-file: RepoDb.Oracle.BulkOperations.sln
       artifact-name: release-pr
+      db-engine: oracle

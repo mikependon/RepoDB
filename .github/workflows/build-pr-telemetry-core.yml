@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.Telemetry.Core
       solution-file: RepoDb.Telemetry.Core.sln
       artifact-name: release-pr
+      db-engine: none

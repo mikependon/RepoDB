@@ -17,3 +17,4 @@ jobs:
       solution-dir: RepoDb.Telemetry.Default
       solution-file: RepoDb.Telemetry.Default.sln
       artifact-name: release-telemetry-default
+      db-engine: none
