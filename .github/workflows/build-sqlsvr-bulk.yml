@@ -17,3 +17,4 @@ jobs:
       solution-dir: RepoDb.Extensions/RepoDb.SqlServer.BulkOperations
       solution-file: RepoDb.SqlServer.BulkOperations.sln
       artifact-name: release-sqlsvr-bulk
+      db-engine: sqlserver

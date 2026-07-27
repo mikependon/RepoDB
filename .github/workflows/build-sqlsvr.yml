@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.SqlServer
       solution-file: RepoDb.SqlServer.sln
       artifact-name: release-sqlsvr
+      db-engine: sqlserver

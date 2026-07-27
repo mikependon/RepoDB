@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.MySql
       solution-file: RepoDb.MySql.sln
       artifact-name: release-pr
+      db-engine: mysql

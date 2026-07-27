@@ -17,3 +17,4 @@ jobs:
       solution-dir: RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations
       solution-file: RepoDb.PostgreSql.BulkOperations.sln
       artifact-name: release-pgsql-bulk
+      db-engine: postgresql

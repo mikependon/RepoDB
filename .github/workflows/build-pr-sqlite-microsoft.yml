@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.Sqlite.Microsoft
       solution-file: RepoDb.Sqlite.Microsoft.sln
       artifact-name: release-pr
+      db-engine: none

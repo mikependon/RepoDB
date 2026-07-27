@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.PostgreSql
       solution-file: RepoDb.PostgreSql.sln
       artifact-name: release-pgsql
+      db-engine: postgresql

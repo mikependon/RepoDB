@@ -16,3 +16,4 @@ jobs:
       solution-dir: RepoDb.MySqlConnector
       solution-file: RepoDb.MySqlConnector.sln
       artifact-name: release-mysqlconnector
+      db-engine: mysql
