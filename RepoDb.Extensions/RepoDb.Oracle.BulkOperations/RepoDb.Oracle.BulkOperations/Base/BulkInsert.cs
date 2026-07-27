@@ -29,6 +29,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBase<TEntity>(this OracleConnection connection,
@@ -37,6 +38,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -51,6 +53,7 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
+                    pseudoTableType,
                     transaction);
             }
             else
@@ -71,6 +74,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBaseForReturnIdentity<TEntity>(this OracleConnection connection,
@@ -79,6 +83,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -121,6 +126,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBase(this OracleConnection connection,
@@ -130,6 +136,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -144,6 +151,7 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
+                    pseudoTableType,
                     transaction);
             }
             else
@@ -157,7 +165,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -166,6 +174,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -176,6 +185,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
             throw new NotImplementedException();
@@ -222,6 +232,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -231,6 +242,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -246,6 +258,7 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
+                    pseudoTableType,
                     transaction,
                     cancellationToken);
             }
@@ -260,7 +273,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -269,6 +282,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -279,6 +293,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -325,6 +340,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -335,6 +351,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -350,6 +367,7 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
+                    pseudoTableType,
                     transaction,
                     cancellationToken);
             }
@@ -365,7 +383,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -374,6 +392,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -384,6 +403,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {

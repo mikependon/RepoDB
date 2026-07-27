@@ -32,6 +32,7 @@ namespace RepoDb
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<OracleConnection> repository,
@@ -40,6 +41,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -47,7 +49,7 @@ namespace RepoDb
 
             try
             {
-                return connection.BulkInsert(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, transaction);
+                return connection.BulkInsert(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
             }
             finally
             {
@@ -174,6 +176,7 @@ namespace RepoDb
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
@@ -183,6 +186,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -191,7 +195,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkInsertAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, transaction, cancellationToken);
+                return await connection.BulkInsertAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
             }
             finally
             {
