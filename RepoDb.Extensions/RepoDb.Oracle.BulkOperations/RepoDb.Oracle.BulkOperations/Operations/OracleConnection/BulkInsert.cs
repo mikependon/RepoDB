@@ -10,10 +10,7 @@ namespace RepoDb
 {
     /// <summary>
     /// Contains the official bulk operations of RepoDB for Oracle, exposed as <see cref="OracleConnection"/>
-    /// extension methods. Method names intentionally match the ADO.NET-conventional <c>BulkInsert</c>/
-    /// <c>BulkDelete</c>/<c>BulkMerge</c>/<c>BulkUpdate</c> naming (rather than the PostgreSQL bulk
-    /// package's <c>BinaryBulkXxx</c> naming) - Oracle's array-bind mechanism isn't a "binary" protocol
-    /// the way PostgreSQL's COPY BINARY is, so that prefix would be misleading here.
+    /// extension methods (i.e. <c>BulkInsert</c>, <c>BulkDelete</c>, <c>BulkMerge</c> and <c>BulkUpdate</c>).
     /// </summary>
     public static partial class OracleConnectionExtension
     {
