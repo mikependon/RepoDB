@@ -5,6 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Base;
+using RepoDb.Oracle.BulkOperations.Extensions;
 
 namespace RepoDb
 {
@@ -105,11 +108,22 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportPseudoTableType pseudoTableType = default)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            // Get the table name
+            var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+
+            // Create Pseudo Table
+            OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName);
+
+            // BulkInsert to the Pseudo Table
+            WriteToServer.WriteToServerInternal(connection, pseudoTableName, entities, mappings, bulkCopyTimeout);
+
+            // Merge to actual table
+            return OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName);
         }
 
         #endregion
