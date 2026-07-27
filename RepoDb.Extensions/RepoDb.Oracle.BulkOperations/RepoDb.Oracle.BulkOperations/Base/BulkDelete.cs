@@ -18,10 +18,37 @@ namespace RepoDb
     {
         #region Sync
 
+        #region BulkDeleteBase(PrimaryKeys)
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="primaryKeys"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static int BulkDeleteBase(this OracleConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            IEnumerable<Field> qualifiers = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            OracleTransaction transaction = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region BulkDeleteBase<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -80,10 +107,39 @@ namespace RepoDb
 
         #region Async
 
+        #region BulkDeleteBaseAsync(PrimaryKeys)
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="primaryKeys"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        private static async Task<int> BulkDeleteBaseAsync(this OracleConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            IEnumerable<Field> qualifiers = null,
+            int? bulkCopyTimeout = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region BulkDeleteBaseAsync<TEntity>
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>

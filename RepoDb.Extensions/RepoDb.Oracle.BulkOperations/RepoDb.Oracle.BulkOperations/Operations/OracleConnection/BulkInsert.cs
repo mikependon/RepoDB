@@ -17,8 +17,6 @@ namespace RepoDb
     /// </summary>
     public static partial class OracleConnectionExtension
     {
-        #region BulkInsert
-
         #region Sync
 
         /// <summary>
@@ -161,8 +159,6 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, identityBehavior, transaction, cancellationToken);
-
-        #endregion
 
         #endregion
     }

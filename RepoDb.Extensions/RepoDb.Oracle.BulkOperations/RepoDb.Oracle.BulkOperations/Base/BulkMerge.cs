@@ -44,6 +44,8 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
+            // Identify the behaviour
+            // TODO: First bulk-insert into a pseudo (Temporary or Physical) table
             throw new NotImplementedException();
         }
 
