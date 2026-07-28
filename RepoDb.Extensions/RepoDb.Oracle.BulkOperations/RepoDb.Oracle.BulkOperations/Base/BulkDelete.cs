@@ -28,6 +28,7 @@ namespace RepoDb
         /// <param name="primaryKeys"></param>
         /// <param name="qualifiers"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -37,6 +38,7 @@ namespace RepoDb
             IEnumerable<object> primaryKeys,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
@@ -59,6 +61,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -68,6 +71,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class
@@ -91,6 +95,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -101,6 +106,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
@@ -125,6 +131,7 @@ namespace RepoDb
         /// <param name="primaryKeys"></param>
         /// <param name="qualifiers"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -135,6 +142,7 @@ namespace RepoDb
             IEnumerable<object> primaryKeys,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -158,6 +166,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -168,6 +177,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -192,6 +202,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -203,6 +214,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)

@@ -26,23 +26,25 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal<TEntity>(OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null)
+            int? bulkCopyTimeout = null,
+            int? batchSize = null)
             where TEntity : class
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout);
+            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(reader);
             return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -50,16 +52,18 @@ namespace RepoDb
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal(OracleConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null)
+            int? bulkCopyTimeout = null,
+            int? batchSize = null)
         {
             connection.EnsureOpen();
-            using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout);
+            using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, batchSize);
             var rows = GetDataRows(table, rowState)?.ToArray();
             bulkCopy.WriteToServer(rows);
             return rows != null ? rows.Length : 0;
@@ -78,6 +82,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal<TEntity>(OracleConnection connection,
@@ -85,6 +90,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -92,7 +98,7 @@ namespace RepoDb
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 using var reader = new DataEntityDataReader<TEntity>(entities);
-                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout);
+                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize);
                 bulkCopy.WriteToServer(reader);
                 return entities != null ? entities.Count() : 0;
             },
@@ -100,7 +106,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -108,6 +114,7 @@ namespace RepoDb
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(OracleConnection connection,
@@ -116,12 +123,13 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             CancellationToken cancellationToken = default)
         {
             await connection.EnsureOpenAsync(cancellationToken);
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
-                using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout);
+                using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, batchSize);
                 var rows = GetDataRows(table, rowState)?.ToArray();
                 bulkCopy.WriteToServer(rows);
                 return rows != null ? rows.Length : 0;
@@ -174,12 +182,14 @@ namespace RepoDb
         /// <param name="table"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <returns></returns>
         private static OracleBulkCopy CreateBulkCopyForDataTable(OracleConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<OracleBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout)
+            int? bulkCopyTimeout,
+            int? batchSize = null)
         {
             var bulkCopy = new OracleBulkCopy(connection)
             {
@@ -188,6 +198,10 @@ namespace RepoDb
             if (bulkCopyTimeout.HasValue)
             {
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                bulkCopy.BatchSize = batchSize.Value;
             }
             if (mappings != null)
             {
@@ -214,12 +228,14 @@ namespace RepoDb
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
         /// <returns></returns>
         private static OracleBulkCopy CreateBulkCopyForDataReader(OracleConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout)
+            int? bulkCopyTimeout,
+            int? batchSize = null)
         {
             var bulkCopy = new OracleBulkCopy(connection)
             {
@@ -228,6 +244,10 @@ namespace RepoDb
             if (bulkCopyTimeout.HasValue)
             {
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                bulkCopy.BatchSize = batchSize.Value;
             }
             if (mappings != null)
             {

@@ -24,6 +24,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-inserted.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -32,11 +33,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkInsertBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
+            BulkInsertBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
         /// Inserts a list of entities into the database in bulk. Returns the number of inserted rows.
@@ -47,6 +49,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-inserted.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -56,11 +59,12 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkInsertBase(connection, tableName, entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
+            BulkInsertBase(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
         /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk. Returns the number of inserted rows.
@@ -71,6 +75,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -81,10 +86,11 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null) =>
-            BulkInsertBase(connection, tableName, table, rowState, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
+            BulkInsertBase(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction);
 
         #endregion
 
@@ -99,6 +105,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-inserted.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -108,12 +115,13 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkInsertBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
+            BulkInsertBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Inserts a list of entities into the database in bulk in an asynchronous way. Returns the number
@@ -125,6 +133,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-inserted.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -135,12 +144,13 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkInsertBaseAsync(connection, tableName, entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
+            BulkInsertBaseAsync(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
@@ -152,6 +162,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -163,11 +174,12 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
+            int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
+            BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         #endregion
     }
