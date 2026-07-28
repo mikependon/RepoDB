@@ -91,5 +91,34 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         }
 
         #endregion
+
+        #region Update
+
+        public static int UpdateFromPseudoTable(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            OracleTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+        }
+
+        public static async Task<int> UpdateFromPseudoTableAsync(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        #endregion
     }
 }

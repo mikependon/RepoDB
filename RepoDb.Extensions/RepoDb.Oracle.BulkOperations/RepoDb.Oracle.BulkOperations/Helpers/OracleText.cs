@@ -9,8 +9,9 @@ namespace RepoDb
 {
     /// <summary>
     /// A light-weight, allocation-cheap builder of the raw SQL text used by the Oracle bulk operations
-    /// (currently <c>BulkMerge</c>). Every method here is a pure string builder - no I/O, no caching -
-    /// callers (<see cref="RepoDb.Oracle.BulkOperations.Extensions.OracleExecution"/>) own execution.
+    /// (currently <c>BulkMerge</c> and <c>BulkUpdate</c>). Every method here is a pure string builder -
+    /// no I/O, no caching - callers (<see cref="RepoDb.Oracle.BulkOperations.Extensions.OracleExecution"/>)
+    /// own execution.
     /// </summary>
     internal static class OracleText
     {
@@ -112,6 +113,53 @@ namespace RepoDb
                 : string.Empty;
 
             return $"MERGE INTO {tableName.AsQuoted(true, dbSetting)} T USING {pseudoTableName.AsQuoted(true, dbSetting)} S ON ({onClause}) {whenMatchedClause}WHEN NOT MATCHED THEN INSERT ({insertColumns}) VALUES ({insertValues})";
+        }
+
+        #endregion
+
+        #region Update
+
+        /// <summary>
+        /// Returns the deterministic name of the staging/pseudo table for a <c>BulkUpdate</c> against
+        /// <paramref name="tableName"/>. Suffixed differently than <see cref="GetPseudoTableNameForMerge"/>
+        /// so a <c>BulkUpdate</c> and a <c>BulkMerge</c> against the same table never share (and clobber)
+        /// one staging table.
+        /// </summary>
+        public static string GetPseudoTableNameForUpdate(string tableName,
+            OracleBulkImportPseudoTableType pseudoTableType) =>
+            pseudoTableType == OracleBulkImportPseudoTableType.Physical ? $"Physical{tableName}Update" : $"Temp{tableName}Update";
+
+        /// <summary>
+        /// Builds the <c>MERGE INTO ... USING ... ON (...) WHEN MATCHED THEN UPDATE ...</c> statement that
+        /// updates every row on <paramref name="tableName"/> matched by a row currently staged in
+        /// <paramref name="pseudoTableName"/>. Unlike <see cref="GetMergeFromPseudoTableSql"/>, there is no
+        /// <c>WHEN NOT MATCHED</c> branch - a <c>BulkUpdate</c> only ever touches rows that already exist;
+        /// staged rows with no matching target row are silently left as-is (not inserted).
+        /// </summary>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged (the qualifier(s) plus every field to update).</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        public static string GetUpdateFromPseudoTableSql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var fieldList = fields.AsList();
+            var qualifierList = qualifiers.AsList();
+
+            var onClause = qualifierList
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(" AND ");
+
+            var updateClause = fieldList
+                .Where(f => qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == false)
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(", ");
+
+            return $"MERGE INTO {tableName.AsQuoted(true, dbSetting)} T USING {pseudoTableName.AsQuoted(true, dbSetting)} S ON ({onClause}) WHEN MATCHED THEN UPDATE SET {updateClause}";
         }
 
         #endregion
