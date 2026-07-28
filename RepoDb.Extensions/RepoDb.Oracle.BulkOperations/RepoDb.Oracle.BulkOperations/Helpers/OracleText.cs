@@ -55,6 +55,24 @@ namespace RepoDb
             IDbSetting dbSetting) =>
             $"TRUNCATE TABLE {pseudoTableName.AsQuoted(true, dbSetting)}";
 
+        /// <summary>
+        /// Builds a guarded (idempotent) <c>DROP TABLE</c> statement for the staging/pseudo table. Run
+        /// once a bulk operation is done with it, for maximum cleanup - unlike <see cref="GetTruncatePseudoTableSql"/>,
+        /// this removes the table definition itself (not just its rows), so the next call against the
+        /// same table starts from a clean <see cref="GetCreatePseudoTableSql"/> again. Guarded with a
+        /// PL/SQL block that swallows ORA-00942 ("table or view does not exist") so this is safe to call
+        /// even if the table was already dropped (e.g. by a concurrent session sharing the same
+        /// deterministic pseudo table name).
+        /// </summary>
+        public static string GetDropPseudoTableSql(string pseudoTableName,
+            IDbSetting dbSetting)
+        {
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+
+            // ORA-00942: table or view does not exist
+            return $"BEGIN EXECUTE IMMEDIATE 'DROP TABLE {quotedPseudoTableName}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE != -942 THEN RAISE; END IF; END;";
+        }
+
         #endregion
 
         #region Merge

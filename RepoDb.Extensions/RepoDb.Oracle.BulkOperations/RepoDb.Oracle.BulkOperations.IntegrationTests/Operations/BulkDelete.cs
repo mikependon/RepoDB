@@ -287,37 +287,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteForEntitiesIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkDelete(tables, null, mappings));
-            }
-        }
-
-        
-
-        
-
-        
-
-        [TestMethod]
         public void TestOracleConnectionBulkDeleteForEntitiesDataTable()
         {
             // Setup
@@ -333,7 +302,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -343,7 +312,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table);
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -387,7 +356,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -397,7 +366,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, null, DataRowState.Unchanged);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -407,51 +376,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(0, countResult);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteForEntitiesDataTableIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            // Insert the records first
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings));
                         }
                     }
                 }
@@ -475,8 +399,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         //        connection.BulkDelete(Enumerable.Empty<BulkOperationIdentityTable>());
         //    }
         //}
-
-        
 
         [TestMethod]
         public void ThrowExceptionOnOracleConnectionBulkDeleteForNullDataTable()
@@ -573,7 +495,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    primaryKeys: primaryKeys);
+                    entities: primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -681,7 +603,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     entities: tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
+                    qualifiers: Field.Parse<BulkOperationIdentityTable>(e => new { e.RowGuid, e.ColumnInt }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -721,12 +643,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        
-
-        
-
-        
-
         [TestMethod]
         public void TestOracleConnectionBulkDeleteForTableNameDbDataTable()
         {
@@ -743,7 +659,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -797,7 +713,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -810,8 +726,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 null,
-                                DataRowState.Unchanged,
-                                mappings);
+                                DataRowState.Unchanged);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -821,55 +736,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(0, countResult);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteForTableNameDbDataTableIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            // Insert the records first
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings));
                         }
                     }
                 }
@@ -1134,32 +1000,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForEntitiesIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                // Act
-                Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(tables,
-                    null,
-                    mappings).Result);
-            }
-        }
 
         
 
@@ -1183,7 +1023,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1193,7 +1033,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1237,7 +1077,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1247,10 +1087,10 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                                table,
                                 null,
-                                DataRowState.Unchanged,
-                                mappings).Result;
+                                DataRowState.Unchanged).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1260,54 +1100,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(0, countResult);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            // Insert the records first
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings).Result);
                         }
                     }
                 }
@@ -1430,7 +1222,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    primaryKeys: primaryKeys).Result;
+                    entities: primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1538,7 +1330,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     entities: tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
+                    qualifiers: Field.Parse<BulkOperationIdentityTable>(e => new { e.RowGuid, e.ColumnInt })).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1604,7 +1396,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1658,7 +1450,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1671,8 +1463,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 null,
-                                DataRowState.Unchanged,
-                                mappings).Result;
+                                DataRowState.Unchanged).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1682,55 +1473,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(0, countResult);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForTableNameDataTableIfTheMappingsAreInvalid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<OracleBulkInsertMapItem>();
-
-            // Add invalid mappings
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-
-            // Switched
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
-
-            // Insert the records first
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings).Result);
                         }
                     }
                 }
@@ -1753,7 +1495,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1786,7 +1528,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {

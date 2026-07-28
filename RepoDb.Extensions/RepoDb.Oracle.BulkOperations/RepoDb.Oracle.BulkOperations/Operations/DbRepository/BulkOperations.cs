@@ -58,14 +58,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Upserts a list of entities in bulk - inserts new rows and updates existing ones based on the
-        /// defined qualifiers (defaults to the primary key). Returns the number of affected rows.
+        /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
+        /// ones based on the defined qualifiers (defaults to the primary key). Returns the number of
+        /// affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -75,6 +77,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -85,7 +88,7 @@ namespace RepoDb
 
             try
             {
-                return connection.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
+                return connection.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
             }
             finally
             {
@@ -102,6 +105,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -110,6 +114,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
@@ -119,7 +124,7 @@ namespace RepoDb
 
             try
             {
-                return connection.BulkUpdate(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, pseudoTableType, transaction);
+                return connection.BulkUpdate(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, pseudoTableType, transaction);
             }
             finally
             {
@@ -204,15 +209,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Upserts a list of entities in bulk in an asynchronous way - inserts new rows and updates
-        /// existing ones based on the defined qualifiers (defaults to the primary key). Returns the number
-        /// of affected rows.
+        /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
+        /// and updates existing ones based on the defined qualifiers (defaults to the primary key). Returns
+        /// the number of affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -223,6 +229,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -234,7 +241,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
+                return await connection.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
             }
             finally
             {
@@ -251,6 +258,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -260,6 +268,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
@@ -270,7 +279,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkUpdateAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, pseudoTableType, transaction, cancellationToken);
+                return await connection.BulkUpdateAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, pseudoTableType, transaction, cancellationToken);
             }
             finally
             {

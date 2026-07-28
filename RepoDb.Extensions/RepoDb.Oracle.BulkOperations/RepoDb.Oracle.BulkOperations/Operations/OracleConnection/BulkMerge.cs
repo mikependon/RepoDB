@@ -15,8 +15,9 @@ namespace RepoDb
         #region Sync
 
         /// <summary>
-        /// Upserts a list of entities in bulk - inserts new rows and updates existing ones based on the
-        /// defined qualifiers (defaults to the primary key). Returns the number of affected rows.
+        /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
+        /// ones based on the defined qualifiers (defaults to the primary key). Returns the number of
+        /// affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -40,8 +41,9 @@ namespace RepoDb
             BulkMergeBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
-        /// Upserts a list of entities in bulk - inserts new rows and updates existing ones based on the
-        /// defined qualifiers (defaults to the primary key). Returns the number of affected rows.
+        /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
+        /// ones based on the defined qualifiers (defaults to the primary key). Returns the number of
+        /// affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -67,7 +69,8 @@ namespace RepoDb
             BulkMergeBase(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
-        /// Upserts the rows of a <see cref="DataTable"/> in bulk. Returns the number of affected rows.
+        /// Merges the rows of a <see cref="DataTable"/> into the database in bulk. Returns the number of
+        /// affected rows.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -97,9 +100,9 @@ namespace RepoDb
         #region Async
 
         /// <summary>
-        /// Upserts a list of entities in bulk in an asynchronous way - inserts new rows and updates
-        /// existing ones based on the defined qualifiers (defaults to the primary key). Returns the number
-        /// of affected rows.
+        /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
+        /// and updates existing ones based on the defined qualifiers (defaults to the primary key). Returns
+        /// the number of affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -125,9 +128,9 @@ namespace RepoDb
             BulkMergeBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
-        /// Upserts a list of entities in bulk in an asynchronous way - inserts new rows and updates
-        /// existing ones based on the defined qualifiers (defaults to the primary key). Returns the number
-        /// of affected rows.
+        /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
+        /// and updates existing ones based on the defined qualifiers (defaults to the primary key). Returns
+        /// the number of affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -155,8 +158,8 @@ namespace RepoDb
             BulkMergeBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
-        /// Upserts the rows of a <see cref="DataTable"/> in bulk in an asynchronous way. Returns the
-        /// number of affected rows.
+        /// Merges the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
+        /// Returns the number of affected rows.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

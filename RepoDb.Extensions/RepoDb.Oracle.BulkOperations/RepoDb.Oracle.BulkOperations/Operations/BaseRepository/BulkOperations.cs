@@ -45,13 +45,15 @@ namespace RepoDb
             repository.DbRepository.BulkInsert(ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
-        /// Upserts a list of entities in bulk - inserts new rows and updates existing ones based on the
-        /// defined qualifiers (defaults to the primary key). Returns the number of affected rows.
+        /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
+        /// ones based on the defined qualifiers (defaults to the primary key). Returns the number of
+        /// affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -60,12 +62,13 @@ namespace RepoDb
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkMerge(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
+            repository.DbRepository.BulkMerge(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction);
 
         /// <summary>
         /// Updates existing rows in the database in bulk, matched by the defined qualifiers (defaults to
@@ -75,6 +78,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -82,11 +86,12 @@ namespace RepoDb
         public static int BulkUpdate<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkUpdate(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, pseudoTableType, transaction);
+            repository.DbRepository.BulkUpdate(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, pseudoTableType, transaction);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk, matched by the defined qualifiers (defaults
@@ -139,14 +144,15 @@ namespace RepoDb
             repository.DbRepository.BulkInsertAsync(ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
-        /// Upserts a list of entities in bulk in an asynchronous way - inserts new rows and updates
-        /// existing ones based on the defined qualifiers (defaults to the primary key). Returns the number
-        /// of affected rows.
+        /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
+        /// and updates existing ones based on the defined qualifiers (defaults to the primary key). Returns
+        /// the number of affected rows.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -156,13 +162,14 @@ namespace RepoDb
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkMergeAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
+            repository.DbRepository.BulkMergeAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, identityBehavior, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Updates existing rows in the database in bulk in an asynchronous way, matched by the defined
@@ -172,6 +179,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -180,12 +188,13 @@ namespace RepoDb
         public static Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkUpdateAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, pseudoTableType, transaction, cancellationToken);
+            repository.DbRepository.BulkUpdateAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, pseudoTableType, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined

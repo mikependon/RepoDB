@@ -269,7 +269,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -279,7 +279,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -311,7 +311,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -321,7 +321,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -376,7 +376,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -386,7 +386,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -430,7 +430,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -440,7 +440,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings));
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings));
                         }
                     }
                 }
@@ -710,7 +710,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -752,7 +752,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -817,7 +817,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -871,7 +871,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -904,7 +904,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -937,7 +937,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1100,7 +1100,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1110,7 +1110,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1142,7 +1142,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1152,7 +1152,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1207,7 +1207,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1217,7 +1217,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1261,7 +1261,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1271,7 +1271,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings).Result);
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings).Result);
                         }
                     }
                 }
@@ -1541,7 +1541,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1583,7 +1583,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1648,7 +1648,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1702,7 +1702,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1735,7 +1735,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1768,7 +1768,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM "BulkOperationIdentityTable";"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {

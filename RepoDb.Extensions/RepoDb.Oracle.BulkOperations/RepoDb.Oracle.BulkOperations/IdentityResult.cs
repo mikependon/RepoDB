@@ -8,8 +8,14 @@ namespace RepoDb.Oracle.BulkOperations
     /// </summary>
     internal class IdentityResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public int Index { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public decimal Identity { get; set; }
     }
 }
