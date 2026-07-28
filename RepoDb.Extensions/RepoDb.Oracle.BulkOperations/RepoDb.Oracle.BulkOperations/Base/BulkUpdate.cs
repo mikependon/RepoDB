@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
-using RepoDb.Oracle.BulkOperations.Base;
 using RepoDb.Oracle.BulkOperations.Extensions;
 
 namespace RepoDb
@@ -60,10 +60,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Identify the columns
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -71,17 +72,23 @@ namespace RepoDb
                 return 0;
             }
 
-            // Bulk and post process
-            OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
-            OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
-            WriteToServer.WriteToServerInternal(connection, pseudoTableName, entities, mappings, bulkCopyTimeout);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
-            // Drop the pseudo table
-            var affectedRows = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
-            OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout);
 
-            // Return the result
-            return affectedRows;
+                // Execute and return
+                return OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
         }
 
         #endregion
@@ -115,10 +122,10 @@ namespace RepoDb
             OracleTransaction transaction = null)
         {
             // Identify the columns
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -126,17 +133,23 @@ namespace RepoDb
                 return 0;
             }
 
-            // Bulk and post process
-            OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
-            OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
-            WriteToServer.WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
-            // Drop the pseudo table
-            var affectedRows = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
-            OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout);
 
-            // Return the result
-            return affectedRows;
+                // Execute and return
+                return OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
         }
 
         #endregion
@@ -174,15 +187,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Identify the columns
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
-
-            // Bulk and post process
-            await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
-            await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
-            await WriteToServer.WriteToServerAsyncInternal(connection, pseudoTableName, entities, mappings, bulkCopyTimeout, cancellationToken);
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -190,12 +199,23 @@ namespace RepoDb
                 return 0;
             }
 
-            // Drop the pseudo table
-            var affectedRows = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
-            await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
-            // Return the result
-            return affectedRows;
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, cancellationToken);
+
+                // Execute and return
+                return await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
         }
 
         #endregion
@@ -229,15 +249,10 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Identify the columns
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
-
-            // Bulk and post process
-            await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
-            await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
-            await WriteToServer.WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, cancellationToken);
 
             // Skip if there's nothing to update
             if (!HasUpdateableFields(stagingFields, qualifierFields))
@@ -245,12 +260,23 @@ namespace RepoDb
                 return 0;
             }
 
-            // Drop the pseudo table
-            var affectedRows = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
-            await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
-            // Return the result
-            return affectedRows;
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, cancellationToken);
+
+                // Execute and return
+                return await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
         }
 
         #endregion

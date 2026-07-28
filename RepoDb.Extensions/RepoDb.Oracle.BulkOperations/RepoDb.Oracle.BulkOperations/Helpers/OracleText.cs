@@ -4,6 +4,7 @@ using System.Linq;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Oracle.BulkOperations;
 
 namespace RepoDb
 {
@@ -34,8 +35,9 @@ namespace RepoDb
             var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
 
             // Physical: an ordinary heap table, shared/visible across sessions.
-            // Temporary (default): a Global Temporary Table whose rows are private per session but whose
-            // definition (created once) is shared - safe for concurrent connections to reuse.
+            // Memory: a Global Temporary Table whose rows are private per session but whose definition
+            // (created once) is shared - safe for concurrent connections to reuse. Auto resolves to either
+            // of these (see OracleConnectionExtension.ResolvePseudoTableType) before this method ever sees it.
             var createClause = pseudoTableType == OracleBulkImportPseudoTableType.Physical
                 ? $"CREATE TABLE {quotedPseudoTableName} AS SELECT * FROM {quotedTableName} WHERE (1 = 0)"
                 : $"CREATE GLOBAL TEMPORARY TABLE {quotedPseudoTableName} ON COMMIT PRESERVE ROWS AS SELECT * FROM {quotedTableName} WHERE (1 = 0)";
@@ -48,7 +50,7 @@ namespace RepoDb
         /// Builds a <c>TRUNCATE TABLE</c> statement for the staging/pseudo table. Always run right before
         /// writing to the staging table (whether it was just created or is being reused from a prior call
         /// on the same session/connection) so leftover rows from an earlier bulk operation - possible for
-        /// the <c>Temporary</c> pseudo table type, whose rows are preserved across commits within the same
+        /// the <c>Memory</c> pseudo table type, whose rows are preserved across commits within the same
         /// session - never leak into the current merge.
         /// </summary>
         public static string GetTruncatePseudoTableSql(string pseudoTableName,
@@ -83,8 +85,7 @@ namespace RepoDb
         /// table definition can be created once and reused (after a <c>TRUNCATE</c>) by later calls.
         /// </summary>
         public static string GetPseudoTableNameForMerge(string tableName,
-            OracleBulkImportPseudoTableType pseudoTableType) =>
-            pseudoTableType == OracleBulkImportPseudoTableType.Physical ? $"Physical{tableName}Merge" : $"Temp{tableName}Merge";
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Merge";
 
         /// <summary>
         /// Builds the <c>MERGE INTO ... USING ... ON (...) WHEN MATCHED ... WHEN NOT MATCHED ...</c>
@@ -144,8 +145,7 @@ namespace RepoDb
         /// one staging table.
         /// </summary>
         public static string GetPseudoTableNameForUpdate(string tableName,
-            OracleBulkImportPseudoTableType pseudoTableType) =>
-            pseudoTableType == OracleBulkImportPseudoTableType.Physical ? $"Physical{tableName}Update" : $"Temp{tableName}Update";
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Update";
 
         /// <summary>
         /// Builds the <c>MERGE INTO ... USING ... ON (...) WHEN MATCHED THEN UPDATE ...</c> statement that

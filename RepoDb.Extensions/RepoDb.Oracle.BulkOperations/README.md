@@ -24,7 +24,7 @@ the one case `OracleBulkCopy` cannot serve: reading back generated identity valu
 
 - [Special Arguments](#special-arguments)
 - [How Rows Are Loaded: OracleBulkCopy and the Transaction Boundary](#how-rows-are-loaded-oraclebulkcopy-and-the-transaction-boundary)
-- [The Staging Table Lifecycle: Temporary vs Physical](#the-staging-table-lifecycle-temporary-vs-physical)
+- [The Staging Table Lifecycle: Auto, Memory, and Physical](#the-staging-table-lifecycle-auto-memory-and-physical)
 - [Async Methods](#async-methods)
 - [BulkInsert](#bulkinsert)
 - [BulkMerge](#bulkmerge)
@@ -86,8 +86,10 @@ LOB/interval/timestamp-with-local-time-zone columns that previously relied on an
 **`pseudoTableType`** (`BulkMerge`, `BulkUpdate`, `BulkDelete` only) — an `OracleBulkImportPseudoTableType`
 controlling what kind of staging table backs the operation:
 
-- `Temporary` *(default)* — a Global Temporary Table (GTT). Session-private rows, safe for concurrent
-  callers writing to the same table from different connections.
+- `Auto` *(default)* — picks `Physical` when the entity/row count being bulk-written is 5,000 or more,
+  otherwise `Memory`.
+- `Memory` — a Global Temporary Table (GTT). Session-private rows, safe for concurrent callers writing to
+  the same table from different connections.
 - `Physical` — an ordinary heap table. No session isolation - see the caveat below before using this.
 
 Unlike the PostgreSQL bulk package, there is no `BulkImportMergeCommandType` (Oracle has exactly one
@@ -130,14 +132,14 @@ rows that were already bulk-copied into the real table. For `BulkMerge`/`BulkUpd
 practical impact is smaller: the final `MERGE`/`UPDATE`/`DELETE` statement against the real table is still
 fully transactional, so a rollback there behaves as expected for your actual data - the only thing that can
 be left behind is now-orphaned rows in the (ephemeral, reusable) staging table, which the next call against
-that staging table clears unconditionally before loading anything new. For `Temporary` staging tables this
+that staging table clears unconditionally before loading anything new. For `Memory` staging tables this
 is invisible outside your own session; for `Physical` staging tables this is within the same
-already-documented concurrency caveat as [everything else about `Physical`](#the-staging-table-lifecycle-temporary-vs-physical).
+already-documented concurrency caveat as [everything else about `Physical`](#the-staging-table-lifecycle-auto-memory-and-physical).
 If a plain `BulkInsert`'s all-or-nothing behavior with respect to your transaction matters for your
 workload, request `identityBehavior: ReturnIdentity` to force the array-bind path, which does honor your
 transaction like every other command in this package.
 
-## The Staging Table Lifecycle: Temporary vs Physical
+## The Staging Table Lifecycle: Auto, Memory, and Physical
 
 `BulkMerge`, `BulkUpdate`, and `BulkDelete` stage rows into a per-table pseudo table before running one
 set-based `MERGE INTO` / `DELETE ... WHERE EXISTS` statement against it. Oracle's `CREATE TABLE` and
@@ -147,17 +149,23 @@ type) the first time it's needed in the process, and merely `DELETE`s its conten
 transaction-safe) before every subsequent call. The `pseudoTableType` argument picks which kind of table
 backs this:
 
-- **`Temporary`** *(default)* — `CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS`. Rows are
-  private to each session, so concurrent connections bulk-writing to the same target table never see or
-  interfere with each other's staged data, even though they share one table definition. This is the safe
-  choice for concurrent/multi-connection workloads and should be left as the default in almost all cases.
+- **`Auto`** *(default)* — resolves to `Physical` when the number of entities/rows being bulk-written is
+  5,000 or more, otherwise resolves to `Memory`. This favors the session-safe `Memory` staging table
+  for typical batch sizes, while stepping up to the lower-overhead `Physical` table for very large loads
+  where GTT overhead is more likely to matter. If your workload has concurrent callers writing to the same
+  table, see the `Physical` caveat below before relying on the `Auto` threshold for large batches.
+- **`Memory`** — `CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS`. Rows are private to each
+  session, so concurrent connections bulk-writing to the same target table never see or interfere with each
+  other's staged data, even though they share one table definition. This is the safe choice for
+  concurrent/multi-connection workloads.
 - **`Physical`** — `CREATE TABLE ... AS SELECT ...`, an ordinary heap table. It carries **no per-session
   data isolation** - every session/connection reads and writes the *same* rows. Two connections
   bulk-writing to the same target table concurrently with `Physical` will corrupt or race each other's
   staged data. Only use this for workloads where calls against the same table are known to be sequential
   (e.g. a single-threaded batch job), in exchange for avoiding whatever session-temporary-object overhead
-  your Oracle environment attaches to GTTs. `Temporary` and `Physical` staging tables for the same real
-  table are named distinctly, so switching between them for the same table is safe and won't collide.
+  your Oracle environment attaches to GTTs. `Memory` and `Physical` staging tables for the same real
+  table are named distinctly, so switching between them (directly or via `Auto`) for the same table is
+  safe and won't collide.
 
 **Practical implication:** the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a given table
 (for a given `pseudoTableType`) in a process will issue a `CREATE TABLE` or `CREATE GLOBAL TEMPORARY TABLE`
@@ -263,8 +271,8 @@ same qualifiers immediately after the `MERGE` completes.
 
 `BulkMerge`, `BulkUpdate`, and `BulkDelete` also accept `pseudoTableType` (see
 [Special Arguments](#special-arguments) and
-[The Staging Table Lifecycle](#the-staging-table-lifecycle-temporary-vs-physical)) to pick between a
-session-isolated Global Temporary Table (the default) and a shared physical table:
+[The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)) to pick between
+auto-selection (the default), a session-isolated Global Temporary Table, and a shared physical table:
 
 ```csharp
 using (var connection = new OracleConnection(ConnectionString))

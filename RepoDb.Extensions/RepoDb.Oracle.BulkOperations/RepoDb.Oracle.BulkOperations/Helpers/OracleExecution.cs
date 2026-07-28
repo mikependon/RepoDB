@@ -22,7 +22,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the real, target table the pseudo table is modeled after.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to create.</param>
-        /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Temporary</c> (Global Temporary Table) one.</param>
+        /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Memory</c> (Global Temporary Table) one. <c>Auto</c> must already be resolved to one of these by the caller.</param>
         /// <param name="transaction">The transaction to be used.</param>
         public static void CreatePseudoTable(OracleConnection connection,
             string tableName,
@@ -42,7 +42,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the real, target table the pseudo table is modeled after.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to create.</param>
-        /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Temporary</c> (Global Temporary Table) one.</param>
+        /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Memory</c> (Global Temporary Table) one. <c>Auto</c> must already be resolved to one of these by the caller.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         public static async Task CreatePseudoTableAsync(OracleConnection connection,

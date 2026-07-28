@@ -5,13 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb;
+using RepoDb.Enumerations.Oracle;
+using RepoDb.Oracle.BulkOperations;
 
-namespace RepoDb.Oracle.BulkOperations.Base
+namespace RepoDb
 {
     /// <summary>
     /// 
     /// </summary>
-    internal static class WriteToServer
+    public static partial class OracleConnectionExtension
     {
         #region WriteToServerInternal
 
@@ -25,7 +27,7 @@ namespace RepoDb.Oracle.BulkOperations.Base
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <returns></returns>
-        public static int WriteToServerInternal<TEntity>(OracleConnection connection,
+        internal static int WriteToServerInternal<TEntity>(OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
@@ -49,7 +51,7 @@ namespace RepoDb.Oracle.BulkOperations.Base
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <returns></returns>
-        public static int WriteToServerInternal(OracleConnection connection,
+        internal static int WriteToServerInternal(OracleConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -78,7 +80,7 @@ namespace RepoDb.Oracle.BulkOperations.Base
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> WriteToServerAsyncInternal<TEntity>(OracleConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
@@ -108,7 +110,7 @@ namespace RepoDb.Oracle.BulkOperations.Base
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> WriteToServerAsyncInternal(OracleConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal(OracleConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -130,6 +132,19 @@ namespace RepoDb.Oracle.BulkOperations.Base
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Resolves <see cref="OracleBulkImportPseudoTableType.Auto"/> to a concrete pseudo table type
+        /// based on <paramref name="rowCount"/>: <see cref="OracleBulkImportPseudoTableType.Physical"/>
+        /// when it is greater than or equal to <see cref="OracleConstants.RowCountThresholdForPhysicalTable"/>,
+        /// otherwise <see cref="OracleBulkImportPseudoTableType.Memory"/>. Any value other than
+        /// <see cref="OracleBulkImportPseudoTableType.Auto"/> is returned unchanged.
+        /// </summary>
+        private static OracleBulkImportPseudoTableType ResolvePseudoTableType(OracleBulkImportPseudoTableType pseudoTableType,
+            int rowCount) =>
+            pseudoTableType == OracleBulkImportPseudoTableType.Auto
+                ? (rowCount >= OracleConstants.RowCountThresholdForPhysicalTable ? OracleBulkImportPseudoTableType.Physical : OracleBulkImportPseudoTableType.Memory)
+                : pseudoTableType;
 
         /// <summary>
         /// 
@@ -170,7 +185,6 @@ namespace RepoDb.Oracle.BulkOperations.Base
             {
                 DestinationTableName = tableName
             };
-
             if (bulkCopyTimeout.HasValue)
             {
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;

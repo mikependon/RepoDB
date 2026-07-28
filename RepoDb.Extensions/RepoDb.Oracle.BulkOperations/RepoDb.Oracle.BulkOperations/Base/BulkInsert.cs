@@ -1,7 +1,7 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
-using RepoDb.Oracle.BulkOperations.Base;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -42,6 +42,8 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -49,7 +51,7 @@ namespace RepoDb
             if (returnIdentity)
             {
                 return connection.BulkInsertBaseForReturnIdentity(tableName,
-                    entities,
+                    entityList,
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
@@ -59,7 +61,7 @@ namespace RepoDb
             else
             {
                 return connection.BulkInsertBaseNoReturnIdentity(tableName,
-                    entities,
+                    entityList,
                     mappings,
                     bulkCopyTimeout);
             }
@@ -106,7 +108,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null)
             where TEntity : class =>
-            WriteToServer.WriteToServerInternal(connection,
+            WriteToServerInternal(connection,
                 tableName,
                 entities,
                 mappings,
@@ -139,6 +141,7 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -207,7 +210,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null) =>
-            WriteToServer.WriteToServerInternal(connection,
+            WriteToServerInternal(connection,
                 tableName,
                 table,
                 rowState,
@@ -247,6 +250,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -254,7 +259,7 @@ namespace RepoDb
             if (returnIdentity)
             {
                 return await connection.BulkInsertBaseForReturnIdentityAsync(tableName,
-                    entities,
+                    entityList,
                     mappings,
                     bulkCopyTimeout,
                     identityBehavior,
@@ -265,7 +270,7 @@ namespace RepoDb
             else
             {
                 return await connection.BulkInsertBaseNoReturnIdentityAsync(tableName,
-                    entities,
+                    entityList,
                     mappings,
                     bulkCopyTimeout,
                     cancellationToken);
@@ -319,7 +324,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await WriteToServer.WriteToServerAsyncInternal(connection,
+            await WriteToServerAsyncInternal(connection,
                 tableName,
                 entities,
                 mappings,
@@ -355,6 +360,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -427,7 +433,7 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             CancellationToken cancellationToken = default) =>
-            await WriteToServer.WriteToServerAsyncInternal(connection,
+            await WriteToServerAsyncInternal(connection,
                 tableName,
                 table,
                 rowState,

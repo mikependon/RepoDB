@@ -40,6 +40,9 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
+            var primaryKeyList = primaryKeys.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList.Count);
+
             throw new NotImplementedException();
         }
 
@@ -69,6 +72,9 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+
             throw new NotImplementedException();
         }
 
@@ -98,6 +104,8 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+
             throw new NotImplementedException();
         }
 
@@ -131,6 +139,9 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            var primaryKeyList = primaryKeys.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList.Count);
+
             throw new NotImplementedException();
         }
 
@@ -162,6 +173,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+
             throw new NotImplementedException();
         }
 
@@ -193,6 +207,8 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+
             throw new NotImplementedException();
         }
 

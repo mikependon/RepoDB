@@ -1,3 +1,5 @@
+using RepoDb.Oracle.BulkOperations;
+
 namespace RepoDb.Enumerations.Oracle
 {
     /// <summary>
@@ -7,12 +9,21 @@ namespace RepoDb.Enumerations.Oracle
     public enum OracleBulkImportPseudoTableType : short
     {
         /// <summary>
+        /// Automatically chooses between <see cref="Physical"/> and <see cref="Memory"/> based on the
+        /// number of rows/entities being bulk-written: <see cref="Physical"/> when the row count is greater
+        /// than or equal to <see cref="OracleConstants.RowCountThresholdForPhysicalTable"/> (<c>5,000</c>),
+        /// otherwise <see cref="Memory"/>. This is the default.
+        /// </summary>
+        Auto,
+
+        /// <summary>
         /// A Global Temporary Table (<c>CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS</c>) is
         /// used. Its rows are private to each session - concurrent sessions bulk-writing to the same table
         /// never see or interfere with each other's staged data, even though they share one table
-        /// definition. This is the default, and the safe choice for concurrent/multi-connection workloads.
+        /// definition. The safe choice for concurrent/multi-connection workloads, and what <see cref="Auto"/>
+        /// picks for smaller batches (fewer than 5,000 rows/entities).
         /// </summary>
-        Temporary,
+        Memory,
 
         /// <summary>
         /// An ordinary heap table (<c>CREATE TABLE ... AS SELECT ...</c>) is used instead. It carries no
@@ -21,6 +32,7 @@ namespace RepoDb.Enumerations.Oracle
         /// corrupt or race each other's staged data. Only use this for workloads where calls against the
         /// same table are known to be sequential (e.g. a single-threaded batch job), in exchange for
         /// avoiding whatever session-temporary-object overhead your Oracle environment attaches to GTTs.
+        /// What <see cref="Auto"/> picks for larger batches (5,000 rows/entities or more).
         /// </summary>
         Physical
     }
