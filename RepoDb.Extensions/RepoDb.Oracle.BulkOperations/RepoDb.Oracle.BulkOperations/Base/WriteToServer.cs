@@ -71,6 +71,37 @@ namespace RepoDb
             return rows != null ? rows.Length : 0;
         }
 
+        /// <summary>
+        /// Streams <paramref name="reader"/> directly into <paramref name="tableName"/> via <see cref="OracleBulkCopy"/>
+        /// without ever materializing it into a list or <see cref="DataTable"/> first - the whole point of the
+        /// <see cref="DbDataReader"/> overloads is to let a source query keep streaming into the destination
+        /// as it's read, instead of buffering every row in memory up front (as the <c>TEntity</c>/<see cref="DataTable"/>
+        /// overloads do). Since <paramref name="reader"/> is forward-only and single-pass, there's no way to know
+        /// the row count ahead of time the way the other overloads do (<c>entities.Count()</c>/<c>rows.Length</c>) -
+        /// so this wraps it in <see cref="CountingDataReader"/>, which tallies exactly how many rows
+        /// <see cref="OracleBulkCopy"/> actually pulled through <see cref="IDataReader.Read"/>.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <returns></returns>
+        internal static int WriteToServerInternal(OracleConnection connection,
+            string tableName,
+            DbDataReader reader,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null)
+        {
+            connection.EnsureOpen();
+            var countingReader = new CountingDataReader(reader);
+            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, batchSize);
+            bulkCopy.WriteToServer(countingReader);
+            return countingReader.Count;
+        }
+
         #endregion
 
         #region WriteToServerAsyncInternal
@@ -135,6 +166,37 @@ namespace RepoDb
                 var rows = GetDataRows(table, rowState)?.ToArray();
                 bulkCopy.WriteToServer(rows);
                 return rows != null ? rows.Length : 0;
+            },
+            cancellationToken);
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="WriteToServerInternal(OracleConnection, string, DbDataReader, IEnumerable{OracleBulkInsertMapItem}, int?, int?)"/> -
+        /// see its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> WriteToServerAsyncInternal(OracleConnection connection,
+            string tableName,
+            DbDataReader reader,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            CancellationToken cancellationToken = default)
+        {
+            await connection.EnsureOpenAsync(cancellationToken);
+            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
+            {
+                var countingReader = new CountingDataReader(reader);
+                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, batchSize);
+                bulkCopy.WriteToServer(countingReader);
+                return countingReader.Count;
             },
             cancellationToken);
         }

@@ -8,6 +8,7 @@ using RepoDb.Oracle.BulkOperations.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -240,6 +241,78 @@ namespace RepoDb
 
         #endregion
 
+        #region BulkDeleteBase<DbDataReader>
+
+        /// <summary>
+        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by streaming
+        /// <paramref name="dataReader"/> straight into a staging (pseudo) table - see
+        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks. A reader is always columnar/tabular
+        /// like a <see cref="DataTable"/> (never a bare list of scalar key values), so unlike the
+        /// <c>TEntity</c> overload there is no raw-key-value redirect to consider here - this is always the
+        /// "actual base execution" directly.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns>The number of rows deleted.</returns>
+        private static int BulkDeleteBase(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<Field> qualifiers = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
+            OracleTransaction transaction = null)
+        {
+            // Row count is unknown for a streaming reader (see the remarks on the DbDataReader BulkMerge
+            // overload); Auto-resolution is currently a no-op regardless.
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, dataReader, null, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        #endregion
+
         #endregion
 
         #region Async
@@ -428,6 +501,74 @@ namespace RepoDb
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkDeleteBaseAsync<DbDataReader>
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="BulkDeleteBase(OracleConnection, string, DbDataReader, IEnumerable{Field}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The number of rows deleted.</returns>
+        private static async Task<int> BulkDeleteBaseAsync(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<Field> qualifiers = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataReader, null, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);

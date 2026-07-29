@@ -4,6 +4,7 @@ using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -105,6 +106,41 @@ namespace RepoDb
             OracleTransaction transaction = null) =>
             BulkInsertBase(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
+        /// <summary>
+        /// Streams a <see cref="DbDataReader"/> into the database in bulk, writing rows to the destination
+        /// as they are read from the source rather than materializing them into memory first. Returns the
+        /// number of inserted rows.
+        /// </summary>
+        /// <remarks>
+        /// There is no <c>identityBehavior</c> parameter - a forward-only, single-pass reader cannot be
+        /// rewound to retry/reconcile identity values, so returning generated identity values back onto a
+        /// source row is not supported for this overload.
+        /// </remarks>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="pseudoTableType">Unused for a plain streaming insert - accepted for signature symmetry with the other <c>DbDataReader</c> bulk operations.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows.</returns>
+        public static int BulkInsert<TEntity>(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null)
+            where TEntity : class =>
+            BulkInsertBase(connection, tableName, dataReader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+
         #endregion
 
         #region Async
@@ -205,6 +241,41 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+
+        /// <summary>
+        /// Streams a <see cref="DbDataReader"/> into the database in bulk in an asynchronous way, writing
+        /// rows to the destination as they are read from the source rather than materializing them into
+        /// memory first. Returns the number of inserted rows.
+        /// </summary>
+        /// <remarks>
+        /// There is no <c>identityBehavior</c> parameter - see the remarks on the synchronous overload.
+        /// </remarks>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="pseudoTableType">Unused for a plain streaming insert - accepted for signature symmetry with the other <c>DbDataReader</c> bulk operations.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of inserted rows.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            BulkInsertBaseAsync(connection, tableName, dataReader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

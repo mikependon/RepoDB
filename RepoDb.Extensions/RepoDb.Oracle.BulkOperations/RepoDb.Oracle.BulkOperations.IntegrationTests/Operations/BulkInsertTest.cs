@@ -1,16 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations.Oracle;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Oracle.BulkOperations.IntegrationTests.Models;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using Oracle.ManagedDataAccess.Client;
-using RepoDb.Enumerations.Oracle;
-using RepoDb.Oracle.BulkOperations;
-using System.Linq;
 
 namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 {

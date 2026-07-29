@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -198,6 +199,98 @@ namespace RepoDb
 
         #endregion
 
+        #region BulkUpdateBase<DbDataReader>
+
+        /// <summary>
+        /// Updates existing rows on <paramref name="tableName"/> by streaming <paramref name="dataReader"/>
+        /// straight into a staging (pseudo) table - see <see cref="BulkUpdateBase{TEntity}"/> for the
+        /// detailed staging-table steps (identical caveats around <paramref name="mappings"/> and
+        /// <paramref name="transaction"/> apply here). As with the other overloads, there is no
+        /// identity-returning variant - a plain update never creates rows - so this is the "actual base
+        /// execution" directly.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
+        /// <param name="mappings">
+        /// The explicit source-to-destination column mapping. When provided, only the destination columns named here
+        /// (plus, always, the qualifier column(s)) are staged and updated - see the same caveat documented on
+        /// <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/> regarding leaving a qualifier column out of the mapping.
+        /// </param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction">
+        /// The transaction under which the staging-table DDL and the final <c>MERGE</c> statement run. As with
+        /// <c>BulkMerge</c>, the bulk-write step in between (<see cref="OracleBulkCopy"/>) is transaction-agnostic
+        /// and always commits immediately regardless of this parameter.
+        /// </param>
+        /// <returns>The number of rows updated.</returns>
+        /// <exception cref="PrimaryFieldNotFoundException">No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.</exception>
+        /// <exception cref="MissingFieldsException">The resulting staged-field list is empty.</exception>
+        private static int BulkUpdateBase(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
+            OracleTransaction transaction = null)
+        {
+            // Identify the columns - row count is unknown for a streaming reader (see the remarks on the
+            // DbDataReader BulkMerge overload); Auto-resolution is currently a no-op regardless.
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+            // Skip if there's nothing to update
+            if (!HasUpdateableFields(stagingFields, qualifierFields))
+            {
+                return 0;
+            }
+
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                result = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        #endregion
+
         #endregion
 
         #region Async
@@ -346,6 +439,85 @@ namespace RepoDb
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                result = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkUpdateBaseAsync<DbDataReader>
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="BulkUpdateBase(OracleConnection, string, DbDataReader, IEnumerable{Field}, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior and caveats (identical here).
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="dataReader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>The number of rows updated.</returns>
+        private static async Task<int> BulkUpdateBaseAsync(this OracleConnection connection,
+            string tableName,
+            DbDataReader dataReader,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Identify the columns
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+            var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+
+            // Skip if there's nothing to update
+            if (!HasUpdateableFields(stagingFields, qualifierFields))
+            {
+                return 0;
+            }
+
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
+            var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 result = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
