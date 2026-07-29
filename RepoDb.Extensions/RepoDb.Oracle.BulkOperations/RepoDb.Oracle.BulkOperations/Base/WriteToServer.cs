@@ -268,17 +268,45 @@ namespace RepoDb
             {
                 bulkCopy.BatchSize = batchSize.Value;
             }
-            if (mappings != null)
+            foreach (var mapping in mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader))
             {
-                foreach (var mapping in mappings)
-                {
-                    // SourceColumn is matched against the reader's own column names (plain .NET string
-                    // equality against DataEntityDataReader.GetName(i) - never sent to Oracle, so it must
-                    // stay unquoted). DestinationColumn needs quoting - see the remarks in CreateBulkCopyForDataTable.
-                    bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
-                }
+                bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
             }
             return bulkCopy;
+        }
+
+        /// <summary>
+        /// Builds a default source-to-destination column mapping for <paramref name="reader"/> when the
+        /// caller did not supply an explicit one - by intersecting the reader's own columns (every public
+        /// property of the source <c>TEntity</c>, per <see cref="DataEntityDataReader{TEntity}"/>) against
+        /// <paramref name="tableName"/>'s real columns.
+        /// </summary>
+        /// <remarks>
+        /// Needed because a <c>TEntity</c> can carry "extra" properties that have no corresponding column
+        /// at all (e.g. a computed/joined field, or a navigation collection - see the <c>...WithExtraFields</c>
+        /// integration test entities). Left unfiltered, <see cref="OracleBulkCopy"/> falls back to
+        /// ordinal column mapping when <see cref="OracleBulkCopy.ColumnMappings"/> is left empty, and a
+        /// column-count/type mismatch between the reader and the destination table fails with
+        /// <c>ORA-50029: Column mapping is invalid</c>. Extra reader columns with no matching destination
+        /// field are silently skipped (never written), exactly like the explicit-mappings path already does
+        /// for a caller-supplied mapping that omits a column.
+        /// </remarks>
+        private static IEnumerable<OracleBulkInsertMapItem> GetDefaultMappingsForDataReader(OracleConnection connection,
+            string tableName,
+            IDataReader reader)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName, null);
+            var dbSetting = connection.GetDbSetting();
+
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                var columnName = reader.GetName(i);
+                var dbField = dbFields.GetByUnquotedName(columnName.AsUnquoted(true, dbSetting));
+                if (dbField != null)
+                {
+                    yield return new OracleBulkInsertMapItem(columnName, dbField.Name);
+                }
+            }
         }
 
         #endregion

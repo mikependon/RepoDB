@@ -251,12 +251,55 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests
             table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
         }
 
+        #endregion
+
+        #region BulkOperationNonIdentityTable
+
+        /// <summary>
+        /// Creates test rows for <see cref="BulkOperationNonIdentityTable"/> - a non-identity counterpart
+        /// of <see cref="BulkOperationIdentityTable"/> whose <c>Id</c> is a plain primary key. Unlike
+        /// <see cref="CreateBulkOperationIdentityTables"/> (whose <c>hasId</c> value is ignored by an
+        /// IDENTITY column on insert), the <c>Id</c> assigned here is guaranteed to be the value actually
+        /// stored - useful for tests that need to build a separate object (anonymous, expando, etc.) that
+        /// must match an already-inserted row by primary key.
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<BulkOperationNonIdentityTable> CreateBulkOperationNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<BulkOperationNonIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new BulkOperationNonIdentityTable
+                {
+                    Id = hasId ? index : 0,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = 1,
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = random.Next(100),
+                    ColumnFloat = random.Next(100),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}"
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region BulkOperationIdentityTable
+
         /*
          * Anonymous Objects
          */
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>

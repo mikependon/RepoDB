@@ -511,8 +511,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         [TestMethod]
         public void TestOracleConnectionBulkDeleteForTableNameExpandoObjects()
         {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -523,13 +522,13 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -539,8 +538,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         [TestMethod]
         public void TestOracleConnectionBulkDeleteForTableNameAnonymousObjects()
         {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -551,13 +549,13 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -1238,8 +1236,9 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         [TestMethod]
         public void TestOracleConnectionBulkDeleteAsyncForTableNameExpandoObjects()
         {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            // Setup - see TestOracleConnectionBulkDeleteForTableNameAnonymousObjects for why
+            // BulkOperationNonIdentityTable is used here instead of the IDENTITY table.
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -1250,13 +1249,13 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);
@@ -1266,8 +1265,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         [TestMethod]
         public void TestOracleConnectionBulkDeleteAsyncForTableNameAnonymousObjects()
         {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -1278,13 +1276,13 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(0, countResult);

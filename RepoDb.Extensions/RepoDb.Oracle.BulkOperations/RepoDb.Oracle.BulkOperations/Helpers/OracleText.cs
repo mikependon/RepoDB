@@ -19,6 +19,18 @@ namespace RepoDb
         #region Shared
 
         /// <summary>
+        /// Strips Oracle identifier quote characters from <paramref name="tableName"/> before it is embedded
+        /// inside a newly-built identifier (a pseudo table name). Needed because a mapped table name can
+        /// arrive pre-quoted (e.g. <c>[Map("\"MixedCaseTable\"")]</c>, used to force case-preservation) - if
+        /// left as-is, concatenating it into <c>$"{pseudoTableType}{tableName}Suffix"</c> embeds the quote
+        /// characters mid-string, and re-quoting that combined string later produces an invalid, only
+        /// partially-quoted identifier (e.g. <c>"Physical"BulkOperationIdentityTable"Delete"</c>, which
+        /// Oracle rejects with <c>ORA-03049</c>).
+        /// </summary>
+        private static string UnquoteForPseudoTableName(string tableName) =>
+            tableName?.Replace("\"", string.Empty);
+
+        /// <summary>
         /// Builds a guarded (idempotent) <c>CREATE TABLE</c> statement for the staging/pseudo table used
         /// by a bulk operation. Guarded with a PL/SQL block that swallows ORA-00955 ("name is already
         /// used by an existing object") so repeated calls against the same table - common since the
@@ -92,7 +104,7 @@ namespace RepoDb
         /// table definition can be created once and reused (after a <c>TRUNCATE</c>) by later calls.
         /// </summary>
         public static string GetPseudoTableNameForMerge(string tableName,
-            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Merge";
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{UnquoteForPseudoTableName(tableName)}Merge";
 
         /// <summary>
         /// Builds the <c>MERGE INTO ... USING ... ON (...) WHEN MATCHED ... WHEN NOT MATCHED ...</c>
@@ -152,7 +164,7 @@ namespace RepoDb
         /// one staging table.
         /// </summary>
         public static string GetPseudoTableNameForUpdate(string tableName,
-            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Update";
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{UnquoteForPseudoTableName(tableName)}Update";
 
         /// <summary>
         /// Builds the <c>MERGE INTO ... USING ... ON (...) WHEN MATCHED THEN UPDATE ...</c> statement that
@@ -198,7 +210,7 @@ namespace RepoDb
         /// the staging table of a concurrent <c>BulkMerge</c>/<c>BulkUpdate</c> against the same table.
         /// </summary>
         public static string GetPseudoTableNameForDelete(string tableName,
-            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Delete";
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{UnquoteForPseudoTableName(tableName)}Delete";
 
         /// <summary>
         /// Builds the <c>DELETE FROM ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement that

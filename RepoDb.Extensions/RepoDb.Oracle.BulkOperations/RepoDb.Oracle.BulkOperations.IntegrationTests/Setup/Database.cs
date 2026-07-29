@@ -49,6 +49,8 @@ namespace RepoDb.IntegrationTests.Setup
                 e => e.RowGuidMapped, new OracleGuidToByteArrayPropertyHandler(), true);
             PropertyHandlerMapper.Add<WithExtraFieldsBulkOperationIdentityTable, OracleGuidToByteArrayPropertyHandler>(
                 e => e.RowGuid, new OracleGuidToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<BulkOperationNonIdentityTable, OracleGuidToByteArrayPropertyHandler>(
+                e => e.RowGuid, new OracleGuidToByteArrayPropertyHandler(), true);
 
             // Create the tables
             CreateTables();
@@ -61,6 +63,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using var connection = new OracleConnection(ConnectionString);
             connection.Truncate<BulkOperationIdentityTable>();
+            connection.Truncate<BulkOperationNonIdentityTable>();
         }
 
         #endregion
@@ -73,6 +76,7 @@ namespace RepoDb.IntegrationTests.Setup
         public static void CreateTables()
         {
             CreateBulkOperationIdentityTable();
+            CreateBulkOperationNonIdentityTable();
         }
 
         /// <summary>
@@ -97,6 +101,42 @@ namespace RepoDb.IntegrationTests.Setup
                             ""ColumnInt"" NUMBER(10,0) NULL,
                             ""ColumnNVarChar"" NVARCHAR2(2000) NULL,
                             CONSTRAINT ""BulkOperationIdentityTable_Id"" PRIMARY KEY (""Id"")
+                        )';
+                EXCEPTION
+                    WHEN OTHERS THEN
+                        IF SQLCODE != -955 THEN -- ORA-00955: name is already used by an existing object
+                            RAISE;
+                        END IF;
+                END;";
+            using var connection = new OracleConnection(ConnectionString);
+            connection.ExecuteNonQuery(commandText);
+        }
+
+        /// <summary>
+        /// Creates a non-identity table that has some important fields. All fields are nullable except
+        /// the primary key. Unlike <see cref="CreateBulkOperationIdentityTable"/>, <c>"Id"</c> here is a
+        /// plain <c>NUMBER</c> primary key (no <c>GENERATED ... AS IDENTITY</c>) - the caller's value is
+        /// stored as-is. Used by tests that need to know a row's <c>Id</c> ahead of time (e.g. matching
+        /// against a separately-built anonymous/expando object by primary key), which an
+        /// Oracle-generated identity value can't support.
+        /// </summary>
+        public static void CreateBulkOperationNonIdentityTable()
+        {
+            var commandText = @"
+                BEGIN
+                    EXECUTE IMMEDIATE '
+                        CREATE TABLE ""BulkOperationNonIdentityTable""
+                        (
+                            ""Id"" NUMBER NOT NULL,
+                            ""RowGuid"" RAW(16) NOT NULL,
+                            ""ColumnBit"" NUMBER(1,0) NULL,
+                            ""ColumnDateTime"" DATE NULL,
+                            ""ColumnDateTime2"" TIMESTAMP(7) NULL,
+                            ""ColumnDecimal"" NUMBER(18,2) NULL,
+                            ""ColumnFloat"" BINARY_DOUBLE NULL,
+                            ""ColumnInt"" NUMBER(10,0) NULL,
+                            ""ColumnNVarChar"" NVARCHAR2(2000) NULL,
+                            CONSTRAINT ""BulkOperationNonIdentityTable_Id"" PRIMARY KEY (""Id"")
                         )';
                 EXCEPTION
                     WHEN OTHERS THEN
