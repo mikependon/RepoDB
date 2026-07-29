@@ -1,12 +1,15 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -83,7 +86,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Inserts <paramref name="entities"/> into <paramref name="tableName"/> via a staging (pseudo)
+        /// table: the entities are bulk-written into the pseudo table, and a single set-based
+        /// <c>INSERT ... SELECT ... RETURNING ... BULK COLLECT INTO ...</c> statement moves every staged
+        /// row into the real table, assigning every generated identity value back onto the matching
+        /// element of <paramref name="entities"/> - see the remarks on
+        /// <see cref="OracleText.GetInsertFromPseudoTableForReturnIdentitySql"/> for the ordering caveat.
+        /// This is the "actual base execution" - the single <see cref="Tracer.InvokeBeforeExecution"/>/
+        /// <see cref="Tracer.InvokeAfterExecution"/> pair for the whole <c>BulkInsert</c> call wraps it.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -111,7 +121,41 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            var entityList = entities.AsList();
+            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                result = OracleExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         /// <summary>
@@ -231,7 +275,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// <see cref="DataTable"/> counterpart of <see cref="BulkInsertBaseForReturnIdentity{TEntity}"/> - see
+        /// its remarks for the detailed behavior (identical here), except the generated identity values are
+        /// assigned back onto the matching row's identity column of <paramref name="table"/> instead of an
+        /// entity property.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -246,7 +293,6 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         private static int BulkInsertBaseForReturnIdentity(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -260,7 +306,41 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
-            throw new NotImplementedException();
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                result = OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         /// <summary>
@@ -446,7 +526,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="BulkInsertBaseForReturnIdentity{TEntity}"/> - see its
+        /// remarks for the detailed behavior (identical here).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -462,7 +543,6 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -477,7 +557,41 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            var entityList = entities.AsList();
+            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                result = await OracleExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         /// <summary>
@@ -601,7 +715,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="BulkInsertBaseForReturnIdentity(OracleConnection, string, DataTable, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportIdentityBehavior, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -617,7 +732,6 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkInsertBaseForReturnIdentityAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -632,7 +746,41 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var pseudoTableName = OracleText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                result = await OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         /// <summary>
@@ -740,6 +888,37 @@ namespace RepoDb
         }
 
         #endregion
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Resolves the field(s) to insert - every real column, filtered down to just the ones named in
+        /// <paramref name="mappings"/> when provided. Used only by the identity-return path, which (unlike
+        /// the plain fire-and-forget path) needs an explicit column list to build the pseudo-table-to-real-table
+        /// <c>INSERT ... SELECT</c> statement.
+        /// </summary>
+        /// <exception cref="MissingFieldsException">No field(s) were found for <paramref name="tableName"/>.</exception>
+        private static IEnumerable<Field> GetInsertFields(string tableName,
+            DbFieldCollection dbFields,
+            IEnumerable<OracleBulkInsertMapItem> mappings)
+        {
+            var fields = dbFields?.GetAsFields();
+
+            if (mappings?.Any() == true)
+            {
+                fields = fields?.Where(field =>
+                    mappings.Any(mapping => string.Equals(mapping.DestinationColumn, field.Name, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldsException($"There are no field(s) found for table '{tableName}' for this operation.");
+            }
+
+            return fields;
+        }
 
         #endregion
     }

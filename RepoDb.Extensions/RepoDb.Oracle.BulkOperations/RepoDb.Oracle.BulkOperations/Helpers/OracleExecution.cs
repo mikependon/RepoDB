@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
@@ -127,6 +129,164 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region Insert
+
+        /// <summary>
+        /// Runs the <c>INSERT ... SELECT ... RETURNING ... BULK COLLECT INTO ...</c> statement that moves
+        /// every row currently staged in <paramref name="pseudoTableName"/> into <paramref name="tableName"/>,
+        /// assigning each generated <paramref name="identityField"/> value back onto the matching element of
+        /// <paramref name="entities"/> - position-for-position, in the order returned (see the remarks on
+        /// <see cref="OracleText.GetInsertFromPseudoTableForReturnIdentitySql"/> for how that lines up with
+        /// the original bulk-write order). Returns the number of rows inserted.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be inserted.</param>
+        /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="entities"/>.</param>
+        /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows inserted.</returns>
+        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IList<TEntity> entities,
+            OracleTransaction transaction = null)
+            where TEntity : class
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            var result = 0;
+
+            while (reader.Read())
+            {
+                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="InsertFromPseudoTableForReturnIdentity{TEntity}"/> - see
+        /// its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be inserted.</param>
+        /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="entities"/>.</param>
+        /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of rows inserted.</returns>
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IList<TEntity> entities,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var result = 0;
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// <see cref="DataRow"/> counterpart of <see cref="InsertFromPseudoTableForReturnIdentity{TEntity}"/> -
+        /// see its remarks for the detailed behavior (identical here), except the generated identity values
+        /// are assigned back onto <paramref name="rows"/>' <paramref name="identityField"/> column instead of
+        /// an entity property (there is no compiled property setter to reuse for a <see cref="DataTable"/> row).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be inserted.</param>
+        /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="rows"/>.</param>
+        /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows inserted.</returns>
+        public static int InsertFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IList<DataRow> rows,
+            OracleTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
+
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            var result = 0;
+
+            while (reader.Read())
+            {
+                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="InsertFromPseudoTableForReturnIdentityForDataTable"/> - see
+        /// its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be inserted.</param>
+        /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="rows"/>.</param>
+        /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of rows inserted.</returns>
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IList<DataRow> rows,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
+
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var result = 0;
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                result++;
+            }
+
+            return result;
         }
 
         #endregion

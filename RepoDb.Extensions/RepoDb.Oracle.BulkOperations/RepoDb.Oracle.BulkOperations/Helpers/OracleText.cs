@@ -10,8 +10,8 @@ namespace RepoDb
 {
     /// <summary>
     /// A light-weight, allocation-cheap builder of the raw SQL text used by the Oracle bulk operations
-    /// (currently <c>BulkMerge</c> and <c>BulkUpdate</c>). Every method here is a pure string builder -
-    /// no I/O, no caching - callers (<see cref="RepoDb.Oracle.BulkOperations.Extensions.OracleExecution"/>)
+    /// (<c>BulkInsert</c>, <c>BulkMerge</c>, <c>BulkUpdate</c> and <c>BulkDelete</c>). Every method here is
+    /// a pure string builder - no I/O, no caching - callers (<see cref="RepoDb.Oracle.BulkOperations.Extensions.OracleExecution"/>)
     /// own execution.
     /// </summary>
     internal static class OracleText
@@ -92,6 +92,64 @@ namespace RepoDb
 
             // ORA-00942: table or view does not exist
             return $"BEGIN EXECUTE IMMEDIATE 'DROP TABLE {quotedPseudoTableName}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE != -942 THEN RAISE; END IF; END;";
+        }
+
+        #endregion
+
+        #region Insert
+
+        /// <summary>
+        /// Returns the deterministic name of the staging/pseudo table for a <c>BulkInsert</c>'s identity-return
+        /// path (the plain fire-and-forget path bulk-writes straight into the real table - no pseudo table
+        /// needed there at all).
+        /// </summary>
+        public static string GetPseudoTableNameForInsert(string tableName,
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{UnquoteForPseudoTableName(tableName)}Insert";
+
+        /// <summary>
+        /// Builds the PL/SQL block that moves every row currently staged in <paramref name="pseudoTableName"/>
+        /// into <paramref name="tableName"/> via a single set-based <c>INSERT ... SELECT</c>, capturing every
+        /// generated <paramref name="identityField"/> value with <c>RETURNING ... BULK COLLECT INTO</c>, then
+        /// surfaces them back to the caller as an Oracle 12c+ implicit result set (<c>DBMS_SQL.RETURN_RESULT</c>)
+        /// - the same mechanism <c>RepoDb.Oracle</c>'s single-row Insert/Merge statement builder uses (see
+        /// <c>OracleStatementBuilder.WrapWithReturningResult</c>), scaled up to a whole batch via
+        /// <c>SYS.ODCINUMBERLIST</c> (a built-in, schema-less collection type - needed since the identity
+        /// values only exist as a local PL/SQL collection, and there's no user-defined SQL type to <c>TABLE()</c>
+        /// over). The staging rows are read back ordered by <c>ROWID</c>, so the returned identity values line
+        /// up, position-for-position, with the order they were originally bulk-written into the staging table
+        /// in - the practical (not contractually guaranteed by Oracle, but true for an untouched, freshly-loaded
+        /// table read back immediately after) order a full table scan returns them in.
+        /// </summary>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be inserted.</param>
+        /// <param name="identityField">The identity column whose generated values are returned.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        public static string GetInsertFromPseudoTableForReturnIdentitySql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+            var resultAlias = "Result".AsQuoted(dbSetting);
+
+            var columnList = fields
+                .Select(f => f.Name.AsQuoted(true, dbSetting))
+                .Join(", ");
+
+            return string.Concat(
+                "DECLARE l_repodb_ids SYS.ODCINUMBERLIST; ",
+                "l_repodb_cursor SYS_REFCURSOR; ",
+                "BEGIN ",
+                "INSERT INTO ", quotedTableName, " (", columnList, ") ",
+                "SELECT ", columnList, " FROM (SELECT ", columnList, " FROM ", quotedPseudoTableName, " ORDER BY ROWID) ",
+                "RETURNING ", quotedIdentityColumn, " BULK COLLECT INTO l_repodb_ids; ",
+                "OPEN l_repodb_cursor FOR SELECT COLUMN_VALUE AS ", resultAlias, " FROM TABLE(l_repodb_ids); ",
+                "DBMS_SQL.RETURN_RESULT(l_repodb_cursor); ",
+                "END;");
         }
 
         #endregion
