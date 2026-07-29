@@ -92,6 +92,10 @@ controlling what kind of staging table backs the operation:
   the same table from different connections.
 - `Physical` — an ordinary heap table. No session isolation - see the caveat below before using this.
 
+> **Currently, every value above resolves to `Physical` at runtime**, including `Memory` and `Auto`'s
+> row-count threshold. See [The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)
+> for why.
+
 Unlike the PostgreSQL bulk package, there is no `BulkImportMergeCommandType` (Oracle has exactly one
 native upsert construct, `MERGE INTO`).
 
@@ -166,6 +170,17 @@ backs this:
   your Oracle environment attaches to GTTs. `Memory` and `Physical` staging tables for the same real
   table are named distinctly, so switching between them (directly or via `Auto`) for the same table is
   safe and won't collide.
+
+**`Memory` is currently not usable - every pseudo table is `Physical` for now, regardless of what you
+pass.** `OracleBulkCopy.WriteToServer` (see [How Rows Are Loaded](#how-rows-are-loaded-oraclebulkcopy-and-the-transaction-boundary))
+always performs a direct-path load internally, and Oracle's direct-path engine cannot write into a Global
+Temporary Table at all - this fails live with `ORA-39826: Direct path load of view or synonym (...) could
+not be resolved`, Oracle's generic error for a direct-path destination it can't support. Since the staging
+table is always loaded via `OracleBulkCopy`, a GTT-backed staging table can never actually receive data as
+this package is currently built - so `Memory` and `Auto`'s row-count threshold are both overridden to
+`Physical` until a working strategy exists (e.g. loading a GTT via array-bound `INSERT`s instead of
+`OracleBulkCopy`). This means the concurrency caveat above for `Physical` currently applies unconditionally,
+not just when you explicitly request it.
 
 **Practical implication:** the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a given table
 (for a given `pseudoTableType`) in a process will issue a `CREATE TABLE` or `CREATE GLOBAL TEMPORARY TABLE`

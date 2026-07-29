@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
 
 namespace RepoDb
@@ -142,17 +143,32 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Resolves <see cref="OracleBulkImportPseudoTableType.Auto"/> to a concrete pseudo table type
-        /// based on <paramref name="rowCount"/>: <see cref="OracleBulkImportPseudoTableType.Physical"/>
-        /// when it is greater than or equal to <see cref="OracleConstants.RowCountThresholdForPhysicalTable"/>,
-        /// otherwise <see cref="OracleBulkImportPseudoTableType.Memory"/>. Any value other than
-        /// <see cref="OracleBulkImportPseudoTableType.Auto"/> is returned unchanged.
+        /// Resolves <paramref name="pseudoTableType"/> to the pseudo table type actually used for a bulk
+        /// operation.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// <b>Temporarily forced to <see cref="OracleBulkImportPseudoTableType.Physical"/> for every input</b>
+        /// (including an explicit <see cref="OracleBulkImportPseudoTableType.Memory"/> request, and regardless
+        /// of <paramref name="rowCount"/>) - <see cref="OracleBulkCopy.WriteToServer(System.Data.DataRow[])"/>
+        /// always performs a direct-path load internally (ODP.NET's <c>OracleBulkCopyOptions</c> has no
+        /// conventional-path alternative), and Oracle's direct-path engine cannot write into a Global
+        /// Temporary Table at all - confirmed live via <c>ORA-39826: Direct path load of view or synonym
+        /// (...) could not be resolved</c>, Oracle's generic error for an unsupported direct-path destination
+        /// object type. Since every pseudo table is bulk-written to via <see cref="OracleBulkCopy"/>
+        /// (see <see cref="WriteToServerInternal{TEntity}"/>/<see cref="WriteToServerInternal(OracleConnection, string, System.Data.DataTable, System.Data.DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?)"/>),
+        /// a <c>Memory</c> (GTT) pseudo table can never actually be used as a bulk-copy destination as
+        /// currently built - so <see cref="OracleBulkImportPseudoTableType.Auto"/>'s row-count threshold
+        /// logic is a no-op for now too, until a working strategy for a session-isolated staging table
+        /// (e.g. writing to a GTT via array-bound <c>INSERT</c>s instead of <see cref="OracleBulkCopy"/>)
+        /// is designed and implemented.
+        /// </para>
+        /// </remarks>
         private static OracleBulkImportPseudoTableType ResolvePseudoTableType(OracleBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
-            pseudoTableType == OracleBulkImportPseudoTableType.Auto
-                ? (rowCount >= OracleConstants.RowCountThresholdForPhysicalTable ? OracleBulkImportPseudoTableType.Physical : OracleBulkImportPseudoTableType.Memory)
-                : pseudoTableType;
+            pseudoTableType == OracleBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= OracleConstants.RowCountThresholdForPhysicalTable ?
+                OracleBulkImportPseudoTableType.Physical :
+                    OracleBulkImportPseudoTableType.Physical; // pseudoTableType; // TODO: ODP.NET Limitation, force to Physical for now
 
         /// <summary>
         /// 
@@ -191,9 +207,10 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize = null)
         {
+            var dbSetting = connection.GetDbSetting();
             var bulkCopy = new OracleBulkCopy(connection)
             {
-                DestinationTableName = tableName
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -207,14 +224,14 @@ namespace RepoDb
             {
                 foreach (var mapping in mappings)
                 {
-                    bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn);
+                    bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
                 }
             }
             else
             {
                 foreach (DataColumn column in table.Columns)
                 {
-                    bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                    bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName.AsQuoted(true, dbSetting));
                 }
             }
             return bulkCopy;
@@ -237,9 +254,11 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize = null)
         {
+            var dbSetting = connection.GetDbSetting();
             var bulkCopy = new OracleBulkCopy(connection)
             {
-                DestinationTableName = tableName
+                // See the remarks in CreateBulkCopyForDataTable - same quoting requirement applies here.
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
@@ -253,7 +272,10 @@ namespace RepoDb
             {
                 foreach (var mapping in mappings)
                 {
-                    bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn);
+                    // SourceColumn is matched against the reader's own column names (plain .NET string
+                    // equality against DataEntityDataReader.GetName(i) - never sent to Oracle, so it must
+                    // stay unquoted). DestinationColumn needs quoting - see the remarks in CreateBulkCopyForDataTable.
+                    bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
                 }
             }
             return bulkCopy;

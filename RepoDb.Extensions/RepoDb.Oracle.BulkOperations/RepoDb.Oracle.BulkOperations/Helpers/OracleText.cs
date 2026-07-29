@@ -26,21 +26,28 @@ namespace RepoDb
         /// per call - do not fail. The staging table always starts out structurally identical to, and
         /// empty relative to, the target table (<c>WHERE (1 = 0)</c> copies columns/types, not rows).
         /// </summary>
+        /// <param name="qualifierField">
+        /// When provided, the pseudo table is projected down to just this one column (used by <c>BulkDelete</c>'s
+        /// <c>primaryKeys</c> overload, which only ever has a single key value per row to stage). Defaults to
+        /// every column (<c>SELECT *</c>) when <see langword="null"/>.
+        /// </param>
         public static string GetCreatePseudoTableSql(string tableName,
             string pseudoTableName,
             OracleBulkImportPseudoTableType pseudoTableType,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            Field qualifierField = null)
         {
             var quotedTableName = tableName.AsQuoted(true, dbSetting);
             var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var columnList = qualifierField != null ? qualifierField.Name.AsQuoted(true, dbSetting) : "*";
 
             // Physical: an ordinary heap table, shared/visible across sessions.
             // Memory: a Global Temporary Table whose rows are private per session but whose definition
             // (created once) is shared - safe for concurrent connections to reuse. Auto resolves to either
             // of these (see OracleConnectionExtension.ResolvePseudoTableType) before this method ever sees it.
             var createClause = pseudoTableType == OracleBulkImportPseudoTableType.Physical
-                ? $"CREATE TABLE {quotedPseudoTableName} AS SELECT * FROM {quotedTableName} WHERE (1 = 0)"
-                : $"CREATE GLOBAL TEMPORARY TABLE {quotedPseudoTableName} ON COMMIT PRESERVE ROWS AS SELECT * FROM {quotedTableName} WHERE (1 = 0)";
+                ? $"CREATE TABLE {quotedPseudoTableName} AS SELECT {columnList} FROM {quotedTableName} WHERE (1 = 0)"
+                : $"CREATE GLOBAL TEMPORARY TABLE {quotedPseudoTableName} ON COMMIT PRESERVE ROWS AS SELECT {columnList} FROM {quotedTableName} WHERE (1 = 0)";
 
             // ORA-00955: name is already used by an existing object
             return $"BEGIN EXECUTE IMMEDIATE '{createClause}'; EXCEPTION WHEN OTHERS THEN IF SQLCODE != -955 THEN RAISE; END IF; END;";

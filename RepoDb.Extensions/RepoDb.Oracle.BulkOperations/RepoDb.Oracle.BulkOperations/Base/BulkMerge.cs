@@ -158,7 +158,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
 
@@ -307,7 +307,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
 
@@ -464,7 +464,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
@@ -619,7 +619,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
