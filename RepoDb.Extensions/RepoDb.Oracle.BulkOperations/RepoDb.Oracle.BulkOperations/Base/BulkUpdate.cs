@@ -202,7 +202,7 @@ namespace RepoDb
         #region BulkUpdateBase<DbDataReader>
 
         /// <summary>
-        /// Updates existing rows on <paramref name="tableName"/> by streaming <paramref name="dataReader"/>
+        /// Updates existing rows on <paramref name="tableName"/> by streaming <paramref name="reader"/>
         /// straight into a staging (pseudo) table - see <see cref="BulkUpdateBase{TEntity}"/> for the
         /// detailed staging-table steps (identical caveats around <paramref name="mappings"/> and
         /// <paramref name="transaction"/> apply here). As with the other overloads, there is no
@@ -211,7 +211,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
         /// <param name="mappings">
         /// The explicit source-to-destination column mapping. When provided, only the destination columns named here
@@ -233,7 +233,7 @@ namespace RepoDb
         /// <exception cref="MissingFieldsException">The resulting staged-field list is empty.</exception>
         private static int BulkUpdateBase(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -271,7 +271,7 @@ namespace RepoDb
                 // Bulk and post process
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
-                WriteToServerInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 result = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
@@ -466,7 +466,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
@@ -479,7 +479,7 @@ namespace RepoDb
         /// <returns>The number of rows updated.</returns>
         private static async Task<int> BulkUpdateBaseAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -517,7 +517,7 @@ namespace RepoDb
                 // Bulk and post process
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 result = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);

@@ -51,6 +51,10 @@ namespace RepoDb.IntegrationTests.Setup
                 e => e.RowGuid, new OracleGuidToByteArrayPropertyHandler(), true);
             PropertyHandlerMapper.Add<BulkOperationNonIdentityTable, OracleGuidToByteArrayPropertyHandler>(
                 e => e.RowGuid, new OracleGuidToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<BulkOperationMappedNonIdentityTable, OracleGuidToByteArrayPropertyHandler>(
+                e => e.RowGuidMapped, new OracleGuidToByteArrayPropertyHandler(), true);
+            PropertyHandlerMapper.Add<WithExtraFieldsBulkOperationNonIdentityTable, OracleGuidToByteArrayPropertyHandler>(
+                e => e.RowGuid, new OracleGuidToByteArrayPropertyHandler(), true);
 
             // Create the tables
             CreateTables();

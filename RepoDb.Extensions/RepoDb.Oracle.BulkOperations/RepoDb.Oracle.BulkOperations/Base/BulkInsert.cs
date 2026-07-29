@@ -317,7 +317,7 @@ namespace RepoDb
         #region BulkInsertBase<DbDataReader>
 
         /// <summary>
-        /// Streams <paramref name="dataReader"/> directly into <paramref name="tableName"/> - no staging
+        /// Streams <paramref name="reader"/> directly into <paramref name="tableName"/> - no staging
         /// table, no identity return-value support (a forward-only, single-pass reader cannot be rewound
         /// to retry/reconcile identity values the way the in-memory <c>TEntity</c>/<see cref="DataTable"/>
         /// overloads eventually will via <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/> -
@@ -328,7 +328,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
@@ -342,7 +342,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int BulkInsertBase(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -360,7 +360,7 @@ namespace RepoDb
             // Actual Execution
             var result = WriteToServerInternal(connection,
                 tableName,
-                dataReader,
+                reader,
                 mappings,
                 bulkCopyTimeout,
                 batchSize);
@@ -695,7 +695,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
@@ -707,7 +707,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -726,7 +726,7 @@ namespace RepoDb
             // Actual Execution
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
-                dataReader,
+                reader,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,

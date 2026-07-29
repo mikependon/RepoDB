@@ -90,7 +90,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static int WriteToServerInternal(OracleConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null)
@@ -184,7 +184,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(OracleConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,

@@ -113,10 +113,9 @@ namespace RepoDb
         /// matched by the defined qualifiers (defaults to the primary key). Returns the number of updated
         /// rows.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
@@ -126,9 +125,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of updated rows.</returns>
-        public static int BulkUpdate<TEntity>(this OracleConnection connection,
+        public static int BulkUpdate(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -136,9 +135,8 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkUpdate,
-            OracleTransaction transaction = null)
-            where TEntity : class =>
-            BulkUpdateBase(connection, tableName, dataReader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            OracleTransaction transaction = null) =>
+            BulkUpdateBase(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -247,10 +245,9 @@ namespace RepoDb
         /// materializing them into memory first, matched by the defined qualifiers (defaults to the primary
         /// key). Returns the number of updated rows.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
@@ -261,9 +258,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of updated rows.</returns>
-        public static Task<int> BulkUpdateAsync<TEntity>(this OracleConnection connection,
+        public static Task<int> BulkUpdateAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -272,9 +269,8 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            BulkUpdateBaseAsync(connection, tableName, dataReader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            CancellationToken cancellationToken = default) =>
+            BulkUpdateBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

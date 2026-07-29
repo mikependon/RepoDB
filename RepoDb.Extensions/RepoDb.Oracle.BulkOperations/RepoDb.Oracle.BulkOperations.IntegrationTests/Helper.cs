@@ -290,6 +290,654 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static BulkOperationNonIdentityTable CreateBulkOperationNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            return new BulkOperationNonIdentityTable
+            {
+                Id = hasId ? 1 : 0,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = 1,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                ColumnFloat = Convert.ToDouble(random.Next(100)),
+                ColumnInt = random.Next(100),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="tables"></param>
+        public static void UpdateBulkOperationNonIdentityTables(List<BulkOperationNonIdentityTable> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                //table.RowGuid = Guid.NewGuid();
+                table.ColumnBit = 1;
+                table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
+                table.ColumnFloat = Convert.ToDouble(random.Next(100));
+                //table.ColumnInt = random.Next(100);
+                table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateBulkOperationNonIdentityTable(BulkOperationNonIdentityTable table)
+        {
+            var random = new Random();
+            //table.RowGuid = Guid.NewGuid();
+            table.ColumnBit = 1;
+            table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+            table.ColumnDateTime2 = DateTime.UtcNow;
+            table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
+            table.ColumnFloat = Convert.ToDouble(random.Next(100));
+            //table.ColumnInt = random.Next(100);
+            table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+        }
+
+        #endregion
+
+        #region BulkOperationNonIdentityTable
+
+        /*
+         * Anonymous Objects
+         */
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateBulkOperationAnonymousObjectNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = hasId ? index : 0,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = (byte)1,
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    ColumnFloat = Convert.ToDouble(random.Next(100)),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static dynamic CreateBulkOperationAnonymousObjectNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = hasId ? 1 : 0,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = (byte)1,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static List<dynamic> UpdateBulkOperationAnonymousObjectNonIdentityTables(List<dynamic> tables)
+        {
+            var random = new Random();
+            var list = new List<dynamic>();
+            foreach (var table in tables)
+            {
+                list.Add(new
+                {
+                    Id = table.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = (byte)1,
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    ColumnFloat = Convert.ToDouble(random.Next(100)),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+                });
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static dynamic UpdateBulkOperationAnonymousObjectNonIdentityTable(dynamic table)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = table.Id,
+                //RowGuid = Guid.NewGuid(),
+                ColumnBit = (byte)1,
+                ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                ColumnFloat = Convert.ToDouble(random.Next(100)),
+                //ColumnInt = random.Next(100),
+                ColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+            };
+        }
+
+        /*
+         * IDictionary<string, object>
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                if (hasId)
+                {
+                    item["Id"] = index;
+                }
+                item["RowGuid"] = Guid.NewGuid();
+                item["ColumnBit"] = (byte)1;
+                item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDecimal"] = random.Next(100);
+                item["ColumnFloat"] = random.Next(100);
+                item["ColumnInt"] = random.Next(100);
+                item["ColumnNVarChar"] = $"NVARCHAR{index}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> UpdateBulkOperationExpandoObjectNonIdentityTables(List<ExpandoObject> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                var item = table as IDictionary<string, object>;
+                //item["RowGuid"] = Guid.NewGuid();
+                item["ColumnBit"] = (byte)1;
+                item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDecimal"] = random.Next(100);
+                item["ColumnFloat"] = random.Next(100);
+                //item["ColumnInt"] = random.Next(100);
+                item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static ExpandoObject CreateBulkOperationExpandoObjectNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            var item = new ExpandoObject() as IDictionary<string, object>;
+            if (hasId)
+            {
+                item["Id"] = 1;
+            }
+            //item["RowGuid"] = Guid.NewGuid();
+            item["ColumnBit"] = (byte)1;
+            item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDecimal"] = random.Next(100);
+            item["ColumnFloat"] = random.Next(100);
+            //item["ColumnInt"] = random.Next(100);
+            item["ColumnNVarChar"] = $"NVARCHAR{random.Next(100)}";
+            return (ExpandoObject)item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateBulkOperationExpandoObjectNonIdentityTable(ExpandoObject table)
+        {
+            var random = new Random();
+            var item = table as IDictionary<string, object>;
+            //item["RowGuid"] = Guid.NewGuid();
+            item["ColumnBit"] = (byte)1;
+            item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDecimal"] = random.Next(100);
+            item["ColumnFloat"] = random.Next(100);
+            //item["ColumnInt"] = random.Next(100);
+            item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
+        }
+
+        #endregion
+
+        #region BulkOperationMappedNonIdentityTable
+
+        /*
+         * Actual Class
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<BulkOperationMappedNonIdentityTable> CreateBulkOperationMappedNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<BulkOperationMappedNonIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new BulkOperationMappedNonIdentityTable
+                {
+                    IdMapped = hasId ? index : 0,
+                    RowGuidMapped = Guid.NewGuid(),
+                    ColumnBitMapped = 1,
+                    ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2Mapped = DateTime.UtcNow,
+                    ColumnDecimalMapped = random.Next(100),
+                    ColumnFloatMapped = random.Next(100),
+                    ColumnIntMapped = random.Next(100),
+                    ColumnNVarCharMapped = $"NVARCHAR{random.Next(100)}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static BulkOperationMappedNonIdentityTable CreateBulkOperationMappedNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            return new BulkOperationMappedNonIdentityTable
+            {
+                IdMapped = hasId ? 1 : 0,
+                RowGuidMapped = Guid.NewGuid(),
+                ColumnBitMapped = 1,
+                ColumnDateTimeMapped = EpocDate,
+                ColumnDateTime2Mapped = DateTime.UtcNow,
+                ColumnDecimalMapped = Convert.ToDecimal(random.Next(100)),
+                ColumnFloatMapped = Convert.ToDouble(random.Next(100)),
+                ColumnIntMapped = random.Next(100),
+                ColumnNVarCharMapped = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static void UpdateBulkOperationMappedNonIdentityTables(List<BulkOperationMappedNonIdentityTable> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                //table.RowGuid = Guid.NewGuid();
+                table.ColumnBitMapped = 1;
+                table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
+                table.ColumnDateTime2Mapped = DateTime.UtcNow;
+                table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
+                table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
+                //table.UnmatchedColumnInt = random.Next(100);
+                table.ColumnNVarCharMapped = $"{table.ColumnNVarCharMapped}-Updated";
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static void UpdateBulkOperationMappedNonIdentityTable(BulkOperationMappedNonIdentityTable table)
+        {
+            var random = new Random();
+            //table.RowGuid = Guid.NewGuid();
+            table.ColumnBitMapped = 1;
+            table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
+            table.ColumnDateTime2Mapped = DateTime.UtcNow;
+            table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
+            table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
+            //table.UnmatchedColumnInt = random.Next(100);
+            table.ColumnNVarCharMapped = $"{table.ColumnNVarCharMapped}-Updated";
+        }
+
+        /*
+         * Anonymous Objects
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateBulkOperationAnonymousObjectMappedNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = hasId ? index : 0,
+                    RowGuid = Guid.NewGuid(),
+                    UnmatchedColumnBit = (byte)1,
+                    UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
+                    UnmatchedColumnInt = random.Next(100),
+                    UnmatchedColumnNVarChar = $"NVARCHAR{random.Next(100)}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static dynamic CreateBulkOperationAnonymousObjectMappedNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = hasId ? 1 : 0,
+                RowGuid = Guid.NewGuid(),
+                UnmatchedColumnBit = (byte)1,
+                UnmatchedColumnDateTime = EpocDate,
+                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                UnmatchedColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
+                UnmatchedColumnInt = random.Next(int.MinValue, int.MaxValue),
+                UnmatchedColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static List<dynamic> UpdateBulkOperationAnonymousObjectMappedNonIdentityTables(List<dynamic> tables)
+        {
+            var random = new Random();
+            var list = new List<dynamic>();
+            foreach (var table in tables)
+            {
+                list.Add(new
+                {
+                    Id = table.Id,
+                    RowGuid = Guid.NewGuid(),
+                    UnmatchedColumnBit = (byte)1,
+                    UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
+                    UnmatchedColumnInt = random.Next(100),
+                    UnmatchedColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+                });
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static dynamic UpdateBulkOperationAnonymousObjectMappedNonIdentityTable(dynamic table)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = table.Id,
+                //RowGuid = Guid.NewGuid(),
+                UnmatchedColumnBit = (byte)1,
+                UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
+                //UnmatchedColumnInt = random.Next(100),
+                UnmatchedColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+            };
+        }
+
+        /*
+         * IDictionary<string, object>
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectMappedNonIdentityTables(int count,
+            bool hasId = true)
+        {
+            var random = new Random();
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                if (hasId)
+                {
+                    item["Id"] = index;
+                }
+                item["RowGuid"] = Guid.NewGuid();
+                item["UnmatchedColumnBit"] = (byte)1;
+                item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDecimal"] = random.Next(100);
+                item["UnmatchedColumnFloat"] = random.Next(100);
+                item["UnmatchedColumnInt"] = random.Next(100);
+                item["UnmatchedColumnNVarChar"] = $"NVARCHAR{index}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> UpdateBulkOperationExpandoObjectMappedNonIdentityTables(List<ExpandoObject> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                var item = table as IDictionary<string, object>;
+                //item["RowGuid"] = Guid.NewGuid();
+                item["UnmatchedColumnBit"] = (byte)1;
+                item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDecimal"] = random.Next(100);
+                item["UnmatchedColumnFloat"] = random.Next(100);
+                //item["UnmatchedColumnInt"] = random.Next(100);
+                item["UnmatchedColumnNVarChar"] = $"{item["UnmatchedColumnNVarChar"]}-Updated";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static ExpandoObject CreateBulkOperationExpandoObjectMappedNonIdentityTable(bool hasId = true)
+        {
+            var random = new Random();
+            var item = new ExpandoObject() as IDictionary<string, object>;
+            if (hasId)
+            {
+                item["Id"] = 1;
+            }
+            //item["RowGuid"] = Guid.NewGuid();
+            item["UnmatchedColumnBit"] = (byte)1;
+            item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDecimal"] = random.Next(100);
+            item["UnmatchedColumnFloat"] = random.Next(100);
+            //item["UnmatchedColumnInt"] = random.Next(100);
+            item["UnmatchedColumnNVarChar"] = $"NVARCHAR{random.Next(100)}";
+            return (ExpandoObject)item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateBulkOperationExpandoObjectMappedNonIdentityTable(ExpandoObject table)
+        {
+            var random = new Random();
+            var item = table as IDictionary<string, object>;
+            //item["RowGuid"] = Guid.NewGuid();
+            item["UnmatchedColumnBit"] = (byte)1;
+            item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDecimal"] = random.Next(100);
+            item["UnmatchedColumnFloat"] = random.Next(100);
+            //item["UnmatchedColumnInt"] = random.Next(100);
+            item["UnmatchedColumnNVarChar"] = $"{item["UnmatchedColumnNVarChar"]}-Updated";
+        }
+
+        #endregion
+
+        #region WithExtraFieldsBulkOperationNonIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<WithExtraFieldsBulkOperationNonIdentityTable> CreateWithExtraFieldsBulkOperationNonIdentityTables(int count)
+        {
+            var tables = new List<WithExtraFieldsBulkOperationNonIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new WithExtraFieldsBulkOperationNonIdentityTable
+                {
+                    Id = index,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = 1,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = index,
+                    ColumnFloat = index,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}",
+                    ExtraField = $"ExtraField{index}",
+                    NonIdentityTables = new[]
+                    {
+                        CreateBulkOperationNonIdentityTable(),
+                        CreateBulkOperationNonIdentityTable()
+                    }
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static WithExtraFieldsBulkOperationNonIdentityTable CreateWithExtraFieldsBulkOperationNonIdentityTable()
+        {
+            var random = new Random();
+            return new WithExtraFieldsBulkOperationNonIdentityTable
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = 1,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static void UpdateWithExtraFieldsBulkOperationNonIdentityTables(List<WithExtraFieldsBulkOperationNonIdentityTable> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                //table.RowGuid = Guid.NewGuid();
+                table.ColumnBit = 1;
+                table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
+                table.ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue));
+                //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);
+                table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+                table.ExtraField = $"{table.ExtraField}-Updated";
+            }
+        }
+
         #endregion
 
         #region BulkOperationIdentityTable

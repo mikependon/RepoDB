@@ -13,6 +13,11 @@ namespace RepoDb
         public const string OracleBulkDelete = "OracleBulkDelete";
 
         /// <summary>
+        /// The trace key for the <c>BulkDeleteByKey</c> operation.
+        /// </summary>
+        public const string OracleBulkDeleteByKey = "OracleBulkDeleteByKey";
+
+        /// <summary>
         /// The trace key for the <c>BulkInsert</c> operation.
         /// </summary>
         public const string OracleBulkInsert = "OracleBulkInsert";

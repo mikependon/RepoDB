@@ -394,7 +394,7 @@ namespace RepoDb
         #region BulkMergeBase<DbDataReader>
 
         /// <summary>
-        /// Upserts <paramref name="dataReader"/> into <paramref name="tableName"/> via a staging (pseudo)
+        /// Upserts <paramref name="reader"/> into <paramref name="tableName"/> via a staging (pseudo)
         /// table, streaming straight from the reader into it - see <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/>
         /// for the detailed staging-table steps (identical caveats around <paramref name="mappings"/> and
         /// <paramref name="transaction"/> apply here). Unlike the <c>TEntity</c>/<see cref="DataTable"/>
@@ -404,7 +404,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
         /// <param name="mappings">
         /// The explicit source-to-destination column mapping. When provided, only the destination columns named here
@@ -425,7 +425,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         private static int BulkMergeBase(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -453,7 +453,7 @@ namespace RepoDb
                 // Bulk and post process
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
-                WriteToServerInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -856,7 +856,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataReader"></param>
+        /// <param name="reader"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
@@ -869,7 +869,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BulkMergeBaseAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -897,7 +897,7 @@ namespace RepoDb
                 // Bulk and post process
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataReader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);

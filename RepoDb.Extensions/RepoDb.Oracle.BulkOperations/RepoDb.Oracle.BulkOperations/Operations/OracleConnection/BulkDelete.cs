@@ -21,33 +21,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="qualifiers">The fields used to match existing rows.</param>
-        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
-        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
-        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this OracleConnection connection,
-            IEnumerable<object> primaryKeys,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            OracleBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = OracleTraceKeys.OracleBulkDelete,
-            OracleTransaction transaction = null)
-            where TEntity : class =>
-            BulkDeleteBase(connection, ClassMappedNameCache.Get<TEntity>(), primaryKeys, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
-
-        /// <summary>
-        /// Deletes existing rows from the database in bulk, matched by the defined qualifiers (defaults
-        /// to the primary key). Returns the number of deleted rows.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
@@ -133,10 +106,9 @@ namespace RepoDb
         /// matched by the defined qualifiers (defaults to the primary key). Returns the number of deleted
         /// rows.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
@@ -145,51 +117,21 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this OracleConnection connection,
+        public static int BulkDelete(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkDelete,
-            OracleTransaction transaction = null)
-            where TEntity : class =>
-            BulkDeleteBase(connection, tableName, dataReader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            OracleTransaction transaction = null) =>
+            BulkDeleteBase(connection, tableName, reader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
         #region Async
-
-        /// <summary>
-        /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined
-        /// qualifiers (defaults to the primary key). Returns the number of deleted rows.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="qualifiers">The fields used to match existing rows.</param>
-        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
-        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
-        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
-        /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this OracleConnection connection,
-            IEnumerable<object> primaryKeys,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            OracleBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = OracleTraceKeys.OracleBulkDelete,
-            OracleTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            BulkDeleteBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), primaryKeys, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined
@@ -288,10 +230,9 @@ namespace RepoDb
         /// materializing them into memory first, matched by the defined qualifiers (defaults to the primary
         /// key). Returns the number of deleted rows.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
@@ -301,9 +242,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this OracleConnection connection,
+        public static Task<int> BulkDeleteAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -311,9 +252,8 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            BulkDeleteBaseAsync(connection, tableName, dataReader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            CancellationToken cancellationToken = default) =>
+            BulkDeleteBaseAsync(connection, tableName, reader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

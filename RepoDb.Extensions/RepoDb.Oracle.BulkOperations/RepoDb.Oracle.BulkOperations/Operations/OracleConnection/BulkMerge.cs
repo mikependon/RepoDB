@@ -126,10 +126,9 @@ namespace RepoDb
         /// rewound to retry/reconcile identity values, so returning generated identity values back onto a
         /// source row is not supported for this overload.
         /// </remarks>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
@@ -139,9 +138,9 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this OracleConnection connection,
+        public static int BulkMerge(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -149,9 +148,8 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkMerge,
-            OracleTransaction transaction = null)
-            where TEntity : class =>
-            BulkMergeBase(connection, tableName, dataReader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            OracleTransaction transaction = null) =>
+            BulkMergeBase(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -270,10 +268,9 @@ namespace RepoDb
         /// <remarks>
         /// There is no <c>identityBehavior</c> parameter - see the remarks on the synchronous overload.
         /// </remarks>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
@@ -284,9 +281,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this OracleConnection connection,
+        public static Task<int> BulkMergeAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -295,9 +292,8 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            BulkMergeBaseAsync(connection, tableName, dataReader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            CancellationToken cancellationToken = default) =>
+            BulkMergeBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
 

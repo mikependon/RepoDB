@@ -116,10 +116,9 @@ namespace RepoDb
         /// rewound to retry/reconcile identity values, so returning generated identity values back onto a
         /// source row is not supported for this overload.
         /// </remarks>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
@@ -128,18 +127,17 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert<TEntity>(this OracleConnection connection,
+        public static int BulkInsert(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkInsert,
-            OracleTransaction transaction = null)
-            where TEntity : class =>
-            BulkInsertBase(connection, tableName, dataReader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            OracleTransaction transaction = null) =>
+            BulkInsertBase(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -250,10 +248,9 @@ namespace RepoDb
         /// <remarks>
         /// There is no <c>identityBehavior</c> parameter - see the remarks on the synchronous overload.
         /// </remarks>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dataReader">The source <see cref="DbDataReader"/> to stream from.</param>
+        /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
@@ -263,9 +260,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this OracleConnection connection,
+        public static Task<int> BulkInsertAsync(this OracleConnection connection,
             string tableName,
-            DbDataReader dataReader,
+            IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -273,9 +270,8 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            BulkInsertBaseAsync(connection, tableName, dataReader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            CancellationToken cancellationToken = default) =>
+            BulkInsertBaseAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }
