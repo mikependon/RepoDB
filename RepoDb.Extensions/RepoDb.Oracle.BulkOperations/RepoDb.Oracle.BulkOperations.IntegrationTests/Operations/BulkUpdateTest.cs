@@ -337,7 +337,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkUpdate(tables, mappings: mappings));
+                Assert.Throws<OracleException>(() => connection.BulkUpdate(tables, mappings: mappings));
             }
         }
 
@@ -470,7 +470,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
@@ -594,7 +594,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         public void TestOracleConnectionBulkUpdateForTableNameExpandoObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -602,16 +602,16 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -626,7 +626,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         public void TestOracleConnectionBulkUpdateForTableNameAnonymousObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -634,16 +634,16 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -888,7 +888,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -1530,7 +1530,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         public void TestOracleConnectionBulkUpdateAsyncForTableNameExpandoObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -1538,16 +1538,16 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -1562,7 +1562,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         public void TestOracleConnectionBulkUpdateAsyncForTableNameAnonymousObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
@@ -1573,13 +1573,13 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -2209,7 +2209,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             using (var connection = new OracleConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkUpdate(tables, mappings: mappings));
+                Assert.Throws<OracleException>(() => connection.BulkUpdate(tables, mappings: mappings));
             }
         }
 
@@ -2336,7 +2336,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
@@ -2725,7 +2725,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
