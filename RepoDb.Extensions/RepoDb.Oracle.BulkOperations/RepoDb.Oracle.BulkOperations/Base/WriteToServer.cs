@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -308,6 +309,28 @@ namespace RepoDb
                 }
             }
         }
+
+        /// <summary>
+        /// Builds a lightweight <see cref="OracleCommand"/> that is never executed - it exists purely to
+        /// carry a descriptive <c>CommandText</c> into <see cref="Tracer.InvokeBeforeExecution"/>/
+        /// <see cref="Tracer.InvokeBeforeExecutionAsync"/> (see the <c>Base/BulkInsert.cs</c>,
+        /// <c>Base/BulkMerge.cs</c>, <c>Base/BulkUpdate.cs</c> and <c>Base/BulkDelete.cs</c> leaf
+        /// execution methods that call this). A bulk operation's actual data movement goes through
+        /// <see cref="OracleBulkCopy"/> (plus, for BulkMerge/BulkUpdate/BulkDelete, a handful of staging
+        /// table DDL/DML statements) rather than a single <see cref="DbCommand"/> - so unlike
+        /// <see cref="RepoDb.Extensions.DbConnectionExtension.ExecuteNonQuery"/> and friends, there is no
+        /// command for the trace machinery to pick up for free; this synthesizes one.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText">A human-readable description of the bulk operation being traced (not executed).</param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static DbCommand CreateTraceCommand(OracleConnection connection,
+            string commandText,
+            int? commandTimeout = null,
+            OracleTransaction transaction = null) =>
+            (DbCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
 
         #endregion
     }

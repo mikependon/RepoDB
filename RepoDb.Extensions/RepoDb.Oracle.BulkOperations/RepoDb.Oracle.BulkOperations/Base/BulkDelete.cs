@@ -2,6 +2,7 @@ using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
 using RepoDb.Oracle.BulkOperations.Extensions;
 using System;
@@ -25,7 +26,9 @@ namespace RepoDb
         /// <summary>
         /// Deletes existing rows from <paramref name="tableName"/> in bulk, matched by their primary (or
         /// identity) key value - or by <paramref name="qualifiers"/>, when explicitly provided - via a
-        /// staging (pseudo) table. See <see cref="BulkDeleteBaseViaKeyValues"/> for the detailed steps.
+        /// staging (pseudo) table. See <see cref="BulkDeleteBaseViaKeyValues"/> for the detailed steps
+        /// (and for where the <see cref="Tracer"/> Before/After pair is actually invoked - this overload
+        /// is a pure pass-through so the bulk operation is only traced once).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -38,6 +41,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase(this OracleConnection connection,
@@ -47,6 +52,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
         {
             var primaryKeyList = primaryKeys?.AsList();
@@ -59,6 +66,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -71,7 +80,10 @@ namespace RepoDb
         /// via a staging (pseudo) table: the entities are bulk-written into the pseudo table, and a single
         /// <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement removes every row on the
         /// real table matched (on <paramref name="qualifiers"/>, defaulting to the primary/identity key) by
-        /// a staged row.
+        /// a staged row. This is the "actual base execution" for the non-redirected path - the single
+        /// <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair wraps
+        /// the entire create/truncate/write/delete/drop sequence below (the key-value redirect below is
+        /// already traced once, inside <see cref="BulkDeleteBaseViaKeyValues"/>).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -88,6 +100,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase<TEntity>(this OracleConnection connection,
@@ -97,6 +111,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -112,10 +128,20 @@ namespace RepoDb
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction);
             }
 
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
 
             try
             {
@@ -127,13 +153,19 @@ namespace RepoDb
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
+                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
             }
             finally
             {
                 // Drop the pseudo table
                 OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
             }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         #endregion
@@ -143,7 +175,8 @@ namespace RepoDb
         /// <summary>
         /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by the rows of
         /// <paramref name="table"/>, following the same steps as the <c>TEntity</c> overload - see
-        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks.
+        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks. This is the "actual base
+        /// execution" that the <see cref="Tracer"/> Before/After pair wraps.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -153,6 +186,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase(this OracleConnection connection,
@@ -163,10 +198,20 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
 
             try
             {
@@ -178,13 +223,19 @@ namespace RepoDb
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
+                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
             }
             finally
             {
                 // Drop the pseudo table
                 OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
             }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         #endregion
@@ -196,7 +247,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync(PrimaryKeys)
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>primaryKeys</c> <see cref="BulkDeleteBase(OracleConnection, string, IEnumerable{object}, IEnumerable{Field}, int?, int?, OracleBulkImportPseudoTableType, OracleTransaction)"/> -
+        /// Asynchronous counterpart of the <c>primaryKeys</c> <see cref="BulkDeleteBase(OracleConnection, string, IEnumerable{object}, IEnumerable{Field}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -206,6 +257,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows deleted.</returns>
@@ -216,6 +269,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -229,6 +284,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }
@@ -249,6 +306,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows deleted.</returns>
@@ -259,6 +318,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -275,11 +336,21 @@ namespace RepoDb
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction,
                     cancellationToken);
             }
 
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
 
             try
             {
@@ -291,13 +362,19 @@ namespace RepoDb
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
+                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
                 await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         #endregion
@@ -305,7 +382,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DataTable>
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkDeleteBase(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, int?, int?, OracleBulkImportPseudoTableType, OracleTransaction)"/> -
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkDeleteBase(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -316,6 +393,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows deleted.</returns>
@@ -327,11 +406,21 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
 
             try
             {
@@ -343,13 +432,19 @@ namespace RepoDb
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
-                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
+                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
                 await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         #endregion
@@ -365,6 +460,9 @@ namespace RepoDb
         /// primary/identity key when not provided), and a single <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c>
         /// statement removes every matched row from the real table. Shared by the dedicated <c>primaryKeys</c> overload
         /// and by the <c>TEntity</c> overload's raw-key-value redirect (see <see cref="IsKeyValueCollection{TEntity}"/>).
+        /// This is the "actual base execution" for both of those callers - the single
+        /// <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair wraps
+        /// the entire create/truncate/write/delete/drop sequence below.
         /// </summary>
         /// <exception cref="PrimaryFieldNotFoundException">
         /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
@@ -376,11 +474,21 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
+            ITrace trace,
+            string traceKey,
             OracleTransaction transaction)
         {
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
 
             try
             {
@@ -393,13 +501,19 @@ namespace RepoDb
                 WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction);
+                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction);
             }
             finally
             {
                 // Drop the pseudo table
                 OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
             }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         /// <summary>
@@ -413,12 +527,22 @@ namespace RepoDb
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
+            ITrace trace,
+            string traceKey,
             OracleTransaction transaction,
             CancellationToken cancellationToken)
         {
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+
+            using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
 
             try
             {
@@ -431,13 +555,19 @@ namespace RepoDb
                 await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction, cancellationToken);
+                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
                 await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         /// <summary>

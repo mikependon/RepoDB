@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
 using RepoDb.Oracle.BulkOperations.Extensions;
 
@@ -28,6 +29,9 @@ namespace RepoDb
         /// statement (with only a <c>WHEN MATCHED THEN UPDATE</c> branch - see
         /// <see cref="OracleText.GetUpdateFromPseudoTableSql"/>) updates every row it matches. Unlike
         /// <c>BulkMerge</c>, there is no identity-returning variant - a plain update never creates rows.
+        /// This is the "actual base execution" - the single <see cref="Tracer.InvokeBeforeExecution"/>/
+        /// <see cref="Tracer.InvokeAfterExecution"/> pair for the whole <c>BulkUpdate</c> call wraps the
+        /// entire create/truncate/write/update/drop sequence below (when there's anything to update).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -42,6 +46,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction">
         /// The transaction under which the staging-table DDL and the final <c>MERGE</c> statement run. As with
         /// <c>BulkMerge</c>, the bulk-write step in between (<see cref="OracleBulkCopy"/>) is transaction-agnostic
@@ -58,6 +64,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -76,6 +84,14 @@ namespace RepoDb
 
             var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
             try
             {
                 // Bulk and post process
@@ -84,13 +100,19 @@ namespace RepoDb
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                return OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
+                result = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
             }
             finally
             {
                 // Drop the pseudo table
                 OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
             }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         #endregion
@@ -112,6 +134,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns>The number of rows updated.</returns>
         private static int BulkUpdateBase(this OracleConnection connection,
@@ -123,6 +147,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null)
         {
             // Identify the columns
@@ -139,6 +165,14 @@ namespace RepoDb
 
             var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
             try
             {
                 // Bulk and post process
@@ -147,13 +181,19 @@ namespace RepoDb
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                return OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
+                result = OracleExecution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction);
             }
             finally
             {
                 // Drop the pseudo table
                 OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
             }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         #endregion
@@ -177,6 +217,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows updated.</returns>
@@ -188,6 +230,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -207,6 +251,14 @@ namespace RepoDb
 
             var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
             try
             {
                 // Bulk and post process
@@ -215,13 +267,19 @@ namespace RepoDb
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                return await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
+                result = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
                 await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         #endregion
@@ -229,7 +287,7 @@ namespace RepoDb
         #region BulkUpdateBaseAsync<DataTable>
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkUpdateBase(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, OracleBulkImportPseudoTableType, OracleTransaction)"/> -
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkUpdateBase(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior and caveats (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -241,6 +299,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The number of rows updated.</returns>
@@ -253,6 +313,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -270,6 +332,14 @@ namespace RepoDb
 
             var pseudoTableName = OracleText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
 
+            using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
             try
             {
                 // Bulk and post process
@@ -278,13 +348,19 @@ namespace RepoDb
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                return await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
+                result = await OracleExecution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
                 await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         #endregion

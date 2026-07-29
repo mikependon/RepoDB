@@ -1,6 +1,7 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Oracle.BulkOperations;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBase<TEntity>(this OracleConnection connection,
@@ -41,6 +44,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -59,6 +64,8 @@ namespace RepoDb
                     batchSize,
                     identityBehavior,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction);
             }
             else
@@ -67,7 +74,10 @@ namespace RepoDb
                     entityList,
                     mappings,
                     bulkCopyTimeout,
-                    batchSize);
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction);
             }
         }
 
@@ -83,6 +93,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBaseForReturnIdentity<TEntity>(this OracleConnection connection,
@@ -93,6 +105,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
             where TEntity : class
         {
@@ -100,7 +114,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Bulk-writes <paramref name="entities"/> directly into <paramref name="tableName"/> (no staging
+        /// table - a plain <c>BulkInsert</c> has nothing to reconcile against existing rows the way
+        /// <c>BulkMerge</c>/<c>BulkUpdate</c>/<c>BulkDelete</c> do). This is the "actual base execution" -
+        /// the single <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/>
+        /// pair for the whole <c>BulkInsert</c> call wraps it.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -109,20 +127,41 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBaseNoReturnIdentity<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null)
-            where TEntity : class =>
-            WriteToServerInternal(connection,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null)
+            where TEntity : class
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Actual Execution
+            var result = WriteToServerInternal(connection,
                 tableName,
                 entities,
                 mappings,
                 bulkCopyTimeout,
                 batchSize);
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
 
         #endregion
 
@@ -140,6 +179,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBase(this OracleConnection connection,
@@ -151,6 +192,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
@@ -168,6 +211,8 @@ namespace RepoDb
                     batchSize,
                     identityBehavior,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction);
             }
             else
@@ -177,7 +222,10 @@ namespace RepoDb
                     rowState,
                     mappings,
                     bulkCopyTimeout,
-                    batchSize);
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction);
             }
         }
 
@@ -193,6 +241,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
@@ -205,13 +255,17 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Bulk-writes the rows of <paramref name="table"/> directly into <paramref name="tableName"/> -
+        /// see <see cref="BulkInsertBaseNoReturnIdentity{TEntity}"/> for the detailed remarks (identical
+        /// here). This is the "actual base execution" that the <see cref="Tracer"/> Before/After pair wraps.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -220,6 +274,9 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BulkInsertBaseNoReturnIdentity(this OracleConnection connection,
             string tableName,
@@ -227,14 +284,32 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null) =>
-            WriteToServerInternal(connection,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Actual Execution
+            var result = WriteToServerInternal(connection,
                 tableName,
                 table,
                 rowState,
                 mappings,
                 bulkCopyTimeout,
                 batchSize);
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
 
         #endregion
 
@@ -256,6 +331,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -267,6 +344,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -286,6 +365,8 @@ namespace RepoDb
                     batchSize,
                     identityBehavior,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction,
                     cancellationToken);
             }
@@ -296,6 +377,9 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     batchSize,
+                    trace,
+                    traceKey,
+                    transaction,
                     cancellationToken);
             }
         }
@@ -312,6 +396,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -324,6 +410,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -332,7 +420,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="BulkInsertBaseNoReturnIdentity{TEntity}"/> - see its
+        /// remarks for the detailed behavior (identical here).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -341,6 +430,9 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this OracleConnection connection,
@@ -349,15 +441,33 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            await WriteToServerAsyncInternal(connection,
+            where TEntity : class
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Actual Execution
+            var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 entities,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
                 cancellationToken);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
 
         #endregion
 
@@ -375,6 +485,8 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -387,6 +499,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -405,6 +519,8 @@ namespace RepoDb
                     batchSize,
                     identityBehavior,
                     pseudoTableType,
+                    trace,
+                    traceKey,
                     transaction,
                     cancellationToken);
             }
@@ -416,6 +532,9 @@ namespace RepoDb
                     mappings,
                     bulkCopyTimeout,
                     batchSize,
+                    trace,
+                    traceKey,
+                    transaction,
                     cancellationToken);
             }
         }
@@ -432,7 +551,10 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkInsertBaseForReturnIdentityAsync(this OracleConnection connection,
@@ -444,6 +566,8 @@ namespace RepoDb
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
             OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -460,6 +584,10 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> BulkInsertBaseNoReturnIdentityAsync(this OracleConnection connection,
             string tableName,
@@ -468,8 +596,19 @@ namespace RepoDb
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            CancellationToken cancellationToken = default) =>
-            await WriteToServerAsyncInternal(connection,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Actual Execution
+            var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 table,
                 rowState,
@@ -477,6 +616,13 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 cancellationToken);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
 
         #endregion
 

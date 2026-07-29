@@ -60,5 +60,12 @@
       OracleStatementBuilder.CreateUpdate for the rename-in-place fix that requires this access.
     -->
     <InternalsVisibleTo Include="RepoDb.Oracle" />
+    <!--
+      RepoDb.Oracle.BulkOperations calls the internal Tracer/TraceResult classes directly so its bulk
+      operations (BulkInsert/BulkMerge/BulkUpdate/BulkDelete) can raise the same Before/After execution
+      trace events as the rest of RepoDb, even though the actual data transfer goes through
+      OracleBulkCopy rather than a DbCommand that ExecuteNonQuery/ExecuteReader/etc. would trace for free.
+    -->
+    <InternalsVisibleTo Include="RepoDb.Oracle.BulkOperations" />
   </ItemGroup>
 </Project>
