@@ -1,7 +1,9 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
+using RepoDb.Oracle.BulkOperations.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static partial class OracleConnectionExtension
     {
@@ -21,18 +23,23 @@ namespace RepoDb
         #region BulkDeleteBase(PrimaryKeys)
 
         /// <summary>
-        ///
+        /// Deletes existing rows from <paramref name="tableName"/> in bulk, matched by their primary (or
+        /// identity) key value - or by <paramref name="qualifiers"/>, when explicitly provided - via a
+        /// staging (pseudo) table. See <see cref="BulkDeleteBaseViaKeyValues"/> for the detailed steps.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="primaryKeys"></param>
-        /// <param name="qualifiers"></param>
+        /// <param name="primaryKeys">The list of primary/identity key values to be bulk-deleted.</param>
+        /// <param name="qualifiers">
+        /// The single field to match <paramref name="primaryKeys"/> against, when the table's primary/identity
+        /// key is not the desired match column. Only the first field is used - each <paramref name="primaryKeys"/>
+        /// entry is a single scalar value, so there is nothing for a second field to match against.
+        /// </param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase(this OracleConnection connection,
             string tableName,
             IEnumerable<object> primaryKeys,
@@ -42,10 +49,17 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
-            var primaryKeyList = primaryKeys.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList.Count);
+            var primaryKeyList = primaryKeys?.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList?.Count);
 
-            throw new NotImplementedException();
+            return BulkDeleteBaseViaKeyValues(connection,
+                tableName,
+                primaryKeyList,
+                qualifiers,
+                bulkCopyTimeout,
+                batchSize,
+                pseudoTableType,
+                transaction);
         }
 
         #endregion
@@ -53,19 +67,29 @@ namespace RepoDb
         #region BulkDeleteBase<TEntity>
 
         /// <summary>
-        ///
+        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by <paramref name="entities"/>,
+        /// via a staging (pseudo) table: the entities are bulk-written into the pseudo table, and a single
+        /// <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement removes every row on the
+        /// real table matched (on <paramref name="qualifiers"/>, defaulting to the primary/identity key) by
+        /// a staged row.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="qualifiers"></param>
+        /// <param name="entities">
+        /// The list of entities to be bulk-deleted. When <typeparamref name="TEntity"/> is <see cref="object"/>
+        /// and every element is a raw scalar/struct value (e.g. boxed <see cref="int"/> or <see cref="Guid"/>
+        /// primary key values, routed here via a named <c>entities:</c> argument rather than the dedicated
+        /// <c>primaryKeys</c> overload) - as opposed to a real entity/anonymous-type instance with properties -
+        /// this is routed through the same key-value staging path as the <c>primaryKeys</c> overload instead,
+        /// since there are no properties to bulk-write as a full entity.
+        /// </param>
+        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -77,9 +101,39 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
 
-            throw new NotImplementedException();
+            if (IsKeyValueCollection(entityList))
+            {
+                return BulkDeleteBaseViaKeyValues(connection,
+                    tableName,
+                    (IEnumerable<object>)entityList,
+                    qualifiers,
+                    bulkCopyTimeout,
+                    batchSize,
+                    pseudoTableType,
+                    transaction);
+            }
+
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
         }
 
         #endregion
@@ -87,7 +141,9 @@ namespace RepoDb
         #region BulkDeleteBase<DataTable>
 
         /// <summary>
-        /// 
+        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by the rows of
+        /// <paramref name="table"/>, following the same steps as the <c>TEntity</c> overload - see
+        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -98,8 +154,7 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static int BulkDeleteBase(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -110,9 +165,26 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 
-            throw new NotImplementedException();
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
         }
 
         #endregion
@@ -124,7 +196,8 @@ namespace RepoDb
         #region BulkDeleteBaseAsync(PrimaryKeys)
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of the <c>primaryKeys</c> <see cref="BulkDeleteBase(OracleConnection, string, IEnumerable{object}, IEnumerable{Field}, int?, int?, OracleBulkImportPseudoTableType, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -135,8 +208,7 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static async Task<int> BulkDeleteBaseAsync(this OracleConnection connection,
             string tableName,
             IEnumerable<object> primaryKeys,
@@ -147,10 +219,18 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var primaryKeyList = primaryKeys.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList.Count);
+            var primaryKeyList = primaryKeys?.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList?.Count);
 
-            throw new NotImplementedException();
+            return await BulkDeleteBaseViaKeyValuesAsync(connection,
+                tableName,
+                primaryKeyList,
+                qualifiers,
+                bulkCopyTimeout,
+                batchSize,
+                pseudoTableType,
+                transaction,
+                cancellationToken);
         }
 
         #endregion
@@ -158,7 +238,8 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<TEntity>
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="BulkDeleteBase{TEntity}"/> - see its remarks for the
+        /// detailed behavior and caveats (identical here).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -170,8 +251,7 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static async Task<int> BulkDeleteBaseAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -184,9 +264,40 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
 
-            throw new NotImplementedException();
+            if (IsKeyValueCollection(entityList))
+            {
+                return await BulkDeleteBaseViaKeyValuesAsync(connection,
+                    tableName,
+                    (IEnumerable<object>)entityList,
+                    qualifiers,
+                    bulkCopyTimeout,
+                    batchSize,
+                    pseudoTableType,
+                    transaction,
+                    cancellationToken);
+            }
+
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
         }
 
         #endregion
@@ -194,7 +305,8 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DataTable>
 
         /// <summary>
-        /// 
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkDeleteBase(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, int?, int?, OracleBulkImportPseudoTableType, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -206,8 +318,7 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <returns>The number of rows deleted.</returns>
         private static async Task<int> BulkDeleteBaseAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -219,12 +330,158 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 
-            throw new NotImplementedException();
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
         }
 
         #endregion
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by a list of raw scalar
+        /// key values (e.g. primary key values), via a staging (pseudo) table: the key values are bulk-written
+        /// into a single-column pseudo table shaped after <paramref name="qualifiers"/> (defaulting to the
+        /// primary/identity key when not provided), and a single <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c>
+        /// statement removes every matched row from the real table. Shared by the dedicated <c>primaryKeys</c> overload
+        /// and by the <c>TEntity</c> overload's raw-key-value redirect (see <see cref="IsKeyValueCollection{TEntity}"/>).
+        /// </summary>
+        /// <exception cref="PrimaryFieldNotFoundException">
+        /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
+        /// </exception>
+        private static int BulkDeleteBaseViaKeyValues(OracleConnection connection,
+            string tableName,
+            IEnumerable<object> keyValues,
+            IEnumerable<Field> qualifiers,
+            int? bulkCopyTimeout,
+            int? batchSize,
+            OracleBulkImportPseudoTableType pseudoTableType,
+            OracleTransaction transaction)
+        {
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            try
+            {
+                // Bulk and post process
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                return OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="BulkDeleteBaseViaKeyValues"/> - see its remarks for the
+        /// detailed behavior (identical here).
+        /// </summary>
+        private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(OracleConnection connection,
+            string tableName,
+            IEnumerable<object> keyValues,
+            IEnumerable<Field> qualifiers,
+            int? bulkCopyTimeout,
+            int? batchSize,
+            OracleBulkImportPseudoTableType pseudoTableType,
+            OracleTransaction transaction,
+            CancellationToken cancellationToken)
+        {
+            var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+
+            try
+            {
+                // Bulk and post process
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+                using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
+                var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                return await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+        }
+
+        /// <summary>
+        /// Builds a single-column <see cref="DataTable"/> (named and typed after <paramref name="qualifierField"/>)
+        /// populated with <paramref name="keyValues"/> - one row per value. Used to bulk-write raw scalar key
+        /// values into the staging/pseudo table, since they have no properties/columns of their own to reflect.
+        /// </summary>
+        private static DataTable CreateKeyValuesDataTable(Field qualifierField,
+            IEnumerable<object> keyValues)
+        {
+            var table = new DataTable();
+            table.Columns.Add(qualifierField.Name, qualifierField.Type ?? typeof(object));
+
+            foreach (var keyValue in keyValues)
+            {
+                table.Rows.Add(keyValue ?? DBNull.Value);
+            }
+
+            return table;
+        }
+
+        /// <summary>
+        /// Detects whether <paramref name="entityList"/> is actually a list of raw scalar/struct key values
+        /// (e.g. boxed <see cref="int"/> or <see cref="Guid"/> primary key values) rather than a list of real
+        /// entity/anonymous-type instances - true only when <typeparamref name="TEntity"/> is <see cref="object"/>
+        /// (i.e. the static element type carries no information of its own) and the runtime type of its first
+        /// element is not a class type (<see cref="TypeExtension.IsClassType(Type)"/> - excludes <see cref="object"/>,
+        /// covers structs like <see cref="int"/>/<see cref="Guid"/>/<see cref="DateTime"/>, and also excludes
+        /// <see cref="string"/>, which implements <see cref="IEnumerable{T}"/>). A real entity, anonymous object,
+        /// or <see cref="System.Dynamic.ExpandoObject"/> passed in as <c>TEntity == object</c> is a class type and
+        /// is therefore correctly left on the normal (non-redirected) entity path.
+        /// </summary>
+        private static bool IsKeyValueCollection<TEntity>(IList<TEntity> entityList)
+            where TEntity : class
+        {
+            if (typeof(TEntity) != typeof(object))
+            {
+                return false;
+            }
+
+            var firstEntity = entityList.FirstOrDefault();
+
+            return firstEntity != null && firstEntity.GetType().IsClassType() != true;
+        }
 
         #endregion
     }

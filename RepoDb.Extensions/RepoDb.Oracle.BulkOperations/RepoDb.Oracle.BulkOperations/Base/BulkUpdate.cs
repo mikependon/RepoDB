@@ -63,7 +63,7 @@ namespace RepoDb
         {
             // Identify the columns
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
@@ -126,7 +126,7 @@ namespace RepoDb
             OracleTransaction transaction = null)
         {
             // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
@@ -194,7 +194,7 @@ namespace RepoDb
         {
             // Identify the columns
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
@@ -257,7 +257,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
             var stagingFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);

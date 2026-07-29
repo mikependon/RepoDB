@@ -152,7 +152,7 @@ namespace RepoDb
         {
             // Identify the columns
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
 
             try
@@ -301,7 +301,7 @@ namespace RepoDb
             OracleTransaction transaction = null)
         {
             // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
 
             try
@@ -458,7 +458,7 @@ namespace RepoDb
         {
             // Identify the columns
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
 
             try
@@ -613,7 +613,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Identify the columns
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
 
             try

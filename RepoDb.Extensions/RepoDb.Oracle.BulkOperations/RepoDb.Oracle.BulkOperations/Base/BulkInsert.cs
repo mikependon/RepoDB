@@ -45,7 +45,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -153,7 +153,7 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType = default,
             OracleTransaction transaction = null)
         {
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -272,7 +272,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;
@@ -390,7 +390,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table.Rows.Count);
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var identityField = dbFields.GetIdentity();
             var returnIdentity = identityBehavior == OracleBulkImportIdentityBehavior.ReturnIdentity && identityField != null;

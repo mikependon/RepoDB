@@ -181,5 +181,52 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// Returns the deterministic name of the staging/pseudo table for a <c>BulkDelete</c> against
+        /// <paramref name="tableName"/>. Suffixed differently than <see cref="GetPseudoTableNameForMerge"/>
+        /// and <see cref="GetPseudoTableNameForUpdate"/> so a <c>BulkDelete</c> never shares (and clobbers)
+        /// the staging table of a concurrent <c>BulkMerge</c>/<c>BulkUpdate</c> against the same table.
+        /// </summary>
+        public static string GetPseudoTableNameForDelete(string tableName,
+            OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{tableName}Delete";
+
+        /// <summary>
+        /// Builds the <c>DELETE FROM ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement that
+        /// removes every row on <paramref name="tableName"/> matched by a row currently staged in
+        /// <paramref name="pseudoTableName"/>. Oracle's <c>DELETE</c> statement cannot directly target a
+        /// joined result the way e.g. SQL Server's <c>DELETE ... FROM ... INNER JOIN ...</c> can - the only
+        /// join-based <c>DELETE</c> form Oracle offers, <c>DELETE FROM (SELECT * FROM t1 JOIN t2 ...)</c>
+        /// (an "updatable/deletable join view"), only works when the joined-against table is <em>key-preserved</em>
+        /// (i.e. backed by a real primary/unique key or index) - which the staging/pseudo table never is,
+        /// since it is created without constraints (see <see cref="GetCreatePseudoTableSql"/>) - and would fail
+        /// with <c>ORA-01779</c> at runtime. A <c>ROWID IN (SELECT T.ROWID FROM ... T INNER JOIN ... S ON (...))</c>
+        /// subquery sidesteps that restriction entirely (plain <c>SELECT</c>s have no key-preservation
+        /// requirement) while still literally performing the match as an <c>INNER JOIN</c>, and - since
+        /// <c>ROWID</c> uniquely identifies a physical row - is safe even if a staged row matches more than
+        /// one target row on the qualifier field(s).
+        /// </summary>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row for deletion.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        public static string GetDeleteFromPseudoTableSql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+
+            var onClause = qualifiers
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(" AND ");
+
+            return $"DELETE FROM {quotedTableName} WHERE ROWID IN (SELECT T.ROWID FROM {quotedTableName} T INNER JOIN {quotedPseudoTableName} S ON ({onClause}))";
+        }
+
+        #endregion
     }
 }

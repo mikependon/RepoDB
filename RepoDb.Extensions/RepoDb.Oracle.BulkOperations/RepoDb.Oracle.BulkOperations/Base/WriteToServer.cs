@@ -149,7 +149,7 @@ namespace RepoDb
         /// <see cref="OracleBulkImportPseudoTableType.Auto"/> is returned unchanged.
         /// </summary>
         private static OracleBulkImportPseudoTableType ResolvePseudoTableType(OracleBulkImportPseudoTableType pseudoTableType,
-            int rowCount) =>
+            int? rowCount) =>
             pseudoTableType == OracleBulkImportPseudoTableType.Auto
                 ? (rowCount >= OracleConstants.RowCountThresholdForPhysicalTable ? OracleBulkImportPseudoTableType.Physical : OracleBulkImportPseudoTableType.Memory)
                 : pseudoTableType;

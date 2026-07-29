@@ -232,5 +232,54 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         }
 
         #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// Runs the <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement that removes every row on
+        /// <paramref name="tableName"/> matched by a row currently staged in <paramref name="pseudoTableName"/>.
+        /// See the remarks on <see cref="OracleText.GetDeleteFromPseudoTableSql"/>.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row for deletion.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows deleted.</returns>
+        public static int DeleteFromPseudoTable(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            OracleTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="DeleteFromPseudoTable"/> - see its remarks for the
+        /// detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row for deletion.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of rows deleted.</returns>
+        public static async Task<int> DeleteFromPseudoTableAsync(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var commandText = OracleText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        #endregion
     }
 }
