@@ -3502,7 +3502,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
-                sourceConnection.BulkInsert(tables);
+                sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 using (var destinationConnection = new OracleConnection(Database.ConnectionString))
@@ -3530,7 +3530,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new OracleConnection(Database.ConnectionString))
             {
-                sourceConnection.BulkInsert(tables);
+                sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 using (var destinationConnection = new OracleConnection(Database.ConnectionString))

@@ -494,8 +494,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    entities: primaryKeys);
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -759,7 +758,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys).Result;
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1219,8 +1218,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    entities: primaryKeys).Result;
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1565,7 +1563,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys);
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1995,8 +1993,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
-                    entities: primaryKeys);
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -2202,7 +2199,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys).Result;
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -2636,8 +2633,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
-                    entities: primaryKeys).Result;
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);

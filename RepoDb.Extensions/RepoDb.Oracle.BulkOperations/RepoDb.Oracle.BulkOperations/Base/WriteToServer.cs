@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using RepoDb;
 using RepoDb.Enumerations.Oracle;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Oracle.BulkOperations;
 
@@ -370,6 +371,34 @@ namespace RepoDb
                     yield return new OracleBulkInsertMapItem(columnName, dbField.Name);
                 }
             }
+        }
+
+        /// <summary>
+        /// Resolves the field(s) used to match an existing row during the <c>MERGE</c> (the <c>ON</c> clause).
+        /// Falls back to the table's primary key, then its identity key, when <paramref name="qualifiers"/>
+        /// is not provided.
+        /// </summary>
+        /// <exception cref="PrimaryFieldNotFoundException">
+        /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
+        /// </exception>
+        private static IEnumerable<Field> GetQualifierFields(string tableName,
+            DbFieldCollection dbFields,
+            IEnumerable<Field> qualifiers = null)
+        {
+            if (qualifiers?.Any() == true)
+            {
+                return qualifiers;
+            }
+
+            var primaryOrIdentity = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
+
+            if (primaryOrIdentity == null)
+            {
+                throw new PrimaryFieldNotFoundException(
+                    $"No primary or identity key found for table '{tableName}'. Provide explicit 'qualifiers' instead.");
+            }
+
+            return new[] { primaryOrIdentity.AsField() };
         }
 
         /// <summary>

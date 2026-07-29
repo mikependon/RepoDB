@@ -67,21 +67,6 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            if (IsKeyValueCollection(entityList))
-            {
-                return BulkDeleteBaseViaKeyValues(connection,
-                    tableName,
-                    (IEnumerable<object>)entityList,
-                    qualifiers,
-                    bulkCopyTimeout,
-                    batchSize,
-                    pseudoTableType,
-                    trace,
-                    traceKey,
-                    transaction);
-            }
-
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
@@ -299,22 +284,6 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-
-            if (IsKeyValueCollection(entityList))
-            {
-                return await BulkDeleteBaseViaKeyValuesAsync(connection,
-                    tableName,
-                    (IEnumerable<object>)entityList,
-                    qualifiers,
-                    bulkCopyTimeout,
-                    batchSize,
-                    pseudoTableType,
-                    trace,
-                    traceKey,
-                    transaction,
-                    cancellationToken);
-            }
-
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
@@ -511,30 +480,6 @@ namespace RepoDb
             }
 
             return table;
-        }
-
-        /// <summary>
-        /// Detects whether <paramref name="entityList"/> is actually a list of raw scalar/struct key values
-        /// (e.g. boxed <see cref="int"/> or <see cref="Guid"/> primary key values) rather than a list of real
-        /// entity/anonymous-type instances - true only when <typeparamref name="TEntity"/> is <see cref="object"/>
-        /// (i.e. the static element type carries no information of its own) and the runtime type of its first
-        /// element is not a class type (<see cref="TypeExtension.IsClassType(Type)"/> - excludes <see cref="object"/>,
-        /// covers structs like <see cref="int"/>/<see cref="Guid"/>/<see cref="DateTime"/>, and also excludes
-        /// <see cref="string"/>, which implements <see cref="IEnumerable{T}"/>). A real entity, anonymous object,
-        /// or <see cref="System.Dynamic.ExpandoObject"/> passed in as <c>TEntity == object</c> is a class type and
-        /// is therefore correctly left on the normal (non-redirected) entity path.
-        /// </summary>
-        private static bool IsKeyValueCollection<TEntity>(IList<TEntity> entityList)
-            where TEntity : class
-        {
-            if (typeof(TEntity) != typeof(object))
-            {
-                return false;
-            }
-
-            var firstEntity = entityList.FirstOrDefault();
-
-            return firstEntity != null && firstEntity.GetType().IsClassType() != true;
         }
 
         #endregion

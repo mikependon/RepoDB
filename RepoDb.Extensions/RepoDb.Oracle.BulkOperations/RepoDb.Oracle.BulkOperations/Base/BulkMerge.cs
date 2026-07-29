@@ -925,34 +925,6 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Resolves the field(s) used to match an existing row during the <c>MERGE</c> (the <c>ON</c> clause).
-        /// Falls back to the table's primary key, then its identity key, when <paramref name="qualifiers"/>
-        /// is not provided.
-        /// </summary>
-        /// <exception cref="PrimaryFieldNotFoundException">
-        /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
-        /// </exception>
-        private static IEnumerable<Field> GetQualifierFields(string tableName,
-            DbFieldCollection dbFields,
-            IEnumerable<Field> qualifiers)
-        {
-            if (qualifiers?.Any() == true)
-            {
-                return qualifiers;
-            }
-
-            var primaryOrIdentity = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
-
-            if (primaryOrIdentity == null)
-            {
-                throw new PrimaryFieldNotFoundException(
-                    $"No primary or identity key found for table '{tableName}'. Provide explicit 'qualifiers' instead.");
-            }
-
-            return new[] { primaryOrIdentity.AsField() };
-        }
-
-        /// <summary>
         /// Resolves the full set of fields to stage and merge (both inserted and, where not a qualifier,
         /// updated). When <paramref name="mappings"/> is provided, only its destination columns - plus,
         /// always, <paramref name="qualifierFields"/> (needed for the <c>ON</c> clause regardless of

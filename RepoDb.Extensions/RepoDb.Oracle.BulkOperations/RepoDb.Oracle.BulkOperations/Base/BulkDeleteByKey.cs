@@ -48,7 +48,6 @@ namespace RepoDb
             return BulkDeleteBaseViaKeyValues(connection,
                 tableName,
                 primaryKeyList,
-                null,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -94,7 +93,6 @@ namespace RepoDb
             return await BulkDeleteBaseViaKeyValuesAsync(connection,
                 tableName,
                 primaryKeyList,
-                null,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -125,7 +123,6 @@ namespace RepoDb
         private static int BulkDeleteBaseViaKeyValues(OracleConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
-            IEnumerable<Field> qualifiers,
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
@@ -135,7 +132,7 @@ namespace RepoDb
         {
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+            var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -178,7 +175,6 @@ namespace RepoDb
         private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(OracleConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
-            IEnumerable<Field> qualifiers,
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
@@ -189,7 +185,7 @@ namespace RepoDb
         {
             var pseudoTableName = OracleText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var qualifierField = GetQualifierFields(tableName, dbFields, qualifiers).First();
+            var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE BY KEY FROM {tableName}", bulkCopyTimeout, transaction);
 
