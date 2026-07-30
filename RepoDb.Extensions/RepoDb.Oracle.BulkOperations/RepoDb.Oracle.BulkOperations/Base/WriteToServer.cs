@@ -248,6 +248,10 @@ namespace RepoDb
             {
                 rows = rows.Where(r => r.RowState == rowState);
             }
+            if (!rows.Any())
+            {
+                throw new System.InvalidOperationException($"No rows found from data table where the state is '{rowState.ToString()}'.");
+            }
             foreach (var row in rows)
             {
                 yield return row;

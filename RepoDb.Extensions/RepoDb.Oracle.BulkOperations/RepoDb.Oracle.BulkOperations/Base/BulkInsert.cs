@@ -135,13 +135,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings);
                 result = OracleExecution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, transaction);
             }
@@ -320,13 +322,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings);
                 result = OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, transaction);
             }
@@ -571,13 +575,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings);
                 result = await OracleExecution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, transaction, cancellationToken);
             }
@@ -760,13 +766,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var identityField = dbFields.GetIdentity().AsField();
                 var insertFields = GetInsertFields(tableName, dbFields, mappings);
                 result = await OracleExecution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, transaction, cancellationToken);
             }

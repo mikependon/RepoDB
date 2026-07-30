@@ -107,47 +107,112 @@ namespace RepoDb
             OracleBulkImportPseudoTableType pseudoTableType) => $"{pseudoTableType.ToString()}{UnquoteForPseudoTableName(tableName)}Insert";
 
         /// <summary>
-        /// Builds the PL/SQL block that moves every row currently staged in <paramref name="pseudoTableName"/>
-        /// into <paramref name="tableName"/> via a single set-based <c>INSERT ... SELECT</c>, capturing every
-        /// generated <paramref name="identityField"/> value with <c>RETURNING ... BULK COLLECT INTO</c>, then
-        /// surfaces them back to the caller as an Oracle 12c+ implicit result set (<c>DBMS_SQL.RETURN_RESULT</c>)
-        /// - the same mechanism <c>RepoDb.Oracle</c>'s single-row Insert/Merge statement builder uses (see
-        /// <c>OracleStatementBuilder.WrapWithReturningResult</c>), scaled up to a whole batch via
-        /// <c>SYS.ODCINUMBERLIST</c> (a built-in, schema-less collection type - needed since the identity
-        /// values only exist as a local PL/SQL collection, and there's no user-defined SQL type to <c>TABLE()</c>
-        /// over). The staging rows are read back ordered by <c>ROWID</c>, so the returned identity values line
-        /// up, position-for-position, with the order they were originally bulk-written into the staging table
-        /// in - the practical (not contractually guaranteed by Oracle, but true for an untouched, freshly-loaded
-        /// table read back immediately after) order a full table scan returns them in.
+        /// Builds an <c>ALTER TABLE ... MODIFY (column NULL)</c> statement that drops a <c>NOT NULL</c>
+        /// constraint from a column of the staging/pseudo table.
         /// </summary>
+        /// <remarks>
+        /// Oracle's <c>CREATE TABLE ... AS SELECT</c> (used by <see cref="GetCreatePseudoTableSql"/>) carries
+        /// over a source column's <c>NOT NULL</c> constraint even though the <c>WHERE (1 = 0)</c> clause
+        /// copies no rows - confirmed live via <c>ORA-26010: Column ... is NOT NULL and is not being loaded</c>.
+        /// The identity column is the one column the identity-return path deliberately leaves unpopulated
+        /// during the initial bulk-write into the staging table (its value is generated afterward, via
+        /// <c>UPDATE ... SET identityColumn = sequence.NEXTVAL</c> - see
+        /// <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>), so a <c>NOT NULL</c> inherited from
+        /// the real table would otherwise make that initial bulk-write fail whenever the source entities/
+        /// <c>DataTable</c>/rows don't already carry an explicit value for it (e.g. a dynamic
+        /// <c>ExpandoObject</c> that simply omits the identity property). Safe to run unconditionally on the
+        /// staging table - it is transient, internal scratch space with no integrity requirements of its own.
+        /// </remarks>
+        public static string GetAllowNullForColumnSql(string pseudoTableName,
+            string columnName,
+            IDbSetting dbSetting) =>
+            $"ALTER TABLE {pseudoTableName.AsQuoted(true, dbSetting)} MODIFY ({columnName.AsQuoted(true, dbSetting)} NULL)";
+
+        /// <summary>
+        /// Builds the query that resolves the sequence (and its generation mode) backing an Oracle 12c+
+        /// <c>IDENTITY</c> column. Needed because Oracle does not support <c>RETURNING ... BULK COLLECT INTO</c>
+        /// on an <c>INSERT ... SELECT</c> statement at all (only on <c>INSERT ... VALUES</c>, and on
+        /// <c>UPDATE</c>/<c>DELETE</c>) - so <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/> cannot
+        /// rely on <c>RETURNING</c> to learn the generated values. Instead it calls <c>{sequence}.NEXTVAL</c>
+        /// itself, once per staged row, which requires knowing the sequence's name up front.
+        /// </summary>
+        /// <remarks>
+        /// Every identity column this provider recognizes already has a matching <c>ALL_TAB_IDENTITY_COLS</c>
+        /// row - see <c>OracleDbHelper.GetCommandText</c>'s <c>IsIdentity</c> detection, which is derived from
+        /// this exact same join - so this is guaranteed to find exactly one row for a field that
+        /// <see cref="DbFieldCollection.GetIdentity"/> already returned as non-<see langword="null"/>.
+        /// </remarks>
+        public static string GetIdentitySequenceMetadataSql() =>
+            "SELECT SEQUENCE_NAME AS \"SequenceName\", GENERATION_TYPE AS \"GenerationType\" " +
+            "FROM ALL_TAB_IDENTITY_COLS " +
+            "WHERE OWNER = COALESCE(:Schema, SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')) " +
+            "AND TABLE_NAME = :TableName " +
+            "AND COLUMN_NAME = :ColumnName";
+
+        /// <summary>
+        /// Builds the PL/SQL block that moves every row currently staged in <paramref name="pseudoTableName"/>
+        /// into <paramref name="tableName"/>, along with the generated identity value for each row.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Oracle does not support combining <c>RETURNING ... BULK COLLECT INTO</c> with an <c>INSERT ... SELECT</c>
+        /// statement - only with <c>INSERT ... VALUES</c> (single-row, or array-bound via <c>FORALL</c>) and with
+        /// <c>UPDATE</c>/<c>DELETE</c> (confirmed live via <c>ORA-03049</c>). So instead of asking Oracle to hand
+        /// back auto-generated values, this pre-generates every row's identity value itself - via
+        /// <c>UPDATE ... SET identityColumn = sequence.NEXTVAL</c> against the staging table (an <c>UPDATE</c>,
+        /// so no <c>RETURNING</c> restriction applies, and Oracle evaluates <c>NEXTVAL</c> once per row updated) -
+        /// then moves the now fully-populated staging rows into <paramref name="tableName"/> via a plain
+        /// <c>INSERT ... SELECT</c> (no <c>RETURNING</c> needed there at all, since the identity values are
+        /// already sitting in the staging table's columns), and finally reads them back from the staging table
+        /// itself as an Oracle 12c+ implicit result set (<c>DBMS_SQL.RETURN_RESULT</c>) - the same mechanism
+        /// <c>RepoDb.Oracle</c>'s single-row Insert/Merge statement builder uses (see
+        /// <c>OracleStatementBuilder.WrapWithReturningResult</c>).
+        /// </para>
+        /// <para>
+        /// The staging rows are read back ordered by <c>ROWID</c>, so the returned identity values line up,
+        /// position-for-position, with the order they were originally bulk-written into the staging table in -
+        /// the practical (not contractually guaranteed by Oracle, but true for an untouched, freshly-loaded
+        /// table read back immediately after) order a full table scan returns them in. <c>UPDATE</c> does not
+        /// change a row's <c>ROWID</c>, so this holds after the identity-generating <c>UPDATE</c> too.
+        /// </para>
+        /// </remarks>
         /// <param name="tableName">The name of the real, target table.</param>
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
-        /// <param name="fields">Every field that was staged and should be inserted.</param>
-        /// <param name="identityField">The identity column whose generated values are returned.</param>
+        /// <param name="fields">Every field that was staged and should be inserted (including <paramref name="identityField"/>).</param>
+        /// <param name="identityField">The identity column to pre-generate a value for on every staged row.</param>
+        /// <param name="sequenceName">The name of the sequence backing <paramref name="identityField"/> - see <see cref="GetIdentitySequenceMetadataSql"/>.</param>
+        /// <param name="isAlwaysGenerated">
+        /// Whether <paramref name="identityField"/> is <c>GENERATED ALWAYS AS IDENTITY</c> (rather than
+        /// <c>GENERATED BY DEFAULT</c>) - if so, the <c>INSERT</c> needs <c>OVERRIDING SYSTEM VALUE</c> to be
+        /// allowed to supply an explicit value for it at all.
+        /// </param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         public static string GetInsertFromPseudoTableForReturnIdentitySql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             Field identityField,
+            string sequenceName,
+            bool isAlwaysGenerated,
             IDbSetting dbSetting)
         {
             var quotedTableName = tableName.AsQuoted(true, dbSetting);
             var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
             var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+            var quotedSequenceName = sequenceName.AsQuoted(true, dbSetting);
             var resultAlias = "Result".AsQuoted(dbSetting);
+            var overridingClause = isAlwaysGenerated ? "OVERRIDING SYSTEM VALUE " : string.Empty;
 
             var columnList = fields
                 .Select(f => f.Name.AsQuoted(true, dbSetting))
                 .Join(", ");
 
             return string.Concat(
-                "DECLARE l_repodb_ids SYS.ODCINUMBERLIST; ",
-                "l_repodb_cursor SYS_REFCURSOR; ",
+                "DECLARE l_repodb_cursor SYS_REFCURSOR; ",
                 "BEGIN ",
-                "INSERT INTO ", quotedTableName, " (", columnList, ") ",
-                "SELECT ", columnList, " FROM (SELECT ", columnList, " FROM ", quotedPseudoTableName, " ORDER BY ROWID) ",
-                "RETURNING ", quotedIdentityColumn, " BULK COLLECT INTO l_repodb_ids; ",
-                "OPEN l_repodb_cursor FOR SELECT COLUMN_VALUE AS ", resultAlias, " FROM TABLE(l_repodb_ids); ",
+                "UPDATE ", quotedPseudoTableName, " SET ", quotedIdentityColumn, " = ", quotedSequenceName, ".NEXTVAL; ",
+                "INSERT INTO ", quotedTableName, " (", columnList, ") ", overridingClause,
+                "SELECT ", columnList, " FROM ", quotedPseudoTableName, "; ",
+                "OPEN l_repodb_cursor FOR SELECT ", quotedIdentityColumn, " AS ", resultAlias, " FROM ", quotedPseudoTableName, " ORDER BY ROWID; ",
                 "DBMS_SQL.RETURN_RESULT(l_repodb_cursor); ",
                 "END;");
         }
