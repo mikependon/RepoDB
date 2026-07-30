@@ -397,6 +397,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="identityField">The identity column, if any, to leave out of the <c>INSERT</c> column list - see the remarks on <see cref="OracleText.GetMergeFromPseudoTableSql"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         public static int MergeFromPseudoTable(OracleConnection connection,
@@ -404,10 +405,11 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = OracleText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            var commandText = OracleText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
             return connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
@@ -420,6 +422,7 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="identityField">The identity column, if any, to leave out of the <c>INSERT</c> column list - see the remarks on <see cref="OracleText.GetMergeFromPseudoTableSql"/>.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
@@ -428,12 +431,179 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = OracleText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
+            var commandText = OracleText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
             return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Runs the statement that upserts every row currently staged in <paramref name="pseudoTableName"/>
+        /// into <paramref name="tableName"/>, resolving (matched rows) or pre-generating (new rows) every
+        /// row's identity value in the process, and assigns each one back onto the matching element of
+        /// <paramref name="entities"/> - position-for-position, in the order returned (see the remarks on
+        /// <see cref="OracleText.GetMergeFromPseudoTableForReturnIdentitySql"/> for the full technique and
+        /// for why this doesn't just use <c>RETURNING</c>). Returns the number of rows affected.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated), including <paramref name="identityField"/>.</param>
+        /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="entities"/>.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IList<TEntity> entities,
+            OracleTransaction transaction = null)
+            where TEntity : class
+        {
+            var dbSetting = connection.GetDbSetting();
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            var result = 0;
+
+            while (reader.Read())
+            {
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="MergeFromPseudoTableForReturnIdentity{TEntity}"/> - see
+        /// its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated), including <paramref name="identityField"/>.</param>
+        /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="entities"/>.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IList<TEntity> entities,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
+            var dbSetting = connection.GetDbSetting();
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var result = 0;
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// <see cref="DataRow"/> counterpart of <see cref="MergeFromPseudoTableForReturnIdentity{TEntity}"/> -
+        /// see its remarks for the detailed behavior (identical here), except the identity values are
+        /// assigned back onto <paramref name="rows"/>' <paramref name="identityField"/> column instead of an
+        /// entity property (there is no compiled property setter to reuse for a <see cref="DataTable"/> row).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated), including <paramref name="identityField"/>.</param>
+        /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="rows"/>.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        public static int MergeFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IList<DataRow> rows,
+            OracleTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            var result = 0;
+
+            while (reader.Read())
+            {
+                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="MergeFromPseudoTableForReturnIdentityForDataTable"/> - see
+        /// its remarks for the detailed behavior (identical here).
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated), including <paramref name="identityField"/>.</param>
+        /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="rows"/>.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(OracleConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IList<DataRow> rows,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var result = 0;
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
+                result++;
+            }
+
+            return result;
         }
 
         #endregion

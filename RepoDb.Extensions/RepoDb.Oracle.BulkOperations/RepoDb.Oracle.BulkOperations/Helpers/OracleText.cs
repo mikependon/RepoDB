@@ -236,15 +236,28 @@ namespace RepoDb
         /// keyword before a table/subquery alias (unlike most other clauses) - the bare <c>T</c>/<c>S</c>
         /// aliases below are intentional, not an oversight.
         /// </summary>
+        /// <remarks>
+        /// <paramref name="identityField"/>, when provided, is always left out of the <c>WHEN NOT MATCHED THEN
+        /// INSERT</c> column list - regardless of whether it also happens to be one of <paramref name="qualifiers"/>
+        /// (the common default fallback - see <c>GetQualifierFields</c>). A brand new row's identity property is
+        /// typically a non-nullable default (e.g. <c>0</c>), not a real value the caller intends to insert as-is;
+        /// omitting the column from the <c>INSERT</c> lets Oracle apply its own identity/sequence default instead.
+        /// Left in, every unmatched row would explicitly insert that same default value, and every row past the
+        /// first would fail with <c>ORA-00001</c> (unique constraint violated) the moment more than one row shares
+        /// it - confirmed live via a <c>BulkMerge</c> of several new rows (all with a default, unset identity
+        /// property) into an empty table.
+        /// </remarks>
         /// <param name="tableName">The name of the real, target table.</param>
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="identityField">The identity column, if any, to leave out of the <c>INSERT</c> column list.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         public static string GetMergeFromPseudoTableSql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField,
             IDbSetting dbSetting)
         {
             var fieldList = fields.AsList();
@@ -258,11 +271,15 @@ namespace RepoDb
                 .Where(f => qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == false)
                 .AsList();
 
-            var insertColumns = fieldList
+            var insertableFields = fieldList
+                .Where(f => identityField == null || !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .AsList();
+
+            var insertColumns = insertableFields
                 .Select(f => f.Name.AsQuoted(true, dbSetting))
                 .Join(", ");
 
-            var insertValues = fieldList
+            var insertValues = insertableFields
                 .Select(f => $"S.{f.Name.AsQuoted(true, dbSetting)}")
                 .Join(", ");
 
@@ -274,6 +291,118 @@ namespace RepoDb
                 : string.Empty;
 
             return $"MERGE INTO {tableName.AsQuoted(true, dbSetting)} T USING {pseudoTableName.AsQuoted(true, dbSetting)} S ON ({onClause}) {whenMatchedClause}WHEN NOT MATCHED THEN INSERT ({insertColumns}) VALUES ({insertValues})";
+        }
+
+        /// <summary>
+        /// Builds the PL/SQL block that upserts every row currently staged in <paramref name="pseudoTableName"/>
+        /// into <paramref name="tableName"/>, along with the identity value for each row - the existing value
+        /// for a row that already exists in <paramref name="tableName"/> (matched by <paramref name="qualifiers"/>),
+        /// or a freshly-generated one for a row that doesn't (about to be inserted).
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// A single-row <c>MERGE ... RETURNING</c> is only supported starting with Oracle Database 23ai (see the
+        /// remarks on <c>OracleStatementBuilder.CreateMerge</c>) - on every earlier version, <c>RETURNING</c>
+        /// after <c>MERGE</c> doesn't parse at all (<c>ORA-00933</c>). So, exactly like
+        /// <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>, this never uses <c>RETURNING</c>: it
+        /// pre-generates or looks up every row's identity value itself, directly against the staging table,
+        /// before the actual <c>MERGE</c> runs.
+        /// </para>
+        /// <para>
+        /// Two <c>UPDATE</c> statements against the staging table do this, in order:
+        /// </para>
+        /// <para>
+        /// 1. For every staged row that already exists in <paramref name="tableName"/> (matched by
+        /// <paramref name="qualifiers"/>), copy that row's real, existing identity value onto the staged row -
+        /// needed because the caller's own copy of an existing row may not carry it (e.g. <paramref name="qualifiers"/>
+        /// is some other natural/business key, not the identity column itself).
+        /// </para>
+        /// <para>
+        /// 2. For every staged row that does <i>not</i> match an existing row (i.e. about to be inserted),
+        /// generate a brand new identity value via the backing sequence's <c>NEXTVAL</c> - matching
+        /// <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>'s technique. Deliberately keyed off
+        /// "does a matching row exist in <paramref name="tableName"/>" (a fresh <c>NOT EXISTS</c> check) rather
+        /// than "is the staged identity column <c>NULL</c>" - the latter would misfire whenever <paramref name="qualifiers"/>
+        /// happens to be the identity column itself (a common default - see <c>GetQualifierFields</c>'s
+        /// primary-then-identity fallback), since a brand new row's identity property is typically a non-nullable
+        /// default (e.g. <c>0</c>), not actually <see langword="null"/>, even though it still doesn't match any
+        /// real row.
+        /// </para>
+        /// <para>
+        /// The actual <c>MERGE</c> that follows never touches <paramref name="identityField"/> on a match (it is
+        /// always excluded from the <c>WHEN MATCHED THEN UPDATE SET</c> list, regardless of whether it happens to
+        /// also be one of <paramref name="qualifiers"/>) and supplies it explicitly - via <paramref name="isAlwaysGenerated"/>'s
+        /// <c>OVERRIDING SYSTEM VALUE</c>, if needed - on a non-match, since by then every staged row's
+        /// <paramref name="identityField"/> column already holds its final value from the two <c>UPDATE</c>s above.
+        /// Finally, every staged row's identity value is read back ordered by <c>ROWID</c> - see the ordering
+        /// caveat on <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>, identical here.
+        /// </para>
+        /// </remarks>
+        /// <param name="tableName">The name of the real, target table.</param>
+        /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
+        /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated), including <paramref name="identityField"/>.</param>
+        /// <param name="identityField">The identity column to resolve (matched rows) or pre-generate (new rows) a value for on every staged row.</param>
+        /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="sequenceName">The name of the sequence backing <paramref name="identityField"/> - see <see cref="GetIdentitySequenceMetadataSql"/>.</param>
+        /// <param name="isAlwaysGenerated">
+        /// Whether <paramref name="identityField"/> is <c>GENERATED ALWAYS AS IDENTITY</c> (rather than
+        /// <c>GENERATED BY DEFAULT</c>) - if so, the <c>MERGE</c>'s insert branch needs <c>OVERRIDING SYSTEM VALUE</c>
+        /// to be allowed to supply an explicit value for it at all.
+        /// </param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        public static string GetMergeFromPseudoTableForReturnIdentitySql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            string sequenceName,
+            bool isAlwaysGenerated,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+            var quotedSequenceName = sequenceName.AsQuoted(true, dbSetting);
+            var resultAlias = "Result".AsQuoted(dbSetting);
+            var overridingClause = isAlwaysGenerated ? "OVERRIDING SYSTEM VALUE " : string.Empty;
+
+            var fieldList = fields.AsList();
+            var qualifierList = qualifiers.AsList();
+
+            var onClause = qualifierList
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(" AND ");
+
+            var updateableFields = fieldList
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase) &&
+                    qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == false)
+                .AsList();
+
+            var insertColumns = fieldList
+                .Select(f => f.Name.AsQuoted(true, dbSetting))
+                .Join(", ");
+
+            var insertValues = fieldList
+                .Select(f => $"S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(", ");
+
+            var whenMatchedClause = updateableFields.Count > 0
+                ? $"WHEN MATCHED THEN UPDATE SET {updateableFields.Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}").Join(", ")} "
+                : string.Empty;
+
+            return string.Concat(
+                "DECLARE l_repodb_cursor SYS_REFCURSOR; ",
+                "BEGIN ",
+                "UPDATE ", quotedPseudoTableName, " S SET ", quotedIdentityColumn, " = (SELECT T.", quotedIdentityColumn, " FROM ", quotedTableName, " T WHERE ", onClause, ") ",
+                "WHERE EXISTS (SELECT 1 FROM ", quotedTableName, " T WHERE ", onClause, "); ",
+                "UPDATE ", quotedPseudoTableName, " S SET ", quotedIdentityColumn, " = ", quotedSequenceName, ".NEXTVAL ",
+                "WHERE NOT EXISTS (SELECT 1 FROM ", quotedTableName, " T WHERE ", onClause, "); ",
+                "MERGE INTO ", quotedTableName, " T USING ", quotedPseudoTableName, " S ON (", onClause, ") ",
+                whenMatchedClause,
+                "WHEN NOT MATCHED THEN INSERT (", insertColumns, ") ", overridingClause, "VALUES (", insertValues, "); ",
+                "OPEN l_repodb_cursor FOR SELECT ", quotedIdentityColumn, " AS ", resultAlias, " FROM ", quotedPseudoTableName, " ORDER BY ROWID; ",
+                "DBMS_SQL.RETURN_RESULT(l_repodb_cursor); ",
+                "END;");
         }
 
         #endregion

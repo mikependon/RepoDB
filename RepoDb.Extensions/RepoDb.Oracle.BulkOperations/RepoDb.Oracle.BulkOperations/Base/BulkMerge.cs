@@ -41,7 +41,6 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         private static int BulkMergeBase<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -90,13 +89,23 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Upserts <paramref name="entities"/> into <paramref name="tableName"/> via a staging (pseudo)
+        /// table, following the same staging-table lifecycle as <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/>,
+        /// but additionally resolves (for a row that already exists in <paramref name="tableName"/>) or
+        /// pre-generates (for a brand new row) every row's identity value and assigns it back onto the
+        /// matching element of <paramref name="entities"/> - see the remarks on
+        /// <see cref="OracleText.GetMergeFromPseudoTableForReturnIdentitySql"/> for the full technique and
+        /// for why this doesn't rely on a <c>RETURNING</c> clause the way a single-row <c>MERGE</c> can (that
+        /// path - see <c>OracleStatementBuilder.CreateMerge</c> - additionally requires Oracle 23ai; this one
+        /// does not, since it never uses <c>RETURNING</c> at all). This is the "actual base execution" - the
+        /// single <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair
+        /// for the whole <c>BulkMerge</c> call wraps the entire create/truncate/write/merge/drop sequence below.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="qualifiers"></param>
+        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
@@ -105,11 +114,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException">
-        /// Not implemented yet. This pass only covers the <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/> == <c>false</c>
-        /// path - see <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/>.
-        /// </exception>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         private static int BulkMergeBaseForReturnIdentity<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -124,7 +129,45 @@ namespace RepoDb
             OracleTransaction transaction = null)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                result = OracleExecution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         /// <summary>
@@ -195,7 +238,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
             }
             finally
             {
@@ -281,7 +325,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// <see cref="DataTable"/> counterpart of <see cref="BulkMergeBaseForReturnIdentity{TEntity}"/> - see
+        /// its remarks for the detailed behavior (identical here), except the identity values are assigned
+        /// back onto the matching row's identity column of <paramref name="table"/> instead of an entity
+        /// property.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -296,11 +343,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException">
-        /// Not implemented yet. This pass only covers the <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/> == <c>false</c>
-        /// path - see <see cref="BulkMergeBaseNoReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/>.
-        /// </exception>
+        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         private static int BulkMergeBaseForReturnIdentity(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -315,7 +358,45 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null)
         {
-            throw new NotImplementedException();
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                result = OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
         }
 
         /// <summary>
@@ -374,7 +455,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
             }
             finally
             {
@@ -459,7 +541,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
             }
             finally
             {
@@ -551,7 +634,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of <see cref="BulkMergeBaseForReturnIdentity{TEntity}"/> - see its
+        /// remarks for the detailed behavior (identical here).
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -568,10 +652,6 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException">
-        /// Not implemented yet. This pass only covers the <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/> == <c>false</c>
-        /// path - see <see cref="BulkMergeBaseNoReturnIdentityAsync{TEntity}"/>.
-        /// </exception>
         private static async Task<int> BulkMergeBaseForReturnIdentityAsync<TEntity>(this OracleConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -587,7 +667,45 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         /// <summary>
@@ -646,7 +764,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction, cancellationToken);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
             }
             finally
             {
@@ -683,7 +802,6 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         private static async Task<int> BulkMergeBaseAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -737,7 +855,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseForReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportIdentityBehavior, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -754,10 +873,6 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException">
-        /// Not implemented yet. This pass only covers the <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/> == <c>false</c>
-        /// path - see <see cref="BulkMergeBaseNoReturnIdentityAsync(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction, CancellationToken)"/>.
-        /// </exception>
         private static async Task<int> BulkMergeBaseForReturnIdentityAsync(this OracleConnection connection,
             string tableName,
             DataTable table,
@@ -773,7 +888,45 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var pseudoTableName = OracleText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+                var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
+                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
         }
 
         /// <summary>
@@ -831,7 +984,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction, cancellationToken);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
             }
             finally
             {
@@ -903,7 +1057,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, transaction, cancellationToken);
+                var identityField = dbFields.GetIdentity()?.AsField();
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
             }
             finally
             {
