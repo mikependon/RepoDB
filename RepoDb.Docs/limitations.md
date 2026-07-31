@@ -1,24 +1,36 @@
 # RepoDB Limitations
 
-We would like you and the community of .NET to understand the limitations of the library before you decide using it. RepoDB is a micro-ORM that has some advance features built to address the advance use-cases. But, it also has its own limitations that may not work in all use-cases.
+We want the .NET community to understand the limitations of this library before deciding to use it. RepoDB is a micro-ORM built to handle advanced use cases, but it still has limitations that may not fit every scenario.
 
-**Disclaimer:** This page may not contain all the limitations as the other use-cases is not yet discovered. We will further update this page for any discoveries pertaining to the use-cases that cannot be supported (or impossible to support).
+**Disclaimer:** This page may not list every limitation, as some use cases are still being discovered. We will keep updating this page as new unsupported scenarios are found.
 
-## Known Limitations
+## Table of Contents
 
-- [Composite Keys](#composite-keys)
-- [Auto-Generated Primary Column](#auto-generated-primary-column)
-- [Computed Columns](#computed-columns)
-- [JOIN Query (Support)](#join-query-support)
-- [Cache Invalidation](#cache-invalidation)
-- [Advance Query Tree Expression](#advance-query-tree-expression)
-- [Multiple Identity Columns](#multiple-identity-columns)
+- Core
+  - [Composite Keys](#composite-keys)
+  - [Auto-Generated Primary Column](#auto-generated-primary-column)
+  - [Computed Columns](#computed-columns)
+  - [JOIN Query (Support)](#join-query-support)
+  - [Cache Invalidation](#cache-invalidation)
+  - [Advance Query Tree Expression](#advance-query-tree-expression)
+  - [Multiple Identity Columns](#multiple-identity-columns)
+- Oracle
+  - [QueryMultiple Round Trips](#querymultiple-round-trips)
+  - [InsertAll / MergeAll Batching](#insertall--mergeall-batching)
+  - [Identity/Primary Key Retrieval](#identityprimary-key-retrieval)
+  - [RETURNING on MERGE](#returning-on-merge)
+  - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier)
+  - [Bulk Operations and Transactions](#bulk-operations-and-transactions)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table)
+  - [Verification Status](#verification-status)
 
-## Composite Keys
+## Core
 
-The default support to this will never be implemented as RepoDB tend to sided the other scenario that is forcefully eliminating this use-case. When you do the push operations in RepoDB (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
+### Composite Keys
 
-### Scenario 1 - Insert
+RepoDB does not support Composite Keys as a default qualifier. Push operations ([Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge), etc.) use the primary key as the qualifier, so a table with composite keys behaves unexpectedly unless you explicitly target the composite columns.
+
+#### Scenario 1 - Insert
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -27,11 +39,11 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Though the call above may insert the data in your database, but the return value will not be the value of the Composite Keys, instead, it will return the ID of that row, whether the ID column is an identity (or not). The value of the Composite Keys cannot be returned on this situation as we only expect a scalar value. This is also true for the other operations, specially for the [Bulk Operations](https://repodb.net/feature/bulkoperations).
+The insert succeeds, but the return value is not the composite key. RepoDB only returns a single scalar value (the identity column, if one exists), never the composite key values. The same is true for [Bulk Operations](https://repodb.net/feature/bulkoperations).
 
-### Scenario 2 - Update
+#### Scenario 2 - Update
 
-Another example is for update operation, we tend to defaultly use the PK as the qualifier. See the code below
+By default, RepoDB uses the primary key as the qualifier for updates.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -40,9 +52,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-In which, the 10045 is pointed to a single column in the DB, which is the PK.
-
-If you use the code below, it will behave unexpectedly if you have the Composite Keys in the Name and DateOfBirth columns.
+Here, `10045` points to a single PK column. If your table instead has composite keys on `Name` and `DateOfBirth`, passing a full entity like below will not behave as expected:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -53,19 +63,19 @@ using (var connection = new SqlConnection(ConnectionString))
 
 **Alternative Solution**
 
-RepoDB will instead ask you to do it this way, targeting the Composite Keys as the qualifiers.
+Target the composite keys explicitly as qualifiers.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
     var person = new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01"), Address = "New York" };
-    var affectedRows = connection.Update(person, e => e.Name = person.Name && e.DateOfBirth = person.DateOfBirth);
+    var affectedRows = connection.Update(person, e => e.Name == person.Name && e.DateOfBirth == person.DateOfBirth);
 }
 ```
 
-### Scenario 3 - Delete
+#### Scenario 3 - Delete
 
-Same goes to the Update scenario, we use the PK as the default qualifier.
+Delete also defaults to the primary key as the qualifier.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -74,20 +84,20 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-It is impossible to map the value of 10045 on the Composite Keys.
+There is no way to map `10045` onto composite keys.
 
 **Alternative Solution**
 
-Simply do the expression-based or dynamic-based approach by targeting the Composite Keys.
+Use an expression-based or dynamic-based delete that targets the composite keys directly.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-    var affectedRows = connection.Delete(e => e.Name == "John Doe" && e.DateOfBirth == DateTime.Parse("1970/01/01"));
+    var affectedRows = connection.Delete<Person>(e => e.Name == "John Doe" && e.DateOfBirth == DateTime.Parse("1970/01/01"));
 }
 ```
 
-Or like below.
+Or:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -96,27 +106,27 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-**Note**: There may be plenty of undiscovered scenarios that makes RepoDB unusable for the use-cases of having a table with Composite Keys.
+**Note:** There may be other undiscovered scenarios where RepoDB does not fully support tables with composite keys.
 
-## Auto-Generated Primary Column
+### Auto-Generated Primary Column
 
-In the past, RepoDB always assume that the user will always define the identity column as the primary column. With this, the library is actually failing during the PUSH operations (i.e.: [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc) in the event the user has separated both the identity and primary into two columns.
+Earlier versions of RepoDB assumed the identity column was always the primary column, and push operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) would fail when the identity and primary columns were separate.
 
-Relating to the issue #1027, the major changes to the behavior pertaining to the scenario explained above has been introduced to the library. The updates to the behavior will now allow the library to "only" return and hydrate the value of the identity column back to the model, ignoring the value of the primary column. This is also true to all other columns with default values. The updates will be available to all versions > 1.12.10.
+As of issue #1027 (versions > 1.12.10), RepoDB now hydrates only the identity column's value back onto the model and ignores the primary column, along with any other column that has a default value.
 
-This scenario is considered a limintation due to the library only returns single value and we tend to put more priority on the identity column over the other column types.
+This remains a limitation because RepoDB only returns a single value, and it always prioritizes the identity column over other column types.
 
-Note: The statement above is also true to a case where a user defined a default-value to the primary column (i.e.: `UUID` in MySQL).
+**Note:** The same applies when the primary column has a default value of its own (e.g., `UUID` in MySQL).
 
-## Computed Columns
+### Computed Columns
 
-Though the computed column is supported in all fluent-based GET operations (i.e.: [Query](https://repodb.net/operation/query), [QueryAll](https://repodb.net/operation/queryall), etc), but by default, it is not supported for all fluent-based PUSH operations (i.e.: [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc). For you to understand the computed columns, we recommend that you visit this Microsoft [documentation](https://docs.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table?view=sql-server-ver15).
+Computed columns are supported in all fluent-based GET operations ([Query](https://repodb.net/operation/query), [QueryAll](https://repodb.net/operation/queryall), etc.), but not in fluent-based PUSH operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) by default. See Microsoft's [documentation](https://docs.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table?view=sql-server-ver15) on computed columns for background.
 
-It is important to take note that all the non fluent-based methods like [Query(TableName)](https://repodb.net/operation/query#targetting-a-table) and [Insert(TableName)](https://repodb.net/operation/insert#targetting-a-table) supports the Computed Columns.
+Non-fluent, table-targeted methods like [Query(TableName)](https://repodb.net/operation/query#targetting-a-table) and [Insert(TableName)](https://repodb.net/operation/insert#targetting-a-table) do support computed columns.
 
-RepoDB is dynamic enough on the property projection, but it does not eliminate the computed columns on its projection. Historically, we have the IgnoreAttribute in placed but has been removed in response to the auto-projection capabilities. Of course, up until being pushed by the community to prove the commonality of this use-case, the support to this may not be delivered. To be specific, please see the example below.
+RepoDB's automatic property projection does not exclude computed columns. An earlier `IgnoreAttribute` was removed in favor of auto-projection, so this isn't yet handled automatically.
 
-Supposed you have a class named Person.
+Given this class and table:
 
 ```csharp
 public class Person
@@ -127,8 +137,6 @@ public class Person
 	public int Age { get; set; }
 }
 ```
-
-And you created a table People below.
 
 ```csharp
 CREATE TABLE [dbo].[Person](
@@ -143,9 +151,7 @@ CREATE TABLE [dbo].[Person](
 ) ON [PRIMARY];
 ```
 
-Notice, the column Age is a computed column.
-
-As mentioned above, RepoDB will work if you are to use any of the GET operations.
+`Age` is a computed column. GET operations work fine:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -154,7 +160,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-But will fail in the push operation.
+But a push operation fails:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -165,7 +171,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 **Alternative Solution**
 
-We recommend to use the targeted operation when doing a push, see the sample code snippet below.
+Use a table-targeted push instead:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -174,7 +180,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or, like below.
+Or explicitly restrict the `fields` argument to exclude the computed column:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -183,9 +189,9 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-In which the computed columns must/are eliminated from the `fields` argument. Please note that you can always extract the list of the fields of the entity model via `FieldCache.Get<T>` method.
+You can get an entity's field list via `FieldCache.Get<T>`.
 
-Or, create a dedicated model for GET operations that has a computed column in it and a dedicated model for PUSH operations that has no computed column in it.
+Or maintain two models — one for GET (with the computed column) and one for PUSH (without it):
 
 ```csharp
 public class Person
@@ -205,50 +211,24 @@ public class CompletePerson
 }
 ```
 
-And do query like below.
-
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var people = connection.QueryAll<CompletePerson>();
-}
-```
-
-And do insert like below.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
 	var id = connection.Insert<Person, long>(new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01") });
 }
 ```
 
-## JOIN Query (Support)
+### JOIN Query (Support)
 
-We understand the reality that without having a support to JOIN Query will somehow eliminate the concepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDB as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
-
-We see that majority of the problems of the RDBMS data providers are managing the relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely did not supported this feature (for now), up until we have a much better solution ahead of other ORM libraries.
+RepoDB does not support JOIN queries. We leave relationship handling (constraints, cascading, delegation, etc.) to the caller, to keep the library predictable and avoid the added complexity ORMs typically take on for this feature.
 
 **Example**
 
-You would like to retrieve the related data of the Supplier record.
-
-Given with these classes.
+Given these classes:
 
 ```csharp
 public class Address
-{
-    public int Id { get; set; }
-    ...
-}
-
-public class Product
-{
-    public int Id { get; set; }
-    ...
-}
-
-public class Warehouse
 {
     public int Id { get; set; }
     ...
@@ -258,117 +238,56 @@ public class Supplier
 {
     public int Id { get; set; }
     public IEnumerable<Address> Addresses { get; set; }
-    public IEnumerable<Product> Products { get; set; }
-    public IEnumerable<Warehouse> Warehouses { get; set; }
 }
 ```
 
-You write the code below.
+There is no built-in equivalent of:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var supplier = connection
-		.Query<Customer>(e => e.Name == "Amazon")
-		.Include<Address>()
-		.Include<Product>()
-		.Include<Warehouse>();
+		.Query<Supplier>(e => e.Name == "Amazon")
+		.Include<Address>();
 }
 ```
-
-And have these scripts executed by ORM.
-
-```
-> SELECT * FROM [Supplier] WHERE Name = 'Amazon';
-> SELECT A.* FROM [Address] A INNER JOIN [Supplier] S ON S.Id = A.SupplierId WHERE A.Name = 'Amazon';
-> SELECT P.* FROM [Product] P INNER JOIN [Supplier] S ON S.Id = P.SupplierId WHERE P.Name = 'Amazon';
-> SELECT W.* FROM [Warehouse] W INNER JOIN [Warehouse] S ON S.Id = W.SupplierId WHERE A.Name = 'Amazon';
-```
-
-We do not want to control the implementation for now, but instead we leave it all to you. We do not know yet whether the solution of multiple execution is acceptable to the community with the use of CTE, LEFT JOIN, OUTER APPLY or whatever techniques.
-
-**SplitQuery**
-
-Though SplitQuery seems to be working in this case, solving the problem beyond N+1. Let us say you write the code below.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var supplier = connection
-		.SplitQuery<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
-		.For<Address>(e => e.Id)
-		.For<Product>(e => e.Id)
-		.For<Wharehouse>(e => e.Id)
-}
-```
-
-That may execute this LEFT JOIN query from the database.
-
-```csharp
-> SELECT S.*
->	, A.*
->	, P.*
->	, W.*
-> FROM [Supplier] S
-> LEFT JOIN [Address] A ON A.SupplierId = S.Id
-> LEFT JOIN [Product] P ON P.SupplierId = S.Id
-> LEFT JOIN [Warehouse] W ON W.SupplierId = S.Id
-> WHERE S.Name = 'Amazon';
-```
-
-Is still not the most optimal thing to do as it needed a lot of process on the data afterwards. Like grouping the main object and the other N+X values.
 
 **Alternative Solution**
 
-We tend to ask the community to use the [QueryMultiple](https://repodb.net/operation/querymultiple) operation to solve this.
+Use [QueryMultiple](https://repodb.net/operation/querymultiple):
 
 ```csharp
 using (var connection = new SqlConnection(connectionString).EnsureOpen())
 {
-	var result = connection.QueryMultiple<Supplier, Address, Product, Warehouse>(s => s.Id == 10045,
-		a => a.SupplierId == 10045,
-		p => p.SupplierId == 10045,
-		w => w.SupplierId == 10045);
+	var result = connection.QueryMultiple<Supplier, Address>(s => s.Id == 10045, a => a.SupplierId == 10045);
 	var supplier = result.Item1.FirstOrDefault();
 	var addresses = result.Item2.AsList();
-	var products = result.Item3.AsList();
-	var warehouses = result.Item4.AsList();
-	
-	// Do the stuffs here
 }
 ```
 
-Or via the [ExecuteMultiple](https://repodb.net/operation/executequerymultiple) operation.
+Or [ExecuteQueryMultiple](https://repodb.net/operation/executequerymultiple) with raw SQL:
 
 ```csharp
 using (var connection = new SqlConnection(connectionString).EnsureOpen())
 {
 	using (var result = connection.ExecuteQueryMultiple(@"SELECT * FROM [dbo].[Supplier] WHERE [Id] = @SupplierId;
-		SELECT * FROM [dbo].[Address] WHERE SupplierId = @SupplierId;
-		SELECT * FROM [dbo].[Product] WHERE SupplierId = @SupplierId;
-		SELECT * FROM [dbo].[Warehouse] WHERE SupplierId = @SupplierId;"))
+		SELECT * FROM [dbo].[Address] WHERE SupplierId = @SupplierId;"))
 	{
-		var supplier = result.Extract<Person>().FirstOrDefault();
+		var supplier = result.Extract<Supplier>().FirstOrDefault();
 		var addresses = result.Extract<Address>().AsList();
-		var products = result.Extract<Product>().AsList();
-		var warehouses = result.Extract<Warehouse>().AsList();
-		
-		// Do the stuffs here
 	}
 }
 ```
 
-The good thing to this is controlled by you, and that is a very important case to us.
+[SplitQuery](https://repodb.net/operation/splitquery) can also help, though it still requires you to group the results yourself afterward.
 
-## Cache Invalidation
+### Cache Invalidation
 
-Though it is quietly important for the cache to get invalidated at some point in time, we in RepoDB decided not to introduce the additional layer that checks the cache invalidity. The reason is to keep the library as light as possible without it allowing to do some extra validations or any background processes that does the hidden jobs.
+RepoDB does not automatically invalidate cache entries. Adding that layer would mean extra validation and background work, which goes against keeping the library lightweight.
 
-By default, the length of the cache item expiration is 180 minutes. It uses the value of [Constant.DefaultCacheItemExpirationInMinutes](https://github.com/mikependon/RepoDb/blob/0c3d4b503a0a7da30b344341cbf6860e98955d9e/RepoDb.Core/RepoDb/Constant.cs#L16) property.
+By default, cache items expire after 180 minutes ([Constant.DefaultCacheItemExpirationInMinutes](https://github.com/mikependon/RepoDb/blob/0c3d4b503a0a7da30b344341cbf6860e98955d9e/RepoDb.Core/RepoDb/Constant.cs#L16)).
 
 **Example**
-
-Via `DbConnection` object.
 
 ```csharp
 var cache = CacheFactory.Create();
@@ -378,46 +297,32 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 }
 ```
 
-Via `BaseRepository` or `DbRepository` object.
-
-```csharp
-using (var repository = new DbRepository<SqlConnection>(connectionString, cache: CacheFactory.Create()))
-{
-	var customers = repository.QueryAll<Customer>(cacheKey: "AllCustomers");
-}
-```
-
-The returned value of the [QueryAll](https://repodb.net/operation/queryall) operation will be cached to the `cache` argument object for the next 180 minutes. The cache item will not auto validate itself when you and/or somebody had changed the list of customers from the database.
-
-When the cache item has expired, it will again do the wired-up in the database and will retrieve the latest and greatest row information.
+The result is cached under `"AllCustomers"` for 180 minutes and will not refresh automatically if the underlying data changes.
 
 **Alternative Solution**
 
-You have to manually invalidate the cache item by simply removing it from the cache itself.
+Remove the cache entry manually when the data changes.
 
 ```csharp
-var cache = CacheFactory.Create(); // Get the instance from the factor
+var cache = CacheFactory.Create();
 cache.Remove("AllCustomers");
 ```
 
-By explicitly removing it, any of the fetch operations that does pointed to the cache key `AllCustomers` will again retrieve the latest information from the database.
+Any subsequent fetch using the `"AllCustomers"` key will then read fresh data from the database.
 
-## Advance Query Tree Expression
+### Advance Query Tree Expression
 
-RepoDB is only supporting a shallow implementation of the query tree expressions. Also mentioned in the above section, RepoDB does not support JOINs in which many developers usually implements the more deeper logics pertaining to the query tree expressions, specifically when using the Entity Framework.
+RepoDB only supports a shallow query tree expression. As noted above, RepoDB also does not support JOINs, so the deeper expression trees common in libraries like Entity Framework are not supported either.
 
-### Scenario 1 - 2nd Level Deep or Deeper
+#### Scenario 1 - 2nd Level Deep or Deeper
 
-RepoDB only support first level (deep) when using the query tree expression, anything beyond is not supported by RepoDB.
-
-Let us say you have the class models below.
+Only the first level of a query tree expression is supported.
 
 ```csharp
 public class Address
 {
 	public int Id { get; set; }
 	public string Street { get; set; }
-	...
 }
 
 public class Customer
@@ -425,49 +330,45 @@ public class Customer
 	public int Id { get; set; }
 	public string Name { get; set; }
 	public Address Address { get; set; }
-	...
 }
 ```
 
-And you did this.
-
 ```csharp
-using (var customer = new SqlConnection(connectionString))
+using (var connection = new SqlConnection(connectionString))
 {
 	var customers = connection.Query<Customer>(e => e.Address.Country == "New York");
 }
 ```
 
-### Scenario 2 - Unbound to the Property
+#### Scenario 2 - Unbound to the Property
 
-Any expression that is unbound to the property will not be supported.
+Expressions not bound to a property are not supported.
 
 ```csharp
-using (var customer = new SqlConnection(connectionString))
+using (var connection = new SqlConnection(connectionString))
 {
 	var customers = connection.Query<Customer>(e => DateTime.UtcNow >= DateTime.UtcNow.Date);
 }
 ```
 
-### Scenario 3 - Field to Field Comparisson
+#### Scenario 3 - Field-to-Field Comparison
 
-Any expression that compares a field to another field.
+Expressions comparing one field to another are not supported.
 
 ```csharp
-using (var customer = new SqlConnection(connectionString))
+using (var connection = new SqlConnection(connectionString))
 {
 	var sales = connection.Query<Sale>(e => e.TotalPrice >= (e.Price * e.Quantity));
 }
 ```
 
-### Other Expressions
+#### Other Expressions
 
-It is also important to take note that the complex first level deep is somewhat not supported. As part of our [disclaimer](https://repodb.net/feature/expressiontrees) in the query expression trees, we therefore highly recommend to always use the [QueryField](https://repodb.net/class/queryfield) or [QueryGroup](https://repodb.net/class/querygroup) objects when composing the complex expression trees.
+Complex first-level expressions may also be unsupported. See our [disclaimer](https://repodb.net/feature/expressiontrees) on expression trees. For complex conditions, use [QueryField](https://repodb.net/class/queryfield) or [QueryGroup](https://repodb.net/class/querygroup) instead.
 
+### Multiple Identity Columns
 
-## Multiple Identity Columns
-
-As recently discovered edge-case scenario, in PosgreSQL, multiple identity columns can be identified in a single table, unlike with other RDBMS. See below.
+PostgreSQL allows multiple identity columns in a single table, unlike other RDBMS providers:
 
 ```csharp
 CREATE TABLE IF NOT EXISTS public."Person"
@@ -479,6 +380,74 @@ CREATE TABLE IF NOT EXISTS public."Person"
 );
 ```
 
-The library core SQL Statement builder is only limited to construct a SQL statement with only identity column (at max) available on the table. This is also true to all the other supported RDBMS. Any identity column on top of the default (usual use-case) identity/primary column will be excluded on the parameter passing in all push operations, forcing the library to fail.
+RepoDB's core statement builder only supports a single identity column per table, across all supported RDBMS. Any additional identity column beyond the primary one is excluded from parameter passing in push operations, which causes the operation to fail.
 
-It is unfortunate, there is no rectification to this other than by maintaining a single identity column on the table.
+There is currently no workaround other than keeping a single identity column per table.
+
+-----
+
+## Oracle
+
+These limitations are specific to the [RepoDb.Oracle](https://www.nuget.org/packages/RepoDb.Oracle) and [RepoDb.Oracle.BulkOperations](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) packages, on top of the [Core](#core) limitations above.
+
+### QueryMultiple Round Trips
+
+ODP.NET rejects command text with more than one SQL statement, so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Oracle. Keep this in mind for latency-sensitive code paths with many types.
+
+### InsertAll / MergeAll Batching
+
+`InsertAll` and `MergeAll` currently execute one row per round trip, since ODP.NET does not support multi-statement command text. True multi-row batching with a single implicit-result-set return is planned for a later release.
+
+### Identity/Primary Key Retrieval
+
+Identity/primary key retrieval on `Insert`/`Merge` relies on an Oracle 12c+ implicit result set (`DBMS_SQL.RETURN_RESULT`) wrapped in an anonymous PL/SQL block. This works around Oracle's native `RETURNING ... INTO`, which binds to an output parameter that RepoDb's core execution pipeline does not read back.
+
+```sql
+DECLARE l_repodb_result "CompleteTable"."Id"%TYPE; l_repodb_cursor SYS_REFCURSOR; BEGIN INSERT INTO "CompleteTable" ( "SessionId", "ColumnVarchar", "ColumnNumber", "ColumnDate", "ColumnTimestamp" ) VALUES ( :SessionId, :ColumnVarchar, :ColumnNumber, :ColumnDate, :ColumnTimestamp ) RETURNING "Id" INTO l_repodb_result; OPEN l_repodb_cursor FOR SELECT l_repodb_result AS "Result" FROM DUAL; DBMS_SQL.RETURN_RESULT(l_repodb_cursor); END;
+```
+
+Verify this against your own Oracle instance before relying on it in production.
+
+### RETURNING on MERGE
+
+A `RETURNING` clause on `MERGE` is only supported starting with **Oracle Database 23ai** — it fails with `ORA-00933` on 12c/18c/19c/21c. This provider otherwise targets 12c+, but `Merge` against a table with a primary/identity key needs 23ai+ to get the key value back. `Insert`, `Update`, `Query`, and other operations are unaffected on older versions — only identity-returning `Merge` calls are impacted.
+
+### GUID/UNIQUEIDENTIFIER
+
+Oracle has no native GUID/`UNIQUEIDENTIFIER` type. Unlike `SqlParameter`/`NpgsqlParameter`, ODP.NET does not accept a raw `Guid` value, so binding a `System.Guid` property directly throws `ArgumentException: Value does not fall within the expected range.` from `OracleParameter.Value`.
+
+If a column stores a GUID as `RAW(16)`, either map the property as `byte[]`, or keep it as `Guid` and register `RepoDb.Oracle.PropertyHandlers.GuidToByteArrayPropertyHandler` for that specific property:
+
+```csharp
+PropertyHandlerMapper.Add<YourEntity, GuidToByteArrayPropertyHandler>(
+    e => e.YourGuidProperty, new GuidToByteArrayPropertyHandler(), true);
+```
+
+Register it per-property rather than globally for `typeof(Guid)` if your process also uses another RepoDb provider that handles `Guid` natively — a type-level registration applies process-wide, across all connections.
+
+### Bulk Operations and Transactions
+
+`OracleBulkCopy` — the mechanism behind every bulk load in `RepoDb.Oracle.BulkOperations` except identity-returning `BulkInsert` — is not aware of the caller's transaction. Per Oracle's own ODP.NET documentation, bulk copy operations are agnostic of any local or distributed transaction, and rows it writes commit independently of the caller's transaction.
+
+In practice:
+
+- For a plain `BulkInsert` without `ReturnIdentity`, a rolled-back transaction will **not** remove rows already written by `OracleBulkCopy`.
+- For `BulkMerge`/`BulkUpdate`/`BulkDelete`, the final `MERGE`/`UPDATE`/`DELETE` against the real table stays fully transactional, so a rollback behaves correctly for your actual data. Only orphaned rows in the reusable staging table can be left behind, and the next call against that table clears them before loading anything new.
+
+If a plain `BulkInsert` needs all-or-nothing behavior with respect to your transaction, request `identityBehavior: ReturnIdentity` to force the array-bind path (`RETURNING ... INTO`), which does honor your transaction.
+
+### Bulk Operations Staging Table
+
+`BulkMerge`, `BulkUpdate`, and `BulkDelete` stage rows into a per-table pseudo table before running a set-based statement against it. The `pseudoTableType` argument picks the kind of table used:
+
+- **`Memory`** — a Global Temporary Table (GTT), isolated per session. Safe for concurrent connections writing to the same table.
+- **`Physical`** — an ordinary heap table, shared by every session. Concurrent connections writing to the same table can corrupt or race each other's staged data. Only use it for sequential, single-threaded workloads.
+- **`Auto`** *(default)* — picks `Physical` at 5,000+ rows, otherwise `Memory`.
+
+**`Memory` is currently not usable — every pseudo table resolves to `Physical` regardless of what you pass.** `OracleBulkCopy` always performs a direct-path load, and Oracle's direct-path engine cannot write into a GTT (`ORA-39826`). Until a working strategy exists (e.g., loading a GTT via array-bound `INSERT`s), `Memory` and `Auto`'s row-count threshold both fall back to `Physical`, so the `Physical` concurrency caveat above applies unconditionally.
+
+Because Oracle's `CREATE TABLE`/`CREATE GLOBAL TEMPORARY TABLE` are DDL and cause an implicit commit, the staging table is created once per (table name, pseudo table type) the first time it's needed, not on every call. This means the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a table in a process will implicitly commit any other uncommitted work already pending in that transaction. If this matters for your workload, "warm up" the staging table with a throwaway call at application startup, outside any transaction you care about.
+
+### Verification Status
+
+`RepoDb.Oracle.BulkOperations` has been implemented and reviewed but not yet exercised against a live Oracle instance. In particular, verify the `OracleBulkCopy` load path, the array-bind `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the staging table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` end-to-end before relying on this package in production. The same caveat applies to the `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.Oracle` package (see [Identity/Primary Key Retrieval](#identityprimary-key-retrieval)).
