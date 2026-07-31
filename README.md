@@ -167,6 +167,7 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Issuing a Pull Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md)
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md)
 - [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md)
+- [Limitations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/limitations.md)
 
 ### Contributors
 
