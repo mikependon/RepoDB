@@ -232,11 +232,7 @@ jobs:
         env:
           ORACLE_PWD: RepoDB2026
         options: >-
-          --health-cmd healthcheck.sh
-          --health-interval 20s
-          --health-timeout 10s
-          --health-retries 120
-          --health-start-period 60s
+          --no-healthcheck
 
     steps:
       - name: Check out repository code
@@ -250,6 +246,26 @@ jobs:
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Wait for Oracle service to be ready
+        run: |
+          CID=$(docker ps -q --filter "ancestor=container-registry.oracle.com/database/free:latest")
+          if [ -z "$CID" ]; then
+            echo "Could not find the Oracle service container."
+            exit 1
+          fi
+          echo "Oracle container id: $CID"
+          for i in $(seq 1 150); do
+            if docker exec "$CID" healthcheck.sh > /dev/null 2>&1; then
+              echo "Oracle is ready (after $((i * 15))s)."
+              exit 0
+            fi
+            echo "Waiting for Oracle to become ready... attempt $i/150"
+            sleep 15
+          done
+          echo "Oracle did not become ready within the timeout. Recent container logs:"
+          docker logs "$CID" --tail 200
+          exit 1
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}
