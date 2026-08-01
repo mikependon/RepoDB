@@ -232,7 +232,11 @@ jobs:
         env:
           ORACLE_PWD: RepoDB2026
         options: >-
-          --no-healthcheck
+          --health-cmd "exit 0"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 1
+          --health-start-period 1s
 
     steps:
       - name: Check out repository code
