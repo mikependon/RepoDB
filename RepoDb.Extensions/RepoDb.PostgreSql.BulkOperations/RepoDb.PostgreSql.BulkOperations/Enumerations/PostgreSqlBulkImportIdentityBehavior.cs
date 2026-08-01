@@ -1,13 +1,10 @@
-﻿using System;
-
-namespace RepoDb.Enumerations.PostgreSql
+﻿namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define the behavior of the identity property/column
     /// when an entity is being bulk-imported towards the underlying target table.
     /// </summary>
-    [Obsolete("This enum is obsolete and will be removed in a future version. Use 'PostgreSqlBulkImportIdentityBehavior' instead.")]
-    public enum BulkImportIdentityBehavior : short
+    public enum PostgreSqlBulkImportIdentityBehavior : short
     {
         /// <summary>
         /// No action required.

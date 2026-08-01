@@ -42,7 +42,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
@@ -72,7 +72,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
@@ -103,13 +103,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
                     tableName,
                     primaryKeys: primaryKeys,
-                    pseudoTableType: BulkImportPseudoTableType.Physical);
+                    pseudoTableType: PostgreSqlBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -138,7 +138,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
@@ -168,7 +168,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
@@ -199,13 +199,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
                     tableName,
                     primaryKeys: primaryKeys,
-                    pseudoTableType: BulkImportPseudoTableType.Physical).Result;
+                    pseudoTableType: PostgreSqlBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);

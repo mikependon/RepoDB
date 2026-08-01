@@ -43,7 +43,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             BulkUpdate<TEntity>(connection: connection,
@@ -83,7 +83,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             BulkUpdateBase<TEntity>(connection: connection,
@@ -124,7 +124,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
             BulkUpdate(connection: connection,
                 tableName: table?.TableName,
@@ -163,7 +163,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
             BulkUpdateBase(connection: connection,
                 tableName: (tableName ?? table?.TableName),
@@ -202,7 +202,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
             BulkUpdateBase(connection: connection,
                 tableName: tableName,
@@ -247,7 +247,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -290,7 +290,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -334,7 +334,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkUpdateAsync(connection: connection,
@@ -376,7 +376,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             await BulkUpdateBaseAsync(connection: connection,
@@ -418,7 +418,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             await BulkUpdateBaseAsync(connection: connection,

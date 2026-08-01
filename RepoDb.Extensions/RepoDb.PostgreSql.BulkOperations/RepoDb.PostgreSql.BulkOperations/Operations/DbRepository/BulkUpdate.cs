@@ -44,7 +44,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -103,7 +103,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -163,7 +163,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             // Create a connection
@@ -221,7 +221,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             // Create a connection
@@ -279,7 +279,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             // Create a connection
@@ -343,7 +343,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -405,7 +405,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -468,7 +468,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -529,7 +529,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -590,7 +590,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {

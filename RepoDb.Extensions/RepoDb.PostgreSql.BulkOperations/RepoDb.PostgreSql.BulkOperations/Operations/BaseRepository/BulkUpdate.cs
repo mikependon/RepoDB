@@ -41,7 +41,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkUpdate<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -80,7 +80,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkUpdate<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
@@ -126,7 +126,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -168,7 +168,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>

@@ -33,7 +33,7 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
             BulkDeleteByKeyBase<TPrimaryKey>(connection: connection,
                 tableName: tableName,
@@ -70,7 +70,7 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             await BulkDeleteByKeyBaseAsync<TPrimaryKey>(connection: connection,

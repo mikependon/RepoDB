@@ -49,8 +49,8 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
 
         #endregion
@@ -131,8 +131,8 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 
@@ -171,8 +171,8 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 

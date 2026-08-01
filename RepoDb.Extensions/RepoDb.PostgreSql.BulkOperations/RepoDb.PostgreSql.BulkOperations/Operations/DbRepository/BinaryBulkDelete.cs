@@ -63,7 +63,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -123,7 +123,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -184,7 +184,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -243,7 +243,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -300,7 +300,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -368,7 +368,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -431,7 +431,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -495,7 +495,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -557,7 +557,7 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -618,7 +618,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

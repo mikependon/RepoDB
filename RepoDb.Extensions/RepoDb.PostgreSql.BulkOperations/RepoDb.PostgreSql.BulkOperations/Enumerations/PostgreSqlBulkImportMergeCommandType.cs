@@ -1,12 +1,9 @@
-﻿using System;
-
-namespace RepoDb.Enumerations.PostgreSql
+﻿namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define which command text to use when executing the 'BinaryBulkMerge' operation.
     /// </summary>
-    [Obsolete("This enum is obsolete and will be removed in a future version. Use 'PostgreSqlBulkImportMergeCommandType' instead.")]
-    public enum BulkImportMergeCommandType : short
+    public enum PostgreSqlBulkImportMergeCommandType : short
     {
         /// <summary>
         /// An explicit 'INSERT' and 'UPDATE' commands will be used during the operation. It is the legacy 'UPSERT' operation.

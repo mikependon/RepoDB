@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable CS0618 // Bridges the new PostgreSql-prefixed enums to the legacy internal Extensions APIs, which still use the deprecated enums.
+
 namespace RepoDb
 {
     public static partial class NpgsqlConnectionExtension
@@ -32,10 +34,10 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
-            var identityBehavior = BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryKey = dbFields.GetPrimary();
@@ -66,7 +68,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        identityBehavior,
+                        (BulkImportIdentityBehavior)identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -82,8 +84,8 @@ namespace RepoDb
 
                 null,
                 false,
-                identityBehavior,
-                pseudoTableType,
+                (BulkImportIdentityBehavior)identityBehavior,
+                (BulkImportPseudoTableType)pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -114,11 +116,11 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var identityBehavior = BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryKey = dbFields.GetPrimary();
@@ -149,7 +151,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        identityBehavior,
+                        (BulkImportIdentityBehavior)identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -166,8 +168,8 @@ namespace RepoDb
 
                 null,
                 false,
-                identityBehavior,
-                pseudoTableType,
+                (BulkImportIdentityBehavior)identityBehavior,
+                (BulkImportPseudoTableType)pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);
@@ -177,4 +179,5 @@ namespace RepoDb
 
         #endregion
     }
+#pragma warning restore CS0618
 }

@@ -66,9 +66,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -131,9 +131,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -197,9 +197,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -261,9 +261,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -323,9 +323,9 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -396,9 +396,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -464,9 +464,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -533,9 +533,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -600,9 +600,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -665,9 +665,9 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    identityBehavior: identityBehavior,
-                    mergeCommandType: mergeCommandType,
-                    pseudoTableType: pseudoTableType,
+                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

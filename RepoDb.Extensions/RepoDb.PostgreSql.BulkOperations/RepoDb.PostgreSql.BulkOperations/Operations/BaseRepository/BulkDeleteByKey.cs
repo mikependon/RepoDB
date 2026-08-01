@@ -34,7 +34,7 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkDeleteByKey<TPrimaryKey>(tableName: tableName,
@@ -72,7 +72,7 @@ namespace RepoDb
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>

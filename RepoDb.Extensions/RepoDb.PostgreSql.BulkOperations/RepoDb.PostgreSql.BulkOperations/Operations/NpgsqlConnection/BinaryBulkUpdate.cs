@@ -56,7 +56,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction);
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction);
 
         #endregion
@@ -139,7 +139,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction);
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction);
 
         #endregion
@@ -217,7 +217,7 @@ namespace RepoDb
                 mappings: mappings,
                 bulkCopyTimeout: bulkCopyTimeout,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction);
 
         #endregion
@@ -266,7 +266,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 
@@ -310,7 +310,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 
@@ -355,7 +355,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 
@@ -398,7 +398,7 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 
@@ -439,7 +439,7 @@ namespace RepoDb
                 mappings: mappings,
                 bulkCopyTimeout: bulkCopyTimeout,
                 keepIdentity: keepIdentity,
-                pseudoTableType: pseudoTableType,
+                pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 

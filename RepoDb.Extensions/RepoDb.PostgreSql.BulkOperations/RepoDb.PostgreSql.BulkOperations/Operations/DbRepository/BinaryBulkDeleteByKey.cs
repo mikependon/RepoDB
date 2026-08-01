@@ -49,7 +49,7 @@ namespace RepoDb
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction);
             }
             finally
@@ -107,7 +107,7 @@ namespace RepoDb
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
