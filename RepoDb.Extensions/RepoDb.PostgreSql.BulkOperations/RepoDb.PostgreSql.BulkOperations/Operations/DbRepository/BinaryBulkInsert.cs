@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
@@ -36,6 +37,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryBulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -52,7 +54,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkInsert<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+                return connection.BulkInsert<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
                     entities: entities,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -91,6 +93,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryBulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -108,7 +111,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkInsert<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                return connection.BulkInsert<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                     entities: entities,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -148,6 +151,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryBulkInsert(this DbRepository<NpgsqlConnection> repository,
             DataTable table,
             DataRowState? rowState = null,
@@ -164,7 +168,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkInsert(tableName: table?.TableName,
+                return connection.BulkInsert(tableName: table?.TableName,
                     table: table,
                     rowState: rowState,
                     mappings: mappings,
@@ -202,6 +206,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryBulkInsert(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DataTable table,
@@ -219,7 +224,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkInsert(tableName: (tableName ?? table?.TableName),
+                return connection.BulkInsert(tableName: (tableName ?? table?.TableName),
                     table: table,
                     rowState: rowState,
                     mappings: mappings,
@@ -259,6 +264,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryBulkInsert(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
@@ -274,7 +280,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkInsert(tableName: tableName,
+                return connection.BulkInsert(tableName: tableName,
                     reader: reader,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -320,6 +326,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryBulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -337,7 +344,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkInsertAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+                return await connection.BulkInsertAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
                     entities: entities,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -378,6 +385,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryBulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -396,7 +404,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkInsertAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                return await connection.BulkInsertAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                     entities: entities,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -438,6 +446,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryBulkInsertAsync(this DbRepository<NpgsqlConnection> repository,
             DataTable table,
             DataRowState? rowState = null,
@@ -455,7 +464,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkInsertAsync(tableName: table?.TableName,
+                return await connection.BulkInsertAsync(tableName: table?.TableName,
                     table: table,
                     rowState: rowState,
                     mappings: mappings,
@@ -495,6 +504,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryBulkInsertAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DataTable table,
@@ -513,7 +523,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkInsertAsync(tableName: (tableName ?? table?.TableName),
+                return await connection.BulkInsertAsync(tableName: (tableName ?? table?.TableName),
                     table: table,
                     rowState: rowState,
                     mappings: mappings,
@@ -555,6 +565,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryBulkInsertAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
@@ -571,7 +582,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkInsertAsync(tableName: tableName,
+                return await connection.BulkInsertAsync(tableName: tableName,
                     reader: reader,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,

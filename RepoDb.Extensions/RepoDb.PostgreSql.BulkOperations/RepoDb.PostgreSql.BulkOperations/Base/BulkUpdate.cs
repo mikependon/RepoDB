@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkInsertBase<TEntity>
+        #region BulkUpdateBase<TEntity>
 
         /// <summary>
         ///
@@ -24,20 +24,22 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkInsertBase<TEntity>(this NpgsqlConnection connection,
+        private static int BulkUpdateBase<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
@@ -47,6 +49,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
@@ -55,15 +58,13 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-                    var includePrimary = isPrimaryAnIdentity == false ||
-                        (isPrimaryAnIdentity && includeIdentity);
+                    var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
                         isDictionary ?
@@ -91,11 +92,13 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -104,8 +107,8 @@ namespace RepoDb
                 (identityResults) =>
                     SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
 
-                null,
-                true,
+                qualifiers,
+                false,
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
@@ -114,7 +117,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BinaryBulkInsertBase<DataTable>
+        #region BulkUpdateBase<DataTable>
 
         /// <summary>
         ///
@@ -123,27 +126,30 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="rowState"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkInsertBase(this NpgsqlConnection connection,
+        private static int BulkUpdateBase(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
@@ -152,15 +158,13 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-                    var includePrimary = isPrimaryAnIdentity == false ||
-                        (isPrimaryAnIdentity && includeIdentity);
+                    var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
                         GetMappings(table,
@@ -183,11 +187,13 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -196,17 +202,17 @@ namespace RepoDb
                 (identityResults) =>
                     SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
 
-                null,
-                true,
-                identityBehavior: identityBehavior,
-                pseudoTableType: pseudoTableType,
+                qualifiers,
+                false,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
-                transaction: transaction);
+                transaction);
         }
 
         #endregion
 
-        #region BinaryBulkInsertBase<DbDataReader>
+        #region BulkUpdateBase<DbDataReader>
 
         /// <summary>
         /// 
@@ -214,28 +220,27 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkInsertBase(this NpgsqlConnection connection,
+        private static int BulkUpdateBase(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-            var includePrimary = isPrimaryAnIdentity == false ||
-                (isPrimaryAnIdentity && includeIdentity);
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
@@ -244,22 +249,20 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-                    var includePrimary = isPrimaryAnIdentity == false ||
-                        (isPrimaryAnIdentity && includeIdentity);
+                    var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
-                          GetMappings(reader,
-                              dbFields,
-                              includePrimary,
-                              includeIdentity,
-                              dbSetting);
+                        GetMappings(reader,
+                            dbFields,
+                            includePrimary,
+                            includeIdentity,
+                            dbSetting);
                 },
 
                 // binaryImport
@@ -273,11 +276,13 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -285,12 +290,12 @@ namespace RepoDb
                 // setIdentities
                 null,
 
-                null,
-                true,
+                qualifiers,
+                false,
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
-                transaction: transaction);
+                transaction);
         }
 
         #endregion
@@ -299,7 +304,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkInsertBaseAsync<TEntity>
+        #region BulkUpdateBaseAsync<TEntity>
 
         /// <summary>
         ///
@@ -308,21 +313,23 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkInsertBaseAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -333,6 +340,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
@@ -341,15 +349,13 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-                    var includePrimary = isPrimaryAnIdentity == false ||
-                        (isPrimaryAnIdentity && includeIdentity);
+                    var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
                         isDictionary ?
@@ -378,11 +384,13 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -391,8 +399,8 @@ namespace RepoDb
                 (identityResults) =>
                     SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
 
-                null,
-                true,
+                qualifiers,
+                false,
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
@@ -402,7 +410,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BinaryBulkInsertBaseAsync<DataTable>
+        #region BulkUpdateBaseAsync<DataTable>
 
         /// <summary>
         ///
@@ -411,22 +419,24 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="rowState"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkInsertBaseAsync(this NpgsqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -434,6 +444,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
@@ -442,15 +453,13 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-                    var includePrimary = isPrimaryAnIdentity == false ||
-                        (isPrimaryAnIdentity && includeIdentity);
+                    var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
                         GetMappings(table,
@@ -474,11 +483,13 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -487,18 +498,18 @@ namespace RepoDb
                 (identityResults) =>
                     SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
 
-                null,
-                true,
-                identityBehavior: identityBehavior,
-                pseudoTableType: pseudoTableType,
+                qualifiers,
+                false,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
-                transaction: transaction,
+                transaction,
                 cancellationToken);
         }
 
         #endregion
 
-        #region BinaryBulkInsertBaseAsync<DbDataReader>
+        #region BulkUpdateBaseAsync<DbDataReader>
 
         /// <summary>
         /// 
@@ -506,19 +517,21 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="identityBehavior"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkInsertBaseAsync(this NpgsqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
+            IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            bool keepIdentity = false,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -526,10 +539,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
-            var includePrimary = isPrimaryAnIdentity == false ||
-                (isPrimaryAnIdentity && includeIdentity);
+            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
@@ -538,16 +548,21 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
-                    mappings = mappings?.Any() == true ? mappings :
+                {
+                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includePrimary = true;
+
+                    return mappings = mappings?.Any() == true ? mappings :
                         GetMappings(reader,
                             dbFields,
                             includePrimary,
                             includeIdentity,
-                            dbSetting),
+                            dbSetting);
+                },
 
                 // binaryImport
                 async (tableName) =>
@@ -561,11 +576,13 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getMergeToPseudoCommandText
+                // getUpdateToPseudoCommandText
                 () =>
-                    GetInsertCommandText(pseudoTableName,
+                    GetUpdateCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
@@ -573,12 +590,12 @@ namespace RepoDb
                 // setIdentities
                 null,
 
-                null,
-                true,
-                identityBehavior: identityBehavior,
-                pseudoTableType: pseudoTableType,
+                qualifiers,
+                false,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
-                transaction: transaction,
+                transaction,
                 cancellationToken);
         }
 

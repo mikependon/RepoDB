@@ -8,7 +8,7 @@ using System.Linq;
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class BinaryBulkDeleteByKeyTest
+    public class BulkDeleteByKeyTest
     {
         [TestInitialize]
         public void Initialize()
@@ -29,7 +29,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKey()
+        public void TestBulkDeleteByKey()
         {
             using (var connection = GetConnection())
             {
@@ -39,13 +39,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKey(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
                     tableName,
                     primaryKeys: primaryKeys);
 
@@ -59,7 +59,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKeyWithBatchSize()
+        public void TestBulkDeleteByKeyWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -69,13 +69,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKey(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
                     tableName,
                     primaryKeys: primaryKeys,
                     batchSize: 3);
@@ -90,7 +90,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKeyViaPhysicalTable()
+        public void TestBulkDeleteByKeyViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -100,13 +100,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKey(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKey(connection,
                     tableName,
                     primaryKeys: primaryKeys,
                     pseudoTableType: BulkImportPseudoTableType.Physical);
@@ -125,7 +125,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKeyAsync()
+        public void TestBulkDeleteByKeyAsync()
         {
             using (var connection = GetConnection())
             {
@@ -135,13 +135,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKeyAsync(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
                     tableName,
                     primaryKeys: primaryKeys).Result;
 
@@ -155,7 +155,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKeyAsyncWithBatchSize()
+        public void TestBulkDeleteByKeyAsyncWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -165,13 +165,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKeyAsync(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
                     tableName,
                     primaryKeys: primaryKeys,
                     batchSize: 3).Result;
@@ -186,7 +186,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkDeleteByKeyAsyncViaPhysicalTable()
+        public void TestBulkDeleteByKeyAsyncViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -196,13 +196,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkDeleteByKeyAsync(connection,
+                result = NpgsqlConnectionExtension.BulkDeleteByKeyAsync(connection,
                     tableName,
                     primaryKeys: primaryKeys,
                     pseudoTableType: BulkImportPseudoTableType.Physical).Result;

@@ -1,5 +1,4 @@
-﻿using System;
-using Npgsql;
+﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
@@ -16,15 +15,15 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkUpdate<TEntity>
+        #region BulkDelete<TEntity>
 
         /// <summary>
-        /// Update the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
-        /// <param name="entities">The list of entities to be bulk-updated to the target table.
+        /// <param name="entities">The list of entities to be bulk-deleted to the target table.
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
@@ -34,36 +33,35 @@ namespace RepoDb
         /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
-        /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        /// <returns>The number of rows that has been deleted from the target table.</returns>
+        public static int BulkDelete<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            bool keepIdentity = true,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkUpdate<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
-                    transaction: transaction);
+            repository.DbRepository.BulkDelete<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                keepIdentity: keepIdentity,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
 
         /// <summary>
-        /// Update the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="entities">The list of entities to be bulk-updated to the target table.
+        /// <param name="entities">The list of entities to be bulk-deleted to the target table.
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
@@ -73,28 +71,27 @@ namespace RepoDb
         /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
-        /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        /// <returns>The number of rows that has been deleted from the target table.</returns>
+        public static int BulkDelete<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            bool keepIdentity = true,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkUpdate<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
-                    transaction: transaction);
+            repository.DbRepository.BulkDelete<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                keepIdentity: keepIdentity,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
 
         #endregion
 
@@ -102,15 +99,15 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkUpdate<TEntity>
+        #region BulkDelete<TEntity>
 
         /// <summary>
-        /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
-        /// <param name="entities">The list of entities to be bulk-updated to the target table.
+        /// <param name="entities">The list of entities to be bulk-deleted to the target table.
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
@@ -121,20 +118,19 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        /// <returns>The number of rows that has been deleted from the target table.</returns>
+        public static async Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            bool keepIdentity = true,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await repository.DbRepository.BulkUpdateAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+            await repository.DbRepository.BulkDeleteAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
@@ -146,13 +142,13 @@ namespace RepoDb
                     cancellationToken: cancellationToken);
 
         /// <summary>
-        /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="entities">The list of entities to be bulk-updated to the target table.
+        /// <param name="entities">The list of entities to be bulk-deleted to the target table.
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
@@ -163,21 +159,20 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        /// <returns>The number of rows that has been deleted from the target table.</returns>
+        public static async Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            bool keepIdentity = true,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await repository.DbRepository.BulkUpdateAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+            await repository.DbRepository.BulkDeleteAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,

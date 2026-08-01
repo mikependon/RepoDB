@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class BinaryBulkInsertTest
+    public class BulkInsertTest
     {
         [TestInitialize]
         public void Initialize()
@@ -31,10 +31,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #region Sync
 
-        #region BinaryBulkInsert<TEntity>
+        #region BulkInsert<TEntity>
 
         [TestMethod]
-        public void TestBinaryBulkInsert()
+        public void TestBulkInsert()
         {
             using (var connection = GetConnection())
             {
@@ -43,7 +43,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -58,7 +58,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
         
         [TestMethod]
-        public void TestBinaryBulkInsertTableNameWithSchema()
+        public void TestBulkInsertTableNameWithSchema()
         {
             using var connection = GetConnection();
             
@@ -67,7 +67,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             var tableName = "public.BulkOperationIdentityTable";
             
             // Act
-            var result = connection.BinaryBulkInsert(tableName, entities);
+            var result = connection.BulkInsert(tableName, entities);
 
             // Assert
             Assert.AreEqual(entities.Count, result);
@@ -79,7 +79,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithIdentityValues()
+        public void TestBulkInsertWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -88,7 +88,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -103,7 +103,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBatchSize()
+        public void TestBulkInsertWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -112,7 +112,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3);
@@ -128,7 +128,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithKeepIdentity()
+        public void TestBulkInsertWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -137,7 +137,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -153,7 +153,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithReturnIdentity()
+        public void TestBulkInsertWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity);
@@ -183,7 +183,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -192,7 +192,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -210,7 +210,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithMappings()
+        public void TestBulkInsertWithMappings()
         {
             using (var connection = GetConnection())
             {
@@ -219,7 +219,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -234,7 +234,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithMappingsAndWithKeepIdentity()
+        public void TestBulkInsertWithMappingsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -243,7 +243,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -259,7 +259,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithMappingsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertWithMappingsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -268,7 +268,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity,
@@ -285,7 +285,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithMappingsAndWithReturnIdentity()
+        public void TestBulkInsertWithMappingsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -294,7 +294,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity);
@@ -311,7 +311,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithMappingsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertWithMappingsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -320,7 +320,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -338,7 +338,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBulkInsertMapItems()
+        public void TestBulkInsertWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -358,7 +358,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings);
@@ -374,7 +374,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -394,7 +394,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -411,7 +411,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -431,7 +431,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -449,7 +449,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -469,7 +469,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -487,7 +487,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -507,7 +507,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -526,7 +526,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithExistingData()
+        public void TestBulkInsertWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -535,7 +535,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -545,7 +545,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -560,7 +560,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -569,7 +569,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -577,7 +577,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert<BulkOperationLightIdentityTable>(connection,
+                result = NpgsqlConnectionExtension.BulkInsert<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -594,10 +594,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<Anonymous>
+        #region BulkInsert<Anonymous>
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymous()
+        public void TestBulkInsertViaAnonymous()
         {
             using (var connection = GetConnection())
             {
@@ -606,7 +606,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -621,7 +621,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithIdentityValues()
+        public void TestBulkInsertViaAnonymousWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -630,7 +630,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -645,7 +645,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithBatchSize()
+        public void TestBulkInsertViaAnonymousWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -654,7 +654,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3);
@@ -670,7 +670,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithKeepIdentity()
+        public void TestBulkInsertViaAnonymousWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -679,7 +679,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -695,7 +695,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithBulkInsertMapItems()
+        public void TestBulkInsertViaAnonymousWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -715,7 +715,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings);
@@ -731,7 +731,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -751,7 +751,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -768,7 +768,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -788,7 +788,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -806,7 +806,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithExistingData()
+        public void TestBulkInsertViaAnonymousWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -815,7 +815,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -825,7 +825,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -840,7 +840,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaAnonymousWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertViaAnonymousWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -849,7 +849,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -857,7 +857,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -874,10 +874,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<IDictionary<string, object>>
+        #region BulkInsert<IDictionary<string, object>>
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObject()
+        public void TestBulkInsertViaExpandoObject()
         {
             using (var connection = GetConnection())
             {
@@ -886,7 +886,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -901,7 +901,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithIdentityValues()
+        public void TestBulkInsertViaExpandoObjectWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -910,7 +910,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -925,7 +925,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBatchSize()
+        public void TestBulkInsertViaExpandoObjectWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -934,7 +934,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3);
@@ -950,7 +950,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithKeepIdentity()
+        public void TestBulkInsertViaExpandoObjectWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -959,7 +959,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -975,7 +975,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithReturnIdentity()
+        public void TestBulkInsertViaExpandoObjectWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -984,7 +984,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity);
@@ -1001,7 +1001,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertViaExpandoObjectWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1010,7 +1010,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -1028,7 +1028,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBulkInsertMapItems()
+        public void TestBulkInsertViaExpandoObjectWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -1048,7 +1048,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings);
@@ -1064,7 +1064,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1084,7 +1084,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -1101,7 +1101,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1121,7 +1121,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -1139,7 +1139,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1159,7 +1159,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -1178,7 +1178,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1198,7 +1198,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -1218,7 +1218,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithExistingData()
+        public void TestBulkInsertViaExpandoObjectWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -1227,7 +1227,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -1237,7 +1237,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -1252,7 +1252,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaExpandoObjectWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertViaExpandoObjectWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1261,7 +1261,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities);
 
@@ -1269,7 +1269,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -1286,10 +1286,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<DataTable>
+        #region BulkInsert<DataTable>
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTable()
+        public void TestBulkInsertViaDataTable()
         {
             using (var connection = GetConnection())
             {
@@ -1299,7 +1299,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table);
 
@@ -1314,7 +1314,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithIdentityValues()
+        public void TestBulkInsertViaDataTableWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -1324,7 +1324,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table);
 
@@ -1339,7 +1339,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBatchSize()
+        public void TestBulkInsertViaDataTableWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -1349,7 +1349,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     batchSize: 3);
@@ -1365,7 +1365,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithKeepIdentity()
+        public void TestBulkInsertViaDataTableWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1375,7 +1375,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -1391,7 +1391,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithReturnIdentity()
+        public void TestBulkInsertViaDataTableWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1401,7 +1401,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity);
@@ -1421,7 +1421,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertViaDataTableWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1431,7 +1431,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -1452,7 +1452,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBulkInsertMapItems()
+        public void TestBulkInsertViaDataTableWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -1473,7 +1473,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     mappings: mappings);
@@ -1489,7 +1489,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1510,7 +1510,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -1527,7 +1527,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertViaDataTableWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1548,7 +1548,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -1566,7 +1566,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertViaDataTableWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1587,7 +1587,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -1608,7 +1608,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertViaDataTableWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1629,7 +1629,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -1651,7 +1651,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithExistingData()
+        public void TestBulkInsertViaDataTableWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -1661,7 +1661,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table);
 
@@ -1672,7 +1672,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table);
 
@@ -1687,7 +1687,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDataTableWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertViaDataTableWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1697,7 +1697,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table);
 
@@ -1706,7 +1706,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -1723,10 +1723,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<DbDataReader>
+        #region BulkInsert<DbDataReader>
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReader()
+        public void TestBulkInsertViaDbDataReader()
         {
             using (var connection = GetConnection())
             {
@@ -1737,7 +1737,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader);
 
@@ -1753,7 +1753,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithIdentityValues()
+        public void TestBulkInsertViaDbDataReaderWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -1764,7 +1764,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader);
 
@@ -1780,7 +1780,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithKeepIdentity()
+        public void TestBulkInsertViaDbDataReaderWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1791,7 +1791,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader,
                         identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -1808,7 +1808,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithBulkInsertMapItems()
+        public void TestBulkInsertViaDbDataReaderWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -1830,7 +1830,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings);
@@ -1847,7 +1847,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1870,7 +1870,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings,
@@ -1888,7 +1888,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -1910,7 +1910,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings,
@@ -1929,7 +1929,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithExistingData()
+        public void TestBulkInsertViaDbDataReaderWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -1940,7 +1940,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader);
 
@@ -1956,7 +1956,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader);
 
@@ -1972,7 +1972,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertViaDbDataReaderWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertViaDbDataReaderWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -1983,7 +1983,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader);
 
@@ -1997,7 +1997,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsert(connection,
                         tableName,
                         reader: reader,
                         identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
@@ -2019,10 +2019,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #region Async
 
-        #region BinaryBulkInsert<TEntity>
+        #region BulkInsert<TEntity>
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsync()
+        public void TestBulkInsertAsync()
         {
             using (var connection = GetConnection())
             {
@@ -2031,7 +2031,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2046,7 +2046,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestBinaryBulkInsertAsyncTableNameWithSchema()
+        public async Task TestBulkInsertAsyncTableNameWithSchema()
         {
             await using var connection = GetConnection();
             
@@ -2055,7 +2055,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             var tableName = "public.BulkOperationIdentityTable";
             
             // Act
-            var result = await connection.BinaryBulkInsertAsync(tableName, entities);
+            var result = await connection.BulkInsertAsync(tableName, entities);
 
             // Assert
             Assert.AreEqual(entities.Count, result);
@@ -2067,7 +2067,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
         
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithIdentityValues()
+        public void TestBulkInsertAsyncWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -2076,7 +2076,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2091,7 +2091,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBatchSize()
+        public void TestBulkInsertAsyncWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -2100,7 +2100,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3).Result;
@@ -2116,7 +2116,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithKeepIdentity()
+        public void TestBulkInsertAsyncWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2125,7 +2125,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2141,7 +2141,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithReturnIdentity()
+        public void TestBulkInsertAsyncWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2150,7 +2150,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity).Result;
@@ -2171,7 +2171,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2180,7 +2180,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -2198,7 +2198,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithMappings()
+        public void TestBulkInsertAsyncWithMappings()
         {
             using (var connection = GetConnection())
             {
@@ -2207,7 +2207,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2222,7 +2222,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithMappingsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncWithMappingsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2231,7 +2231,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2247,7 +2247,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithMappingsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncWithMappingsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2256,7 +2256,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity,
@@ -2273,7 +2273,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithMappingsAndWithReturnIdentity()
+        public void TestBulkInsertAsyncWithMappingsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2282,7 +2282,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity).Result;
@@ -2299,7 +2299,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithMappingsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncWithMappingsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2308,7 +2308,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -2326,7 +2326,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBulkInsertMapItems()
+        public void TestBulkInsertAsyncWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -2346,7 +2346,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings).Result;
@@ -2362,7 +2362,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2382,7 +2382,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2399,7 +2399,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2419,7 +2419,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2437,7 +2437,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertAsyncWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2457,7 +2457,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2475,7 +2475,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2495,7 +2495,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2514,7 +2514,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithExistingData()
+        public void TestBulkInsertAsyncWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -2523,7 +2523,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2533,7 +2533,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2548,7 +2548,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertAsyncWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2557,7 +2557,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2565,7 +2565,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<BulkOperationLightIdentityTable>(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2582,10 +2582,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<Anonymous>
+        #region BulkInsert<Anonymous>
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymous()
+        public void TestBulkInsertAsyncViaAnonymous()
         {
             using (var connection = GetConnection())
             {
@@ -2594,7 +2594,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2609,7 +2609,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithIdentityValues()
+        public void TestBulkInsertAsyncViaAnonymousWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -2618,7 +2618,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2633,7 +2633,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithBatchSize()
+        public void TestBulkInsertAsyncViaAnonymousWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -2642,7 +2642,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3).Result;
@@ -2658,7 +2658,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithKeepIdentity()
+        public void TestBulkInsertAsyncViaAnonymousWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2667,7 +2667,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2683,7 +2683,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithBulkInsertMapItems()
+        public void TestBulkInsertAsyncViaAnonymousWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -2703,7 +2703,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings).Result;
@@ -2719,7 +2719,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2739,7 +2739,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2756,7 +2756,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2776,7 +2776,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -2794,7 +2794,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithExistingData()
+        public void TestBulkInsertAsyncViaAnonymousWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -2803,7 +2803,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2813,7 +2813,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2828,7 +2828,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaAnonymousWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaAnonymousWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2837,7 +2837,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2845,7 +2845,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2862,10 +2862,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<IDictionary<string, object>>
+        #region BulkInsert<IDictionary<string, object>>
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObject()
+        public void TestBulkInsertAsyncViaExpandoObject()
         {
             using (var connection = GetConnection())
             {
@@ -2874,7 +2874,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2889,7 +2889,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithIdentityValues()
+        public void TestBulkInsertAsyncViaExpandoObjectWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -2898,7 +2898,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -2913,7 +2913,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBatchSize()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -2922,7 +2922,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     batchSize: 3).Result;
@@ -2938,7 +2938,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithKeepIdentity()
+        public void TestBulkInsertAsyncViaExpandoObjectWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2947,7 +2947,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -2963,7 +2963,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithReturnIdentity()
+        public void TestBulkInsertAsyncViaExpandoObjectWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -2972,7 +2972,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity).Result;
@@ -2989,7 +2989,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaExpandoObjectWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -2998,7 +2998,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -3016,7 +3016,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItems()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -3036,7 +3036,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings).Result;
@@ -3052,7 +3052,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3072,7 +3072,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -3089,7 +3089,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3109,7 +3109,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -3127,7 +3127,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3147,7 +3147,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -3166,7 +3166,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3186,7 +3186,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     mappings: mappings,
@@ -3206,7 +3206,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithExistingData()
+        public void TestBulkInsertAsyncViaExpandoObjectWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -3215,7 +3215,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -3225,7 +3225,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     .ToList();
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -3240,7 +3240,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaExpandoObjectWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaExpandoObjectWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3249,7 +3249,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -3257,7 +3257,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true, 100);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     entities: entities,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -3274,10 +3274,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<DataTable>
+        #region BulkInsert<DataTable>
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTable()
+        public void TestBulkInsertAsyncViaDataTable()
         {
             using (var connection = GetConnection())
             {
@@ -3287,7 +3287,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table).Result;
 
@@ -3302,7 +3302,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithIdentityValues()
+        public void TestBulkInsertAsyncViaDataTableWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -3312,7 +3312,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table).Result;
 
@@ -3327,7 +3327,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBatchSize()
+        public void TestBulkInsertAsyncViaDataTableWithBatchSize()
         {
             using (var connection = GetConnection())
             {
@@ -3337,7 +3337,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     batchSize: 3).Result;
@@ -3353,7 +3353,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDataTableWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3363,7 +3363,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -3379,7 +3379,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithReturnIdentity()
+        public void TestBulkInsertAsyncViaDataTableWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3389,7 +3389,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity).Result;
@@ -3409,7 +3409,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaDataTableWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3419,7 +3419,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.ReturnIdentity,
@@ -3440,7 +3440,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBulkInsertMapItems()
+        public void TestBulkInsertAsyncViaDataTableWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -3461,7 +3461,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     mappings: mappings).Result;
@@ -3477,7 +3477,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3498,7 +3498,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -3515,7 +3515,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3536,7 +3536,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -3554,7 +3554,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithReturnIdentity()
+        public void TestBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithReturnIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3575,7 +3575,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -3596,7 +3596,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaDataTableWithBulkInsertMapItemsAndWithReturnIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3617,7 +3617,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     mappings: mappings,
@@ -3639,7 +3639,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithExistingData()
+        public void TestBulkInsertAsyncViaDataTableWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -3649,7 +3649,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table).Result;
 
@@ -3660,7 +3660,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table).Result;
 
@@ -3675,7 +3675,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDataTableWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDataTableWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3685,7 +3685,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table).Result;
 
@@ -3694,7 +3694,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
                     table: table,
                     identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -3711,10 +3711,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BinaryBulkInsert<DbDataReader>
+        #region BulkInsert<DbDataReader>
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReader()
+        public void TestBulkInsertAsyncViaDbDataReader()
         {
             using (var connection = GetConnection())
             {
@@ -3725,7 +3725,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader).Result;
 
@@ -3741,7 +3741,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithIdentityValues()
+        public void TestBulkInsertAsyncViaDbDataReaderWithIdentityValues()
         {
             using (var connection = GetConnection())
             {
@@ -3752,7 +3752,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader).Result;
 
@@ -3768,7 +3768,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDbDataReaderWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3779,7 +3779,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader,
                         identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;
@@ -3796,7 +3796,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItems()
+        public void TestBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItems()
         {
             using (var connection = GetConnection())
             {
@@ -3818,7 +3818,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings).Result;
@@ -3835,7 +3835,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3858,7 +3858,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings,
@@ -3876,7 +3876,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
+        public void TestBulkInsertAsyncViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentityViaPhysicalTable()
         {
             using (var connection = GetConnection())
             {
@@ -3898,7 +3898,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader,
                         mappings: mappings,
@@ -3917,7 +3917,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithExistingData()
+        public void TestBulkInsertAsyncViaDbDataReaderWithExistingData()
         {
             using (var connection = GetConnection())
             {
@@ -3928,7 +3928,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader).Result;
 
@@ -3944,7 +3944,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader).Result;
 
@@ -3960,7 +3960,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBinaryBulkInsertAsyncViaDbDataReaderWithExistingDataAndWithKeepIdentity()
+        public void TestBulkInsertAsyncViaDbDataReaderWithExistingDataAndWithKeepIdentity()
         {
             using (var connection = GetConnection())
             {
@@ -3971,7 +3971,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader).Result;
 
@@ -3985,7 +3985,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
                 {
                     // Act
-                    var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                         tableName,
                         reader: reader,
                         identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Result;

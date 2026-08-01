@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using System.Collections.Generic;
 using System.Threading;
@@ -28,6 +29,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
         public static int BinaryBulkDeleteByKey<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -35,7 +37,7 @@ namespace RepoDb
             int? batchSize = null,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryBulkDeleteByKeyBase<TPrimaryKey>(connection: connection,
+            BulkDeleteByKey<TPrimaryKey>(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -65,6 +67,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
         public static async Task<int> BinaryBulkDeleteByKeyAsync<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -73,7 +76,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            await BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>(connection: connection,
+            await BulkDeleteByKeyAsync<TPrimaryKey>(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: bulkCopyTimeout,

@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static int BinaryBulkMerge<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -50,7 +52,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            BinaryBulkMerge<TEntity>(connection: connection,
+            BulkMerge<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: qualifiers,
@@ -83,6 +85,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static int BinaryBulkMerge<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -95,7 +98,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            BinaryBulkMergeBase<TEntity>(connection: connection,
+            BulkMerge<TEntity>(connection: connection,
                 tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                 entities: entities,
                 qualifiers: qualifiers,
@@ -129,6 +132,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static int BinaryBulkMerge(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
@@ -140,7 +144,7 @@ namespace RepoDb
             BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryBulkMerge(connection: connection,
+            BulkMerge(connection: connection,
                 tableName: table?.TableName,
                 table: table,
                 rowState: rowState,
@@ -172,6 +176,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static int BinaryBulkMerge(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -184,7 +189,7 @@ namespace RepoDb
             BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryBulkMergeBase(connection: connection,
+            BulkMerge(connection: connection,
                 tableName: (tableName ?? table?.TableName),
                 table: table,
                 rowState: rowState,
@@ -218,6 +223,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static int BinaryBulkMerge(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -228,7 +234,7 @@ namespace RepoDb
             BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryBulkMergeBase(connection: connection,
+            BulkMerge(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 qualifiers: qualifiers,
@@ -268,6 +274,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static Task<int> BinaryBulkMergeAsync<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -280,7 +287,7 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BinaryBulkMergeAsync<TEntity>(connection: connection,
+            BulkMergeAsync<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: qualifiers,
@@ -315,6 +322,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static async Task<int> BinaryBulkMergeAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -328,7 +336,7 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            await BinaryBulkMergeBaseAsync<TEntity>(connection: connection,
+            await BulkMergeAsync<TEntity>(connection: connection,
                 tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                 entities: entities,
                 qualifiers: qualifiers,
@@ -364,6 +372,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
@@ -376,7 +385,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BinaryBulkMergeAsync(connection: connection,
+            BulkMergeAsync(connection: connection,
                 tableName: table?.TableName,
                 table: table,
                 rowState: rowState,
@@ -410,6 +419,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static async Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -423,7 +433,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            await BinaryBulkMergeBaseAsync(connection: connection,
+            await BulkMergeAsync(connection: connection,
                 tableName: (tableName ?? table?.TableName),
                 table: table,
                 rowState: rowState,
@@ -459,6 +469,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been merged into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkMerge' instead.")]
         public static async Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
@@ -470,7 +481,7 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            await BinaryBulkMergeBaseAsync(connection: connection,
+            await BulkMergeAsync(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 qualifiers: qualifiers,

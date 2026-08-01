@@ -13,7 +13,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkDeleteByKeyBase<TPrimaryKey>
+        #region BulkDeleteByKeyBase<TPrimaryKey>
 
         /// <summary>
         ///
@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkDeleteByKeyBase<TPrimaryKey>(this NpgsqlConnection connection,
+        private static int BulkDeleteByKeyBase<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -94,7 +94,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>
+        #region BulkDeleteByKeyBaseAsync<TPrimaryKey>
 
         /// <summary>
         ///
@@ -109,7 +109,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>(this NpgsqlConnection connection,
+        private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,

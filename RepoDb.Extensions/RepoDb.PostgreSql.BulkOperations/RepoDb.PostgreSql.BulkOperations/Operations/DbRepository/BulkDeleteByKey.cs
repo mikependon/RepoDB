@@ -1,5 +1,4 @@
-﻿using System;
-using Npgsql;
+﻿using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkDeleteByKey<TPrimaryKey>
+        #region BulkDeleteByKey<TPrimaryKey>
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys. Underneath this operation is a call directly to the existing
@@ -30,8 +29,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
-        public static int BinaryBulkDeleteByKey<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
+        public static int BulkDeleteByKey<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -71,7 +69,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkDeleteByKey<TPrimaryKey>
+        #region BulkDeleteByKey<TPrimaryKey>
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys in an asynchronous way. Underneath this operation is a call directly to the existing
@@ -87,8 +85,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
-        public static async Task<int> BinaryBulkDeleteByKeyAsync<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
+        public static async Task<int> BulkDeleteByKeyAsync<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,

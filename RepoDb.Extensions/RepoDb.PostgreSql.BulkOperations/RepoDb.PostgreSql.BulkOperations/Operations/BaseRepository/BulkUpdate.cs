@@ -1,5 +1,4 @@
-﻿using System;
-using Npgsql;
+﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkUpdate<TEntity>
+        #region BulkUpdate<TEntity>
 
         /// <summary>
         /// Update the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
@@ -35,8 +34,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static int BulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -74,8 +72,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static int BinaryBulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static int BulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -102,7 +99,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkUpdate<TEntity>
+        #region BulkUpdate<TEntity>
 
         /// <summary>
         /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
@@ -122,8 +119,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static async Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -164,8 +160,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been updated into the target table.</returns>
-        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkUpdate' instead.")]
-        public static async Task<int> BinaryBulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
+        public static async Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
