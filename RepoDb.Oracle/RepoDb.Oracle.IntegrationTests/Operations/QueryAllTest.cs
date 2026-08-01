@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Linq;
@@ -39,6 +40,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionQueryAllWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -89,6 +114,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionQueryAllAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

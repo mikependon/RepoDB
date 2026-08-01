@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System;
@@ -45,6 +46,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionMaxAllWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.MaxAll<CompleteTable>(e => e.ColumnInt);
+
+                    // Assert
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionMaxAllWithHintsThrows()
         {
             // Setup
@@ -76,6 +101,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionMaxAllAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt);
+
+                    // Assert
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

@@ -51,6 +51,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionMaxWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionMaxViaExpression()
         {
             // Setup
@@ -180,6 +205,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionMaxAsyncWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

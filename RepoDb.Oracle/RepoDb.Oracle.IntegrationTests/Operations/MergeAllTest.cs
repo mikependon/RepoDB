@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
@@ -51,6 +52,38 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionMergeAllForEmptyTableWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.MergeAll<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(tables.All(table => table.Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -158,6 +191,38 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionMergeAllAsyncForEmptyTableWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(tables.All(table => table.Id > 0));
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

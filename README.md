@@ -17,7 +17,7 @@ Write raw SQL when you need absolute control. Use fluent APIs when productivity 
 
 | Project | Nuget | Downloads | Status |
 |---------|-------|-----------|--------|
-| [RepoDb](https://www.nuget.org/packages/RepoDb) | [![](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb) | [![](https://img.shields.io/nuget/dt/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-core.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-core.yml) |
+| [RepoDb.Core](https://www.nuget.org/packages/RepoDb) | [![](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb) | [![](https://img.shields.io/nuget/dt/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-core.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-core.yml) |
 | [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer) | [![](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer) | [![](https://img.shields.io/nuget/dt/RepoDb.SqlServer?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml) |
 | [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [![](https://img.shields.io/nuget/v/RepoDb.SqlServer.BulkOperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [![](https://img.shields.io/nuget/dt/RepoDb.SqlServer.BulkOperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml) |
 | [RepoDb.Oracle](https://www.nuget.org/packages/RepoDb.Oracle) | [![](https://img.shields.io/nuget/v/RepoDb.Oracle?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Oracle) | [![](https://img.shields.io/nuget/dt/RepoDb.Oracle?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Oracle) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle.yml) |
@@ -68,8 +68,9 @@ RepoDB is no longer just an ORM in the near future — it is becoming a complete
 Choose your database and follow the quick-start guide:
 
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
-- [MySQL](http://repodb.net/tutorial/get-started-mysql)
+- [Oracle](http://repodb.net/tutorial/get-started-oracle)
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
+- [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
 
 Explore individual features in the [documentation](http://repodb.net/docs).
@@ -101,7 +102,12 @@ On providers that support multiple SQL statements in a single command text (SQL 
 RepoDB uses ADO.NET's native coercion by default, keeping type mismatches visible and explicit. To enable automatic conversion:
 
 ```csharp
-RepoDb.Converter.ConversionType = ConversionType.Automatic;
+GlobalConfiguration
+    .Setup(new Options.GlobalConfigurationOptions()
+    {
+        ConversionType = ConversionType.Automatic
+    })
+    .UseSqlServer();
 ```
 
 ## How RepoDB Compares

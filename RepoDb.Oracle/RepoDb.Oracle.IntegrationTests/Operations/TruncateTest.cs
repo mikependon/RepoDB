@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Threading.Tasks;
@@ -43,6 +44,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestOracleConnectionTruncateWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.Truncate<CompleteTable>();
+                    var countResult = connection.CountAll<CompleteTable>();
+
+                    // Assert
+                    Assert.AreEqual(0, countResult);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
         #endregion
 
         #region Async
@@ -61,6 +87,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionTruncateAsyncWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.TruncateAsync<CompleteTable>();
+                    var countResult = connection.CountAll<CompleteTable>();
+
+                    // Assert
+                    Assert.AreEqual(0, countResult);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

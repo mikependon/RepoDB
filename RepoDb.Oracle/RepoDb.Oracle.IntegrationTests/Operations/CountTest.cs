@@ -46,6 +46,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionCountWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.Count<CompleteTable>((object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Count(), result);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionCountViaExpression()
         {
             // Setup
@@ -169,6 +193,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionCountAsyncWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.CountAsync<CompleteTable>((object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Count(), result);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

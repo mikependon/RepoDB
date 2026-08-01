@@ -46,6 +46,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionExistsWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.Exists<CompleteTable>((object)null);
+
+                    // Assert
+                    Assert.IsTrue(result);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionExistsViaExpression()
         {
             // Setup
@@ -186,6 +210,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExistsAsyncWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.ExistsAsync<CompleteTable>((object)null);
+
+                    // Assert
+                    Assert.IsTrue(result);
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

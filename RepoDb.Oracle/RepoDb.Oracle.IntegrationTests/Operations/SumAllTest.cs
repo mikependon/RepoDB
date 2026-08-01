@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System;
@@ -48,6 +49,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionSumAllWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.SumAll<CompleteTable>(e => e.ColumnSmallInt);
+
+                    // Assert
+                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionSumAllWithHintsThrows()
         {
             // Setup
@@ -79,6 +104,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionSumAllAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt);
+
+                    // Assert
+                    Assert.AreEqual(tables.Sum(e => e.ColumnSmallInt), Convert.ToInt32(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

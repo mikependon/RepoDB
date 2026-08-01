@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Linq;
@@ -61,6 +62,37 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             Helper.AssertPropertiesEquality(table, queryResult.First());
         }
 
+        [TestMethod]
+        public void TestOracleConnectionInsertForIdentityWithAutomaticConversion()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.Insert<CompleteTable>(table);
+
+                // Assert
+                Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
         #endregion
 
         #region Async
@@ -86,6 +118,37 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(1, queryResult?.Count());
             Helper.AssertPropertiesEquality(table, queryResult.First());
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionInsertAsyncForIdentityWithAutomaticConversion()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.InsertAsync<CompleteTable>(table);
+
+                // Assert
+                Assert.IsTrue(System.Convert.ToInt64(result) > 0);
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         #endregion

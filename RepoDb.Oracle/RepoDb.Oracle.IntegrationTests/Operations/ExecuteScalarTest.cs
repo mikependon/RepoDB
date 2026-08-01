@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System;
 using System.Linq;
@@ -38,6 +39,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(tables.Count, Convert.ToInt32(result));
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionExecuteScalarWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(tables.Count, Convert.ToInt32(result));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -88,6 +112,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(tables.Count, Convert.ToInt32(result));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteScalarAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(tables.Count, Convert.ToInt32(result));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

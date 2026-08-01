@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
@@ -53,6 +54,43 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionUpdateAllWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            tables.ForEach(table =>
+            {
+                table.ColumnVarchar = $"Updated-{table.Id}";
+                table.ColumnInt = table.ColumnInt + 1;
+            });
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.UpdateAll<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -140,6 +178,43 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionUpdateAllAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            tables.ForEach(table =>
+            {
+                table.ColumnVarchar = $"Updated-{table.Id}";
+                table.ColumnInt = table.ColumnInt + 1;
+            });
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

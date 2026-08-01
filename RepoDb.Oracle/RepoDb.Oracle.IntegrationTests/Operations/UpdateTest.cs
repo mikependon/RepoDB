@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System;
@@ -63,6 +64,37 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult);
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionUpdateViaDataEntityWithAutomaticConversion()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            UpdateCompleteTableProperties(table);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.Update<CompleteTable>(table);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -216,6 +248,37 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult);
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionUpdateAsyncViaDataEntityWithAutomaticConversion()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            UpdateCompleteTableProperties(table);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.UpdateAsync<CompleteTable>(table);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

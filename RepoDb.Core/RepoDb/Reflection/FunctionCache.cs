@@ -85,7 +85,7 @@ namespace RepoDb
             /// <param name="reader"></param>
             /// <returns></returns>
             private static long GetKey(DbDataReader reader) =>
-                HashCode.Combine(GetReaderFieldsHashCode(reader), typeof(TResult).GetHashCode());
+                HashCode.Combine(GetReaderFieldsHashCode(reader), typeof(TResult).GetHashCode(), GlobalConfiguration.Options.ConversionType);
         }
 
         #endregion
@@ -141,7 +141,7 @@ namespace RepoDb
             /// <param name="reader"></param>
             /// <returns></returns>
             private static long GetKey(DbDataReader reader) =>
-                GetReaderFieldsHashCode(reader);
+                HashCode.Combine(GetReaderFieldsHashCode(reader), GlobalConfiguration.Options.ConversionType);
         }
 
         #endregion
@@ -227,7 +227,7 @@ namespace RepoDb
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields)
             {
-                var key = HashCode.Combine((long)entityType.GetHashCode(), cacheKey.GetHashCode());
+                var key = HashCode.Combine((long)entityType.GetHashCode(), cacheKey.GetHashCode(), GlobalConfiguration.Options.ConversionType);
                 if (inputFields != null)
                 {
                     foreach (var field in inputFields)
@@ -340,7 +340,7 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = HashCode.Combine((long)entityType.GetHashCode(), batchSize.GetHashCode(), cacheKey?.GetHashCode());
+                var key = HashCode.Combine((long)entityType.GetHashCode(), batchSize.GetHashCode(), cacheKey?.GetHashCode(), GlobalConfiguration.Options.ConversionType);
 
                 if (inputFields?.Any() == true)
                 {
@@ -406,7 +406,7 @@ namespace RepoDb
                 int index,
                 IDbSetting dbSetting = null)
             {
-                var key = HashCode.Combine((long)typeof(TEntity).GetHashCode(), field.GetHashCode(), parameterName.GetHashCode(), index.GetHashCode());
+                var key = HashCode.Combine((long)typeof(TEntity).GetHashCode(), field.GetHashCode(), parameterName.GetHashCode(), index.GetHashCode(), GlobalConfiguration.Options.ConversionType);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
                     func = FunctionFactory.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
@@ -450,7 +450,7 @@ namespace RepoDb
             internal static Action<object, object> Get(Type type,
                 Field field)
             {
-                var key = HashCode.Combine(type.GetHashCode(), field.GetHashCode());
+                var key = HashCode.Combine(type.GetHashCode(), field.GetHashCode(), GlobalConfiguration.Options.ConversionType);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
                     if (TypeCache.Get(type).IsDictionaryStringObject())
@@ -509,7 +509,7 @@ namespace RepoDb
                 {
                     return null;
                 }
-                var key = HashCode.Combine(paramType.GetHashCode(), (entityType?.GetHashCode() ?? 0));
+                var key = HashCode.Combine(paramType.GetHashCode(), (entityType?.GetHashCode() ?? 0), GlobalConfiguration.Options.ConversionType);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
                     if (paramType.IsPlainType())

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
@@ -47,6 +48,35 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 Assert.AreEqual(3, result.Count());
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBatchQueryFirstBatchAscendingWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.BatchQuery<CompleteTable>(0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(3, result.Count());
+                    Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                    Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 
@@ -175,6 +205,35 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 Assert.AreEqual(3, result.Count());
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionBatchQueryAsyncFirstBatchAscendingWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.BatchQueryAsync<CompleteTable>(0,
+                        3,
+                        OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(3, result.Count());
+                    Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                    Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

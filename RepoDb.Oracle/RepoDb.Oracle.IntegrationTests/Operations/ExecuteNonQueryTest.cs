@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Linq;
@@ -48,6 +49,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionExecuteNonQueryWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -101,6 +126,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count, result);
             Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteNonQueryAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

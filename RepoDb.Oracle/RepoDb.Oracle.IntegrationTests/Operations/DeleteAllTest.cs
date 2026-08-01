@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Linq;
@@ -39,6 +40,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count(), result);
             Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionDeleteAllWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.DeleteAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -109,6 +134,30 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Assert
             Assert.AreEqual(tables.Count(), result);
             Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionDeleteAllAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.DeleteAllAsync<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

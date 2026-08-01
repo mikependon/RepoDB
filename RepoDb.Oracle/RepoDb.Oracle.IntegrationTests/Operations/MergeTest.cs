@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System;
@@ -63,6 +64,36 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult.First());
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionMergeForNewRowWithAutomaticConversion()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.Merge<CompleteTable>(table);
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -142,6 +173,36 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, queryResult.First());
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionMergeAsyncForNewRowWithAutomaticConversion()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.MergeAsync<CompleteTable>(table);
+
+                // Assert
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

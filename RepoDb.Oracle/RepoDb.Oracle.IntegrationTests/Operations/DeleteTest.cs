@@ -44,6 +44,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionDeleteWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.Delete<CompleteTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionDeleteViaPrimaryKey()
         {
             // Setup
@@ -176,6 +199,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(tables.Count(), result);
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionDeleteAsyncWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = await connection.DeleteAsync<CompleteTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

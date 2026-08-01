@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Linq;
@@ -45,6 +46,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionQueryViaPrimaryKeyWithAutomaticConversion()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]
@@ -170,6 +194,29 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
             // Assert
             Helper.AssertPropertiesEquality(table, result);
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionQueryAsyncViaPrimaryKeyWithAutomaticConversion()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         [TestMethod]

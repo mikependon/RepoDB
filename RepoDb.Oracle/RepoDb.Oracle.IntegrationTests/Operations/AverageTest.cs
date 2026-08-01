@@ -54,6 +54,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionAverageWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionAverageViaExpression()
         {
             // Setup
@@ -183,6 +208,31 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionAverageAsyncWithoutExpressionWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+                try
+                {
+                    // Act
+                    var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
+                        (object)null);
+
+                    // Assert
+                    Assert.AreEqual(tables.Average(e => e.ColumnSmallInt), Convert.ToDouble(result));
+                }
+                finally
+                {
+                    GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using System.Threading.Tasks;
 
@@ -63,6 +64,27 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
         }
 
+        [TestMethod]
+        public void TestOracleConnectionExecuteQueryMultipleThrowsOnMultiStatementTextWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act & Assert: the multi-statement limitation is independent of ConversionType.
+                Assert.Throws<OracleException>(() =>
+                    connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
         #endregion
 
         #region Async
@@ -78,6 +100,27 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             // Act & Assert: async counterpart of the same known Oracle limitation.
             await Assert.ThrowsAsync<OracleException>(() =>
                 connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteQueryMultipleAsyncThrowsOnMultiStatementTextWithAutomaticConversion()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act & Assert: the multi-statement limitation is independent of ConversionType.
+                await Assert.ThrowsAsync<OracleException>(() =>
+                    connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
         }
 
         #endregion

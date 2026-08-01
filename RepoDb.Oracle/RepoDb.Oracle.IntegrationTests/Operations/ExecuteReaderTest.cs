@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Oracle.ManagedDataAccess.Client;
+using RepoDb.Enumerations;
 using RepoDb.Oracle.IntegrationTests.Models;
 using RepoDb.Oracle.IntegrationTests.Setup;
 using RepoDb.Reflection;
@@ -57,6 +58,39 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 Assert.IsNotNull(table);
                 Assert.AreEqual(columnInt, table.ColumnInt);
                 Assert.AreEqual(columnDate, table.ColumnDate);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionExecuteReaderWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                using var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+                while (reader.Read())
+                {
+                    // Act
+                    var id = reader.GetInt32(0);
+                    var columnInt = reader.GetInt32(1);
+                    var columnDate = reader.GetDateTime(2);
+                    var table = tables.FirstOrDefault(e => e.Id == id);
+
+                    // Assert
+                    Assert.IsNotNull(table);
+                    Assert.AreEqual(columnInt, table.ColumnInt);
+                    Assert.AreEqual(columnDate, table.ColumnDate);
+                }
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
             }
         }
 
@@ -127,6 +161,39 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 Assert.IsNotNull(table);
                 Assert.AreEqual(columnInt, table.ColumnInt);
                 Assert.AreEqual(columnDate, table.ColumnDate);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteReaderAsyncWithAutomaticConversion()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+            try
+            {
+                // Act
+                using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+                while (reader.Read())
+                {
+                    // Act
+                    var id = reader.GetInt32(0);
+                    var columnInt = reader.GetInt32(1);
+                    var columnDate = reader.GetDateTime(2);
+                    var table = tables.FirstOrDefault(e => e.Id == id);
+
+                    // Assert
+                    Assert.IsNotNull(table);
+                    Assert.AreEqual(columnInt, table.ColumnInt);
+                    Assert.AreEqual(columnDate, table.ColumnDate);
+                }
+            }
+            finally
+            {
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
             }
         }
 
