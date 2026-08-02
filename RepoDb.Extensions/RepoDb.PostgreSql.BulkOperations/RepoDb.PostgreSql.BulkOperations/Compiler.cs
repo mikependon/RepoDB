@@ -50,7 +50,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
@@ -90,14 +90,14 @@ namespace RepoDb.PostgreSql.BulkOperations
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                BulkImportIdentityBehavior identityBehavior,
+                PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
-                var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                 var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
-                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                    (isPrimaryAnIdentity && identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
                     includePrimary,
@@ -239,7 +239,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
@@ -280,14 +280,14 @@ namespace RepoDb.PostgreSql.BulkOperations
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                BulkImportIdentityBehavior identityBehavior,
+                PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
-                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
-                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                    (isPrimaryAnIdentity && identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
                     includePrimary,

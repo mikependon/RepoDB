@@ -69,7 +69,8 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType,
-            PostgreSqlBulkImportIdentityBehavior identityBehavior)
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            int startIndex = 0)
             where TEntity : class
         {
             var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName,
@@ -81,20 +82,23 @@ namespace RepoDb
                 () => enumerator.MoveNext(),
                 () => enumerator.Current,
                 (entity) => func(importer, entity),
-                identityBehavior);
+                identityBehavior,
+                startIndex);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="importer"></param>
         /// <param name="dictionaries"></param>
         /// <param name="mappings"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="startIndex"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<IDictionary<string, object>> dictionaries,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            PostgreSqlBulkImportIdentityBehavior identityBehavior)
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            int startIndex = 0)
         {
             var enumerator = dictionaries.GetEnumerator();
 
@@ -108,20 +112,23 @@ namespace RepoDb
                         BinaryImportWrite(importer, dictionary[mapping.SourceColumn], mapping.NpgsqlDbType);
                     }
                 },
-                identityBehavior);
+                identityBehavior,
+                startIndex);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="importer"></param>
         /// <param name="rows"></param>
         /// <param name="mappings"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="startIndex"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            PostgreSqlBulkImportIdentityBehavior identityBehavior)
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            int startIndex = 0)
         {
             var enumerator = rows.GetEnumerator();
 
@@ -136,7 +143,8 @@ namespace RepoDb
                         BinaryImportWrite(importer, data, mapping.NpgsqlDbType);
                     }
                 },
-                identityBehavior);
+                identityBehavior,
+                startIndex);
         }
 
         /// <summary>
@@ -173,15 +181,18 @@ namespace RepoDb
         /// <param name="getCurrent"></param>
         /// <param name="write"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="startIndex">The running __RepoDb_OrderColumn index to continue from (carries over across batches so batched
+        /// imports keep a single, globally-ordered sequence instead of each batch restarting at 0).</param>
         /// <returns></returns>
         private static int BinaryImportWrite<TEntity>(NpgsqlBinaryImporter importer,
             Func<bool> moveNext,
             Func<TEntity> getCurrent,
             Action<TEntity> write,
-            PostgreSqlBulkImportIdentityBehavior identityBehavior)
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            int startIndex = 0)
             where TEntity : class
         {
-            var result = 0;
+            var result = startIndex;
 
             while (moveNext())
             {
@@ -310,7 +321,8 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            int startIndex = 0)
             where TEntity : class
         {
             var func = Compiler.GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(tableName,
@@ -323,23 +335,26 @@ namespace RepoDb
                 async () => await Task.FromResult(enumerator.Current),
                 async (entity) => await func(importer, entity, cancellationToken),
                 identityBehavior,
-                cancellationToken);
+                cancellationToken,
+                startIndex);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="importer"></param>
         /// <param name="dictionaries"></param>
         /// <param name="mappings"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="startIndex"></param>
         /// <returns></returns>
         private static async Task<int> BinaryImportExplicitAsync(NpgsqlBinaryImporter importer,
             IEnumerable<IDictionary<string, object>> dictionaries,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            int startIndex = 0)
         {
             var enumerator = dictionaries.GetEnumerator();
 
@@ -355,22 +370,25 @@ namespace RepoDb
                     }
                 },
                 identityBehavior,
-                cancellationToken);
+                cancellationToken,
+                startIndex);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="importer"></param>
         /// <param name="rows"></param>
         /// <param name="mappings"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="startIndex"></param>
         private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            int startIndex = 0)
         {
             var enumerator = rows.GetEnumerator();
 
@@ -386,7 +404,8 @@ namespace RepoDb
                     }
                 },
                 identityBehavior,
-                cancellationToken);
+                cancellationToken,
+                startIndex);
         }
 
         /// <summary>
@@ -428,16 +447,19 @@ namespace RepoDb
         /// <param name="writeAsync"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="startIndex">The running __RepoDb_OrderColumn index to continue from (carries over across batches so batched
+        /// imports keep a single, globally-ordered sequence instead of each batch restarting at 0).</param>
         /// <returns></returns>
         private static async Task<int> BinaryImportWriteAsync<TEntity>(NpgsqlBinaryImporter importer,
             Func<Task<bool>> moveNextAsync,
             Func<Task<TEntity>> getCurrentAsync,
             Func<TEntity, Task> writeAsync,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            int startIndex = 0)
             where TEntity : class
         {
-            var result = 0;
+            var result = startIndex;
 
             while (await moveNextAsync())
             {

@@ -33,7 +33,7 @@ namespace RepoDb
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="setIdentities"></param>
         /// <param name="qualifiers"></param>
-        /// <param name="isBinaryBulkInsert"></param>
+        /// <param name="isBulkInsert"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
@@ -50,7 +50,7 @@ namespace RepoDb
             Func<string> getMergeToPseudoCommandText,
             Action<IEnumerable<IdentityResult>> setIdentities,
             IEnumerable<Field> qualifiers,
-            bool isBinaryBulkInsert,
+            bool isBulkInsert,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             PostgreSqlBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
@@ -58,7 +58,7 @@ namespace RepoDb
         {
             string pseudoTableName = null;
             var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
-                isBinaryBulkInsert == false;
+                isBulkInsert == false;
 
             try
             {
@@ -91,7 +91,7 @@ namespace RepoDb
                 var result = binaryImport?.Invoke(pseudoTableName ?? tableName);
 
                 // Create Index
-                if (isBinaryBulkInsert == false && withPseudoTable)
+                if (isBulkInsert == false && withPseudoTable)
                 {
                     qualifiers = qualifiers?.Any() == true ? qualifiers :
                         dbFields?.GetPrimary().AsField().AsEnumerable();
@@ -149,7 +149,7 @@ namespace RepoDb
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="setIdentities"></param>
         /// <param name="qualifiers"></param>
-        /// <param name="isBinaryBulkInsert"></param>
+        /// <param name="isBulkInsert"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
@@ -167,7 +167,7 @@ namespace RepoDb
             Func<string> getMergeToPseudoCommandText,
             Action<IEnumerable<IdentityResult>> setIdentities,
             IEnumerable<Field> qualifiers,
-            bool isBinaryBulkInsert,
+            bool isBulkInsert,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             PostgreSqlBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
@@ -176,7 +176,7 @@ namespace RepoDb
         {
             string pseudoTableName = null;
             var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
-                isBinaryBulkInsert == false;
+                isBulkInsert == false;
 
             try
             {
@@ -211,7 +211,7 @@ namespace RepoDb
                 var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
 
                 // Create Index
-                if (isBinaryBulkInsert == false && withPseudoTable)
+                if (isBulkInsert == false && withPseudoTable)
                 {
                     qualifiers = qualifiers?.Any() == true ? qualifiers :
                         dbFields?.GetPrimary().AsField().AsEnumerable();
@@ -348,11 +348,7 @@ namespace RepoDb
             // Ensure transaction
             if (hasTransaction == false)
             {
-#if NET5_0
                 transaction = await connection.BeginTransactionAsync(cancellationToken);
-#else
-                transaction = connection.BeginTransaction();
-#endif
             }
 
             try

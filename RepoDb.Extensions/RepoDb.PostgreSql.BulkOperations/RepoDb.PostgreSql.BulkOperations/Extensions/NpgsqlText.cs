@@ -130,7 +130,7 @@ namespace RepoDb
             Field primaryField,
             Field identityField,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
-            BulkImportMergeCommandType mergeCommandType,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("BinaryBulkMerge".GetHashCode(),
@@ -151,7 +151,7 @@ namespace RepoDb
             }
 
             // Compose
-            commandText = mergeCommandType == BulkImportMergeCommandType.OnConflictDoUpdate ?
+            commandText = mergeCommandType == PostgreSqlBulkImportMergeCommandType.OnConflictDoUpdate ?
                 GetMergeCommandTextViaOnConflictDoUpdate(sourceTableName,
                     destinationTableName,
                     fields,

@@ -105,7 +105,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -203,7 +203,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -295,7 +295,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -406,7 +406,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -508,7 +508,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -604,7 +604,7 @@ namespace RepoDb
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
-                        (BulkImportMergeCommandType)mergeCommandType,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities

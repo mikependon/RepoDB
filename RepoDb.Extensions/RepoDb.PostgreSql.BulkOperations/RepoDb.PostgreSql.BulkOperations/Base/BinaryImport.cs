@@ -142,6 +142,8 @@ namespace RepoDb
             // Execution
             int execute()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var batches = entities.Split(batchSize.GetValueOrDefault());
 
@@ -156,19 +158,21 @@ namespace RepoDb
                     {
                         if (isDictionary)
                         {
-                            result += BinaryImport(importer,
+                            result = BinaryImport(importer,
                                 batch?.Select(entity => entity as IDictionary<string, object>),
                                 mappings,
-                                identityBehavior);
+                                identityBehavior,
+                                result);
                         }
                         else
                         {
-                            result += BinaryImport<TEntity>(importer,
+                            result = BinaryImport<TEntity>(importer,
                                 tableName,
                                 batch,
                                 mappings,
                                 entityType,
-                                identityBehavior);
+                                identityBehavior,
+                                result);
                         }
                     }
                 }
@@ -296,6 +300,8 @@ namespace RepoDb
             // Execution
             int execute()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var rows = GetRows(table, rowState).ToList();
                 var batches = rows.Split(batchSize.GetValueOrDefault());
@@ -309,10 +315,11 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting))
                     {
-                        result += BinaryImport(importer,
+                        result = BinaryImport(importer,
                             batch,
                             mappings,
-                            identityBehavior);
+                            identityBehavior,
+                            result);
                     }
                 }
 
@@ -555,6 +562,8 @@ namespace RepoDb
             // Execution
             async Task<int> executeAsync()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var batches = entities.Split(batchSize.GetValueOrDefault());
 
@@ -570,21 +579,23 @@ namespace RepoDb
                     {
                         if (isDictionary)
                         {
-                            result += await BinaryImportExplicitAsync(importer,
+                            result = await BinaryImportExplicitAsync(importer,
                                 batch?.Select(entity => entity as IDictionary<string, object>),
                                 mappings,
                                 identityBehavior,
-                                cancellationToken);
+                                cancellationToken,
+                                result);
                         }
                         else
                         {
-                            result += await BinaryImportAsync<TEntity>(importer,
+                            result = await BinaryImportAsync<TEntity>(importer,
                                 tableName,
                                 batch,
                                 mappings,
                                 entityType,
                                 identityBehavior,
-                                cancellationToken);
+                                cancellationToken,
+                                result);
                         }
                     }
                 }
@@ -720,6 +731,8 @@ namespace RepoDb
             // Execution
             async Task<int> executeAsync()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var rows = GetRows(table, rowState).ToList();
                 var batches = rows.Split(batchSize.GetValueOrDefault());
@@ -734,11 +747,12 @@ namespace RepoDb
                         dbSetting,
                         cancellationToken))
                     {
-                        result += await BinaryImportAsync(importer,
+                        result = await BinaryImportAsync(importer,
                             batch,
                             mappings,
                             identityBehavior,
-                            cancellationToken);
+                            cancellationToken,
+                            result);
                     }
                 }
 

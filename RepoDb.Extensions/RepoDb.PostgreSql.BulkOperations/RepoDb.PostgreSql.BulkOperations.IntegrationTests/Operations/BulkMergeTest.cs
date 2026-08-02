@@ -45,7 +45,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -67,7 +68,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             var tableName = "public.BulkOperationIdentityTable";
             
             // Act
-            var result = connection.BulkMerge(tableName, entities);
+            var result = connection.BulkMerge(tableName, entities,
+            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
             // Assert
             Assert.AreEqual(entities.Count, result);
@@ -91,7 +93,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3);
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -118,7 +121,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -224,7 +228,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationMappedIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -364,7 +369,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings);
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -699,7 +705,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -723,7 +730,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Prepare (Elimination)
                 entities = entities
@@ -733,7 +741,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMerge<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -761,7 +770,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -786,7 +796,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3);
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -813,7 +824,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -874,7 +886,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings);
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1132,7 +1145,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1156,7 +1170,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Prepare (Elimination)
                 entities = entities
@@ -1166,7 +1181,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1194,7 +1210,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1219,7 +1236,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3);
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1246,7 +1264,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1360,7 +1379,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings);
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1538,7 +1558,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1696,7 +1717,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1720,7 +1742,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Prepare (Elimination)
                 entities = entities
@@ -1730,7 +1753,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1759,7 +1783,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table);
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1785,7 +1810,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     table: table,
-                    batchSize: 3);
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1813,7 +1839,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     table: table,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1937,7 +1964,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
                     table: table,
-                    mappings: mappings);
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2295,7 +2323,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table: table);
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2320,7 +2349,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table: table);
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Prepare (Elimination)
                 entities = entities
@@ -2331,7 +2361,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table: table);
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2361,7 +2392,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMerge(connection,
                         tableName,
-                        reader);
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2391,7 +2423,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                         reader,
                         qualifiers: Field.From(
                             nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                            nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+                            nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2458,7 +2491,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     var result = NpgsqlConnectionExtension.BulkMerge(connection,
                         tableName,
                         reader: reader,
-                        mappings: mappings);
+                        mappings: mappings,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2672,7 +2706,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMerge(connection,
                         tableName,
-                        reader);
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2700,7 +2735,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMerge(connection,
                         tableName,
-                        reader);
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2717,7 +2753,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMerge(connection,
                         tableName,
-                        reader);
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -2750,7 +2787,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2772,7 +2810,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             var tableName = "public.BulkOperationIdentityTable";
             
             // Act
-            var result = await connection.BulkMergeAsync(tableName, entities);
+            var result = await connection.BulkMergeAsync(tableName, entities,
+            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
             // Assert
             Assert.AreEqual(entities.Count, result);
@@ -2796,7 +2835,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3).Result;
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2823,7 +2863,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2929,7 +2970,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3069,7 +3111,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationUnmatchedIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings).Result;
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3404,7 +3447,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3428,7 +3472,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Prepare (Elimination)
                 entities = entities
@@ -3438,7 +3483,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMergeAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3466,7 +3512,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3491,7 +3538,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3).Result;
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3518,7 +3566,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3579,7 +3628,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings).Result;
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3837,7 +3887,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3861,7 +3912,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Prepare (Elimination)
                 entities = entities
@@ -3871,7 +3923,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3899,7 +3952,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3924,7 +3978,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 3).Result;
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -3951,7 +4006,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     entities: entities,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4065,7 +4121,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     entities: entities,
-                    mappings: mappings).Result;
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4243,7 +4300,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4401,7 +4459,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4425,7 +4484,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Prepare (Elimination)
                 entities = entities
@@ -4435,7 +4495,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4464,7 +4525,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4490,7 +4552,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     table: table,
-                    batchSize: 3).Result;
+                    batchSize: 3,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4518,7 +4581,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     table: table,
                     qualifiers: Field.From(
                         nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4642,7 +4706,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
                     table: table,
-                    mappings: mappings).Result;
+                    mappings: mappings,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -5000,7 +5065,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table: table).Result;
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -5025,7 +5091,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table: table).Result;
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Prepare (Elimination)
                 entities = entities
@@ -5036,7 +5103,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table: table).Result;
+                    table: table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -5066,7 +5134,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                         tableName,
-                        reader).Result;
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -5096,7 +5165,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                         reader,
                         qualifiers: Field.From(
                             nameof(BulkOperationLightIdentityTable.ColumnBigInt),
-                            nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+                            nameof(BulkOperationLightIdentityTable.ColumnInteger)),
+                            identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -5163,7 +5233,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                         tableName,
                         reader: reader,
-                        mappings: mappings).Result;
+                        mappings: mappings,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -5377,7 +5448,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                         tableName,
-                        reader).Result;
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -5405,7 +5477,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                         tableName,
-                        reader).Result;
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -5422,7 +5495,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                         tableName,
-                        reader).Result;
+                        reader,
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
