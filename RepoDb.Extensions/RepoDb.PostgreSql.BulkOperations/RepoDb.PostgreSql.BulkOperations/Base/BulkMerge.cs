@@ -56,6 +56,7 @@ namespace RepoDb
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -91,7 +92,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -103,7 +104,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -113,8 +114,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -158,6 +159,7 @@ namespace RepoDb
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -188,7 +190,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -200,7 +202,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -210,8 +212,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                identityBehavior: (BulkImportIdentityBehavior)identityBehavior,
-                pseudoTableType: (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
                 dbSetting,
                 transaction: transaction);
         }
@@ -251,6 +253,7 @@ namespace RepoDb
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
@@ -279,7 +282,7 @@ namespace RepoDb
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -291,7 +294,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -300,8 +303,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction: transaction);
         }
@@ -353,6 +356,7 @@ namespace RepoDb
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -388,7 +392,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -401,7 +405,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -411,8 +415,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);
@@ -459,6 +463,7 @@ namespace RepoDb
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -489,7 +494,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -502,7 +507,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -512,8 +517,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                identityBehavior: (BulkImportIdentityBehavior)identityBehavior,
-                pseudoTableType: (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
                 dbSetting,
                 transaction: transaction,
                 cancellationToken);
@@ -556,6 +561,7 @@ namespace RepoDb
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
@@ -584,7 +590,7 @@ namespace RepoDb
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -597,7 +603,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         (BulkImportMergeCommandType)mergeCommandType,
                         dbSetting),
 
@@ -606,8 +612,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                identityBehavior: (BulkImportIdentityBehavior)identityBehavior,
-                pseudoTableType: (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
                 dbSetting,
                 transaction: transaction,
                 cancellationToken);

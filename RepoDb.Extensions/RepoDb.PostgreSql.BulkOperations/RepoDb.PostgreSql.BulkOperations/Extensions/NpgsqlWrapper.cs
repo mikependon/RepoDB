@@ -24,6 +24,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbFields"></param>
         /// <param name="getPseudoTableName"></param>
@@ -40,6 +41,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int PseudoBasedBinaryImport(this NpgsqlConnection connection,
             string tableName,
+            int rowCount,
             int? bulkCopyTimeout,
             DbFieldCollection dbFields,
             Func<string> getPseudoTableName,
@@ -49,13 +51,13 @@ namespace RepoDb
             Action<IEnumerable<IdentityResult>> setIdentities,
             IEnumerable<Field> qualifiers,
             bool isBinaryBulkInsert,
-            BulkImportIdentityBehavior identityBehavior,
-            BulkImportPseudoTableType pseudoTableType,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
             NpgsqlTransaction transaction)
         {
             string pseudoTableName = null;
-            var withPseudoTable = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ||
+            var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
                 isBinaryBulkInsert == false;
 
             try
@@ -76,6 +78,7 @@ namespace RepoDb
                     CreatePseudoTable(connection,
                         tableName,
                         pseudoTableName,
+                        rowCount,
                         mappings,
                         bulkCopyTimeout,
                         identityBehavior,
@@ -109,7 +112,7 @@ namespace RepoDb
                         bulkCopyTimeout,
                         transaction)?.AsList();
 
-                    if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
                     {
                         setIdentities?.Invoke(identityResults);
                     }
@@ -137,6 +140,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbFields"></param>
         /// <param name="getPseudoTableName"></param>
@@ -154,6 +158,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> PseudoBasedBinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
+            int rowCount,
             int? bulkCopyTimeout,
             DbFieldCollection dbFields,
             Func<string> getPseudoTableName,
@@ -163,14 +168,14 @@ namespace RepoDb
             Action<IEnumerable<IdentityResult>> setIdentities,
             IEnumerable<Field> qualifiers,
             bool isBinaryBulkInsert,
-            BulkImportIdentityBehavior identityBehavior,
-            BulkImportPseudoTableType pseudoTableType,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
             NpgsqlTransaction transaction,
             CancellationToken cancellationToken = default)
         {
             string pseudoTableName = null;
-            var withPseudoTable = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ||
+            var withPseudoTable = identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ||
                 isBinaryBulkInsert == false;
 
             try
@@ -192,6 +197,7 @@ namespace RepoDb
                     await CreatePseudoTableAsync(connection,
                         tableName,
                         pseudoTableName,
+                        rowCount,
                         mappings,
                         bulkCopyTimeout,
                         identityBehavior,
@@ -227,7 +233,7 @@ namespace RepoDb
                         bulkCopyTimeout,
                         transaction))?.AsList();
 
-                    if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
                     {
                         setIdentities?.Invoke(identityResults);
                     }

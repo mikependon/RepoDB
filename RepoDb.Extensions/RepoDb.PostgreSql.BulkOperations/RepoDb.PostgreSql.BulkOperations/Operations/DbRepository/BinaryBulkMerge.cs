@@ -66,9 +66,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -131,9 +131,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -197,9 +197,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -261,9 +261,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -323,9 +323,9 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -396,9 +396,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -464,9 +464,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -533,9 +533,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -600,9 +600,9 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -665,9 +665,9 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    identityBehavior: (PostgreSqlBulkImportIdentityBehavior)identityBehavior,
+                    identityBehavior: identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ? PostgreSqlBulkImportIdentityBehavior.ReturnIdentity : PostgreSqlBulkImportIdentityBehavior.KeepIdentity,
                     mergeCommandType: (PostgreSqlBulkImportMergeCommandType)mergeCommandType,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

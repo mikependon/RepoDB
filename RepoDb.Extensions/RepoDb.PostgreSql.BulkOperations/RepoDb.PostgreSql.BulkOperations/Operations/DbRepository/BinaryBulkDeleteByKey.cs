@@ -49,7 +49,7 @@ namespace RepoDb
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -107,7 +107,7 @@ namespace RepoDb
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

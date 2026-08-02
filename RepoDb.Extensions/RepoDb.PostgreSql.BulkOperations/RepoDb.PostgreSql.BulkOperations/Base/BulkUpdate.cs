@@ -30,7 +30,6 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -41,7 +40,6 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
@@ -51,10 +49,11 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -90,7 +89,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -102,7 +101,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -111,8 +110,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -132,7 +131,6 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -144,17 +142,17 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -185,7 +183,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -197,7 +195,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -206,8 +204,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -225,7 +223,6 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -235,17 +232,17 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
@@ -274,7 +271,7 @@ namespace RepoDb
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -286,7 +283,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -294,8 +291,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -319,7 +316,6 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -331,7 +327,6 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -342,10 +337,11 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -381,7 +377,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -394,7 +390,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -403,8 +399,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);
@@ -425,7 +421,6 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -438,7 +433,6 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -446,10 +440,11 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -480,7 +475,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -493,7 +488,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -502,8 +497,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);
@@ -522,7 +517,6 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -533,7 +527,6 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -541,10 +534,11 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? PostgreSqlBulkImportIdentityBehavior.KeepIdentity : PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
@@ -573,7 +567,7 @@ namespace RepoDb
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -586,7 +580,7 @@ namespace RepoDb
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -594,8 +588,8 @@ namespace RepoDb
 
                 qualifiers,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);

@@ -1,4 +1,4 @@
-﻿namespace RepoDb.Oracle.BulkOperations
+﻿namespace RepoDb.PostgreSql.BulkOperations
 {
     /// <summary>
     /// Shared constants used across the PostgreSql bulk operations.

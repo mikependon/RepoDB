@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using RepoDb.Enumerations.PostgreSql;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
@@ -92,7 +93,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -141,7 +142,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -215,7 +216,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     tableName,
                     entities: entities,
                     mappings: mappings,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -240,14 +241,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act (Trigger)
                 Assert.Throws<PostgresException>(() =>
                     NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true));
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity));
             }
         }
 
@@ -317,7 +318,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -416,14 +417,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act (Trigger)
                 Assert.Throws<PostgresException>(() =>
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true));
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity));
             }
         }
 
@@ -493,7 +494,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -566,7 +567,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     tableName,
                     entities: entities,
                     mappings: mappings,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -591,14 +592,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act (Trigger)
                 Assert.Throws<PostgresException>(() =>
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true));
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity));
             }
         }
 
@@ -673,7 +674,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     table.TableName,
                     table: table,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Assert
                 Assert.AreEqual(table.Rows.Count, result);
@@ -773,14 +774,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     table.TableName,
                     table: table,
-                    keepIdentity: true);
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                 // Act (Trigger)
                 Assert.Throws<PostgresException>(() =>
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         table.TableName,
                         table: table,
-                        keepIdentity: true));
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity));
             }
         }
 
@@ -830,7 +831,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     var result = NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true);
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -911,7 +912,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                         tableName,
                         reader: reader,
                         mappings: mappings,
-                        keepIdentity: true);
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -939,7 +940,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true);
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 }
 
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
@@ -949,7 +950,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                         NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true));
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity));
                 }
             }
         }
@@ -1024,7 +1025,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1073,7 +1074,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationMappedIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1146,7 +1147,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     tableName,
                     entities: entities,
                     mappings: mappings,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1171,14 +1172,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Wait();
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait();
 
                 // Act (Trigger)
                 Assert.Throws<AggregateException>(() =>
                     NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true).Wait());
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait());
             }
         }
 
@@ -1248,7 +1249,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1323,7 +1324,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     tableName,
                     entities: entities,
                     mappings: mappings,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1348,14 +1349,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Wait();
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait();
 
                 // Act (Trigger)
                 Assert.Throws<AggregateException>(() =>
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true).Wait());
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait());
             }
         }
 
@@ -1425,7 +1426,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1498,7 +1499,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     tableName,
                     entities: entities,
                     mappings: mappings,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1523,14 +1524,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    keepIdentity: true).Wait();
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait();
 
                 // Act (Trigger)
                 Assert.Throws<AggregateException>(() =>
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
                         entities: entities,
-                        keepIdentity: true).Wait());
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait());
             }
         }
 
@@ -1605,7 +1606,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     table.TableName,
                     table: table,
-                    keepIdentity: true).Result;
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(table.Rows.Count, result);
@@ -1705,14 +1706,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     table.TableName,
                     table: table,
-                    keepIdentity: true).Wait();
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait();
 
                 // Act (Trigger)
                 Assert.Throws<AggregateException>(() =>
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         table.TableName,
                         table: table,
-                        keepIdentity: true).Wait());
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait());
             }
         }
 
@@ -1762,7 +1763,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true).Result;
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -1845,7 +1846,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                         tableName,
                         reader: reader,
                         mappings: mappings,
-                        keepIdentity: true).Result;
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -1873,7 +1874,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
                         reader: reader,
-                        keepIdentity: true).Wait();
+                        identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait();
                 }
 
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
@@ -1883,7 +1884,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                         NpgsqlConnectionExtension.BinaryImportAsync(connection,
                             tableName,
                             reader: reader,
-                            keepIdentity: true).Wait());
+                            identityBehavior: PostgreSqlBulkImportIdentityBehavior.KeepIdentity).Wait());
                 }
             }
         }

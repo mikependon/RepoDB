@@ -133,8 +133,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDelete<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false);
+                    entities: entities);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -421,8 +420,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false);
+                    entities: entities);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -650,8 +648,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false);
+                    entities: entities);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -851,8 +848,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    table: table,
-                    keepIdentity: false);
+                    table: table);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1065,8 +1061,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkDelete(connection,
                         tableName,
-                        reader,
-                        keepIdentity: false);
+                        reader);
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -1344,8 +1339,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false).Result;
+                    entities: entities).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1632,8 +1626,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false).Result;
+                    entities: entities).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1861,8 +1854,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    entities: entities,
-                    keepIdentity: false).Result;
+                    entities: entities).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2062,8 +2054,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 // Act
                 result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    table: table,
-                    keepIdentity: false).Result;
+                    table: table).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -2276,8 +2267,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     // Act
                     var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                         tableName,
-                        reader,
-                        keepIdentity: false).Result;
+                        reader).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);

@@ -62,8 +62,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -122,8 +121,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -183,8 +181,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -242,8 +239,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -299,8 +295,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -367,8 +362,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -430,8 +424,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -494,8 +487,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -556,8 +548,7 @@ namespace RepoDb
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -616,8 +607,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: (PostgreSqlBulkImportPseudoTableType)pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-#pragma warning disable CS0618 // Bridges the new PostgreSql-prefixed enums to the legacy internal Extensions APIs, which still use the deprecated enums.
-
 namespace RepoDb
 {
     public static partial class NpgsqlConnectionExtension
@@ -37,7 +35,7 @@ namespace RepoDb
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
-            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryKey = dbFields.GetPrimary();
@@ -46,6 +44,7 @@ namespace RepoDb
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                primaryKeys?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -68,7 +67,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction),
 
@@ -84,8 +83,8 @@ namespace RepoDb
 
                 null,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction);
         }
@@ -120,7 +119,7 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryKey = dbFields.GetPrimary();
@@ -129,6 +128,7 @@ namespace RepoDb
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                primaryKeys?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -151,7 +151,7 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         batchSize,
-                        (BulkImportIdentityBehavior)identityBehavior,
+                        identityBehavior,
                         dbSetting,
                         transaction,
                         cancellationToken),
@@ -168,8 +168,8 @@ namespace RepoDb
 
                 null,
                 false,
-                (BulkImportIdentityBehavior)identityBehavior,
-                (BulkImportPseudoTableType)pseudoTableType,
+                identityBehavior,
+                pseudoTableType,
                 dbSetting,
                 transaction,
                 cancellationToken);
@@ -179,5 +179,4 @@ namespace RepoDb
 
         #endregion
     }
-#pragma warning restore CS0618
 }
