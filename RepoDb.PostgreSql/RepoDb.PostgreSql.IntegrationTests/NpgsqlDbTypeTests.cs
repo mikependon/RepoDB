@@ -9,6 +9,7 @@ using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests
 {
@@ -116,6 +117,45 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTableForJson>();
+
+                // Assert
+                entities.ForEach(e =>
+                    Helper.AssertPropertiesEquality(e, queryResult.First(item => item.Id == e.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForJson()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = GetCompleteTableForJsons(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForJson>(entity.Id)).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForJsons()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = GetCompleteTableForJsons(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(entities);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<CompleteTableForJson>();
 
                 // Assert
                 entities.ForEach(e =>
@@ -260,6 +300,145 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
                     e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTime()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(entity.Id)).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTimes()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = GetCompleteTableForDateTimes(10).AsList();
+
+                // Act
+                await connection.InsertAllAsync(entities);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<CompleteTableForDateTime>();
+
+                // Assert
+                entities.ForEach(e =>
+                    Helper.AssertPropertiesEquality(e, queryResult.First(item => item.Id == e.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTimeAsWhereExpression()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Setup
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTimeAsWhereExpressionFromVariable()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Setup
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTimeAsWhereExpressionWithAutomaticConversion()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                GlobalConfiguration
+                    .Setup(new() { ConversionType = ConversionType.Automatic });
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Setup
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncForDateTimeAsWhereExpressionFromVariableWithAutomaticConversion()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                GlobalConfiguration
+                    .Setup(new() { ConversionType = ConversionType.Automatic });
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Setup
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
+
+                // Act
+                var queryResult = (await connection.QueryAsync<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);

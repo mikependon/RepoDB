@@ -7,6 +7,7 @@ using RepoDb.Oracle.PropertyHandlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Oracle.IntegrationTests
 {
@@ -280,6 +281,164 @@ namespace RepoDb.Oracle.IntegrationTests
 
             // Query
             var queryResult = connection.QueryAll<PersonWithTextAsInteger>().AsList();
+
+            // Assert
+            people.ForEach(p =>
+            {
+                var item = queryResult.First(e => e.Id == p.Id);
+                Assert.AreEqual(p.ColumnVarchar, item.ColumnVarchar);
+            });
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsNull()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var person = GetPersonWithText(1).First();
+            person.ColumnVarchar = null;
+
+            // Act
+            var id = await connection.InsertAsync(person);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<PersonWithText>(id)).First();
+
+            // Assert
+            Assert.IsNull(queryResult.ColumnVarchar);
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsText()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var person = GetPersonWithText(1).First();
+
+            // Act
+            var id = await connection.InsertAsync(person);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<PersonWithText>(id)).First();
+
+            // Assert
+            Assert.AreEqual(person.ColumnVarchar, queryResult.ColumnVarchar);
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextByBatch()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var people = GetPersonWithText(10).AsList();
+
+            // Act
+            await connection.InsertAllAsync(people);
+
+            // Query
+            var queryResult = (await connection.QueryAllAsync<PersonWithText>()).AsList();
+
+            // Assert
+            people.ForEach(p =>
+            {
+                var item = queryResult.First(e => e.Id == p.Id);
+                Assert.AreEqual(p.ColumnVarchar, item.ColumnVarchar);
+            });
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsIntegerAsNull()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var person = GetPersonWithInteger(1).First();
+            person.ColumnNumber = null;
+
+            // Act
+            var id = await connection.InsertAsync(person);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id)).First();
+
+            // Assert
+            Assert.IsNull(queryResult.ColumnNumber);
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsInteger()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var person = GetPersonWithInteger(1).First();
+
+            // Act
+            var id = await connection.InsertAsync(person);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<PersonWithInteger>(id)).First();
+
+            // Assert
+            Assert.AreEqual(person.ColumnNumber, queryResult.ColumnNumber);
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsIntegerAsBatch()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var people = GetPersonWithInteger(10).AsList();
+
+            // Act
+            await connection.InsertAllAsync(people);
+
+            // Query
+            var queryResult = (await connection.QueryAllAsync<PersonWithInteger>()).AsList();
+
+            // Assert
+            people.ForEach(p =>
+            {
+                var item = queryResult.First(e => e.Id == p.Id);
+                Assert.AreEqual(p.ColumnNumber, item.ColumnNumber);
+            });
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsInt()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var person = GetPersonWithTextAsInteger(1).First();
+
+            // Act
+            var id = await connection.InsertAsync(person);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<PersonWithTextAsInteger>(id)).First();
+
+            // Assert
+            Assert.AreEqual(person.ColumnVarchar, queryResult.ColumnVarchar);
+        }
+
+        [TestMethod]
+        public async Task TestInsertAndQueryAsyncEnumAsTextAsIntAsBatch()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Setup
+            var people = GetPersonWithTextAsInteger(10).AsList();
+
+            // Act
+            await connection.InsertAllAsync(people);
+
+            // Query
+            var queryResult = (await connection.QueryAllAsync<PersonWithTextAsInteger>()).AsList();
 
             // Assert
             people.ForEach(p =>

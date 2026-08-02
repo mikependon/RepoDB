@@ -574,6 +574,20 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 connection.Delete<CompleteTable>(tables.First().Id, hints: "NOLOCK"));
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionDeleteAsyncWithHintsThrows()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(1);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act/Assert: AreTableHintsSupported = false for Oracle - BaseStatementBuilder.GuardHints
+            // throws for any non-null/non-whitespace hints, regardless of operation.
+            await Assert.ThrowsAsync<System.NotSupportedException>(() =>
+                connection.DeleteAsync<CompleteTable>(tables.First().Id, hints: "NOLOCK"));
+        }
+
         #endregion
     }
 }

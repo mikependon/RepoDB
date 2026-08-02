@@ -186,6 +186,18 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             Assert.AreEqual(5, result.Count());
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteQueryAsyncWithNoResult()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
+
+            // Assert
+            Assert.AreEqual(0, result.Count());
+        }
+
         #endregion
     }
 }

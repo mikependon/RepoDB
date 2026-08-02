@@ -169,6 +169,22 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             Assert.AreEqual(tables.Count - 1, connection.CountAll<CompleteTable>());
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionExecuteNonQueryAsyncUpdate()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            var result = await connection.ExecuteNonQueryAsync("UPDATE \"CompleteTable\" SET \"ColumnVarchar\" = :ColumnVarchar WHERE \"Id\" = :Id",
+                new { ColumnVarchar = "Updated", tables.Last().Id });
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
         #endregion
     }
 }

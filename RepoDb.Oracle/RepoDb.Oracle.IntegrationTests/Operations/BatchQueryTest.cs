@@ -301,6 +301,27 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestOracleConnectionBatchQueryAsyncViaExpression()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+            var last5Ids = tables.Skip(5).Select(t => t.Id).ToArray();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.BatchQueryAsync<CompleteTable>(0,
+                    2,
+                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    e => last5Ids.Contains(e.Id));
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item => Assert.IsTrue(last5Ids.Contains(item.Id)));
+            }
+        }
+
+        [TestMethod]
         public async Task TestOracleConnectionBatchQueryAsyncWithHintsThrows()
         {
             // Setup

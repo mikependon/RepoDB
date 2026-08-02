@@ -255,6 +255,23 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestOracleConnectionExistsAsyncViaExpressionNoMatch()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+            var missingId = tables.Max(t => t.Id) + 1000;
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.ExistsAsync<CompleteTable>(e => e.Id == missingId);
+
+                // Assert
+                Assert.IsFalse(result);
+            }
+        }
+
+        [TestMethod]
         public async Task TestOracleConnectionExistsAsyncViaDynamic()
         {
             // Setup
@@ -326,6 +343,21 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionExistsAsyncWithHintsThrows()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
+                // "hints" argument must throw, rather than silently being ignored.
+                await Assert.ThrowsAsync<NotSupportedException>(() =>
+                    connection.ExistsAsync<CompleteTable>((object)null, hints: "NOLOCK"));
             }
         }
 

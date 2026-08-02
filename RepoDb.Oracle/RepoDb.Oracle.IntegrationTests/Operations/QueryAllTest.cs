@@ -156,6 +156,19 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionQueryAllAsyncWithHintsThrowsNotSupportedException()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act/Assert: OracleDbSetting.AreTableHintsSupported is false - any non-null/non-whitespace
+            // "hints" argument must throw rather than silently being ignored.
+            await Assert.ThrowsAsync<System.NotSupportedException>(() => connection.QueryAllAsync<CompleteTable>(hints: "NOLOCK"));
+        }
+
         #endregion
     }
 }
