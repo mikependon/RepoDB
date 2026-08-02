@@ -749,7 +749,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2) - 10, false);
+                Assert.AreEqual(10, queryResult.Count());
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
         }
@@ -1761,7 +1762,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 var queryResult = connection.QueryAll(tableName).ToList();
-                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2) - 10, false);
+                Assert.AreEqual(10, queryResult.Count());
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
         }
@@ -3491,7 +3493,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2) - 10, false);
+                Assert.AreEqual(10, queryResult.Count());
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
         }
@@ -4503,7 +4506,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 var queryResult = connection.QueryAll(tableName).ToList();
-                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2) - 10, false);
+                Assert.AreEqual(10, queryResult.Count());
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
         }
