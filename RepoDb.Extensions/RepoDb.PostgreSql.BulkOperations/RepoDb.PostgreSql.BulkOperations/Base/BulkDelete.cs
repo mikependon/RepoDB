@@ -212,7 +212,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkDeleteBase<DbDataReader>
+        #region BulkDeleteBase<IDataReader>
 
         /// <summary>
         /// 
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int BulkDeleteBase(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -506,7 +506,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkDeleteBaseAsync<DbDataReader>
+        #region BulkDeleteBaseAsync<IDataReader>
 
         /// <summary>
         /// 
@@ -523,7 +523,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,

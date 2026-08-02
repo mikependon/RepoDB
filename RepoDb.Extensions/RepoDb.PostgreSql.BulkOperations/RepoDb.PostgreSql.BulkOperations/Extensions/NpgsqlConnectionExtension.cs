@@ -147,7 +147,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="identityBehavior"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior)
         {
@@ -398,13 +398,13 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="cancellationToken"></param>
         private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default)
         {
             return await BinaryImportWriteAsync(importer,
-                async () => await reader.ReadAsync(cancellationToken),
+                async () => await (reader is DbDataReader r ? r.ReadAsync(cancellationToken) : Task.FromResult(reader.Read())),
                 async () => await Task.FromResult(reader),
                 async (current) =>
                 {

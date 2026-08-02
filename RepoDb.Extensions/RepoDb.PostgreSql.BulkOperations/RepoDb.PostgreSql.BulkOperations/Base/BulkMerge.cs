@@ -220,7 +220,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMergeBase<DbDataReader>
+        #region BulkMergeBase<IDataReader>
 
         /// <summary>
         /// 
@@ -238,7 +238,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int BulkMergeBase(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -526,7 +526,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMergeBaseAsync<DbDataReader>
+        #region BulkMergeBaseAsync<IDataReader>
 
         /// <summary>
         /// 
@@ -545,7 +545,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BulkMergeBaseAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,

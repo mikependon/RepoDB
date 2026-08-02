@@ -210,7 +210,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertBase<DbDataReader>
+        #region BulkInsertBase<IDataReader>
 
         /// <summary>
         /// 
@@ -226,7 +226,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int BulkInsertBase(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
@@ -505,7 +505,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertBaseAsync<DbDataReader>
+        #region BulkInsertBaseAsync<IDataReader>
 
         /// <summary>
         /// 
@@ -522,7 +522,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,

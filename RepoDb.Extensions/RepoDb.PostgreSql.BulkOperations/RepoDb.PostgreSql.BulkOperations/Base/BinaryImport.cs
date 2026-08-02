@@ -328,20 +328,20 @@ namespace RepoDb
         #region BinaryImport<DataReader>
 
         /// <summary>
-        /// Inserts the rows of the <see cref="DbDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// Inserts the rows of the <see cref="IDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DbDataReader"/> will be handled during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="IDataReader"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
@@ -371,7 +371,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
@@ -759,16 +759,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DbDataReader"/> will be handled during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="IDataReader"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
@@ -801,7 +801,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,

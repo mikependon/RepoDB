@@ -249,7 +249,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbDataReader reader,
+        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDataReader reader,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,

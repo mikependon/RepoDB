@@ -244,15 +244,15 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkDelete<DbDataReader>
+        #region BulkDelete<IDataReader>
 
         /// <summary>
-        /// Delete the existing rows via <see cref="DbDataReader"/> by bulk. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via <see cref="IDataReader"/> by bulk. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-deleted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-deleted to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
@@ -261,7 +261,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         public static int BulkDelete(this DbRepository<NpgsqlConnection> repository,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -539,15 +539,15 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkDelete<DbDataReader>
+        #region BulkDelete<IDataReader>
 
         /// <summary>
-        /// Delete the existing rows via <see cref="DbDataReader"/> by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// Delete the existing rows via <see cref="IDataReader"/> by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-deleted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-deleted to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
@@ -557,7 +557,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been deleted from the target table.</returns>
         public static async Task<int> BulkDeleteAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,

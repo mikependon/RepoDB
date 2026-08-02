@@ -276,17 +276,17 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMerge<DbDataReader>
+        #region BulkMerge<IDataReader>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
+        /// Merges the rows of the <see cref="IDataReader"/> into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
         /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-merged to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-merged to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
@@ -297,7 +297,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been merged into the target table.</returns>
         public static int BulkMerge(this DbRepository<NpgsqlConnection> repository,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -611,17 +611,17 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMerge<DbDataReader>
+        #region BulkMerge<IDataReader>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
+        /// Merges the rows of the <see cref="IDataReader"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
         /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-merged to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-merged to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the operation. Ensure to target the indexed columns to make the execution more performant. If not specified, the primary key will be used.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
@@ -633,7 +633,7 @@ namespace RepoDb
         /// <returns>The number of rows that has been merged into the target table.</returns>
         public static async Task<int> BulkMergeAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
