@@ -23,7 +23,7 @@ namespace RepoDb
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -78,7 +78,7 @@ namespace RepoDb
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -193,7 +193,7 @@ namespace RepoDb
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
@@ -311,7 +311,7 @@ namespace RepoDb
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -369,7 +369,7 @@ namespace RepoDb
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>

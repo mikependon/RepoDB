@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -46,6 +47,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkMerge<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -57,6 +60,8 @@ namespace RepoDb
                     identityBehavior: identityBehavior,
                     mergeCommandType: mergeCommandType,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction);
 
         /// <summary>
@@ -90,6 +95,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkMerge<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
@@ -101,6 +108,8 @@ namespace RepoDb
                     identityBehavior: identityBehavior,
                     mergeCommandType: mergeCommandType,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction);
 
         #endregion
@@ -141,6 +150,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -153,6 +164,8 @@ namespace RepoDb
                     identityBehavior: identityBehavior,
                     mergeCommandType: mergeCommandType,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 
@@ -188,6 +201,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -200,6 +215,8 @@ namespace RepoDb
                     identityBehavior: identityBehavior,
                     mergeCommandType: mergeCommandType,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 

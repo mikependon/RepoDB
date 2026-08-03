@@ -1,15 +1,13 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-#pragma warning disable CS0618 // Bridges the new PostgreSql-prefixed enums to the legacy internal Extensions APIs, which still use the deprecated enums.
 
 namespace RepoDb
 {
@@ -41,6 +39,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -83,7 +83,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport<TEntity>(tableName,
+                    connection.BinaryImportInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -105,14 +105,15 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identityResults) =>
-                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
+                null,
 
                 qualifiers,
                 false,
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -143,6 +144,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -176,7 +179,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         table,
                         rowState,
                         mappings,
@@ -207,6 +210,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -233,6 +238,8 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -266,7 +273,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         reader,
                         mappings,
                         dbFields,
@@ -294,6 +301,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -328,6 +337,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -371,7 +382,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync<TEntity>(tableName,
+                    await connection.BinaryImportAsyncInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -394,14 +405,15 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identityResults) =>
-                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
+                null,
 
                 qualifiers,
                 false,
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }
@@ -434,6 +446,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -468,7 +482,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         table,
                         rowState,
                         mappings,
@@ -500,6 +514,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }
@@ -528,6 +544,8 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -562,7 +580,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         reader,
                         mappings,
                         dbFields,
@@ -591,6 +609,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }
@@ -599,5 +619,4 @@ namespace RepoDb
 
         #endregion
     }
-#pragma warning restore CS0618
 }

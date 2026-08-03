@@ -67,5 +67,13 @@
       OracleBulkCopy rather than a DbCommand that ExecuteNonQuery/ExecuteReader/etc. would trace for free.
     -->
     <InternalsVisibleTo Include="RepoDb.Oracle.BulkOperations" />
+    <!--
+      RepoDb.PostgreSql.BulkOperations calls the internal Tracer/TraceResult classes directly so its bulk
+      operations (BulkInsert/BulkMerge/BulkUpdate/BulkDelete/BulkDeleteByKey) can raise the same Before/After
+      execution trace events as the rest of RepoDb, even though the actual data transfer goes through
+      NpgsqlBinaryImporter (via a pseudo/staging table) rather than a single DbCommand that
+      ExecuteNonQuery/ExecuteReader/etc. would trace for free.
+    -->
+    <InternalsVisibleTo Include="RepoDb.PostgreSql.BulkOperations" />
   </ItemGroup>
 </Project>

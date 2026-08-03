@@ -3,6 +3,7 @@ using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -34,6 +35,7 @@ namespace RepoDb
         /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -67,6 +69,7 @@ namespace RepoDb
         /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -79,7 +82,7 @@ namespace RepoDb
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
 
-            return BinaryImport<TEntity>(connection,
+            return BinaryImportInternal<TEntity>(connection,
                 tableName,
                 entities,
                 mappings,
@@ -106,7 +109,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport<TEntity>(this NpgsqlConnection connection,
+        private static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -201,6 +204,7 @@ namespace RepoDb
         /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
@@ -233,6 +237,7 @@ namespace RepoDb
         /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -245,7 +250,7 @@ namespace RepoDb
         {
             tableName ??= table?.TableName;
 
-            return BinaryImport(connection,
+            return BinaryImportInternal(connection,
                 tableName ?? table?.TableName,
                 table,
                 rowState,
@@ -273,7 +278,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport(this NpgsqlConnection connection,
+        private static int BinaryImportInternal(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -346,6 +351,7 @@ namespace RepoDb
         /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="IDataReader"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -353,7 +359,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryImport(connection,
+            BinaryImportInternal(connection,
                 tableName,
                 reader,
                 mappings,
@@ -376,7 +382,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport(this NpgsqlConnection connection,
+        private static int BinaryImportInternal(this NpgsqlConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -447,6 +453,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -483,6 +490,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -496,7 +504,7 @@ namespace RepoDb
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
 
-            return await BinaryImportAsync<TEntity>(connection,
+            return await BinaryImportAsyncInternal<TEntity>(connection,
                 tableName,
                 entities,
                 mappings,
@@ -525,7 +533,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -625,6 +633,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
@@ -660,6 +669,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -673,7 +683,7 @@ namespace RepoDb
         {
             tableName ??= table?.TableName;
 
-            return await BinaryImportAsync(connection,
+            return await BinaryImportAsyncInternal(connection,
                 tableName,
                 table,
                 rowState,
@@ -703,7 +713,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -780,6 +790,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -788,7 +799,7 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            await BinaryImportAsync(connection,
+            await BinaryImportAsyncInternal(connection,
                 tableName,
                 reader,
                 mappings,
@@ -813,7 +824,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal(this NpgsqlConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,

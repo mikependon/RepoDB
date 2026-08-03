@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -19,7 +20,7 @@ namespace RepoDb
 
         /// <summary>
         /// Update the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
@@ -40,6 +41,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkUpdate<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -49,11 +52,13 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction);
 
         /// <summary>
         /// Update the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
@@ -76,6 +81,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkUpdate<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
@@ -85,6 +92,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction);
 
         #endregion
@@ -97,7 +106,7 @@ namespace RepoDb
 
         /// <summary>
         /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
@@ -119,6 +128,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -129,12 +140,14 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 
         /// <summary>
         /// Update the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
@@ -158,6 +171,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkUpdate,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -168,6 +183,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 

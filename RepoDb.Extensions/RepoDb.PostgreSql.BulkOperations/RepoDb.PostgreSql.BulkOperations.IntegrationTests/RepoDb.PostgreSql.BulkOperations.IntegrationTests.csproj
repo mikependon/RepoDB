@@ -7,6 +7,11 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Base\**" />
+    <EmbeddedResource Remove="Base\**" />
+    <None Remove="Base\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="Models\BulkOperationIdentityTable.cs" />
   </ItemGroup>
   <ItemGroup>

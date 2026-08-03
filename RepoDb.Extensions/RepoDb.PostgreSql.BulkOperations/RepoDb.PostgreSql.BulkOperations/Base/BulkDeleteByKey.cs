@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null)
         {
             var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
@@ -61,7 +64,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
@@ -86,6 +89,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -116,6 +121,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -145,7 +152,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
@@ -171,6 +178,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }

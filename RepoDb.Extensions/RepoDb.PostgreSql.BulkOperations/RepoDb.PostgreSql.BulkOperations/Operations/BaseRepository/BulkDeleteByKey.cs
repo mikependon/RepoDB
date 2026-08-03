@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
@@ -35,6 +36,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkDeleteByKey<TPrimaryKey>(tableName: tableName,
@@ -42,6 +45,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction);
 
         #endregion
@@ -54,7 +59,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
@@ -73,6 +78,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -81,6 +88,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     pseudoTableType: pseudoTableType,
+                    trace: trace,
+                    traceKey: traceKey,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
 
