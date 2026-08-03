@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
+using RepoDb.SqlServer.BulkOperations;
+
 namespace RepoDb
 {
     /// <summary>
@@ -57,7 +59,7 @@ namespace RepoDb
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -94,7 +96,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -164,7 +166,7 @@ namespace RepoDb
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -204,7 +206,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,

@@ -9,6 +9,8 @@ using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 
+using RepoDb.SqlServer.BulkOperations;
+
 namespace RepoDb
 {
     public static partial class SqlConnectionExtension
@@ -35,14 +37,15 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
-            ITrace? trace = null)
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             // Validate
             if (!reader.HasRows)
@@ -105,7 +108,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -158,7 +161,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -202,14 +205,15 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
-            ITrace? trace = null)
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             // Validate
             if (dataTable?.Rows.Count <= 0)
@@ -272,7 +276,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -325,7 +329,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -372,7 +376,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -380,6 +384,7 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -443,7 +448,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -495,7 +500,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -540,7 +545,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -548,6 +553,7 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -611,7 +617,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -665,7 +671,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkUpdate, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);

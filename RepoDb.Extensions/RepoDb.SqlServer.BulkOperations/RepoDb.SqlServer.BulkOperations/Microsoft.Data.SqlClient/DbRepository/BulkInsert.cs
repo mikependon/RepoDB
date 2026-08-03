@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
+using RepoDb.SqlServer.BulkOperations;
+
 namespace RepoDb
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -72,7 +74,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -111,7 +113,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlTransaction? transaction = null)
@@ -147,7 +149,7 @@ namespace RepoDb
         public static int BulkInsert(this DbRepository<SqlConnection> repository,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlTransaction? transaction = null)
@@ -183,7 +185,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -227,7 +229,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -273,7 +275,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -318,7 +320,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -362,7 +364,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -407,7 +409,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -448,7 +450,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlTransaction? transaction = null,
@@ -487,7 +489,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync(this DbRepository<SqlConnection> repository,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlTransaction? transaction = null,
@@ -526,7 +528,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
@@ -573,7 +575,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
