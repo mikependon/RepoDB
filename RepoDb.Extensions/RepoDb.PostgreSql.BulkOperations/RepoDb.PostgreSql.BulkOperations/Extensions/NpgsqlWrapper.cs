@@ -129,7 +129,12 @@ namespace RepoDb
                         getMergeToPseudoCommandText,
                         bulkCopyTimeout,
                         transaction)?.AsList();
-                    setIdentities?.Invoke(identityResults);
+
+                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                    {
+                        setIdentities?.Invoke(identityResults);
+                    }
+
                     result = identityResults.Count();
                 }
 
@@ -264,7 +269,12 @@ namespace RepoDb
                         getMergeToPseudoCommandText,
                         bulkCopyTimeout,
                         transaction))?.AsList();
-                    setIdentities?.Invoke(identityResults);
+
+                    if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
+                    {
+                        setIdentities?.Invoke(identityResults);
+                    }
+
                     result = identityResults.Count;
                 }
 
