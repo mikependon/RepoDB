@@ -7,7 +7,8 @@ namespace RepoDb.PostgreSql.BulkOperations
     /// <summary>
     /// A class that is being used to define a mapping for the bulk insert operation for PostgeSQL.
     /// </summary>
-    public class NpgsqlBulkInsertMapItem : BulkInsertMapItem
+    [Obsolete("This class is obsolete and will be removed in a future version. Use 'PostgreSqlBulkInsertMapItem' instead.")]
+    public class NpgsqlBulkInsertMapItem : PostgreSqlBulkInsertMapItem
     {
         private static readonly ClientTypeToNpgsqlDbTypeResolver clientTypeToNpgsqlDbTypeResolver = new ClientTypeToNpgsqlDbTypeResolver();
 
@@ -20,7 +21,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="destinationColumn">The name of the destination column in the database.</param>
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn) :
-            this(sourceColumn, destinationColumn, (Type)null)
+            base(sourceColumn, destinationColumn, (Type)null)
         { }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
             Type type) :
-            this(sourceColumn, destinationColumn, type != null ? clientTypeToNpgsqlDbTypeResolver.Resolve(type) : null)
+            base(sourceColumn, destinationColumn, type != null ? clientTypeToNpgsqlDbTypeResolver.Resolve(type) : null)
         { }
 
         /// <summary>
@@ -47,10 +48,8 @@ namespace RepoDb.PostgreSql.BulkOperations
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
             string dataTypeName) :
-            base(sourceColumn, destinationColumn)
-        {
-            DataTypeName = dataTypeName;
-        }
+            base(sourceColumn, destinationColumn, dataTypeName)
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="NpgsqlBulkInsertMapItem"/> object.
@@ -61,69 +60,8 @@ namespace RepoDb.PostgreSql.BulkOperations
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
             NpgsqlDbType? npgsqlDbType) :
-            base(sourceColumn, destinationColumn)
-        {
-            NpgsqlDbType = npgsqlDbType;
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the <see cref="NpgsqlTypes.NpgsqlDbType"/> type value being used when writing.
-        /// </summary>
-        public NpgsqlDbType? NpgsqlDbType { get; }
-
-        /// <summary>
-        /// Gets the PostgreSQL data type name (e.g. a custom enum type name) to be used when writing.
-        /// When set, this takes precedence over <see cref="NpgsqlDbType"/>.
-        /// </summary>
-        public string DataTypeName { get; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Returns the string representation of the current object.
-        /// </summary>
-        /// <returns>The string representation of the current object.</returns>
-        public override string ToString() =>
-            DataTypeName != null
-                ? $"{base.ToString()} ({DataTypeName})"
-                : $"{base.ToString()} ({NpgsqlDbType})";
-
-        #endregion
-
-        #region Equality and comparers
-
-        private int? hashCode = null;
-
-        /// <summary>
-        /// Returns the hashcode of the current instance.
-        /// </summary>
-        /// <returns>The hashcode value.</returns>
-        public override int GetHashCode()
-        {
-            // Make sure to return if it is already provided
-            if (this.hashCode != null)
-            {
-                return this.hashCode.Value;
-            }
-
-            // Base
-            var hashCode = base.GetHashCode();
-
-            // NpgsqlDbType
-            hashCode = HashCode.Combine(hashCode, NpgsqlDbType);
-
-            // DataTypeName
-            hashCode = HashCode.Combine(hashCode, DataTypeName);
-
-            // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
-        }
+            base(sourceColumn, destinationColumn, npgsqlDbType)
+        { }
 
         #endregion
     }

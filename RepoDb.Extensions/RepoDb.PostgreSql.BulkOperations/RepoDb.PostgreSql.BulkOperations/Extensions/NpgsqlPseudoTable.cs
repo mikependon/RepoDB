@@ -30,7 +30,7 @@ namespace RepoDb
             string tableName,
             string pseudoTableName,
             int rowCount,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
@@ -66,7 +66,7 @@ namespace RepoDb
             string tableName,
             string pseudoTableName,
             int rowCount,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
@@ -312,7 +312,7 @@ namespace RepoDb
         /// <returns></returns>
         private static string GetCreatePseudoTableCommandText(string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
@@ -331,7 +331,7 @@ namespace RepoDb
         /// <returns></returns>
         private static string GetCreatePseudoTemporaryTableCommandText(string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
@@ -346,7 +346,7 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetCreatePseudoTableQueryColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+        private static string GetCreatePseudoTableQueryColumns(IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             identityBehavior != PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ?

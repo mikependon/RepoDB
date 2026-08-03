@@ -33,7 +33,7 @@ namespace RepoDb
         /// <returns></returns>
         private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter(NpgsqlConnection connection,
             string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
@@ -67,7 +67,7 @@ namespace RepoDb
         private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             int startIndex = 0)
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="startIndex"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<IDictionary<string, object>> dictionaries,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             int startIndex = 0)
         {
@@ -126,7 +126,7 @@ namespace RepoDb
         /// <param name="startIndex"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             int startIndex = 0)
         {
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         private static int BinaryImport(NpgsqlBinaryImporter importer,
             IDataReader reader,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior)
         {
             return BinaryImportWrite(importer,
@@ -281,7 +281,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<NpgsqlBinaryImporter> GetNpgsqlBinaryImporterAsync(NpgsqlConnection connection,
             string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting,
@@ -318,7 +318,7 @@ namespace RepoDb
         private static async Task<int> BinaryImportAsync<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default,
@@ -351,7 +351,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> BinaryImportExplicitAsync(NpgsqlBinaryImporter importer,
             IEnumerable<IDictionary<string, object>> dictionaries,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default,
             int startIndex = 0)
@@ -385,7 +385,7 @@ namespace RepoDb
         /// <param name="startIndex"></param>
         private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default,
             int startIndex = 0)
@@ -418,7 +418,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
             IDataReader reader,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             CancellationToken cancellationToken = default)
         {
@@ -538,7 +538,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetBinaryImportCopyCommand(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
@@ -560,7 +560,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetTextColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+        private static string GetTextColumns(IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             IDbSetting dbSetting) =>
             mappings?.Select(mapping => mapping.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ");
 

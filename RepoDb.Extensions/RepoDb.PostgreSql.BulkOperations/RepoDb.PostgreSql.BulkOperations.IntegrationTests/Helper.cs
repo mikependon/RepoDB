@@ -240,14 +240,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region Helpers
 
-        public static List<NpgsqlBulkInsertMapItem> GetEnumTableMappings()
+        public static List<PostgreSqlBulkInsertMapItem> GetEnumTableMappings()
         {
             return new[]
             {
-                new NpgsqlBulkInsertMapItem(nameof(EnumTable.Id), nameof(EnumTable.Id), NpgsqlTypes.NpgsqlDbType.Bigint),
-                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumText), nameof(EnumTable.ColumnEnumText), NpgsqlTypes.NpgsqlDbType.Text),
-                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumInt), nameof(EnumTable.ColumnEnumInt), NpgsqlTypes.NpgsqlDbType.Integer),
-                new NpgsqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumHand), nameof(EnumTable.ColumnEnumHand), "hand")
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.Id), nameof(EnumTable.Id), NpgsqlTypes.NpgsqlDbType.Bigint),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumText), nameof(EnumTable.ColumnEnumText), NpgsqlTypes.NpgsqlDbType.Text),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumInt), nameof(EnumTable.ColumnEnumInt), NpgsqlTypes.NpgsqlDbType.Integer),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumHand), nameof(EnumTable.ColumnEnumHand), "hand")
             }
             .AsList();
         }

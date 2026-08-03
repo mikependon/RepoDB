@@ -66,7 +66,7 @@ namespace RepoDb
         /// <param name="npgsqlDbType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
+        private static PostgreSqlBulkInsertMapItem GetMapping(string sourceName,
             string destinationName,
             DbFieldCollection dbFields,
             bool includePrimary,
@@ -96,7 +96,7 @@ namespace RepoDb
             }
 
             // Return
-            return new NpgsqlBulkInsertMapItem(sourceName, destinationName, npgsqlDbType);
+            return new PostgreSqlBulkInsertMapItem(sourceName, destinationName, npgsqlDbType);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             bool includePrimary,
             bool includeIdentity,
@@ -183,7 +183,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -216,7 +216,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DataTable table,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DataTable table,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDataReader reader,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDataReader reader,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -341,11 +341,11 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="mappings"></param>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<PostgreSqlBulkInsertMapItem> mappings)
         {
-            var list = new List<NpgsqlBulkInsertMapItem>(mappings);
+            var list = new List<PostgreSqlBulkInsertMapItem>(mappings);
             list.Insert(0,
-                new NpgsqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlDbType.Integer));
+                new PostgreSqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlDbType.Integer));
             return list;
         }
 

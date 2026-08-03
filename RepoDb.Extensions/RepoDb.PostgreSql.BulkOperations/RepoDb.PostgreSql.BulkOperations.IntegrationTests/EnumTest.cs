@@ -40,7 +40,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         private NpgsqlConnection GetConnection() =>
             (NpgsqlConnection)(_enumDataSource.CreateConnection()).EnsureOpen();
 
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetEnumColumnMappings() =>
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetEnumColumnMappings() =>
             Helper.GetEnumTableMappings().Where(m => m.SourceColumn != nameof(Models.EnumTable.Id));
 
         public static List<EnumTable> CreateEnumTablesWithNullValues(int count,

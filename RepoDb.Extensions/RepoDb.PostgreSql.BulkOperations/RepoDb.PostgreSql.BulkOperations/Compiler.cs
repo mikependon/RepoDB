@@ -30,7 +30,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings, entityType);
@@ -72,7 +72,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
@@ -104,7 +104,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                     includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
-                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                    new PostgreSqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
 
                 return GetFunc(tableName, mappings, entityType);
             }
@@ -117,7 +117,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             private static Action<NpgsqlBinaryImporter, TEntity> GetFunc(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
@@ -219,7 +219,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, mappings, entityType);
@@ -262,7 +262,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
@@ -294,7 +294,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                     includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
-                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                    new PostgreSqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
 
                 return GetFunc(tableName, mappings, entityType);
             }
@@ -307,7 +307,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             private static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetFunc(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
@@ -515,7 +515,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <returns></returns>
         private static Expression GetEntityPropertyExpression(Expression entityExpression,
             Type entityType,
-            NpgsqlBulkInsertMapItem mapping)
+            PostgreSqlBulkInsertMapItem mapping)
         {
             // Property
             var classProperty = PropertyCache.Get(entityType, mapping.SourceColumn);
@@ -637,7 +637,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mappings"></param>
         /// <returns></returns>
         private static int GetHashCode<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings) =>
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings) =>
             GetHashCode(typeof(TEntity), tableName, mappings);
 
         /// <summary>
@@ -649,7 +649,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <returns></returns>
         private static int GetHashCode(Type entityType,
             string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings)
         {
             var hashCode = GetHashCode(entityType, tableName);
 
