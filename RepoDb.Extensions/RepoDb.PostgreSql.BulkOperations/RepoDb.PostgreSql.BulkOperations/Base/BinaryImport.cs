@@ -44,7 +44,37 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            BinaryImport<TEntity>(connection,
+            BinaryImportInternal<TEntity>(connection,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport{TEntity}(NpgsqlConnection, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null)
+            where TEntity : class =>
+            BinaryImportInternal<TEntity>(connection,
                 ClassMappedNameCache.Get<TEntity>(),
                 entities,
                 mappings,
@@ -78,6 +108,39 @@ namespace RepoDb
             int? batchSize = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
+            where TEntity : class =>
+            BinaryImportInternal<TEntity>(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport{TEntity}(NpgsqlConnection, string, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null)
             where TEntity : class
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
@@ -95,7 +158,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -213,7 +276,38 @@ namespace RepoDb
             int? batchSize = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryImport(connection,
+            BinaryImportInternal(connection,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
                 table?.TableName,
                 table,
                 rowState,
@@ -246,6 +340,40 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, string, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
         {
             tableName ??= table?.TableName;
@@ -264,7 +392,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -363,6 +491,34 @@ namespace RepoDb
                 tableName,
                 reader,
                 mappings,
+                bulkCopyTimeout,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, string, IDataReader, IEnumerable{NpgsqlBulkInsertMapItem}, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
+                tableName,
+                reader,
+                mappings,
                 DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
                 identityBehavior,
@@ -370,7 +526,7 @@ namespace RepoDb
                 transaction);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -463,7 +619,40 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BinaryImportAsync<TEntity>(connection,
+            BinaryImportInternalAsync<TEntity>(connection,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync{TEntity}(NpgsqlConnection, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            BinaryImportInternalAsync<TEntity>(connection,
                 ClassMappedNameCache.Get<TEntity>(),
                 entities,
                 mappings,
@@ -500,6 +689,42 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            await BinaryImportInternalAsync<TEntity>(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync{TEntity}(NpgsqlConnection, string, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
@@ -518,7 +743,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -643,7 +868,41 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BinaryImportAsync(connection,
+            BinaryImportInternalAsync(connection,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BinaryImportInternalAsync(connection,
                 table?.TableName,
                 table,
                 rowState,
@@ -679,6 +938,43 @@ namespace RepoDb
             int? batchSize = null,
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            await BinaryImportInternalAsync(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             tableName ??= table?.TableName;
@@ -698,7 +994,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -799,6 +1095,37 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
+            await BinaryImportInternalAsync(connection,
+                tableName,
+                reader,
+                mappings,
+                bulkCopyTimeout,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, IDataReader, IEnumerable{NpgsqlBulkInsertMapItem}, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
             await BinaryImportAsyncInternal(connection,
                 tableName,
                 reader,
@@ -811,7 +1138,7 @@ namespace RepoDb
                 cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
