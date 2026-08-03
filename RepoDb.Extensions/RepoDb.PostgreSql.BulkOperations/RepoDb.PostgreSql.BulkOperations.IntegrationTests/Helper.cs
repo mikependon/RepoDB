@@ -777,7 +777,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnEnumHand"] = Hands.Right;
                 expandoObject["ColumnEnumInt"] = (int?)null; // Hands.Left;
-                expandoObject["ColumnEnumText"] = (string?)null; // Hands.Unidentified;
+                expandoObject["ColumnEnumText"] = (string)null; // Hands.Unidentified;
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;

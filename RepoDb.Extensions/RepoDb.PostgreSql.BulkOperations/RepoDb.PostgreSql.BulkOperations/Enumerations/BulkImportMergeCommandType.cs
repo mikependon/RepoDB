@@ -1,8 +1,11 @@
-﻿namespace RepoDb.Enumerations.PostgreSql
+﻿using System;
+
+namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define which command text to use when executing the 'BinaryBulkMerge' operation.
     /// </summary>
+    [Obsolete("This enum is obsolete and will be removed in a future version. Use 'PostgreSqlBulkImportMergeCommandType' instead.")]
     public enum BulkImportMergeCommandType : short
     {
         /// <summary>

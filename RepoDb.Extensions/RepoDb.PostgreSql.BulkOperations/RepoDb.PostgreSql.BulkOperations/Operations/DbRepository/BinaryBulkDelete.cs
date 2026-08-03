@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
@@ -22,7 +23,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -37,6 +38,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static int BinaryBulkDelete<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -54,14 +56,13 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDelete<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+                return connection.BulkDelete<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -79,7 +80,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via entities by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -95,6 +96,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static int BinaryBulkDelete<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -113,14 +115,13 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDelete<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                return connection.BulkDelete<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -142,7 +143,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DataTable"/> by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-deleted to the target table.</param>
@@ -155,6 +156,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static int BinaryBulkDelete(this DbRepository<NpgsqlConnection> repository,
             DataTable table,
             DataRowState? rowState = null,
@@ -172,15 +174,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDelete(tableName: table?.TableName,
+                return connection.BulkDelete(tableName: table?.TableName,
                     table: table,
                     rowState: rowState,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -198,7 +199,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DataTable"/> by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
@@ -212,6 +213,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static int BinaryBulkDelete(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DataTable table,
@@ -230,15 +232,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDelete(tableName: (tableName ?? table?.TableName),
+                return connection.BulkDelete(tableName: (tableName ?? table?.TableName),
                     table: table,
                     rowState: rowState,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -260,7 +261,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DbDataReader"/> by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
@@ -272,6 +273,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static int BinaryBulkDelete(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
@@ -288,13 +290,12 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDelete(tableName: tableName,
+                return connection.BulkDelete(tableName: tableName,
                     reader: reader,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -320,7 +321,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -336,6 +337,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static async Task<int> BinaryBulkDeleteAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -354,14 +356,13 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
+                return await connection.BulkDeleteAsync<TEntity>(tableName: ClassMappedNameCache.Get<TEntity>(),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -380,7 +381,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via entities by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -397,6 +398,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static async Task<int> BinaryBulkDeleteAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -416,14 +418,13 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                return await connection.BulkDeleteAsync<TEntity>(tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -446,7 +447,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DataTable"/> by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-deleted to the target table.</param>
@@ -460,6 +461,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static async Task<int> BinaryBulkDeleteAsync(this DbRepository<NpgsqlConnection> repository,
             DataTable table,
             DataRowState? rowState = null,
@@ -478,15 +480,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteAsync(tableName: table?.TableName,
+                return await connection.BulkDeleteAsync(tableName: table?.TableName,
                     table: table,
                     rowState: rowState,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -505,7 +506,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DataTable"/> by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
@@ -520,6 +521,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static async Task<int> BinaryBulkDeleteAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DataTable table,
@@ -539,15 +541,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteAsync(tableName: (tableName ?? table?.TableName),
+                return await connection.BulkDeleteAsync(tableName: (tableName ?? table?.TableName),
                     table: table,
                     rowState: rowState,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
@@ -570,7 +571,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows via <see cref="DbDataReader"/> by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
@@ -583,6 +584,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDelete' instead.")]
         public static async Task<int> BinaryBulkDeleteAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
@@ -601,13 +603,12 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteAsync(tableName: tableName,
+                return await connection.BulkDeleteAsync(tableName: tableName,
                     reader: reader,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     bulkCopyTimeout: bulkCopyTimeout,
-                    keepIdentity: keepIdentity,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

@@ -235,6 +235,20 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 connection.Insert<CompleteTable>(table, hints: "NOLOCK"));
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionInsertAsyncWithHintsThrows()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act/Assert: AreTableHintsSupported = false for Oracle - BaseStatementBuilder.GuardHints
+            // throws for any non-null/non-whitespace hints, regardless of operation.
+            await Assert.ThrowsAsync<System.NotSupportedException>(() =>
+                connection.InsertAsync<CompleteTable>(table, hints: "NOLOCK"));
+        }
+
         #endregion
     }
 }

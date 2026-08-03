@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +16,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkUpdateBase<TEntity>
+        #region BulkDeleteBase<TEntity>
 
         /// <summary>
         ///
@@ -28,19 +29,19 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkUpdateBase<TEntity>(this NpgsqlConnection connection,
+        private static int BulkDeleteBase<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -49,21 +50,22 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -82,7 +84,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport<TEntity>(tableName,
+                    connection.BinaryImportInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -92,193 +94,9 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getUpdateToPseudoCommandText
+                // getDeleteToPseudoCommandText
                 () =>
-                    GetUpdateCommandText(pseudoTableName,
-                        tableName,
-                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        qualifiers,
-                        dbFields.GetPrimary()?.AsField(),
-                        dbFields.GetIdentity()?.AsField(),
-                        identityBehavior,
-                        dbSetting),
-
-                // setIdentities
-                (identityResults) =>
-                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
-
-                qualifiers,
-                false,
-                identityBehavior,
-                pseudoTableType,
-                dbSetting,
-                transaction);
-        }
-
-        #endregion
-
-        #region BinaryBulkUpdateBase<DataTable>
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="table"></param>
-        /// <param name="rowState"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="pseudoTableType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        private static int BinaryBulkUpdateBase(this NpgsqlConnection connection,
-            string tableName,
-            DataTable table,
-            DataRowState? rowState = null,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
-            NpgsqlTransaction transaction = null)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
-
-            return PseudoBasedBinaryImport(connection,
-                tableName,
-                bulkCopyTimeout,
-                dbFields,
-
-                // getPseudoTableName
-                () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
-
-                // getMappings
-                () =>
-                {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var includePrimary = true;
-
-                    return mappings = mappings?.Any() == true ? mappings :
-                        GetMappings(table,
-                            dbFields,
-                            includePrimary,
-                            includeIdentity,
-                            dbSetting);
-                },
-
-                // binaryImport
-                (tableName) =>
-                    connection.BinaryImport(tableName,
-                        table,
-                        rowState,
-                        mappings,
-                        dbFields,
-                        bulkCopyTimeout,
-                        batchSize,
-                        identityBehavior,
-                        dbSetting,
-                        transaction),
-
-                // getUpdateToPseudoCommandText
-                () =>
-                    GetUpdateCommandText(pseudoTableName,
-                        tableName,
-                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        qualifiers,
-                        dbFields.GetPrimary()?.AsField(),
-                        dbFields.GetIdentity()?.AsField(),
-                        identityBehavior,
-                        dbSetting),
-
-                // setIdentities
-                (identityResults) =>
-                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
-
-                qualifiers,
-                false,
-                identityBehavior,
-                pseudoTableType,
-                dbSetting,
-                transaction);
-        }
-
-        #endregion
-
-        #region BinaryBulkUpdateBase<DbDataReader>
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="pseudoTableType"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        private static int BinaryBulkUpdateBase(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
-            NpgsqlTransaction transaction = null)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
-
-            return PseudoBasedBinaryImport(connection,
-                tableName,
-                bulkCopyTimeout,
-                dbFields,
-
-                // getPseudoTableName
-                () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
-
-                // getMappings
-                () =>
-                {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var includePrimary = true;
-
-                    return mappings = mappings?.Any() == true ? mappings :
-                        GetMappings(reader,
-                            dbFields,
-                            includePrimary,
-                            includeIdentity,
-                            dbSetting);
-                },
-
-                // binaryImport
-                (tableName) =>
-                    connection.BinaryImport(tableName,
-                        reader,
-                        mappings,
-                        dbFields,
-                        bulkCopyTimeout,
-                        identityBehavior,
-                        dbSetting,
-                        transaction),
-
-                // getUpdateToPseudoCommandText
-                () =>
-                    GetUpdateCommandText(pseudoTableName,
+                    GetDeleteCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
@@ -295,7 +113,198 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
+        }
+
+        #endregion
+
+        #region BulkDeleteBase<DataTable>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkDeleteBase(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
+            NpgsqlTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var pseudoTableName = tableName;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+
+            return PseudoBasedBinaryImport(connection,
+                tableName,
+                table?.Rows.Count ?? 0,
+                bulkCopyTimeout,
+                dbFields,
+
+                // getPseudoTableName
+                () =>
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+
+                // getMappings
+                () =>
+                {
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+                    var includePrimary = true;
+
+                    return mappings = mappings?.Any() == true ? mappings :
+                        GetMappings(table,
+                            dbFields,
+                            includePrimary,
+                            includeIdentity,
+                            dbSetting);
+                },
+
+                // binaryImport
+                (tableName) =>
+                    connection.BinaryImportInternal(tableName,
+                        table,
+                        rowState,
+                        mappings,
+                        dbFields,
+                        bulkCopyTimeout,
+                        batchSize,
+                        identityBehavior,
+                        dbSetting,
+                        transaction),
+
+                // getDeleteToPseudoCommandText
+                () =>
+                    GetDeleteCommandText(pseudoTableName,
+                        tableName,
+                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
+                        identityBehavior,
+                        dbSetting),
+
+                // setIdentities
+                (identityResults) =>
+                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
+
+                qualifiers,
+                false,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                dbSetting,
+                trace,
+                traceKey,
+                transaction: transaction);
+        }
+
+        #endregion
+
+        #region BulkDeleteBase<IDataReader>
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkDeleteBase(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
+            NpgsqlTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var pseudoTableName = tableName;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+
+            return PseudoBasedBinaryImport(connection,
+                tableName,
+                0, // row count is unknown for a forward-only reader
+                bulkCopyTimeout,
+                dbFields,
+
+                // getPseudoTableName
+                () =>
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+
+                // getMappings
+                () =>
+                {
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+                    var includePrimary = true;
+
+                    return mappings = mappings?.Any() == true ? mappings :
+                        GetMappings(reader,
+                            dbFields,
+                            includePrimary,
+                            includeIdentity,
+                            dbSetting);
+                },
+
+                // binaryImport
+                (tableName) =>
+                    connection.BinaryImportInternal(tableName,
+                        reader,
+                        mappings,
+                        dbFields,
+                        bulkCopyTimeout,
+                        identityBehavior,
+                        dbSetting,
+                        transaction),
+
+                // getDeleteToPseudoCommandText
+                () =>
+                    GetDeleteCommandText(pseudoTableName,
+                        tableName,
+                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
+                        identityBehavior,
+                        dbSetting),
+
+                // setIdentities
+                null,
+
+                qualifiers,
+                false,
+                identityBehavior,
+                pseudoTableType,
+                dbSetting,
+                trace,
+                traceKey,
+                transaction: transaction);
         }
 
         #endregion
@@ -304,7 +313,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkUpdateBaseAsync<TEntity>
+        #region BulkDeleteBaseAsync<TEntity>
 
         /// <summary>
         ///
@@ -317,20 +326,20 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkUpdateBaseAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -340,21 +349,22 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -373,7 +383,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync<TEntity>(tableName,
+                    await connection.BinaryImportAsyncInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -384,201 +394,9 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getUpdateToPseudoCommandText
+                // getDeleteToPseudoCommandText
                 () =>
-                    GetUpdateCommandText(pseudoTableName,
-                        tableName,
-                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        qualifiers,
-                        dbFields.GetPrimary()?.AsField(),
-                        dbFields.GetIdentity()?.AsField(),
-                        identityBehavior,
-                        dbSetting),
-
-                // setIdentities
-                (identityResults) =>
-                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
-
-                qualifiers,
-                false,
-                identityBehavior,
-                pseudoTableType,
-                dbSetting,
-                transaction,
-                cancellationToken);
-        }
-
-        #endregion
-
-        #region BinaryBulkUpdateBaseAsync<DataTable>
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="table"></param>
-        /// <param name="rowState"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="pseudoTableType"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private static async Task<int> BinaryBulkUpdateBaseAsync(this NpgsqlConnection connection,
-            string tableName,
-            DataTable table,
-            DataRowState? rowState = null,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
-
-            return await PseudoBasedBinaryImportAsync(connection,
-                tableName,
-                bulkCopyTimeout,
-                dbFields,
-
-                // getPseudoTableName
-                () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
-
-                // getMappings
-                () =>
-                {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var includePrimary = true;
-
-                    return mappings = mappings?.Any() == true ? mappings :
-                        GetMappings(table,
-                            dbFields,
-                            includePrimary,
-                            includeIdentity,
-                            dbSetting);
-                },
-
-                // binaryImport
-                async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
-                        table,
-                        rowState,
-                        mappings,
-                        dbFields,
-                        bulkCopyTimeout,
-                        batchSize,
-                        identityBehavior,
-                        dbSetting,
-                        transaction,
-                        cancellationToken),
-
-                // getUpdateToPseudoCommandText
-                () =>
-                    GetUpdateCommandText(pseudoTableName,
-                        tableName,
-                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        qualifiers,
-                        dbFields.GetPrimary()?.AsField(),
-                        dbFields.GetIdentity()?.AsField(),
-                        identityBehavior,
-                        dbSetting),
-
-                // setIdentities
-                (identityResults) =>
-                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
-
-                qualifiers,
-                false,
-                identityBehavior,
-                pseudoTableType,
-                dbSetting,
-                transaction,
-                cancellationToken);
-        }
-
-        #endregion
-
-        #region BinaryBulkUpdateBaseAsync<DbDataReader>
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="pseudoTableType"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private static async Task<int> BinaryBulkUpdateBaseAsync(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
-            BulkImportPseudoTableType pseudoTableType = default,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
-
-            return await PseudoBasedBinaryImportAsync(connection,
-                tableName,
-                bulkCopyTimeout,
-                dbFields,
-
-                // getPseudoTableName
-                () =>
-                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
-
-                // getMappings
-                () =>
-                {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
-                    var includePrimary = true;
-
-                    return mappings = mappings?.Any() == true ? mappings :
-                        GetMappings(reader,
-                            dbFields,
-                            includePrimary,
-                            includeIdentity,
-                            dbSetting);
-                },
-
-                // binaryImport
-                async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
-                        reader,
-                        mappings,
-                        dbFields,
-                        bulkCopyTimeout,
-                        identityBehavior,
-                        dbSetting,
-                        transaction,
-                        cancellationToken),
-
-                // getUpdateToPseudoCommandText
-                () =>
-                    GetUpdateCommandText(pseudoTableName,
+                    GetDeleteCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
@@ -595,7 +413,206 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
+                cancellationToken);
+        }
+
+        #endregion
+
+        #region BulkDeleteBaseAsync<DataTable>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkDeleteBaseAsync(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var pseudoTableName = tableName;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+
+            return await PseudoBasedBinaryImportAsync(connection,
+                tableName,
+                table?.Rows.Count ?? 0,
+                bulkCopyTimeout,
+                dbFields,
+
+                // getPseudoTableName
+                () =>
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+
+                // getMappings
+                () =>
+                {
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+                    var includePrimary = true;
+
+                    return mappings = mappings?.Any() == true ? mappings :
+                        GetMappings(table,
+                            dbFields,
+                            includePrimary,
+                            includeIdentity,
+                            dbSetting);
+                },
+
+                // binaryImport
+                async (tableName) =>
+                    await connection.BinaryImportAsyncInternal(tableName,
+                        table,
+                        rowState,
+                        mappings,
+                        dbFields,
+                        bulkCopyTimeout,
+                        batchSize,
+                        identityBehavior,
+                        dbSetting,
+                        transaction,
+                        cancellationToken),
+
+                // getDeleteToPseudoCommandText
+                () =>
+                    GetDeleteCommandText(pseudoTableName,
+                        tableName,
+                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
+                        identityBehavior,
+                        dbSetting),
+
+                // setIdentities
+                (identityResults) =>
+                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
+
+                qualifiers,
+                false,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                dbSetting,
+                trace,
+                traceKey,
+                transaction: transaction,
+                cancellationToken);
+        }
+
+        #endregion
+
+        #region BulkDeleteBaseAsync<IDataReader>
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkDeleteBaseAsync(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDelete,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var pseudoTableName = tableName;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+
+            return await PseudoBasedBinaryImportAsync(connection,
+                tableName,
+                0, // row count is unknown for a forward-only reader
+                bulkCopyTimeout,
+                dbFields,
+
+                // getPseudoTableName
+                () =>
+                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+
+                // getMappings
+                () =>
+                {
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
+                    var includePrimary = true;
+
+                    return mappings = mappings?.Any() == true ? mappings :
+                        GetMappings(reader,
+                            dbFields,
+                            includePrimary,
+                            includeIdentity,
+                            dbSetting);
+                },
+
+                // binaryImport
+                async (tableName) =>
+                    await connection.BinaryImportAsyncInternal(tableName,
+                        reader,
+                        mappings,
+                        dbFields,
+                        bulkCopyTimeout,
+                        identityBehavior,
+                        dbSetting,
+                        transaction,
+                        cancellationToken),
+
+                // getDeleteToPseudoCommandText
+                () =>
+                    GetDeleteCommandText(pseudoTableName,
+                        tableName,
+                        mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                        qualifiers,
+                        dbFields.GetPrimary()?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
+                        identityBehavior,
+                        dbSetting),
+
+                // setIdentities
+                null,
+
+                qualifiers,
+                false,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                dbSetting,
+                trace,
+                traceKey,
+                transaction: transaction,
                 cancellationToken);
         }
 

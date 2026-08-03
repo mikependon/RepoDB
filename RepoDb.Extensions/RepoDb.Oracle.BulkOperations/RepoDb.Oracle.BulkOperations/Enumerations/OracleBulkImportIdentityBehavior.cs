@@ -6,11 +6,6 @@ namespace RepoDb.Enumerations.Oracle
     public enum OracleBulkImportIdentityBehavior : short
     {
         /// <summary>
-        /// No action required.
-        /// </summary>
-        Unspecified,
-
-        /// <summary>
         /// A value that indicates whether the value of the identity property/column will be kept and used.
         /// </summary>
         KeepIdentity,

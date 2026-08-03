@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Oracle.IntegrationTests
 {
@@ -151,6 +152,84 @@ namespace RepoDb.Oracle.IntegrationTests
 
             // Query
             var queryResult = connection.QueryAll<OracleAttributeTable>();
+
+            // Assert
+            Assert.AreEqual(tables.Count, queryResult.Count());
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionForInsertAsyncForOracleDbTypeAttribute()
+        {
+            // Setup
+            var table = CreateOracleAttributeTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            await connection.InsertAsync<OracleAttributeTable>(table);
+
+            // Assert
+            Assert.AreEqual(1, connection.CountAll<OracleAttributeTable>());
+
+            // Query
+            var queryResult = connection.QueryAll<OracleAttributeTable>().First();
+
+            // Assert
+            Helper.AssertPropertiesEquality(table, queryResult);
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionForInsertAllAsyncForOracleDbTypeAttribute()
+        {
+            // Setup
+            var tables = CreateOracleAttributeTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            await connection.InsertAllAsync<OracleAttributeTable>(tables);
+
+            // Assert
+            Assert.AreEqual(tables.Count, connection.CountAll<OracleAttributeTable>());
+
+            // Query
+            var queryResult = connection.QueryAll<OracleAttributeTable>();
+
+            // Assert
+            tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionForQueryAsyncForOracleDbTypeAttribute()
+        {
+            // Setup
+            var table = CreateOracleAttributeTables(1).First();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            var id = connection.Insert<OracleAttributeTable>(table);
+
+            // Query
+            var queryResult = (await connection.QueryAsync<OracleAttributeTable>(id)).First();
+
+            // Assert
+            Helper.AssertPropertiesEquality(table, queryResult);
+        }
+
+        [TestMethod]
+        public async Task TestOracleConnectionForQueryAllAsyncForOracleDbTypeAttribute()
+        {
+            // Setup
+            var tables = CreateOracleAttributeTables(10).AsList();
+
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act
+            connection.InsertAll<OracleAttributeTable>(tables);
+
+            // Query
+            var queryResult = await connection.QueryAllAsync<OracleAttributeTable>();
 
             // Assert
             Assert.AreEqual(tables.Count, queryResult.Count());

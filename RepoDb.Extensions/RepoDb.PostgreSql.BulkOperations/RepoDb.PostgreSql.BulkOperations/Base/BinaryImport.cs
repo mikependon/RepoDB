@@ -3,6 +3,7 @@ using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -31,24 +32,55 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            BinaryImport<TEntity>(connection,
+            BinaryImportInternal<TEntity>(connection,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport{TEntity}(NpgsqlConnection, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null)
+            where TEntity : class =>
+            BinaryImportInternal<TEntity>(connection,
                 ClassMappedNameCache.Get<TEntity>(),
                 entities,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                identityBehavior,
                 transaction);
 
         /// <summary>
@@ -64,35 +96,69 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null)
+            where TEntity : class =>
+            BinaryImportInternal<TEntity>(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport{TEntity}(NpgsqlConnection, string, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
 
-            return BinaryImport<TEntity>(connection,
+            return BinaryImportInternal<TEntity>(connection,
                 tableName,
                 entities,
                 mappings,
                 DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
                 batchSize,
-                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                identityBehavior,
                 connection.GetDbSetting(),
                 transaction);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -106,14 +172,14 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport<TEntity>(this NpgsqlConnection connection,
+        private static int BinaryImportInternal<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
             where TEntity : class
@@ -121,7 +187,7 @@ namespace RepoDb
             // Solving the anonymous types
             var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
@@ -142,6 +208,8 @@ namespace RepoDb
             // Execution
             int execute()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var batches = entities.Split(batchSize.GetValueOrDefault());
 
@@ -156,19 +224,21 @@ namespace RepoDb
                     {
                         if (isDictionary)
                         {
-                            result += BinaryImport(importer,
+                            result = BinaryImport(importer,
                                 batch?.Select(entity => entity as IDictionary<string, object>),
                                 mappings,
-                                identityBehavior);
+                                identityBehavior,
+                                result);
                         }
                         else
                         {
-                            result += BinaryImport<TEntity>(importer,
+                            result = BinaryImport<TEntity>(importer,
                                 tableName,
                                 batch,
                                 mappings,
                                 entityType,
-                                identityBehavior);
+                                identityBehavior,
+                                result);
                         }
                     }
                 }
@@ -194,25 +264,57 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryImport(connection,
+            BinaryImportInternal(connection,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
                 table?.TableName,
                 table,
                 rowState,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                identityBehavior,
                 transaction);
 
         /// <summary>
@@ -226,9 +328,10 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -236,12 +339,46 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, string, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
         {
             tableName ??= table?.TableName;
 
-            return BinaryImport(connection,
+            return BinaryImportInternal(connection,
                 tableName ?? table?.TableName,
                 table,
                 rowState,
@@ -249,13 +386,13 @@ namespace RepoDb
                 DbFieldCache.Get(connection, tableName ?? table?.TableName, transaction),
                     bulkCopyTimeout,
                     batchSize,
-                    (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                    identityBehavior,
                     connection.GetDbSetting(),
                     transaction);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -269,7 +406,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport(this NpgsqlConnection connection,
+        private static int BinaryImportInternal(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -277,11 +414,11 @@ namespace RepoDb
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
@@ -296,6 +433,8 @@ namespace RepoDb
             // Execution
             int execute()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var rows = GetRows(table, rowState).ToList();
                 var batches = rows.Split(batchSize.GetValueOrDefault());
@@ -309,10 +448,11 @@ namespace RepoDb
                         identityBehavior,
                         dbSetting))
                     {
-                        result += BinaryImport(importer,
+                        result = BinaryImport(importer,
                             batch,
                             mappings,
-                            identityBehavior);
+                            identityBehavior,
+                            result);
                     }
                 }
 
@@ -328,36 +468,65 @@ namespace RepoDb
         #region BinaryImport<DataReader>
 
         /// <summary>
-        /// Inserts the rows of the <see cref="DbDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// Inserts the rows of the <see cref="IDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DbDataReader"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="IDataReader"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static int BinaryImport(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null) =>
-            BinaryImport(connection,
+            BinaryImportInternal(connection,
+                tableName,
+                reader,
+                mappings,
+                bulkCopyTimeout,
+                identityBehavior,
+                transaction);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImport(NpgsqlConnection, string, IDataReader, IEnumerable{NpgsqlBulkInsertMapItem}, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static int BinaryImportInternal(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryImportInternal(connection,
                 tableName,
                 reader,
                 mappings,
                 DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
-                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                identityBehavior,
                 connection.GetDbSetting(),
                 transaction);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -369,17 +538,17 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport(this NpgsqlConnection connection,
+        private static int BinaryImportInternal(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
@@ -436,26 +605,60 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BinaryImportAsync<TEntity>(connection,
+            BinaryImportInternalAsync<TEntity>(connection,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync{TEntity}(NpgsqlConnection, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            BinaryImportInternalAsync<TEntity>(connection,
                 ClassMappedNameCache.Get<TEntity>(),
                 entities,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                identityBehavior,
                 transaction,
                 cancellationToken);
 
@@ -472,38 +675,75 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the entities will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            await BinaryImportInternalAsync<TEntity>(connection,
+                tableName,
+                entities,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync{TEntity}(NpgsqlConnection, string, IEnumerable{TEntity}, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             tableName ??= ClassMappedNameCache.Get<TEntity>();
 
-            return await BinaryImportAsync<TEntity>(connection,
+            return await BinaryImportAsyncInternal<TEntity>(connection,
                 tableName,
                 entities,
                 mappings,
                 await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
                 batchSize,
-                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -518,14 +758,14 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -534,7 +774,7 @@ namespace RepoDb
             // Solving the anonymous types
             var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
             var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
@@ -555,6 +795,8 @@ namespace RepoDb
             // Execution
             async Task<int> executeAsync()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var batches = entities.Split(batchSize.GetValueOrDefault());
 
@@ -570,21 +812,23 @@ namespace RepoDb
                     {
                         if (isDictionary)
                         {
-                            result += await BinaryImportExplicitAsync(importer,
+                            result = await BinaryImportExplicitAsync(importer,
                                 batch?.Select(entity => entity as IDictionary<string, object>),
                                 mappings,
                                 identityBehavior,
-                                cancellationToken);
+                                cancellationToken,
+                                result);
                         }
                         else
                         {
-                            result += await BinaryImportAsync<TEntity>(importer,
+                            result = await BinaryImportAsync<TEntity>(importer,
                                 tableName,
                                 batch,
                                 mappings,
                                 entityType,
                                 identityBehavior,
-                                cancellationToken);
+                                cancellationToken,
+                                result);
                         }
                     }
                 }
@@ -610,27 +854,62 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BinaryImportAsync(connection,
+            BinaryImportInternalAsync(connection,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BinaryImportInternalAsync(connection,
                 table?.TableName,
                 table,
                 rowState,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                identityBehavior,
                 transaction,
                 cancellationToken);
 
@@ -645,10 +924,11 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="DataTable"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
@@ -656,13 +936,50 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            await BinaryImportInternalAsync(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyTimeout,
+                batchSize,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, DataTable, DataRowState?, IEnumerable{NpgsqlBulkInsertMapItem}, int?, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             tableName ??= table?.TableName;
 
-            return await BinaryImportAsync(connection,
+            return await BinaryImportAsyncInternal(connection,
                 tableName,
                 table,
                 rowState,
@@ -670,14 +987,14 @@ namespace RepoDb
                 await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
                 batchSize,
-                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -692,7 +1009,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -700,12 +1017,12 @@ namespace RepoDb
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
@@ -720,6 +1037,8 @@ namespace RepoDb
             // Execution
             async Task<int> executeAsync()
             {
+                // 'result' also doubles as the running __RepoDb_OrderColumn start index for the next batch,
+                // so batched imports keep a single, globally-ordered sequence instead of each batch restarting at 0.
                 var result = 0;
                 var rows = GetRows(table, rowState).ToList();
                 var batches = rows.Split(batchSize.GetValueOrDefault());
@@ -734,11 +1053,12 @@ namespace RepoDb
                         dbSetting,
                         cancellationToken))
                     {
-                        result += await BinaryImportAsync(importer,
+                        result = await BinaryImportAsync(importer,
                             batch,
                             mappings,
                             identityBehavior,
-                            cancellationToken);
+                            cancellationToken,
+                            result);
                     }
                 }
 
@@ -759,34 +1079,66 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="reader">The instance of <see cref="IDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DbDataReader"/> will be kept during the operation.</param>
+        /// <param name="identityBehavior">The <see cref="PostgreSqlBulkImportIdentityBehavior"/> that defines how the identity property values from the <see cref="IDataReader"/> will be handled during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkInsert' instead.")]
         public static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            await BinaryImportAsync(connection,
+            await BinaryImportInternalAsync(connection,
+                tableName,
+                reader,
+                mappings,
+                bulkCopyTimeout,
+                identityBehavior,
+                transaction,
+                cancellationToken);
+
+        /// <summary>
+        /// Non-obsolete equivalent of the deprecated <see cref="BinaryImportAsync(NpgsqlConnection, string, IDataReader, IEnumerable{NpgsqlBulkInsertMapItem}, int?, PostgreSqlBulkImportIdentityBehavior, NpgsqlTransaction, CancellationToken)"/> -
+        /// kept so that internal callers within this assembly (e.g. <c>BaseRepository</c>/<c>DbRepository</c>/<c>NpgsqlConnection</c> extension methods) don't trigger
+        /// CS0618 obsolete warnings when they need this behavior.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BinaryImportInternalAsync(this NpgsqlConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            await BinaryImportAsyncInternal(connection,
                 tableName,
                 reader,
                 mappings,
                 await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
-                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                identityBehavior,
                 connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -799,18 +1151,18 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync(this NpgsqlConnection connection,
+        private static async Task<int> BinaryImportAsyncInternal(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             DbFieldCollection dbFields = null,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
             var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
             var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 

@@ -1,10 +1,10 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkDeleteBase<TEntity>
+        #region BulkMergeBase<TEntity>
 
         /// <summary>
         ///
@@ -28,19 +28,23 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkDeleteBase<TEntity>(this NpgsqlConnection connection,
+        private static int BulkMergeBase<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -49,21 +53,21 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -82,7 +86,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport<TEntity>(tableName,
+                    connection.BinaryImportInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -92,15 +96,16 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -112,12 +117,14 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
         #endregion
 
-        #region BinaryBulkDeleteBase<DataTable>
+        #region BulkMergeBase<DataTable>
 
         /// <summary>
         ///
@@ -130,11 +137,12 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkDeleteBase(this NpgsqlConnection connection,
+        private static int BulkMergeBase(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -142,28 +150,31 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -176,7 +187,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         table,
                         rowState,
                         mappings,
@@ -187,15 +198,16 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -207,12 +219,14 @@ namespace RepoDb
                 identityBehavior: identityBehavior,
                 pseudoTableType: pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction: transaction);
         }
 
         #endregion
 
-        #region BinaryBulkDeleteBase<DbDataReader>
+        #region BulkMergeBase<IDataReader>
 
         /// <summary>
         /// 
@@ -223,38 +237,42 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkDeleteBase(this NpgsqlConnection connection,
+        private static int BulkMergeBase(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -267,7 +285,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         reader,
                         mappings,
                         dbFields,
@@ -276,15 +294,16 @@ namespace RepoDb
                         dbSetting,
                         transaction),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -295,6 +314,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction: transaction);
         }
 
@@ -304,7 +325,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkDeleteBaseAsync<TEntity>
+        #region BulkMergeBaseAsync<TEntity>
 
         /// <summary>
         ///
@@ -317,20 +338,24 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkDeleteBaseAsync<TEntity>(this NpgsqlConnection connection,
+        private static async Task<int> BulkMergeBaseAsync<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -340,21 +365,21 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                entities?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -373,7 +398,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync<TEntity>(tableName,
+                    await connection.BinaryImportAsyncInternal<TEntity>(tableName,
                         entities,
                         mappings,
                         dbFields,
@@ -384,15 +409,16 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -404,13 +430,15 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }
 
         #endregion
 
-        #region BinaryBulkDeleteBaseAsync<DataTable>
+        #region BulkMergeBaseAsync<DataTable>
 
         /// <summary>
         ///
@@ -423,12 +451,13 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkDeleteBaseAsync(this NpgsqlConnection connection,
+        private static async Task<int> BulkMergeBaseAsync(this NpgsqlConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -436,29 +465,32 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                table?.Rows.Count ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -471,7 +503,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         table,
                         rowState,
                         mappings,
@@ -483,15 +515,16 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -503,13 +536,15 @@ namespace RepoDb
                 identityBehavior: identityBehavior,
                 pseudoTableType: pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction: transaction,
                 cancellationToken);
         }
 
         #endregion
 
-        #region BinaryBulkDeleteBaseAsync<DbDataReader>
+        #region BulkMergeBaseAsync<IDataReader>
 
         /// <summary>
         /// 
@@ -520,40 +555,44 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkDeleteBaseAsync(this NpgsqlConnection connection,
+        private static async Task<int> BulkMergeBaseAsync(this NpgsqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = true,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkMerge,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;
-            var identityBehavior = keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : BulkImportIdentityBehavior.Unspecified;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                0, // row count is unknown for a forward-only reader
                 bulkCopyTimeout,
                 dbFields,
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryBulkDeletePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
                 {
-                    var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
+                    var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
                     return mappings = mappings?.Any() == true ? mappings :
@@ -566,7 +605,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         reader,
                         mappings,
                         dbFields,
@@ -576,15 +615,16 @@ namespace RepoDb
                         transaction,
                         cancellationToken),
 
-                // getDeleteToPseudoCommandText
+                // getMergeToPseudoCommandText
                 () =>
-                    GetDeleteCommandText(pseudoTableName,
+                    GetMergeCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         qualifiers,
                         dbFields.GetPrimary()?.AsField(),
                         dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -595,6 +635,8 @@ namespace RepoDb
                 identityBehavior: identityBehavior,
                 pseudoTableType: pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction: transaction,
                 cancellationToken);
         }

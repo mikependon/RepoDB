@@ -131,6 +131,21 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionSumAllAsyncWithHintsThrows()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act/Assert: AreTableHintsSupported == false for Oracle - any non-null/non-whitespace
+                // "hints" argument must throw, rather than silently being ignored.
+                await Assert.ThrowsAsync<NotSupportedException>(() =>
+                    connection.SumAllAsync<CompleteTable>(e => e.ColumnSmallInt, hints: "NOLOCK"));
+            }
+        }
+
         #endregion
 
         #endregion

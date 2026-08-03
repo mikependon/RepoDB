@@ -739,6 +739,75 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged));
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region BulkDeleteAsync<TEntity>
@@ -2178,6 +2247,75 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged));
                         }
                     }
                 }

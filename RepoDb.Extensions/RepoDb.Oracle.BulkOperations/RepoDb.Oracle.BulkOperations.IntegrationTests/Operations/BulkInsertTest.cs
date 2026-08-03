@@ -1042,6 +1042,97 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForMappedEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForMappedEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForMappedEntitiesWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, mappings: mappings).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnOracleConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2761,6 +2852,98 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForNonIdentityMappedEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForNonIdentityMappedEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: OracleBulkImportIdentityBehavior.ReturnIdentity).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkInsertAsyncForNonIdentityMappedEntitiesWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.IdMapped), nameof(BulkOperationNonIdentityTable.Id)));
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.RowGuidMapped), nameof(BulkOperationNonIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnBitMapped), nameof(BulkOperationNonIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationNonIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationNonIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnDecimalMapped), nameof(BulkOperationNonIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnFloatMapped), nameof(BulkOperationNonIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnIntMapped), nameof(BulkOperationNonIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationMappedNonIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, mappings: mappings).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());

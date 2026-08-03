@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace RepoDb
     {
         #region Sync
 
-        #region BinaryBulkDeleteByKeyBase<TPrimaryKey>
+        #region BulkDeleteByKeyBase<TPrimaryKey>
 
         /// <summary>
         ///
@@ -27,15 +28,17 @@ namespace RepoDb
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryBulkDeleteByKeyBase<TPrimaryKey>(this NpgsqlConnection connection,
+        private static int BulkDeleteByKeyBase<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null)
         {
-            var identityBehavior = BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryKey = dbFields.GetPrimary();
@@ -44,6 +47,7 @@ namespace RepoDb
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
+                primaryKeys?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -60,7 +64,7 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport(tableName,
+                    connection.BinaryImportInternal(tableName,
                         GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
@@ -85,6 +89,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction);
         }
 
@@ -94,7 +100,7 @@ namespace RepoDb
 
         #region Async
 
-        #region BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>
+        #region BulkDeleteByKeyBaseAsync<TPrimaryKey>
 
         /// <summary>
         ///
@@ -109,16 +115,18 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>(this NpgsqlConnection connection,
+        private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = PostgreSqlTraceKeys.PostgreSqlBulkDeleteByKey,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var identityBehavior = BulkImportIdentityBehavior.Unspecified;
+            var identityBehavior = PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryKey = dbFields.GetPrimary();
@@ -127,6 +135,7 @@ namespace RepoDb
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
+                primaryKeys?.Count() ?? 0,
                 bulkCopyTimeout,
                 dbFields,
 
@@ -143,7 +152,7 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync(tableName,
+                    await connection.BinaryImportAsyncInternal(tableName,
                         GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
@@ -169,6 +178,8 @@ namespace RepoDb
                 identityBehavior,
                 pseudoTableType,
                 dbSetting,
+                trace,
+                traceKey,
                 transaction,
                 cancellationToken);
         }

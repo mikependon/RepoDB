@@ -348,6 +348,17 @@ namespace RepoDb.Oracle.IntegrationTests.Operations
                 connection.Query<CompleteTable>((object)null, hints: "NOLOCK"));
         }
 
+        [TestMethod]
+        public async Task TestOracleConnectionQueryAsyncWithHintsThrows()
+        {
+            using var connection = new OracleConnection(Database.ConnectionString);
+
+            // Act/Assert: AreTableHintsSupported = false for Oracle - BaseStatementBuilder.GuardHints
+            // throws for any non-null/non-whitespace hints, regardless of operation.
+            await Assert.ThrowsAsync<System.NotSupportedException>(() =>
+                connection.QueryAsync<CompleteTable>((object)null, hints: "NOLOCK"));
+        }
+
         #endregion
     }
 }

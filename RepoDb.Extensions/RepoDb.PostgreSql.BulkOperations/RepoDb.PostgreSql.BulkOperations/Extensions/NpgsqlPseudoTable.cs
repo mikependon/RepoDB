@@ -19,6 +19,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
@@ -28,14 +29,17 @@ namespace RepoDb
         private static void CreatePseudoTable(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
+            int rowCount,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+            var isPhysical = pseudoTableType == PostgreSqlBulkImportPseudoTableType.Physical ||
+                (pseudoTableType == PostgreSqlBulkImportPseudoTableType.Auto && rowCount >= PostgreSqlConstants.RowCountThresholdForPhysicalTable);
+            var commandText = isPhysical ?
                 GetCreatePseudoTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
@@ -50,6 +54,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
@@ -60,15 +65,18 @@ namespace RepoDb
         private static async Task CreatePseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
+            int rowCount,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+            var isPhysical = pseudoTableType == PostgreSqlBulkImportPseudoTableType.Physical ||
+                (pseudoTableType == PostgreSqlBulkImportPseudoTableType.Auto && rowCount >= PostgreSqlConstants.RowCountThresholdForPhysicalTable);
+            var commandText = isPhysical ?
                 GetCreatePseudoTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
@@ -305,7 +313,7 @@ namespace RepoDb
         private static string GetCreatePseudoTableCommandText(string tableName,
             string pseudoTableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO {pseudoTableName.AsQuoted(true, dbSetting)} " +
@@ -324,7 +332,7 @@ namespace RepoDb
         private static string GetCreatePseudoTemporaryTableCommandText(string tableName,
             string pseudoTableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO TEMPORARY {pseudoTableName.AsQuoted(true, dbSetting)} " +
@@ -339,9 +347,9 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetCreatePseudoTableQueryColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
-            identityBehavior != BulkImportIdentityBehavior.ReturnIdentity ?
+            identityBehavior != PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ?
                 mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ") :
                 $"0 AS {"__RepoDb_OrderColumn".AsQuoted(dbSetting)}, " +
                     $"{mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ")}";
