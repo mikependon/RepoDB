@@ -97,11 +97,9 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.GetPrimary() ??
-                        dbFields.GetIdentity()
-                    );
+                var primaryDbField = dbFields?.GetPrimary();
+                var identityDbField = dbFields?.GetIdentity();
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Throw an error if there are is no primary key
                 if (primaryOrIdentityDbField == null)

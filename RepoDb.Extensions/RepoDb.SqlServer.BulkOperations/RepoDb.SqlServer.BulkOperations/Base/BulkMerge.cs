@@ -737,7 +737,12 @@ namespace RepoDb
                 else
                 {
                     using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkMerge, cancellationToken: cancellationToken);
-                    result = await SetIdentityForEntitiesAsync(entities, reader, identityDbField, cancellationToken);
+
+                    var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                    var mappedIdentityDbField = mapping != null
+                        ? new DbField(mapping.SourceColumn, identityDbField.IsPrimary, identityDbField.IsIdentity, identityDbField.IsNullable, identityDbField.Type, identityDbField.Size, identityDbField.Precision, identityDbField.Scale, identityDbField.DatabaseType, identityDbField.HasDefaultValue, identityDbField.Provider)
+                        : identityDbField;
+                    result = await SetIdentityForEntitiesAsync(entities, reader, mappedIdentityDbField, cancellationToken);
                 }
 
                 // Drop the table after used
@@ -1046,6 +1051,17 @@ namespace RepoDb
                     hasOrderingColumn);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
+                //// Set the options to KeepIdentity if needed
+                //if (options == SqlBulkCopyOptions.Default &&
+                //    identityDbField?.IsIdentity == true &&
+                //    qualifiers?.Any(
+                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                //    fields?.Any(
+                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                //{
+                //    options = SqlBulkCopyOptions.KeepIdentity;
+                //}
+
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
                     tempTableName,
@@ -1064,17 +1080,6 @@ namespace RepoDb
                     qualifiers,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
-                //// Set the options to KeepIdentity if needed
-                //if (options == SqlBulkCopyOptions.Default &&
-                //    identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
 
                 // Merge the actual merge
                 sql = GetBulkMergeSqlText(tableName,

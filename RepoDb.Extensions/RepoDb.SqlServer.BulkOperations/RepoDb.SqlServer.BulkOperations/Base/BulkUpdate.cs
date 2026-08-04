@@ -179,10 +179,8 @@ namespace RepoDb
                 //// Set the options to KeepIdentity if needed
                 //if (options == SqlBulkCopyOptions.Default &&
                 //    identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                //    fields?.FirstOrDefault(
+                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 //{
                 //    options = SqlBulkCopyOptions.KeepIdentity;
                 //}

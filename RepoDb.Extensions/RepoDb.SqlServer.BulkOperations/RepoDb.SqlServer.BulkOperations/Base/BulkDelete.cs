@@ -286,7 +286,7 @@ namespace RepoDb
                 // Get the DB Fields
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
-                // Get the DB Fields
+                // Variables needed
                 var tableFields = Enumerable.Range(0, table.Columns.Count)
                     .Select((index) => table.Columns[index].ColumnName);
                 var fields = dbFields?.GetAsFields();
