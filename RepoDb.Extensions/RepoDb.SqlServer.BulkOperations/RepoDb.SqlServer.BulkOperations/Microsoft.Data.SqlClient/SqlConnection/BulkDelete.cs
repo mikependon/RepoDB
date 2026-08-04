@@ -21,74 +21,6 @@ namespace RepoDb
         #region BulkDelete<TEntity>
 
         //        /// <summary>
-        //        /// Bulk delete the list of data entity objects via primary keys from the database.
-        //        /// </summary>
-        //        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        //        /// <param name="connection">The connection object to be used.</param>
-        //        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        //        /// <param name="hints">The table hints to be used.</param>
-        //        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        //        /// <param name="batchSize">The size per batch to be used.</param>
-        //        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        //        /// <param name="transaction">The transaction to be used.</param>
-        //        /// <returns>The number of rows affected by the execution.</returns>
-        //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
-        //        public static int BulkDelete<TEntity>(this SqlConnection connection,
-        //            IEnumerable<object> primaryKeys,
-        //            string? hints = null,
-        //            int? bulkCopyTimeout = null,
-        //            int? batchSize = null,
-        //            bool usePhysicalPseudoTempTable = false,
-        //            SqlTransaction? transaction = null)
-        //            where TEntity : class
-        //        {
-        //            return BulkDelete<TEntity>(connection: connection,
-        //                primaryKeys: primaryKeys,
-        //                hints: hints,
-        //                bulkCopyTimeout: bulkCopyTimeout,
-        //                batchSize: batchSize,
-        //                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
-        //                transaction: transaction);
-        //        }
-
-        /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            SqlServerBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
-            SqlTransaction? transaction = null)
-            where TEntity : class
-        {
-            return BulkDeleteInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                transaction: transaction,
-                trace: trace,
-                traceKey: traceKey);
-        }
-
-        //        /// <summary>
         //        /// Bulk delete a list of data entity objects from the database.
         //        /// </summary>
         //        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -107,7 +39,7 @@ namespace RepoDb
         //        public static int BulkDelete<TEntity>(this SqlConnection connection,
         //            IEnumerable<TEntity> entities,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -148,7 +80,7 @@ namespace RepoDb
         public static int BulkDelete<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -197,7 +129,7 @@ namespace RepoDb
         //            string tableName,
         //            IEnumerable<TEntity> entities,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -241,7 +173,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -286,9 +218,9 @@ namespace RepoDb
         //        /// <returns>The number of rows affected by the execution.</returns>
         //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
         //        public static int BulkDelete<TEntity>(this SqlConnection connection,
-        //            DbDataReader reader,
+        //            IDataReader reader,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -327,9 +259,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete<TEntity>(this SqlConnection connection,
-            DbDataReader reader,
+            IDataReader reader,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -376,7 +308,7 @@ namespace RepoDb
         //            DataTable dataTable,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
         //            DataRowState? rowState = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -420,7 +352,7 @@ namespace RepoDb
             DataTable dataTable,
             Expression<Func<TEntity, object>>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -452,75 +384,6 @@ namespace RepoDb
         #region BulkDelete(TableName)
 
         //        /// <summary>
-        //        /// Bulk delete the list of data entity objects via primary keys from the database.
-        //        /// </summary>
-        //        /// <param name="connection">The connection object to be used.</param>
-        //        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        //        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        //        /// <param name="hints">The table hints to be used.</param>
-        //        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        //        /// <param name="batchSize">The size per batch to be used.</param>
-        //        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        //        /// <param name="transaction">The transaction to be used.</param>
-        //        /// <returns>The number of rows affected by the execution.</returns>
-        //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
-        //        public static int BulkDelete(this SqlConnection connection,
-        //            string tableName,
-        //            IEnumerable<object> primaryKeys,
-        //            string? hints = null,
-        //            int? bulkCopyTimeout = null,
-        //            int? batchSize = null,
-        //            bool usePhysicalPseudoTempTable = false,
-        //            SqlTransaction? transaction = null)
-        //        {
-        //            return BulkDelete(connection: connection,
-        //                tableName: tableName,
-        //                primaryKeys: primaryKeys,
-        //                hints: hints,
-        //                bulkCopyTimeout: bulkCopyTimeout,
-        //                batchSize: batchSize,
-        //                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
-        //                transaction: transaction);
-        //        }
-
-        /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete(this SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            SqlServerBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
-            SqlTransaction? transaction = null)
-        {
-            return BulkDeleteInternal(connection: connection,
-                tableName: tableName,
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                transaction: transaction,
-                trace: trace,
-                traceKey: traceKey);
-        }
-
-        //        /// <summary>
         //        /// Bulk delete an instance of <see cref="DbDataReader"/> object into the database.
         //        /// </summary>
         //        /// <param name="connection">The connection object to be used.</param>
@@ -538,9 +401,9 @@ namespace RepoDb
         //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
         //        public static int BulkDelete(this SqlConnection connection,
         //            string tableName,
-        //            DbDataReader reader,
+        //            IDataReader reader,
         //            IEnumerable<Field>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -580,9 +443,9 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete(this SqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -629,7 +492,7 @@ namespace RepoDb
         //            DataTable dataTable,
         //            IEnumerable<Field>? qualifiers = null,
         //            DataRowState? rowState = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -674,7 +537,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -705,80 +568,6 @@ namespace RepoDb
         #region BulkDeleteAsync<TEntity>
 
         //        /// <summary>
-        //        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        //        /// </summary>
-        //        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        //        /// <param name="connection">The connection object to be used.</param>
-        //        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        //        /// <param name="hints">The table hints to be used.</param>
-        //        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        //        /// <param name="batchSize">The size per batch to be used.</param>
-        //        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        //        /// <param name="transaction">The transaction to be used.</param>
-        //        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        //        /// <returns>The number of rows affected by the execution.</returns>
-        //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
-        //        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
-        //            IEnumerable<object> primaryKeys,
-        //            string? hints = null,
-        //            int? bulkCopyTimeout = null,
-        //            int? batchSize = null,
-        //            bool usePhysicalPseudoTempTable = false,
-        //            SqlTransaction? transaction = null,
-        //            CancellationToken cancellationToken = default)
-        //            where TEntity : class
-        //        {
-        //            return BulkDeleteAsync<TEntity>(connection: connection,
-        //                primaryKeys: primaryKeys,
-        //                hints: hints,
-        //                bulkCopyTimeout: bulkCopyTimeout,
-        //                batchSize: batchSize,
-        //                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
-        //                transaction: transaction,
-        //                cancellationToken: cancellationToken);
-        //        }
-
-        /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            SqlServerBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
-            SqlTransaction? transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkDeleteAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                transaction: transaction,
-                trace: trace,
-                traceKey: traceKey,
-                cancellationToken: cancellationToken);
-        }
-
-        //        /// <summary>
         //        /// Bulk delete a list of data entity objects from the database in an asynchronous way.
         //        /// </summary>
         //        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -798,7 +587,7 @@ namespace RepoDb
         //        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
         //            IEnumerable<TEntity> entities,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -842,7 +631,7 @@ namespace RepoDb
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -894,7 +683,7 @@ namespace RepoDb
         //            string tableName,
         //            IEnumerable<TEntity> entities,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -941,7 +730,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -989,9 +778,9 @@ namespace RepoDb
         //        /// <returns>The number of rows affected by the execution.</returns>
         //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
         //        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
-        //            DbDataReader reader,
+        //            IDataReader reader,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -1033,9 +822,9 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
-            DbDataReader reader,
+            IDataReader reader,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1085,7 +874,7 @@ namespace RepoDb
         //            DataTable dataTable,
         //            Expression<Func<TEntity, object>>? qualifiers = null,
         //            DataRowState? rowState = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -1132,7 +921,7 @@ namespace RepoDb
             DataTable dataTable,
             Expression<Func<TEntity, object>>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1166,81 +955,6 @@ namespace RepoDb
         #region BulkDeleteAsync(TableName)
 
         //        /// <summary>
-        //        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        //        /// </summary>
-        //        /// <param name="connection">The connection object to be used.</param>
-        //        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        //        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        //        /// <param name="hints">The table hints to be used.</param>
-        //        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        //        /// <param name="batchSize">The size per batch to be used.</param>
-        //        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        //        /// <param name="transaction">The transaction to be used.</param>
-        //        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        //        /// <returns>The number of rows affected by the execution.</returns>
-        //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
-        //        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
-        //            string tableName,
-        //            IEnumerable<object> primaryKeys,
-        //            string? hints = null,
-        //            int? bulkCopyTimeout = null,
-        //            int? batchSize = null,
-        //            bool usePhysicalPseudoTempTable = false,
-        //            SqlTransaction? transaction = null,
-        //            CancellationToken cancellationToken = default)
-        //        {
-        //            return BulkDeleteAsync(connection: connection,
-        //                tableName: tableName,
-        //                primaryKeys: primaryKeys,
-        //                hints: hints,
-        //                bulkCopyTimeout: bulkCopyTimeout,
-        //                batchSize: batchSize,
-        //                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
-        //                transaction: transaction,
-        //                cancellationToken: cancellationToken);
-        //        }
-
-        /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            SqlServerBulkImportPseudoTableType pseudoTableType = default,
-            ITrace trace = null,
-            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
-            SqlTransaction? transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkDeleteAsyncInternal(connection: connection,
-                tableName: tableName,
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
-                transaction: transaction,
-                trace: trace,
-                traceKey: traceKey,
-                cancellationToken: cancellationToken);
-        }
-
-        //        /// <summary>
         //        /// Bulk delete an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         //        /// </summary>
         //        /// <param name="connection">The connection object to be used.</param>
@@ -1259,9 +973,9 @@ namespace RepoDb
         //        [Obsolete("Use the overload that accepts 'SqlServerBulkImportPseudoTableType pseudoTableType' instead.")]
         //        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
         //            string tableName,
-        //            DbDataReader reader,
+        //            IDataReader reader,
         //            IEnumerable<Field>? qualifiers = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -1304,9 +1018,9 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1356,7 +1070,7 @@ namespace RepoDb
         //            DataTable dataTable,
         //            IEnumerable<Field>? qualifiers = null,
         //            DataRowState? rowState = null,
-        //            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+        //            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
         //            SqlBulkCopyOptions options = default,
         //            string? hints = null,
         //            int? bulkCopyTimeout = null,
@@ -1404,7 +1118,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1441,41 +1155,6 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="primaryKeys"></param>
-        /// <param name="hints"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <returns></returns>
-        internal static int BulkDeleteInternal(SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null,
-            ITrace? trace = null,
-            string? traceKey = null) =>
-            BulkDeleteByKeyInternalBase(connection,
-                tableName,
-                primaryKeys,
-                hints,
-                bulkCopyTimeout,
-                batchSize,
-                usePhysicalPseudoTempTable,
-                transaction,
-                trace,
-                traceKey);
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
@@ -1490,9 +1169,9 @@ namespace RepoDb
         /// <returns></returns>
         internal static int BulkDeleteInternal(SqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1538,7 +1217,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1571,44 +1250,6 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="primaryKeys"></param>
-        /// <param name="hints"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        internal static Task<int> BulkDeleteAsyncInternal(SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null,
-            ITrace? trace = null,
-            string? traceKey = null,
-            CancellationToken cancellationToken = default) =>
-            BulkDeleteByKeyAsyncInternalBase(connection,
-                tableName,
-                primaryKeys,
-                hints,
-                bulkCopyTimeout,
-                batchSize,
-                usePhysicalPseudoTempTable,
-                transaction,
-                trace,
-                traceKey,
-                cancellationToken);
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
@@ -1624,9 +1265,9 @@ namespace RepoDb
         /// <returns></returns>
         internal static Task<int> BulkDeleteAsyncInternal(SqlConnection connection,
             string tableName,
-            DbDataReader reader,
+            IDataReader reader,
             IEnumerable<Field>? qualifiers = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
@@ -1675,7 +1316,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,

@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="reader"></param>
         /// <param name="identityField"></param>
         private static int SetIdentityForEntities<TEntity>(IEnumerable<TEntity> entities,
-            DbDataReader reader,
+            IDataReader reader,
             Field identityField)
             where TEntity : class
         {
@@ -77,7 +77,7 @@ namespace RepoDb
         /// <param name="identityDbField"></param>
         /// <param name="cancellationToken"></param>
         private static async Task<int> SetIdentityForEntitiesAsync<TEntity>(IEnumerable<TEntity> entities,
-            DbDataReader reader,
+            IDataReader reader,
             DbField identityDbField,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="identityColumn"></param>
         /// <returns></returns>
         private static int SetIdentityForEntities(DataTable dataTable,
-            DbDataReader reader,
+            IDataReader reader,
             DataColumn identityColumn)
         {
             var result = 0;
@@ -144,7 +144,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> SetIdentityForEntitiesAsync(DataTable dataTable,
-            DbDataReader reader,
+            IDataReader reader,
             DataColumn identityColumn,
             CancellationToken cancellationToken = default)
         {
@@ -304,7 +304,7 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        internal static void ThrowIfNullOrEmpty(DbDataReader reader)
+        internal static void ThrowIfNullOrEmpty(IDataReader reader)
         {
             if (reader == null)
             {

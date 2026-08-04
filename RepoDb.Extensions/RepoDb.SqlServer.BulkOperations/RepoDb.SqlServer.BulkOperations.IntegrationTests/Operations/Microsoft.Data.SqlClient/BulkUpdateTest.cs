@@ -45,7 +45,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -78,7 +78,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt }, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -155,7 +155,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -187,7 +187,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -220,7 +220,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(tables,
-                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped }, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -297,7 +297,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -335,7 +335,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkUpdate(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                Assert.Throws<InvalidOperationException>(() => connection.BulkUpdate(tables, mappings: mappings));
             }
         }
 
@@ -361,7 +361,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -405,7 +405,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader,
-                            mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                            mappings: mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -449,7 +449,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader,
-                            mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                            mappings: mappings));
                     }
                 }
             }
@@ -481,7 +481,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -530,7 +530,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                                mappings: mappings);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -579,7 +579,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         {
                             // Act
                             Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                                mappings: mappings));
                         }
                     }
                 }
@@ -591,7 +591,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
@@ -600,7 +600,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         //{
         //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>(), pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+        //        connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>());
         //    }
         //}
 
@@ -610,7 +610,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DbDataReader)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                    (DbDataReader)null));
             }
         }
 
@@ -620,7 +620,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                    (DataTable)null));
             }
         }
 
@@ -643,7 +643,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -685,7 +685,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -721,7 +721,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -753,7 +753,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -785,7 +785,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -819,7 +819,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt }, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -893,7 +893,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                            reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -938,7 +938,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         // Act
                         var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             reader,
-                            mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                            mappings: mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -983,7 +983,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         // Act
                         Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             reader,
-                            mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                            mappings: mappings));
                     }
                 }
             }
@@ -1011,7 +1011,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable", reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable", reader));
                     }
                 }
             }
@@ -1039,7 +1039,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable", reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable", reader));
                     }
                 }
             }
@@ -1071,7 +1071,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1121,7 +1121,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
+                                mappings: mappings);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1171,7 +1171,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             // Act
                             Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                                mappings: mappings));
                         }
                     }
                 }
@@ -1205,7 +1205,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable",
-                                table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                                table));
                         }
                     }
                 }
@@ -1239,7 +1239,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
-                                table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
+                                table));
                         }
                     }
                 }
