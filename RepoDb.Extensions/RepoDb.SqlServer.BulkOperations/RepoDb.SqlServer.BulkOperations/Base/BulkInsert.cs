@@ -51,7 +51,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate
-            // ThrowIfNullOrEmpty(entities);
+            if (entities?.Any() != true)
+            {
+                return default;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -351,7 +354,7 @@ namespace RepoDb
                 }
 
                 // Pseudo temp table
-                var withPseudoExecution = (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null);
+                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
                 var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
                     tableName,
                     pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
@@ -461,8 +464,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate
-            var firstEntity = entities?.FirstOrDefault();
-            if (firstEntity is null)
+            if (entities?.Any() != true)
             {
                 return default;
             }
@@ -481,9 +483,9 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var entityType = firstEntity.GetType();
+                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(firstEntity as IDictionary<string, object>) :
+                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.GetAsFields();
 
@@ -516,6 +518,7 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
+                // Pseudo temp table
                 var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
                 var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
                     tableName,
@@ -555,7 +558,11 @@ namespace RepoDb
                     // Execute the SQL
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken)))
                     {
-                        result = await SetIdentityForEntitiesAsync(entities, reader, identityDbField, cancellationToken);
+                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                        var mappedIdentityDbField = mapping != null
+                            ? new DbField(mapping.SourceColumn, identityDbField.IsPrimary, identityDbField.IsIdentity, identityDbField.IsNullable, identityDbField.Type, identityDbField.Size, identityDbField.Precision, identityDbField.Scale, identityDbField.DatabaseType, identityDbField.HasDefaultValue, identityDbField.Provider)
+                            : identityDbField;
+                        result = await SetIdentityForEntitiesAsync(entities, reader, mappedIdentityDbField, cancellationToken);
                     }
 
                     // Drop the table after used

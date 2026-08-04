@@ -765,24 +765,6 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForNullEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
-            }
-        }
-
-        //[TestMethod, ExpectedException(typeof(EmptyException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEmptyEntities()
-        //{
-        //    using (var connection = new SqlConnection(Database.ConnectionString))
-        //    {
-        //        connection.BulkInsert(Enumerable.Empty<BulkOperationIdentityTable>());
-        //    }
-        //}
-
-        [TestMethod]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForNullDataReader()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -2335,24 +2317,6 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
-
-        [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
-            }
-        }
-
-        //[TestMethod, ExpectedException(typeof(AggregateException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEmptyEntities()
-        //{
-        //    using (var connection = new SqlConnection(Database.ConnectionString))
-        //    {
-        //        connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
-        //    }
-        //}
 
         [TestMethod]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullDataReader()
