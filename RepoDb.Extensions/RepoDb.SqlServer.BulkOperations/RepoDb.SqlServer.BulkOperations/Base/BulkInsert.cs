@@ -109,7 +109,8 @@ namespace RepoDb
                     transaction,
                     withPseudoExecution,
                     dbSetting,
-                    fields);
+                    fields,
+                    trace);
 
                 // WriteToServer
                 result = WriteToServerInternal(connection,
@@ -356,7 +357,8 @@ namespace RepoDb
                     transaction,
                     withPseudoExecution,
                     dbSetting,
-                    fields);
+                    fields,
+                    trace);
 
                 // WriteToServer
                 result = WriteToServerInternal(connection,
@@ -521,7 +523,8 @@ namespace RepoDb
                     withPseudoExecution,
                     dbSetting,
                     fields,
-                    cancellationToken);
+                    cancellationToken,
+                    trace);
 
                 // WriteToServer
                 result = await WriteToServerAsyncInternal(connection,
@@ -773,7 +776,8 @@ namespace RepoDb
                     withPseudoExecution,
                     dbSetting,
                     fields,
-                    cancellationToken);
+                    cancellationToken,
+                    trace);
 
                 // WriteToServer
                 result = await WriteToServerAsyncInternal(connection,

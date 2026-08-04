@@ -13,7 +13,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class MicrosoftSqlConnectionBulkUpdateOperationsTest
+    public class MicrosoftSqlConnectionBulkInsertOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -28,10 +28,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             Database.Cleanup();
         }
 
-        #region BulkUpdate<TEntity>
+        #region BulkInsert<TEntity>
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntities()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -39,16 +39,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkInsertResult = connection.BulkInsert(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -63,7 +57,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -71,17 +65,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
+                var bulkInsertResult = connection.BulkInsert(tables, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -90,13 +78,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithReturnIdentityAndWithHints()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -104,17 +93,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
-                    usePhysicalPseudoTempTable: true);
+                var bulkInsertResult = connection.BulkInsert(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -123,20 +106,48 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -149,16 +160,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
+                var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -173,7 +178,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntities()
+        public void TestMicrosoftSqlConnectionBulkInsertForMappedEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
@@ -181,16 +186,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkInsertResult = connection.BulkInsert(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
@@ -205,7 +204,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkInsertForMappedEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
@@ -213,17 +212,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
-                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped });
+                var bulkInsertResult = connection.BulkInsert(tables, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
@@ -232,13 +225,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForMappedEntitiesWithReturnIdentityAndWithHints()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
@@ -246,17 +240,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
-                    usePhysicalPseudoTempTable: true);
+                var bulkInsertResult = connection.BulkInsert(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
@@ -265,42 +253,64 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForMappedEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
+                var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
@@ -315,7 +325,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -335,12 +345,12 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkUpdate(tables, mappings: mappings));
+                Assert.Throws<InvalidOperationException>(() => connection.BulkInsert(tables, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -361,61 +371,71 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
-                    }
-                }
-            }
-        }
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReaderWithMappings()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
-
-            // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
-                    {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReaderWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader, mappings);
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -448,15 +468,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings));
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader, mappings));
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -481,10 +500,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table);
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -492,14 +517,163 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -529,11 +703,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -541,7 +720,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -578,8 +757,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings));
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -587,66 +765,60 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullEntities()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForNullEntities()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null));
+                Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         //[TestMethod, ExpectedException(typeof(EmptyException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEmptyEntities()
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEmptyEntities()
         //{
         //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>());
+        //        connection.BulkInsert(Enumerable.Empty<BulkOperationIdentityTable>(), pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
         //    }
         //}
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataReader()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForNullDataReader()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DbDataReader)null));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataTable()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForNullDataTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null));
+                Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         #endregion
 
-        #region BulkUpdate<TEntity>(Extra Fields)
+        #region BulkInsert<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Setup
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkInsertResult = connection.BulkInsert(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -661,7 +833,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -678,17 +850,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Setup
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkInsertResult = connection.BulkInsert(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -704,74 +870,62 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkUpdate(TableName)
+        #region BulkInsert(TableName)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameExpandoObjects()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameExpandoObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameAnonymousObjects()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameAnonymousObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkUpdateForTableNameDataEntities()
+        public void TestSystemSqlConnectionBulkInsertForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -779,16 +933,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -803,26 +951,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDataEntitiesWithQualifiers()
+        public void TestSystemSqlConnectionBulkInsertForTableNameExpandoObjectsWithReturnIdentity()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -831,13 +972,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -845,18 +986,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
-                    usePhysicalPseudoTempTable: true);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -865,13 +999,70 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -892,25 +1083,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -936,19 +1131,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            mappings: mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -981,16 +1180,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            mappings: mappings));
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings));
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1011,14 +1208,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable", (DbDataReader)reader));
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", reader));
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1039,14 +1236,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable", (DbDataReader)reader));
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", reader));
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1071,10 +1268,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1082,14 +1285,163 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1119,12 +1471,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                mappings: mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto);  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1132,7 +1488,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1169,9 +1525,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                mappings: mappings));
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -1179,7 +1533,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1204,8 +1558,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable",
-                                table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -1213,7 +1566,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1238,8 +1591,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
-                                table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto));  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -1248,10 +1600,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkUpdateAsync<TEntity>
+        #region BulkInsertAsync<TEntity>
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntities()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1259,16 +1611,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -1283,7 +1629,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1291,17 +1637,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -1310,13 +1650,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityWithHints()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1324,17 +1665,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -1343,159 +1678,48 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Setup
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables, mappings: mappings).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntities()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithQualifiers()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped }).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithMappings()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
-
-            // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1508,16 +1732,36 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables, mappings: mappings).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForMappedEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
@@ -1532,7 +1776,128 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForMappedEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForMappedEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForMappedEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForMappedEntitiesWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1552,13 +1917,12 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(tables,
-                    mappings: mappings).Result);
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(tables, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1579,61 +1943,71 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
-                    }
-                }
-            }
-        }
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
-        [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReaderWithMappings()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
-
-            // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
-                    {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings).Result;
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader, mappings).Result;
+
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1666,15 +2040,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader, mappings).Result);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1699,10 +2072,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1710,14 +2089,163 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1747,11 +2275,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
-                                mappings: mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1759,7 +2292,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1796,8 +2329,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
-                                mappings: mappings).Result);
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -1805,66 +2337,60 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullEntities()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullEntities()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Wait());  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         //[TestMethod, ExpectedException(typeof(AggregateException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEmptyEntities()
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEmptyEntities()
         //{
         //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();)
+        //        Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>(), pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Wait();)  // TODO: Remove the 'pseudoTableType' in the future
         //    }
         //}
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataReader()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullDataReader()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DbDataReader)null).Wait());
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataTable()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullDataTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null).Wait());
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Wait());  // TODO: Remove the 'pseudoTableType' in the future
             }
         }
 
         #endregion
 
-        #region BulkUpdateAsync<TEntity>(Extra Fields)
+        #region BulkInsertAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Setup
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -1879,14 +2405,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -1897,17 +2422,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Setup
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -1923,74 +2442,62 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkUpdateAsync(TableName)
+        #region BulkInsertAsync(TableName)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameExpandoObjects()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameExpandoObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameAnonymousObjects()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameAnonymousObjects()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
+                tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkUpdateAsyncForTableNameDataEntities()
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1998,16 +2505,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -2022,26 +2523,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithQualifiers()
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameExpandoObjectsWithReturnIdentity()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
-                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -2050,13 +2544,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2064,18 +2558,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
-                // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
@@ -2084,13 +2571,70 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2111,24 +2655,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -2154,19 +2703,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            mappings: mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2199,16 +2752,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            mappings: mappings).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings).Result);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2229,14 +2780,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable", (DbDataReader)reader).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", reader).Result);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2257,14 +2808,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable", (DbDataReader)reader).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", reader).Result);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2289,10 +2840,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -2300,14 +2857,163 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -2337,12 +3043,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                mappings: mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -2350,7 +3060,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2387,9 +3097,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                mappings: mappings).Result);
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -2397,7 +3105,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2422,7 +3130,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable", table).Result);
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", table, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }
@@ -2430,7 +3138,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2455,8 +3163,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable",
-                                table).Result);
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
                         }
                     }
                 }

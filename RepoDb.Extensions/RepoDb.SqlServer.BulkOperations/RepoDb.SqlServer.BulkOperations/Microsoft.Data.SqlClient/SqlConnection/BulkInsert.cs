@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
 using RepoDb.Interfaces;
 
 using RepoDb.SqlServer.BulkOperations;
@@ -33,6 +35,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
@@ -42,6 +45,46 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
+            where TEntity : class =>
+            connection.BulkInsert<TEntity>(entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkInsert<TEntity>(this SqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -53,9 +96,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         /// <summary>
@@ -74,6 +119,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -85,6 +131,49 @@ namespace RepoDb
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null)
+            where TEntity : class =>
+            connection.BulkInsert<TEntity>(tableName: tableName,
+                entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkInsert<TEntity>(this SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
+            SqlTransaction? transaction = null)
             where TEntity : class
         {
             return BulkInsertInternal(connection: connection,
@@ -95,9 +184,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         /// <summary>
@@ -182,6 +273,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
@@ -192,6 +284,49 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null)
+            where TEntity : class =>
+            connection.BulkInsert<TEntity>(dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction);
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkInsert<TEntity>(this SqlConnection connection,
+            DataTable dataTable,
+            DataRowState? rowState = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -204,9 +339,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         /// <summary>
@@ -225,6 +362,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static int BulkInsert(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
@@ -236,6 +374,50 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null) =>
+            connection.BulkInsert(tableName: tableName,
+                dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction);
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkInsert(this SqlConnection connection,
+            string tableName,
+            DataTable dataTable,
+            DataRowState? rowState = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null)
         {
             return BulkInsertInternal(connection: connection,
@@ -247,9 +429,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         #endregion
@@ -272,6 +456,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
@@ -281,6 +466,49 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            connection.BulkInsertAsync<TEntity>(entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -293,9 +521,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -316,6 +546,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -328,6 +559,52 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            connection.BulkInsertAsync<TEntity>(tableName: tableName,
+                entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
+            SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -338,9 +615,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -394,6 +673,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IAsyncEnumerable<TEntity> entities,
             IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
@@ -403,6 +683,49 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            connection.BulkInsertAsync<TEntity>(entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+            IAsyncEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -415,9 +738,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -438,6 +763,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IAsyncEnumerable<TEntity> entities,
@@ -450,6 +776,52 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            connection.BulkInsertAsync<TEntity>(tableName: tableName,
+                entities: entities,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+            string tableName,
+            IAsyncEnumerable<TEntity> entities,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
+            SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -460,9 +832,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -521,6 +895,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
@@ -531,6 +906,52 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            connection.BulkInsertAsync<TEntity>(dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+            DataTable dataTable,
+            DataRowState? rowState = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -544,9 +965,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -567,6 +990,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use the overload that accepts 'SqlServerBulkImportIdentityBehavior' and 'SqlServerBulkImportPseudoTableType' instead of the 'isReturnIdentity' and 'usePhysicalPseudoTempTable' boolean flags.")]
         public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
@@ -579,6 +1003,53 @@ namespace RepoDb
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
+            CancellationToken cancellationToken = default) =>
+            connection.BulkInsertAsync(tableName: tableName,
+                dataTable: dataTable,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: isReturnIdentity ? SqlServerBulkImportIdentityBehavior.ReturnIdentity : SqlServerBulkImportIdentityBehavior.KeepIdentity,
+                pseudoTableType: usePhysicalPseudoTempTable ? SqlServerBulkImportPseudoTableType.Physical : SqlServerBulkImportPseudoTableType.Auto,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use. This argument will only be used if the 'identityBehavior' argument is 'ReturnIdentity'.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync(this SqlConnection connection,
+            string tableName,
+            DataTable dataTable,
+            DataRowState? rowState = null,
+            IEnumerable<SqlServerBulkInsertMapItem>? mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkInsert,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -590,9 +1061,11 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                isReturnIdentity: identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity,
+                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -601,7 +1074,7 @@ namespace RepoDb
         #region BulkInsertInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -615,6 +1088,8 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <returns></returns>
         internal static int BulkInsertInternal<TEntity>(SqlConnection connection,
             string tableName,
@@ -626,7 +1101,9 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null)
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
             where TEntity : class =>
             BulkInsertInternalBase(connection,
                 tableName,
@@ -638,10 +1115,12 @@ namespace RepoDb
                 batchSize,
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
-                transaction);
+                transaction,
+                trace,
+                traceKey);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -684,6 +1163,8 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
@@ -696,7 +1177,9 @@ namespace RepoDb
             int? batchSize = null,
             bool isReturnIdentity = false,
             bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null) =>
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null) =>
             BulkInsertInternalBase(connection,
                 tableName,
                 dataTable,
@@ -708,14 +1191,16 @@ namespace RepoDb
                 batchSize,
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
-                transaction);
+                transaction,
+                trace,
+                traceKey);
 
         #endregion
 
         #region BulkInsertAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -730,6 +1215,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
@@ -744,6 +1230,7 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkInsertAsyncInternalBase(connection,
@@ -758,10 +1245,11 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 trace,
+                traceKey,
                 cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -808,6 +1296,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> BulkInsertAsyncInternal(SqlConnection connection,
@@ -823,6 +1312,7 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsyncInternalBase(connection,
                 tableName,
@@ -837,10 +1327,11 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 trace,
+                traceKey,
                 cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -855,6 +1346,7 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
@@ -869,6 +1361,7 @@ namespace RepoDb
             bool usePhysicalPseudoTempTable = false,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -886,6 +1379,7 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 trace,
+                traceKey,
                 cancellationToken);
         }
 
