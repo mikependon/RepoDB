@@ -173,7 +173,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk merge an instance of <see cref="DataTable"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
@@ -189,7 +188,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this SqlConnection connection,
+        public static int BulkMerge(this SqlConnection connection,
             DataTable table,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
@@ -203,10 +202,9 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null)
-            where TEntity : class
         {
             return BulkMergeInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: table.TableName,
                 table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
@@ -440,7 +438,6 @@ namespace RepoDb
         /// <summary>
         /// Bulk merge an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
@@ -457,7 +454,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync(this SqlConnection connection,
             DataTable table,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
@@ -472,10 +469,9 @@ namespace RepoDb
             string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
             return BulkMergeAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: table.TableName,
                 table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
