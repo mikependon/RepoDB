@@ -111,7 +111,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -253,7 +253,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -853,7 +853,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1331,7 +1331,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1470,7 +1470,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -2072,7 +2072,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);

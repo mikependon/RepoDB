@@ -39,7 +39,7 @@ namespace RepoDb
             // Create a connection
             using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            // Call the method
+            //// Call the method
             return bulkDbConnector.Connection.BulkDeleteByKey(tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: repository.CommandTimeout,
@@ -81,7 +81,7 @@ namespace RepoDb
             // Create a connection
             using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            // Call the method
+            //// Call the method
             return await bulkDbConnector.Connection.BulkDeleteByKeyAsync(tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: repository.CommandTimeout,

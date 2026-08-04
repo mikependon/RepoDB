@@ -17,7 +17,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="repository">The instance of <see cref="DbRepository{SqlConnection}"/> object.</param>
-        public BulkDbConnector(SqlTransaction transaction, DbRepository<SqlConnection> repository)
+        public BulkDbConnector(
+            SqlTransaction transaction,
+            DbRepository<SqlConnection> repository)
         {
             this.transaction = transaction;
             this.repository = repository;
