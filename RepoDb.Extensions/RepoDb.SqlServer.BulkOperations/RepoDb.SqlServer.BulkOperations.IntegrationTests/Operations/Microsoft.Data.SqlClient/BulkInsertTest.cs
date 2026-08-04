@@ -371,7 +371,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -419,7 +419,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -468,7 +468,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert<BulkOperationIdentityTable>(reader, mappings));
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings));
                     }
                 }
             }
@@ -1943,7 +1943,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -1991,7 +1991,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader, mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -2040,7 +2040,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(reader, mappings).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, mappings).Result);
                     }
                 }
             }

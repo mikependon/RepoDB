@@ -116,7 +116,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int WriteToServerInternal(SqlConnection connection,
             string tableName,
-            IDataReader reader,
+            DbDataReader reader,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
@@ -174,7 +174,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
@@ -185,7 +185,7 @@ namespace RepoDb
         /// <returns></returns>
         private static int WriteToServerInternal(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
@@ -224,7 +224,7 @@ namespace RepoDb
                 // Add the order column
                 if (hasOrderingColumn)
                 {
-                    AddOrderColumn(dataTable);
+                    AddOrderColumn(table);
                     mappings = AddOrderColumnMapping(mappings);
                 }
 
@@ -236,16 +236,16 @@ namespace RepoDb
                 if (rowState.HasValue == true)
                 {
                     var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DataTable), typeof(DataRowState) });
-                    writeToServerMethod(sqlBulkCopy, new object[] { dataTable, rowState.Value });
+                    writeToServerMethod(sqlBulkCopy, new object[] { table, rowState.Value });
                 }
                 else
                 {
                     var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DataTable) });
-                    writeToServerMethod(sqlBulkCopy, new[] { dataTable });
+                    writeToServerMethod(sqlBulkCopy, new[] { table });
                 }
 
                 // Set the result
-                result = rowState == null ? dataTable.Rows.Count : GetDataRows(dataTable, rowState).Count();
+                result = rowState == null ? table.Rows.Count : GetDataRows(table, rowState).Count();
             }
 
             // Return the result
@@ -357,7 +357,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> WriteToServerAsyncInternal(SqlConnection connection,
             string tableName,
-            IDataReader reader,
+            DbDataReader reader,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
@@ -415,7 +415,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
@@ -427,7 +427,7 @@ namespace RepoDb
         /// <returns></returns>
         private static async Task<int> WriteToServerAsyncInternal(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
@@ -467,7 +467,7 @@ namespace RepoDb
                 // Add the order column
                 if (hasOrderingColumn)
                 {
-                    AddOrderColumn(dataTable);
+                    AddOrderColumn(table);
                     mappings = AddOrderColumnMapping(mappings);
                 }
 
@@ -479,16 +479,16 @@ namespace RepoDb
                 if (rowState.HasValue == true)
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(DataRowState), typeof(CancellationToken) });
-                    await writeToServerMethod(sqlBulkCopy, new object[] { dataTable, rowState.Value, cancellationToken });
+                    await writeToServerMethod(sqlBulkCopy, new object[] { table, rowState.Value, cancellationToken });
                 }
                 else
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(CancellationToken) });
-                    await writeToServerMethod(sqlBulkCopy, new object[] { dataTable, cancellationToken });
+                    await writeToServerMethod(sqlBulkCopy, new object[] { table, cancellationToken });
                 }
 
                 // Set the result
-                result = rowState == null ? dataTable.Rows.Count : GetDataRows(dataTable, rowState).Count();
+                result = rowState == null ? table.Rows.Count : GetDataRows(table, rowState).Count();
             }
 
             // Return the result

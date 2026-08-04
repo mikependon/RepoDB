@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 
@@ -18,7 +19,57 @@ namespace RepoDb
         #region BulkUpdateInternalBase
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="options"></param>
+        /// <param name="hints"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <returns></returns>
+        internal static int BulkUpdateInternalBase<TEntity>(SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
+            where TEntity : class
+        {
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return BulkUpdateInternalBase(connection,
+                tableName,
+                reader,
+                qualifiers,
+                mappings,
+                options,
+                hints,
+                bulkCopyTimeout,
+                batchSize,
+                pseudoTableType,
+                transaction,
+                trace,
+                traceKey);
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -29,20 +80,20 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <returns></returns>
         internal static int BulkUpdateInternalBase(SqlConnection connection,
             string tableName,
-            IDataReader reader,
+            DbDataReader reader,
             IEnumerable<Field>? qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
             string? traceKey = null)
@@ -59,7 +110,7 @@ namespace RepoDb
             int result;
 
             transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-            var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
@@ -188,7 +239,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -196,13 +247,13 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace"></param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkUpdateInternalBase(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -210,13 +261,13 @@ namespace RepoDb
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
             string? traceKey = null)
         {
             // Validate
-            if (dataTable?.Rows.Count <= 0)
+            if (table?.Rows.Count <= 0)
             {
                 return default;
             }
@@ -227,7 +278,7 @@ namespace RepoDb
             int result;
 
             transaction = CreateOrValidateCurrentTransaction(connection, transaction);
-            var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
@@ -235,8 +286,8 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
-                    .Select((index) => dataTable.Columns[index].ColumnName);
+                var tableFields = Enumerable.Range(0, table.Columns.Count)
+                    .Select((index) => table.Columns[index].ColumnName);
                 var fields = dbFields?.GetAsFields();
                 var primaryDbField = dbFields?.GetPrimary();
                 var identityDbField = dbFields?.GetIdentity();
@@ -305,7 +356,7 @@ namespace RepoDb
                 // WriteToServer
                 WriteToServerInternal(connection,
                     tempTableName,
-                    dataTable,
+                    table,
                     rowState,
                     mappings,
                     options,
@@ -356,7 +407,60 @@ namespace RepoDb
         #region BulkUpdateAsyncInternalBase
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
+        /// <param name="options"></param>
+        /// <param name="hints"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<int> BulkUpdateAsyncInternalBase<TEntity>(SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return await BulkUpdateAsyncInternalBase(connection,
+                tableName,
+                reader,
+                qualifiers,
+                mappings,
+                options,
+                hints,
+                bulkCopyTimeout,
+                batchSize,
+                pseudoTableType,
+                transaction,
+                trace,
+                traceKey,
+                cancellationToken);
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -367,21 +471,21 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkUpdateAsyncInternalBase(SqlConnection connection,
             string tableName,
-            IDataReader reader,
+            DbDataReader reader,
             IEnumerable<Field>? qualifiers = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
             string? traceKey = null,
@@ -399,7 +503,7 @@ namespace RepoDb
             int result;
 
             transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
-            var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
@@ -527,7 +631,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="table"></param>
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
@@ -535,14 +639,14 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkUpdateAsyncInternalBase(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
@@ -550,14 +654,14 @@ namespace RepoDb
             string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
             SqlTransaction? transaction = null,
             ITrace? trace = null,
             string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
-            if (dataTable?.Rows.Count <= 0)
+            if (table?.Rows.Count <= 0)
             {
                 return default;
             }
@@ -568,7 +672,7 @@ namespace RepoDb
             int result;
 
             transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
-            var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkUpdateTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
 
             try
             {
@@ -576,8 +680,8 @@ namespace RepoDb
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
-                var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
-                    .Select((index) => dataTable.Columns[index].ColumnName);
+                var tableFields = Enumerable.Range(0, table.Columns.Count)
+                    .Select((index) => table.Columns[index].ColumnName);
                 var fields = dbFields?.GetAsFields();
                 var primaryDbField = dbFields?.GetPrimary();
                 var identityDbField = dbFields?.GetIdentity();
@@ -646,7 +750,7 @@ namespace RepoDb
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
                     tempTableName,
-                    dataTable,
+                    table,
                     rowState,
                     mappings,
                     options,

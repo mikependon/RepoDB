@@ -39,12 +39,12 @@ namespace RepoDb
             string traceKey = SqlServerTraceKeys.SqlServerBulkDeleteByKey,
             SqlTransaction transaction = null)
         {
-            return BulkDeleteInternal(connection: connection,
+            return BulkDeleteByKeyInternalBase(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys?.Cast<object>(),
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
                 trace: trace,
                 traceKey: traceKey);
@@ -80,12 +80,12 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteByKeyAsyncInternalBase(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys?.Cast<object>(),
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
                 trace: trace,
                 traceKey: traceKey,

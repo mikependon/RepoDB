@@ -361,7 +361,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader);
+                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -404,7 +404,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader,
+                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings);
 
                         // Assert
@@ -448,7 +448,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate<BulkOperationIdentityTable>(reader,
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings));
                     }
                 }
@@ -1579,7 +1579,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
+                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1622,7 +1622,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(reader,
+                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result;  // TODO: Remove the 'pseudoTableType' in the future
 
                         // Assert
@@ -1666,7 +1666,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(reader,
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings, pseudoTableType: Enumerations.SqlServer.SqlServerBulkImportPseudoTableType.Auto).Result);  // TODO: Remove the 'pseudoTableType' in the future
                     }
                 }

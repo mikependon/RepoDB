@@ -36,7 +36,6 @@ namespace RepoDb
             string traceKey = SqlServerTraceKeys.SqlServerBulkDeleteByKey,
             SqlTransaction transaction = null)
         {
-            // Create a connection
             using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
             //// Call the method
@@ -78,7 +77,6 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            // Create a connection
             using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
             //// Call the method
