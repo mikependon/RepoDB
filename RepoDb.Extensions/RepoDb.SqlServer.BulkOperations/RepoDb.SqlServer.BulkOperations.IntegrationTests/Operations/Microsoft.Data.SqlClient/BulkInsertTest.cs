@@ -1657,7 +1657,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityWithHints()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityAndWithHints()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2335,6 +2335,24 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
+
+        [TestMethod]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
+            }
+        }
+
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEmptyEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
+        //    {
+        //        connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+        //    }
+        //}
 
         [TestMethod]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForNullDataReader()
