@@ -122,7 +122,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMerge(TableName)
+        #region BulkMerge(IDataReader)
 
         /// <summary>
         /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database.
@@ -169,6 +169,10 @@ namespace RepoDb
                 trace: trace,
                 traceKey: traceKey);
         }
+
+        #endregion
+
+        #region BulkMerge(DataTable)
 
         /// <summary>
         /// Bulk merge an instance of <see cref="DataTable"/> object into the database.
@@ -384,7 +388,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkMergeAsync(TableName)
+        #region BulkMergeAsync(IDataReader)
 
         /// <summary>
         /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
@@ -434,6 +438,10 @@ namespace RepoDb
                 traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
+
+        #endregion
+
+        #region BulkMergeAsync(DataTable)
 
         /// <summary>
         /// Bulk merge an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
