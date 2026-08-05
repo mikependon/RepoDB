@@ -1,9 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
+using RepoDb.Interfaces;
+
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -15,32 +19,6 @@ namespace RepoDb
         #region BulkDelete<TEntity>
 
         /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null)
-            where TEntity : class
-        {
-            return repository.DbRepository.BulkDelete<TEntity>(primaryKeys: primaryKeys,
-                hints: hints,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
         /// Bulk delete a list of data entity objects from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -51,17 +29,21 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -71,7 +53,9 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -87,18 +71,22 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -109,42 +97,15 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
         #endregion
 
         #region BulkDeleteAsync<TEntity>
-
-        /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
-            IEnumerable<object> primaryKeys,
-            string? hints = null,
-            int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
-            SqlTransaction? transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return repository.DbRepository.BulkDeleteAsync<TEntity>(primaryKeys: primaryKeys,
-                hints: hints,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
 
         /// <summary>
         /// Bulk delete a list of data entity objects from the database in an asynchronous way.
@@ -157,18 +118,22 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -179,7 +144,9 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -196,7 +163,9 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -204,11 +173,13 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkDelete,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -220,7 +191,9 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }

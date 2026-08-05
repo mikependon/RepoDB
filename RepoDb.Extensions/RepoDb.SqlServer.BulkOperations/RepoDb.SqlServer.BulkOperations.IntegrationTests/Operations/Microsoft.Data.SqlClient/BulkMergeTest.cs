@@ -9,6 +9,7 @@ using System.Data.Common;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using RepoDb.Exceptions;
+using RepoDb.Enumerations.SqlServer;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
@@ -65,7 +66,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -131,7 +132,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -199,7 +200,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -221,18 +222,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -295,7 +296,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -361,7 +362,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -429,7 +430,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -451,18 +452,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -495,18 +496,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -537,7 +538,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader);
+                        var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -551,18 +552,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -580,7 +581,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader,
+                        var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings);
 
                         // Assert
@@ -595,18 +596,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -624,7 +625,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader,
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings));
                     }
                 }
@@ -651,13 +652,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table);
+                            var bulkMergeResult = destinationConnection.BulkMerge(table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -687,13 +689,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table, isReturnIdentity: true);
+                            var bulkMergeResult = destinationConnection.BulkMerge(table, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -719,18 +722,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -746,13 +749,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table,
+                            var bulkMergeResult = destinationConnection.BulkMerge(table,
                                 mappings: mappings);
 
                             // Assert
@@ -768,18 +772,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -795,13 +799,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge<BulkOperationIdentityTable>(table,
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge(table,
                                 mappings: mappings));
                         }
                     }
@@ -888,16 +893,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -964,7 +969,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1029,7 +1034,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1082,7 +1087,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1147,7 +1152,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1200,7 +1205,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1266,7 +1271,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1332,7 +1337,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
                 Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Assert
@@ -1402,7 +1407,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    usePhysicalPseudoTempTable: true);
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1442,7 +1447,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader);
+                            reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1456,18 +1461,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -1486,7 +1491,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
+                            reader,
                             mappings: mappings);
 
                         // Assert
@@ -1501,18 +1506,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -1531,7 +1536,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
+                            reader,
                             mappings: mappings));
                     }
                 }
@@ -1560,7 +1565,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("InvalidTable", (DbDataReader)reader));
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("InvalidTable", reader));
                     }
                 }
             }
@@ -1588,7 +1593,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("MissingTable", (DbDataReader)reader));
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("MissingTable", reader));
                     }
                 }
             }
@@ -1614,13 +1619,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            var bulkMergeResult = destinationConnection.BulkMerge(table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1650,13 +1656,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true);
+                            var bulkMergeResult = destinationConnection.BulkMerge(table, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1682,18 +1689,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -1732,18 +1739,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -1881,7 +1888,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1941,7 +1948,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2009,7 +2016,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2031,18 +2038,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -2102,7 +2109,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2168,7 +2175,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2236,7 +2243,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2258,18 +2265,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.RowGuidMapped), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -2302,18 +2309,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -2345,7 +2352,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
+                        var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2359,18 +2366,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -2388,7 +2395,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                        var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings).Result;
 
                         // Assert
@@ -2403,18 +2410,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -2432,7 +2439,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader,
                             mappings: mappings).Result);
                     }
                 }
@@ -2459,13 +2466,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkMergeResult = destinationConnection.BulkMergeAsync(table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2495,13 +2503,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true).Result;
+                            var bulkMergeResult = destinationConnection.BulkMergeAsync(table, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2527,18 +2536,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -2554,13 +2563,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table,
+                            var bulkMergeResult = destinationConnection.BulkMergeAsync(table,
                                 mappings: mappings).Result;
 
                             // Assert
@@ -2576,18 +2586,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -2603,13 +2613,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 {
                     using (var table = new DataTable())
                     {
+                        table.TableName = ClassMappedNameCache.Get<BulkOperationIdentityTable>();
                         table.Load(reader);
 
                         // Open the destination connection
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table,
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync(table,
                                 mappings: mappings).Result);
                         }
                     }
@@ -2696,17 +2707,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -2773,7 +2784,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2838,7 +2849,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2891,7 +2902,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -2956,7 +2967,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3009,7 +3020,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3075,7 +3086,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3141,7 +3152,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
                 Assert.IsFalse(tables.Any(e => e.Id <= 0));
 
                 // Assert
@@ -3211,7 +3222,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    usePhysicalPseudoTempTable: true).Result;
+                    pseudoTableType: SqlServerBulkImportPseudoTableType.Physical).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3250,7 +3261,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
+                        var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3264,18 +3275,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -3294,7 +3305,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
+                            reader,
                             mappings: mappings).Result;
 
                         // Assert
@@ -3309,18 +3320,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -3339,7 +3350,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     {
                         // Act
                         Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
+                            reader,
                             mappings: mappings).Result);
                     }
                 }
@@ -3368,7 +3379,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("InvalidTable", (DbDataReader)reader).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("InvalidTable", reader).Result);
                     }
                 }
             }
@@ -3396,7 +3407,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("MissingTable", (DbDataReader)reader).Result);
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("MissingTable", reader).Result);
                     }
                 }
             }
@@ -3464,7 +3475,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true).Result;
+                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -3490,18 +3501,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -3540,18 +3551,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            var mappings = new List<BulkInsertMapItem>();
+            var mappings = new List<SqlServerBulkInsertMapItem>();
 
             // Add invalid mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
 
             // Switched
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new SqlServerBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionString))

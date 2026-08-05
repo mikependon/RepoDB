@@ -1,9 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
+using RepoDb.Interfaces;
+
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -25,19 +29,23 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column to be used.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool isReturnIdentity = false,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -47,8 +55,10 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -64,20 +74,24 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column to be used.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool isReturnIdentity = false,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null)
             where TEntity : class
         {
@@ -88,8 +102,10 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -108,20 +124,24 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column to be used.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool isReturnIdentity = false,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -132,8 +152,10 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -150,8 +172,10 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column to be used.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -159,12 +183,14 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>>? qualifiers = null,
-            IEnumerable<BulkInsertMapItem>? mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string? hints = null,
             int? batchSize = null,
-            bool isReturnIdentity = false,
-            bool usePhysicalPseudoTempTable = false,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkMerge,
             SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -176,8 +202,10 @@ namespace RepoDb
                 options: options,
                 hints: hints,
                 batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }

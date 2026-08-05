@@ -43,7 +43,7 @@ namespace RepoDb
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primaryKey = dbFields.GetPrimary();
             var pseudoTableName = tableName;
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null;
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null;
 
             return PseudoBasedBinaryImport(connection,
                 tableName,
@@ -59,7 +59,7 @@ namespace RepoDb
                 () =>
                     mappings = new[]
                     {
-                        new NpgsqlBulkInsertMapItem(primaryKey.Name, primaryKey.Name)
+                        new PostgreSqlBulkInsertMapItem(primaryKey.Name, primaryKey.Name)
                     },
 
                 // binaryImport
@@ -131,7 +131,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primaryKey = dbFields.GetPrimary();
             var pseudoTableName = tableName;
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null;
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings = null;
 
             return await PseudoBasedBinaryImportAsync(connection,
                 tableName,
@@ -147,7 +147,7 @@ namespace RepoDb
                 () =>
                     mappings = new[]
                     {
-                        new NpgsqlBulkInsertMapItem(primaryKey.Name, primaryKey.Name)
+                        new PostgreSqlBulkInsertMapItem(primaryKey.Name, primaryKey.Name)
                     },
 
                 // binaryImport

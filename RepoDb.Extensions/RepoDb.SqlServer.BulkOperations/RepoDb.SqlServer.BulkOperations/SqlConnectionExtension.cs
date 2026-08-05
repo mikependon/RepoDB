@@ -165,7 +165,7 @@ namespace RepoDb
         /// <param name="sqlBulkCopy"></param>
         /// <param name="mappings"></param>
         private static void AddMappings(SqlBulkCopy sqlBulkCopy,
-            IEnumerable<BulkInsertMapItem> mappings)
+            IEnumerable<SqlServerBulkInsertMapItem> mappings)
         {
             var columnMappingsProperty = Compiler.GetPropertyGetterFunc<SqlBulkCopy, SqlBulkCopyColumnMappingCollection>("ColumnMappings");
             var columnMappingsInstance = columnMappingsProperty(sqlBulkCopy);
@@ -280,10 +280,10 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="mappings"></param>
-        private static IEnumerable<BulkInsertMapItem> AddOrderColumnMapping(IEnumerable<BulkInsertMapItem> mappings)
+        private static IEnumerable<SqlServerBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<SqlServerBulkInsertMapItem> mappings)
         {
             var list = mappings.AsList();
-            list.Add(new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
+            list.Add(new SqlServerBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
             return list;
         }
 
@@ -292,11 +292,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        private static IEnumerable<BulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
+        private static IEnumerable<SqlServerBulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
         {
             foreach (var field in fields)
             {
-                yield return new BulkInsertMapItem(field.Name, field.Name);
+                yield return new SqlServerBulkInsertMapItem(field.Name, field.Name);
             }
         }
 
@@ -304,7 +304,8 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        internal static void ThrowIfNullOrEmpty(DbDataReader reader)
+        internal static void ThrowIfNullOrEmpty(
+            DbDataReader reader)
         {
             if (reader == null)
             {
