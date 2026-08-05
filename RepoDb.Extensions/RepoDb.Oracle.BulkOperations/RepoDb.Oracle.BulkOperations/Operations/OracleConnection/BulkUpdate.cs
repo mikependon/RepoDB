@@ -77,6 +77,36 @@ namespace RepoDb
             BulkUpdateBase(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
+        /// Updates the rows of the target table in bulk from a <see cref="DataTable"/>. Uses the
+        /// <see cref="DataTable.TableName"/> property as the target table. Returns the number of updated
+        /// rows.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/>.</param>
+        /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of updated rows.</returns>
+        public static int BulkUpdate(this OracleConnection connection,
+            DataTable table,
+            IEnumerable<Field> qualifiers = null,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
+            OracleTransaction transaction = null) =>
+            BulkUpdate(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+
+        /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/>. Returns the
         /// number of updated rows.
         /// </summary>
@@ -205,6 +235,38 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkUpdateBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+
+        /// <summary>
+        /// Updates the rows of the target table in bulk from a <see cref="DataTable"/> in an asynchronous
+        /// way. Uses the <see cref="DataTable.TableName"/> property as the target table. Returns the number
+        /// of updated rows.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/>.</param>
+        /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of updated rows.</returns>
+        public static Task<int> BulkUpdateAsync(this OracleConnection connection,
+            DataTable table,
+            IEnumerable<Field> qualifiers = null,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkUpdate,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BulkUpdateAsync(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/> in an asynchronous

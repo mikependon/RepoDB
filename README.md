@@ -143,12 +143,12 @@ GlobalConfiguration
     GlobalConfiguration
     .Setup(new GlobalConfigurationOptions { UseRegisteredGlobalTraces = true })
     .UseDefaultTelemetry(new DefaultTelemetryOption("<YOUR_APPLICATION_NAME>")
-        {
-            Host = "https://your-collector-host",
-            ApiKey = "YOUR_API_KEY",
-            Group = "<YOUR_APPLICATION_GROUP>",
-            Frequency = TimeSpan.FromSeconds(1)
-        });
+    {
+        Host = "https://your-collector-host",
+        ApiKey = "YOUR_API_KEY",
+        Group = "<YOUR_APPLICATION_GROUP>",
+        Frequency = TimeSpan.FromSeconds(1)
+    });
 ```
 
 It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.

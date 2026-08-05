@@ -77,6 +77,35 @@ namespace RepoDb
             BulkInsertBase(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
+        /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk. Uses the
+        /// <see cref="DataTable.TableName"/> property as the target table. Returns the number of inserted rows.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/>.</param>
+        /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows.</returns>
+        public static int BulkInsert(this OracleConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null) =>
+            BulkInsert(connection, table?.TableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+
+        /// <summary>
         /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk. Returns the number of inserted rows.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -206,6 +235,38 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkInsertBaseAsync(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+
+        /// <summary>
+        /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
+        /// Uses the <see cref="DataTable.TableName"/> property as the target table. Returns the number of
+        /// inserted rows.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/>.</param>
+        /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="OracleBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of inserted rows.</returns>
+        public static Task<int> BulkInsertAsync(this OracleConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            OracleBulkImportIdentityBehavior identityBehavior = default,
+            OracleBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = OracleTraceKeys.OracleBulkInsert,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BulkInsertAsync(connection, table?.TableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Inserts the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
