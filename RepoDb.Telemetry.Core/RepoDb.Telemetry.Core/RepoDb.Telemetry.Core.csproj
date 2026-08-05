@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Title>RepoDb.Telemetry.Core</Title>
+    <AssemblyName>RepoDb.Telemetry.Core</AssemblyName>
     <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <Description>The telemetry's core package of RepoDB library.</Description>
     <LangVersion>preview</LangVersion>
