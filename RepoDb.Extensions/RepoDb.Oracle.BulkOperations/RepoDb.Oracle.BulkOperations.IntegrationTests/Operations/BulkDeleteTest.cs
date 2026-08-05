@@ -33,34 +33,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         #region BulkDelete<TEntity>
 
         [TestMethod]
-        public void TestOracleConnectionBulkDeleteByKey()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new OracleConnection(Database.ConnectionString))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var primaryKeys = tables.Select(e => e.Id);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
-
-                // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(0, countResult);
-            }
-        }
-
-        [TestMethod]
         public void TestOracleConnectionBulkDeleteForEntities()
         {
             // Setup
@@ -134,6 +106,48 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForEntitiesWithBatchSize()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables,
+                    batchSize: 3);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables);
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -410,6 +424,34 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForEntitiesViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => (object)e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
         #endregion
 
         #region BulkDelete<TEntity>(Extra Fields)
@@ -535,6 +577,22 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionBulkDeleteForTableNameExpandoObjectsOnEmptyTable()
+        {
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionBulkDeleteForTableNameAnonymousObjects()
         {
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -558,6 +616,22 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForTableNameAnonymousObjectsOnEmptyTable()
+        {
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -637,6 +711,22 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForTableNameDataEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -808,6 +898,174 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForTableNameDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForTableNameDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                                table,
+                                null,
+                                DataRowState.Unchanged);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForTableNameDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForTableNameDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged));
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region BulkDeleteAsync<TEntity>
@@ -914,6 +1172,48 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForEntitiesWithBatchSize()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                    batchSize: 3).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -1065,7 +1365,6 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(0, countResult);
             }
         }
-
 
         
 
@@ -1330,6 +1629,24 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForTableNameExpandoObjectsOnEmptyTable()
+        {
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionBulkDeleteAsyncForTableNameAnonymousObjects()
         {
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -1353,6 +1670,24 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForTableNameAnonymousObjectsOnEmptyTable()
+        {
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -1444,6 +1779,22 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         
 
         
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForTableNameDataEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
+            }
+        }
 
         [TestMethod]
         public void TestOracleConnectionBulkDeleteAsyncForTableNameDataTable()
@@ -1613,6 +1964,174 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForTableNameDbDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForTableNameDbDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                                table,
+                                null,
+                                DataRowState.Unchanged).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged).Result);
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region NonIdentityTable Mirrors
@@ -1719,6 +2238,48 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForNonIdentityEntitiesWithBatchSize()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables,
+                    batchSize: 3);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForNonIdentityEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables);
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -2323,6 +2884,174 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestOracleConnectionBulkDeleteForNonIdentityTableNameDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForNonIdentityTableNameDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.Id), nameof(BulkOperationNonIdentityTable.Id)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.RowGuid), nameof(BulkOperationNonIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnBit), nameof(BulkOperationNonIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDateTime), nameof(BulkOperationNonIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDateTime2), nameof(BulkOperationNonIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDecimal), nameof(BulkOperationNonIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnFloat), nameof(BulkOperationNonIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                                table,
+                                null,
+                                DataRowState.Unchanged);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForNonIdentityTableNameDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteForNonIdentityTableNameDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestOracleConnectionBulkDeleteAsyncForNonIdentityEntitiesViaPrimaryKeys()
         {
             // Setup
@@ -2424,6 +3153,48 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForNonIdentityEntitiesWithBatchSize()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                    batchSize: 3).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationNonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForNonIdentityEntitiesOnEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10).AsList();
+
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(0, bulkDeleteResult);
             }
         }
 
@@ -3031,6 +3802,174 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForNonIdentityTableNameDbDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForNonIdentityTableNameDbDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+            var mappings = new List<OracleBulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.Id), nameof(BulkOperationNonIdentityTable.Id)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.RowGuid), nameof(BulkOperationNonIdentityTable.RowGuid)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnBit), nameof(BulkOperationNonIdentityTable.ColumnBit)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDateTime), nameof(BulkOperationNonIdentityTable.ColumnDateTime)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDateTime2), nameof(BulkOperationNonIdentityTable.ColumnDateTime2)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnDecimal), nameof(BulkOperationNonIdentityTable.ColumnDecimal)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnFloat), nameof(BulkOperationNonIdentityTable.ColumnFloat)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
+            mappings.Add(new OracleBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                                table,
+                                null,
+                                DataRowState.Unchanged).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnOracleConnectionBulkDeleteAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new OracleConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                        {
+                            // Act
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged).Result);
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region BulkDelete(DbDataReader)
@@ -3087,6 +4026,40 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
 
                     // Assert
                     Assert.AreEqual(0, countResult);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteForDbDataReaderOnEmptyTable()
+        {
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                {
+                    // Act
+                    var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader);
+
+                    // Assert
+                    Assert.AreEqual(0, bulkDeleteResult);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestOracleConnectionBulkDeleteAsyncForDbDataReaderOnEmptyTable()
+        {
+            using (var sourceConnection = new OracleConnection(Database.ConnectionString))
+            {
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var destinationConnection = new OracleConnection(Database.ConnectionString))
+                {
+                    // Act
+                    var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader).Result;
+
+                    // Assert
+                    Assert.AreEqual(0, bulkDeleteResult);
                 }
             }
         }
