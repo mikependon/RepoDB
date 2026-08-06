@@ -26,9 +26,9 @@ namespace RepoDb.IntegrationTests.Setup
         public static void Initialize()
         {
             ConnectionString =
-                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_BULK") ??
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYSTEM") ??
                 Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
-                "User Id=system;Password=RepoDB2026;Data Source=localhost:1521/FREEPDB1;";
+                "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;";
 
             // Initialize MySqlConnector
             GlobalConfiguration

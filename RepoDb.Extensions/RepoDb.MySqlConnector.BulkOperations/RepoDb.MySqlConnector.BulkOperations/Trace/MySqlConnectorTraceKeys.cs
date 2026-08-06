@@ -2,8 +2,7 @@ namespace RepoDb.MySqlConnector.BulkOperations
 {
     /// <summary>
     /// A class that holds the constant values of the operation tracking keys used by the MySqlConnector bulk
-    /// operations (<see cref="RepoDb.MySqlConnector.BulkOperations"/>). Extends the core <see cref="MySqlConnectorTraceKeys"/>
-    /// (defined in <c>RepoDb.Core</c>) rather than replacing it.
+    /// operations (<see cref="RepoDb.MySqlConnector.BulkOperations"/>).
     /// </summary>
     public static partial class MySqlConnectorTraceKeys
     {
