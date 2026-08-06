@@ -8,6 +8,7 @@ using Oracle.ManagedDataAccess.Client;
 using RepoDb;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Oracle.BulkOperations.Extensions
 {
@@ -28,12 +29,16 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging/pseudo table to create.</param>
         /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Memory</c> (Global Temporary Table) one. <c>Auto</c> must already be resolved to one of these by the caller.</param>
         /// <param name="qualifierField">When provided, the pseudo table is projected down to just this one column - see <see cref="OracleText.GetCreatePseudoTableSql"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         public static void CreatePseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             OracleBulkImportPseudoTableType pseudoTableType,
             Field qualifierField = null,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -50,6 +55,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging/pseudo table to create.</param>
         /// <param name="pseudoTableType">Whether the pseudo table is a <c>Physical</c> heap table or a <c>Memory</c> (Global Temporary Table) one. <c>Auto</c> must already be resolved to one of these by the caller.</param>
         /// <param name="qualifierField">When provided, the pseudo table is projected down to just this one column - see <see cref="OracleText.GetCreatePseudoTableSql"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         public static async Task CreatePseudoTableAsync(OracleConnection connection,
@@ -57,6 +64,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string pseudoTableName,
             OracleBulkImportPseudoTableType pseudoTableType,
             Field qualifierField = null,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -71,9 +80,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to truncate.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         public static void TruncatePseudoTable(OracleConnection connection,
             string pseudoTableName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -87,10 +100,14 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to truncate.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         public static async Task TruncatePseudoTableAsync(OracleConnection connection,
             string pseudoTableName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -105,9 +122,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to drop.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         public static void DropPseudoTable(OracleConnection connection,
             string pseudoTableName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -121,10 +142,14 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table to drop.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         public static async Task DropPseudoTableAsync(OracleConnection connection,
             string pseudoTableName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -145,10 +170,14 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table.</param>
         /// <param name="columnName">The column to allow <c>NULL</c> for.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         public static void AllowNullForColumn(OracleConnection connection,
             string pseudoTableName,
             string columnName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -163,11 +192,15 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="pseudoTableName">The name of the staging/pseudo table.</param>
         /// <param name="columnName">The column to allow <c>NULL</c> for.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         public static async Task AllowNullForColumnAsync(OracleConnection connection,
             string pseudoTableName,
             string columnName,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -181,10 +214,19 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <paramref name="identityField"/> - see the remarks on <see cref="OracleText.GetIdentitySequenceMetadataSql"/>
         /// for why this lookup exists and why it is guaranteed to find a match.
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="identityField"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(OracleConnection connection,
             string tableName,
             Field identityField,
-            OracleTransaction transaction)
+            ITrace trace = null,
+            string traceKey = null,
+            OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetIdentitySequenceMetadataSql();
@@ -204,11 +246,21 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// Asynchronous counterpart of <see cref="GetIdentitySequenceMetadata"/> - see its remarks for the
         /// detailed behavior (identical here).
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="identityField"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(OracleConnection connection,
             string tableName,
             Field identityField,
-            OracleTransaction transaction,
-            CancellationToken cancellationToken)
+            ITrace trace = null,
+            string traceKey = null,
+            OracleTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = OracleText.GetIdentitySequenceMetadataSql();
@@ -239,6 +291,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be inserted (including <paramref name="identityField"/>).</param>
         /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="entities"/>.</param>
         /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows inserted.</returns>
         public static int InsertFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
@@ -247,11 +301,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             Field identityField,
             IList<TEntity> entities,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
@@ -277,6 +333,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be inserted (including <paramref name="identityField"/>).</param>
         /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="entities"/>.</param>
         /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows inserted.</returns>
@@ -286,12 +344,14 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             Field identityField,
             IList<TEntity> entities,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
@@ -319,6 +379,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be inserted (including <paramref name="identityField"/>).</param>
         /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="rows"/>.</param>
         /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows inserted.</returns>
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
@@ -327,10 +389,12 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             Field identityField,
             IList<DataRow> rows,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
@@ -355,6 +419,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be inserted (including <paramref name="identityField"/>).</param>
         /// <param name="identityField">The identity column whose generated values are assigned back onto <paramref name="rows"/>.</param>
         /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the generated identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows inserted.</returns>
@@ -364,11 +430,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             Field identityField,
             IList<DataRow> rows,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
             var commandText = OracleText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
@@ -398,6 +466,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="identityField">The identity column, if any, to leave out of the <c>INSERT</c> column list - see the remarks on <see cref="OracleText.GetMergeFromPseudoTableSql"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         public static int MergeFromPseudoTable(OracleConnection connection,
@@ -406,6 +476,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             Field identityField,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -423,6 +495,9 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="fields">Every field that was staged and should be merged (inserted and/or updated).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="identityField">The identity column, if any, to leave out of the <c>INSERT</c> column list - see the remarks on <see cref="OracleText.GetMergeFromPseudoTableSql"/>.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
@@ -432,6 +507,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             Field identityField,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -455,6 +532,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="entities"/>.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         public static int MergeFromPseudoTableForReturnIdentity<TEntity>(OracleConnection connection,
@@ -464,11 +543,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             Field identityField,
             IEnumerable<Field> qualifiers,
             IList<TEntity> entities,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
@@ -495,6 +576,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="entities"/>.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="entities">The entities - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
@@ -505,13 +588,15 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             Field identityField,
             IEnumerable<Field> qualifiers,
             IList<TEntity> entities,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
@@ -539,6 +624,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="rows"/>.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(OracleConnection connection,
@@ -548,10 +635,12 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             Field identityField,
             IEnumerable<Field> qualifiers,
             IList<DataRow> rows,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, transaction);
+            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
@@ -577,6 +666,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="identityField">The identity column whose values are assigned back onto <paramref name="rows"/>.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
         /// <param name="rows">The rows - in the same order they were bulk-written into <paramref name="pseudoTableName"/> - to assign the identity values back onto.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
@@ -587,11 +678,13 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             Field identityField,
             IEnumerable<Field> qualifiers,
             IList<DataRow> rows,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, transaction, cancellationToken);
+            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
             var commandText = OracleText.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
@@ -620,6 +713,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="fields">Every field that was staged (the qualifier(s) plus every field to update).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows updated.</returns>
         public static int UpdateFromPseudoTable(OracleConnection connection,
@@ -627,6 +722,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -643,6 +740,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="fields">Every field that was staged (the qualifier(s) plus every field to update).</param>
         /// <param name="qualifiers">The field(s) used to match an existing row (the <c>ON</c> clause).</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows updated.</returns>
@@ -651,6 +750,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -672,12 +773,16 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="tableName">The name of the real, target table.</param>
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row for deletion.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows deleted.</returns>
         public static int DeleteFromPseudoTable(OracleConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -693,6 +798,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
         /// <param name="tableName">The name of the real, target table.</param>
         /// <param name="pseudoTableName">The name of the staging table that was bulk-written to.</param>
         /// <param name="qualifiers">The field(s) used to match an existing row for deletion.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The trace key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of rows deleted.</returns>
@@ -700,6 +807,8 @@ namespace RepoDb.Oracle.BulkOperations.Extensions
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {

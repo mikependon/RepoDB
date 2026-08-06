@@ -145,20 +145,20 @@ namespace RepoDb
             try
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
                 WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction);
+                result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -198,20 +198,20 @@ namespace RepoDb
             try
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, transaction, cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
                 await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, transaction, cancellationToken);
+                result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution

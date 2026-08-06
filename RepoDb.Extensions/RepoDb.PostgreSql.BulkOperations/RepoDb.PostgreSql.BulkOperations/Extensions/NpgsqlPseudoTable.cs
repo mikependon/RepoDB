@@ -25,6 +25,8 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void CreatePseudoTable(NpgsqlConnection connection,
             string tableName,
@@ -35,6 +37,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             var isPhysical = pseudoTableType == PostgreSqlBulkImportPseudoTableType.Physical ||
@@ -45,6 +49,8 @@ namespace RepoDb
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -60,8 +66,11 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task CreatePseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
@@ -71,6 +80,8 @@ namespace RepoDb
             PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
             PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -82,6 +93,8 @@ namespace RepoDb
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -92,17 +105,23 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int MergeToPseudoTable(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             var commandText = getMergeToPseudoCommandText();
 
             return connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -132,11 +151,16 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> MergeToPseudoTableAsync(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -144,6 +168,8 @@ namespace RepoDb
 
             return await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -176,10 +202,14 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void DropPseudoTable(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             if (string.IsNullOrWhiteSpace(tableName))
@@ -192,6 +222,8 @@ namespace RepoDb
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -201,11 +233,16 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task DropPseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -219,6 +256,8 @@ namespace RepoDb
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -231,12 +270,16 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void CreatePseudoTableIndex(NpgsqlConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             int? bulkCopyTimeout = null,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             if (fields?.Any() != true)
@@ -248,6 +291,8 @@ namespace RepoDb
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -259,6 +304,10 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -267,6 +316,8 @@ namespace RepoDb
             IEnumerable<Field> fields,
             int? bulkCopyTimeout = null,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -279,6 +330,8 @@ namespace RepoDb
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
