@@ -38,6 +38,17 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
         #region Methods
 
         /// <summary>
+        /// Returns the current UTC time truncated to microsecond precision - the maximum fractional-seconds
+        /// precision a MySQL <c>DATETIME(6)</c> column (used for <c>ColumnDateTime2</c>/
+        /// <c>ColumnDateTime2Mapped</c>) can store. <see cref="DateTime.UtcNow"/> carries tick (100ns)
+        /// precision; without truncating here, the sub-microsecond remainder would be silently dropped by
+        /// MySQL on write, and a direct <see cref="DateTime"/> equality assertion between the in-memory
+        /// value and the value read back from the database would fail.
+        /// </summary>
+        private static DateTime UtcNowMicroseconds() =>
+            new DateTime(DateTime.UtcNow.Ticks / 10 * 10, DateTimeKind.Utc);
+
+        /// <summary>
         /// Asserts the properties equality of 2 types.
         /// </summary>
         /// <typeparam name="T1">The type of first object.</typeparam>
@@ -182,7 +193,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = random.Next(100),
                     ColumnFloat = random.Next(100),
                     ColumnInt = random.Next(100),
@@ -206,7 +217,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 ColumnFloat = Convert.ToDouble(random.Next(100)),
                 ColumnInt = random.Next(100),
@@ -226,7 +237,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBit = 1;
                 table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDateTime2 = UtcNowMicroseconds();
                 table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
                 table.ColumnFloat = Convert.ToDouble(random.Next(100));
                 //table.ColumnInt = random.Next(100);
@@ -244,7 +255,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //table.RowGuid = Guid.NewGuid();
             table.ColumnBit = 1;
             table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-            table.ColumnDateTime2 = DateTime.UtcNow;
+            table.ColumnDateTime2 = UtcNowMicroseconds();
             table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
             table.ColumnFloat = Convert.ToDouble(random.Next(100));
             //table.ColumnInt = random.Next(100);
@@ -280,7 +291,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = random.Next(100),
                     ColumnFloat = random.Next(100),
                     ColumnInt = random.Next(100),
@@ -304,7 +315,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 ColumnFloat = Convert.ToDouble(random.Next(100)),
                 ColumnInt = random.Next(100),
@@ -324,7 +335,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBit = 1;
                 table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDateTime2 = UtcNowMicroseconds();
                 table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
                 table.ColumnFloat = Convert.ToDouble(random.Next(100));
                 //table.ColumnInt = random.Next(100);
@@ -342,7 +353,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //table.RowGuid = Guid.NewGuid();
             table.ColumnBit = 1;
             table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-            table.ColumnDateTime2 = DateTime.UtcNow;
+            table.ColumnDateTime2 = UtcNowMicroseconds();
             table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
             table.ColumnFloat = Convert.ToDouble(random.Next(100));
             //table.ColumnInt = random.Next(100);
@@ -377,7 +388,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     ColumnFloat = Convert.ToDouble(random.Next(100)),
                     ColumnInt = random.Next(100),
@@ -401,7 +412,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -425,7 +436,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     ColumnFloat = Convert.ToDouble(random.Next(100)),
                     ColumnInt = random.Next(100),
@@ -448,7 +459,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 ColumnFloat = Convert.ToDouble(random.Next(100)),
                 //ColumnInt = random.Next(100),
@@ -482,7 +493,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDateTime2"] = UtcNowMicroseconds();
                 item["ColumnDecimal"] = random.Next(100);
                 item["ColumnFloat"] = random.Next(100);
                 item["ColumnInt"] = random.Next(100);
@@ -506,7 +517,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDateTime2"] = UtcNowMicroseconds();
                 item["ColumnDecimal"] = random.Next(100);
                 item["ColumnFloat"] = random.Next(100);
                 //item["ColumnInt"] = random.Next(100);
@@ -532,7 +543,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDateTime2"] = UtcNowMicroseconds();
             item["ColumnDecimal"] = random.Next(100);
             item["ColumnFloat"] = random.Next(100);
             //item["ColumnInt"] = random.Next(100);
@@ -551,7 +562,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDateTime2"] = UtcNowMicroseconds();
             item["ColumnDecimal"] = random.Next(100);
             item["ColumnFloat"] = random.Next(100);
             //item["ColumnInt"] = random.Next(100);
@@ -586,7 +597,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuidMapped = Guid.NewGuid(),
                     ColumnBitMapped = 1,
                     ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2Mapped = DateTime.UtcNow,
+                    ColumnDateTime2Mapped = UtcNowMicroseconds(),
                     ColumnDecimalMapped = random.Next(100),
                     ColumnFloatMapped = random.Next(100),
                     ColumnIntMapped = random.Next(100),
@@ -610,7 +621,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuidMapped = Guid.NewGuid(),
                 ColumnBitMapped = 1,
                 ColumnDateTimeMapped = EpocDate,
-                ColumnDateTime2Mapped = DateTime.UtcNow,
+                ColumnDateTime2Mapped = UtcNowMicroseconds(),
                 ColumnDecimalMapped = Convert.ToDecimal(random.Next(100)),
                 ColumnFloatMapped = Convert.ToDouble(random.Next(100)),
                 ColumnIntMapped = random.Next(100),
@@ -630,7 +641,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBitMapped = 1;
                 table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2Mapped = DateTime.UtcNow;
+                table.ColumnDateTime2Mapped = UtcNowMicroseconds();
                 table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
                 table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
                 //table.UnmatchedColumnInt = random.Next(100);
@@ -648,7 +659,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //table.RowGuid = Guid.NewGuid();
             table.ColumnBitMapped = 1;
             table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
-            table.ColumnDateTime2Mapped = DateTime.UtcNow;
+            table.ColumnDateTime2Mapped = UtcNowMicroseconds();
             table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
             table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
             //table.UnmatchedColumnInt = random.Next(100);
@@ -679,7 +690,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                     UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                     UnmatchedColumnInt = random.Next(100),
@@ -703,7 +714,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate,
-                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                 UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 UnmatchedColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 UnmatchedColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -727,7 +738,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                     UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                     UnmatchedColumnInt = random.Next(100),
@@ -750,7 +761,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                 UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                 //UnmatchedColumnInt = random.Next(100),
@@ -784,7 +795,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
                 item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
                 item["UnmatchedColumnDecimal"] = random.Next(100);
                 item["UnmatchedColumnFloat"] = random.Next(100);
                 item["UnmatchedColumnInt"] = random.Next(100);
@@ -808,7 +819,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
                 item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
                 item["UnmatchedColumnDecimal"] = random.Next(100);
                 item["UnmatchedColumnFloat"] = random.Next(100);
                 //item["UnmatchedColumnInt"] = random.Next(100);
@@ -834,7 +845,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;
             item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
             item["UnmatchedColumnDecimal"] = random.Next(100);
             item["UnmatchedColumnFloat"] = random.Next(100);
             //item["UnmatchedColumnInt"] = random.Next(100);
@@ -853,7 +864,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;
             item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
             item["UnmatchedColumnDecimal"] = random.Next(100);
             item["UnmatchedColumnFloat"] = random.Next(100);
             //item["UnmatchedColumnInt"] = random.Next(100);
@@ -881,7 +892,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
@@ -909,7 +920,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -929,7 +940,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBit = 1;
                 table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDateTime2 = UtcNowMicroseconds();
                 table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
                 table.ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue));
                 //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);
@@ -966,7 +977,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     ColumnFloat = Convert.ToDouble(random.Next(100)),
                     ColumnInt = random.Next(100),
@@ -990,7 +1001,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -1014,7 +1025,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     ColumnFloat = Convert.ToDouble(random.Next(100)),
                     ColumnInt = random.Next(100),
@@ -1037,7 +1048,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //RowGuid = Guid.NewGuid(),
                 ColumnBit = (byte)1,
                 ColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 ColumnFloat = Convert.ToDouble(random.Next(100)),
                 //ColumnInt = random.Next(100),
@@ -1071,7 +1082,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDateTime2"] = UtcNowMicroseconds();
                 item["ColumnDecimal"] = random.Next(100);
                 item["ColumnFloat"] = random.Next(100);
                 item["ColumnInt"] = random.Next(100);
@@ -1095,7 +1106,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDateTime2"] = UtcNowMicroseconds();
                 item["ColumnDecimal"] = random.Next(100);
                 item["ColumnFloat"] = random.Next(100);
                 //item["ColumnInt"] = random.Next(100);
@@ -1121,7 +1132,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDateTime2"] = UtcNowMicroseconds();
             item["ColumnDecimal"] = random.Next(100);
             item["ColumnFloat"] = random.Next(100);
             //item["ColumnInt"] = random.Next(100);
@@ -1140,7 +1151,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["ColumnBit"] = (byte)1;
             item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDateTime2"] = UtcNowMicroseconds();
             item["ColumnDecimal"] = random.Next(100);
             item["ColumnFloat"] = random.Next(100);
             //item["ColumnInt"] = random.Next(100);
@@ -1175,7 +1186,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuidMapped = Guid.NewGuid(),
                     ColumnBitMapped = 1,
                     ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100)),
-                    ColumnDateTime2Mapped = DateTime.UtcNow,
+                    ColumnDateTime2Mapped = UtcNowMicroseconds(),
                     ColumnDecimalMapped = random.Next(100),
                     ColumnFloatMapped = random.Next(100),
                     ColumnIntMapped = random.Next(100),
@@ -1199,7 +1210,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuidMapped = Guid.NewGuid(),
                 ColumnBitMapped = 1,
                 ColumnDateTimeMapped = EpocDate,
-                ColumnDateTime2Mapped = DateTime.UtcNow,
+                ColumnDateTime2Mapped = UtcNowMicroseconds(),
                 ColumnDecimalMapped = Convert.ToDecimal(random.Next(100)),
                 ColumnFloatMapped = Convert.ToDouble(random.Next(100)),
                 ColumnIntMapped = random.Next(100),
@@ -1219,7 +1230,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBitMapped = 1;
                 table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2Mapped = DateTime.UtcNow;
+                table.ColumnDateTime2Mapped = UtcNowMicroseconds();
                 table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
                 table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
                 //table.UnmatchedColumnInt = random.Next(100);
@@ -1237,7 +1248,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //table.RowGuid = Guid.NewGuid();
             table.ColumnBitMapped = 1;
             table.ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100));
-            table.ColumnDateTime2Mapped = DateTime.UtcNow;
+            table.ColumnDateTime2Mapped = UtcNowMicroseconds();
             table.ColumnDecimalMapped = Convert.ToDecimal(random.Next(100));
             table.ColumnFloatMapped = Convert.ToDouble(random.Next(100));
             //table.UnmatchedColumnInt = random.Next(100);
@@ -1268,7 +1279,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                     UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                     UnmatchedColumnInt = random.Next(100),
@@ -1292,7 +1303,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate,
-                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                 UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 UnmatchedColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 UnmatchedColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -1316,7 +1327,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     UnmatchedColumnBit = (byte)1,
                     UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                    UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                    UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                     UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                     UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                     UnmatchedColumnInt = random.Next(100),
@@ -1339,7 +1350,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //RowGuid = Guid.NewGuid(),
                 UnmatchedColumnBit = (byte)1,
                 UnmatchedColumnDateTime = EpocDate.AddDays(random.Next(100)),
-                UnmatchedColumnDateTime2 = DateTime.UtcNow,
+                UnmatchedColumnDateTime2 = UtcNowMicroseconds(),
                 UnmatchedColumnDecimal = Convert.ToDecimal(random.Next(100)),
                 UnmatchedColumnFloat = Convert.ToDouble(random.Next(100)),
                 //UnmatchedColumnInt = random.Next(100),
@@ -1373,7 +1384,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
                 item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
                 item["UnmatchedColumnDecimal"] = random.Next(100);
                 item["UnmatchedColumnFloat"] = random.Next(100);
                 item["UnmatchedColumnInt"] = random.Next(100);
@@ -1397,7 +1408,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //item["RowGuid"] = Guid.NewGuid();
                 item["UnmatchedColumnBit"] = (byte)1;
                 item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-                item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+                item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
                 item["UnmatchedColumnDecimal"] = random.Next(100);
                 item["UnmatchedColumnFloat"] = random.Next(100);
                 //item["UnmatchedColumnInt"] = random.Next(100);
@@ -1423,7 +1434,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;
             item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
             item["UnmatchedColumnDecimal"] = random.Next(100);
             item["UnmatchedColumnFloat"] = random.Next(100);
             //item["UnmatchedColumnInt"] = random.Next(100);
@@ -1442,7 +1453,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
             //item["RowGuid"] = Guid.NewGuid();
             item["UnmatchedColumnBit"] = (byte)1;
             item["UnmatchedColumnDateTime"] = EpocDate.AddDays(random.Next(100));
-            item["UnmatchedColumnDateTime2"] = DateTime.UtcNow;
+            item["UnmatchedColumnDateTime2"] = UtcNowMicroseconds();
             item["UnmatchedColumnDecimal"] = random.Next(100);
             item["UnmatchedColumnFloat"] = random.Next(100);
             //item["UnmatchedColumnInt"] = random.Next(100);
@@ -1469,7 +1480,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = 1,
                     ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDateTime2 = UtcNowMicroseconds(),
                     ColumnDecimal = index,
                     ColumnFloat = index,
                     ColumnInt = index,
@@ -1497,7 +1508,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = 1,
                 ColumnDateTime = EpocDate,
-                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDateTime2 = UtcNowMicroseconds(),
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
@@ -1517,7 +1528,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                 //table.RowGuid = Guid.NewGuid();
                 table.ColumnBit = 1;
                 table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
-                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDateTime2 = UtcNowMicroseconds();
                 table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
                 table.ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue));
                 //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);

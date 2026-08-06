@@ -3,7 +3,7 @@ using System;
 
 namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Models
 {
-    [Map("\"BulkOperationIdentityTable\"")]
+    [Map("BulkOperationIdentityTable")]
     public class BulkOperationMappedIdentityTable
     {
         [Map("Id")]

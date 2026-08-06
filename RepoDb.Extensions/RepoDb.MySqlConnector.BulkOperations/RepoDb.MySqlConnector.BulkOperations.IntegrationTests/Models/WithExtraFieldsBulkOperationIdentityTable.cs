@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Models
 {
-    [Map("\"BulkOperationIdentityTable\"")]
+    [Map("BulkOperationIdentityTable")]
     public class WithExtraFieldsBulkOperationIdentityTable
     {
         /* Normal Fields */
