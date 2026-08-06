@@ -147,20 +147,20 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
-                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = OracleExecution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, transaction);
+                result = OracleExecution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -230,8 +230,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
@@ -239,12 +239,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -376,20 +376,20 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
-                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, transaction);
+                result = OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -447,8 +447,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
@@ -456,12 +456,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -533,8 +533,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction);
-                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
 
                 // Execute and return
@@ -542,12 +542,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction);
+                result = OracleExecution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
             }
             finally
             {
                 // Drop the pseudo table
-                OracleExecution.DropPseudoTable(connection, pseudoTableName, transaction);
+                OracleExecution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
             }
 
             // After Execution
@@ -685,20 +685,20 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
-                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, transaction, cancellationToken);
+                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution
@@ -756,8 +756,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
@@ -765,12 +765,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution
@@ -906,20 +906,20 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
-                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, transaction, cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
-                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, transaction, cancellationToken);
+                result = await OracleExecution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution
@@ -976,8 +976,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
@@ -985,12 +985,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution
@@ -1049,8 +1049,8 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, transaction: transaction, cancellationToken: cancellationToken);
-                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
@@ -1058,12 +1058,12 @@ namespace RepoDb
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
-                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, transaction, cancellationToken);
+                result = await OracleExecution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
                 // Drop the pseudo table
-                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await OracleExecution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
             }
 
             // After Execution
