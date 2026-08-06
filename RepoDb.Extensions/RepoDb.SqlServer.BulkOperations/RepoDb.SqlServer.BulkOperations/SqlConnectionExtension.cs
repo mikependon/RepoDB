@@ -25,6 +25,20 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static DbCommand CreateTraceCommand(SqlConnection connection,
+            string commandText,
+            int? commandTimeout = null,
+            SqlTransaction transaction = null) =>
+            (DbCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <param name="reader"></param>

@@ -58,6 +58,12 @@ namespace RepoDb
                 return default;
             }
 
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
@@ -203,6 +209,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -242,6 +252,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -371,6 +387,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -414,6 +434,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -563,6 +589,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -612,6 +642,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -761,6 +797,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
@@ -802,6 +842,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -932,6 +978,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
@@ -977,6 +1027,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1126,6 +1182,10 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
             // Return the result
             return result;
