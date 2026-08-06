@@ -55,5 +55,6 @@
     <InternalsVisibleTo Include="RepoDb.Oracle" />
     <InternalsVisibleTo Include="RepoDb.Oracle.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.PostgreSql.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.MySqlConnector.BulkOperations" />
   </ItemGroup>
 </Project>
