@@ -56,6 +56,12 @@ namespace RepoDb
                 return default;
             }
 
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
             // Variables needed
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
@@ -165,6 +171,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -180,6 +190,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <returns></returns>
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
@@ -188,13 +200,21 @@ namespace RepoDb
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction? transaction = null)
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             // Validate
             if (!reader.HasRows)
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables needed
             var hasTransaction = transaction != null;
@@ -264,6 +284,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -305,6 +329,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -421,6 +451,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -468,6 +502,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -582,6 +622,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
@@ -597,6 +641,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
@@ -607,6 +653,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -614,6 +662,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var hasTransaction = transaction != null;
@@ -684,6 +738,10 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
@@ -727,6 +785,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -845,11 +909,17 @@ namespace RepoDb
                 DisposeTransaction(transaction, hasTransaction);
             }
 
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
 
         #endregion
+
+        #region Helpers
 
         private static string CreateBulkInsertTempTableIfNecessary<TSqlTransaction>(
             IDbConnection connection,
@@ -894,5 +964,7 @@ namespace RepoDb
 
             return tempTableName;
         }
+
+        #endregion
     }
 }

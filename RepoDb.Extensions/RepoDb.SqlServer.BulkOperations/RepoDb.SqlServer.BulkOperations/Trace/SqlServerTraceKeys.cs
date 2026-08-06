@@ -1,4 +1,4 @@
-namespace RepoDb
+namespace RepoDb.SqlServer.BulkOperations
 {
     /// <summary>
     /// A class that holds the constant values of the operation tracking keys used by the SqlServer bulk

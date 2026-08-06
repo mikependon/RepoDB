@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Interfaces;
+using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

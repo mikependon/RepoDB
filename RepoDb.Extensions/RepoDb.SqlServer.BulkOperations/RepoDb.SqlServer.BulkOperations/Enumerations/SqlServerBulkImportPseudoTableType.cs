@@ -1,5 +1,3 @@
-using RepoDb.SqlServer.BulkOperations;
-
 namespace RepoDb.Enumerations.SqlServer
 {
     /// <summary>
