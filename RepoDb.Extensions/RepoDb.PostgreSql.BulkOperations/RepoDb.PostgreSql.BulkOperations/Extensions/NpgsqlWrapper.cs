@@ -91,6 +91,8 @@ namespace RepoDb
                     DropPseudoTable(connection,
                         pseudoTableName,
                         bulkCopyTimeout,
+                        trace,
+                        traceKey,
                         transaction);
 
                     CreatePseudoTable(connection,
@@ -102,6 +104,8 @@ namespace RepoDb
                         identityBehavior,
                         pseudoTableType,
                         dbSetting,
+                        trace,
+                        traceKey,
                         transaction);
                 }
 
@@ -119,6 +123,8 @@ namespace RepoDb
                         qualifiers,
                         bulkCopyTimeout,
                         dbSetting,
+                        trace,
+                        traceKey,
                         transaction);
                 }
 
@@ -152,6 +158,8 @@ namespace RepoDb
                     DropPseudoTable(connection,
                         pseudoTableName,
                         bulkCopyTimeout,
+                        trace,
+                        traceKey,
                         transaction);
                 }
             }
@@ -228,6 +236,8 @@ namespace RepoDb
                     await DropPseudoTableAsync(connection,
                         pseudoTableName,
                         bulkCopyTimeout,
+                        trace,
+                        traceKey,
                         transaction,
                         cancellationToken);
 
@@ -240,6 +250,8 @@ namespace RepoDb
                         identityBehavior,
                         pseudoTableType,
                         dbSetting,
+                        trace,
+                        traceKey,
                         transaction,
                         cancellationToken);
                 }
@@ -258,6 +270,8 @@ namespace RepoDb
                         qualifiers,
                         bulkCopyTimeout,
                         dbSetting,
+                        trace,
+                        traceKey,
                         transaction,
                         cancellationToken);
                 }
@@ -292,6 +306,8 @@ namespace RepoDb
                     await DropPseudoTableAsync(connection,
                         pseudoTableName,
                         bulkCopyTimeout,
+                        trace,
+                        traceKey,
                         transaction,
                         cancellationToken);
                 }
