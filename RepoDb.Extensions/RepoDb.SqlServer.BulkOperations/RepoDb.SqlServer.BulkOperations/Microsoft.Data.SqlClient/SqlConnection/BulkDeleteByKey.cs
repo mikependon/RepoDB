@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using RepoDb.Enumerations.SqlServer;
 using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
