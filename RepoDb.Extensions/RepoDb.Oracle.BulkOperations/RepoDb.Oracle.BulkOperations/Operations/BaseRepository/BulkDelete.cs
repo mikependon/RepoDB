@@ -1,6 +1,7 @@
 using Oracle.ManagedDataAccess.Client;
 using RepoDb.Enumerations.Oracle;
 using RepoDb.Interfaces;
+using RepoDb.Oracle.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

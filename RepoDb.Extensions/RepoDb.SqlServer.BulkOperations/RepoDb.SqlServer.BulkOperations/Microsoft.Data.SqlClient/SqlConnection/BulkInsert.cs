@@ -128,6 +128,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this SqlConnection connection,
             string tableName,
@@ -136,7 +138,9 @@ namespace RepoDb
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction? transaction = null)
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
@@ -145,7 +149,9 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                transaction: transaction);
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         #endregion
@@ -367,6 +373,8 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync(this SqlConnection connection,
@@ -377,6 +385,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             return BulkInsertAsyncInternal(connection: connection,
@@ -387,6 +397,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -565,7 +577,9 @@ namespace RepoDb
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction? transaction = null) =>
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null) =>
             BulkInsertInternalBase(connection,
                 tableName,
                 (DbDataReader)reader,
@@ -573,7 +587,9 @@ namespace RepoDb
                 options,
                 bulkCopyTimeout,
                 batchSize,
-                transaction);
+                transaction,
+                trace,
+                traceKey);
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
@@ -696,6 +712,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsyncInternalBase(connection,
                 tableName,
@@ -705,6 +723,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 transaction,
+                trace,
+                traceKey,
                 cancellationToken);
 
         /// <summary>
