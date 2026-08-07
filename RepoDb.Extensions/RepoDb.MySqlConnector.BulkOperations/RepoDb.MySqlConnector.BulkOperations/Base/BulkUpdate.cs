@@ -83,7 +83,7 @@ namespace RepoDb
                 return 0;
             }
 
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 
@@ -164,7 +164,7 @@ namespace RepoDb
                 return 0;
             }
 
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 
@@ -256,7 +256,7 @@ namespace RepoDb
             }
 
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 
@@ -342,7 +342,7 @@ namespace RepoDb
                 return 0;
             }
 
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 
@@ -423,7 +423,7 @@ namespace RepoDb
                 return 0;
             }
 
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 
@@ -502,7 +502,7 @@ namespace RepoDb
             }
 
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForUpdate(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK UPDATE {tableName}", bulkCopyTimeout, transaction);
 

@@ -122,7 +122,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -309,7 +309,7 @@ namespace RepoDb
             MySqlTransaction transaction = null)
         {
             var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -562,7 +562,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityList = entities.AsList();
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -753,7 +753,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var rows = GetDataRows(table, rowState)?.ToArray();
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 

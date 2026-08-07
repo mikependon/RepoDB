@@ -37,18 +37,15 @@ namespace RepoDb.IntegrationTests.Setup
 
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
-                "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;";
+                "Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;AllowLoadLocalInfile=True;AllowUserVariables=True;";
 
             // Initialize MySqlConnector
             GlobalConfiguration
                 .Setup()
                 .UseMySqlConnector();
 
-            // Note: "RowGuid"/"RowGuidMapped" are stored as CHAR(36) and round-trip directly to/from
-            // System.Guid via MySqlConnector's default GuidFormat=Char36 connection behavior - no
-            // property handler registration is needed here, unlike the Oracle/PostgreSql providers
-            // (which have no native GUID-compatible column type) that this table shape was originally
-            // copied from.
+            // Enable server side local in file for bulk
+            EnableServerLocalInfile();
 
             // Create the database first
             CreateDatabase();
@@ -64,6 +61,20 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using var connection = new MySqlConnection(ConnectionStringForSystem);
             connection.ExecuteNonQuery("CREATE DATABASE IF NOT EXISTS `RepoDb`;");
+        }
+
+        /// <summary>
+        /// Enables the server-side <c>local_infile</c> global variable, which MySQL disables by default.
+        /// Required for <c>LOAD DATA LOCAL INFILE</c> - the mechanism <c>MySqlBulkCopy</c> uses under the
+        /// hood for every bulk operation in this package - to work; the client-side counterpart is the
+        /// "AllowLoadLocalInfile=True" flag on <see cref="ConnectionString"/>. Requires a user with
+        /// SUPER/SYSTEM_VARIABLES_ADMIN privilege (root has it by default), and takes effect immediately
+        /// for new connections - no server restart needed.
+        /// </summary>
+        public static void EnableServerLocalInfile()
+        {
+            using var connection = new MySqlConnection(ConnectionStringForSystem);
+            connection.ExecuteNonQuery("SET GLOBAL local_infile = 1;");
         }
 
         /// <summary>

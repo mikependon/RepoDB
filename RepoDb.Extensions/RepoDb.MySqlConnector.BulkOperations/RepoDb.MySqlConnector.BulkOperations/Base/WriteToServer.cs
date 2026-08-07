@@ -228,7 +228,7 @@ namespace RepoDb
             int? rowCount) =>
             pseudoTableType == MySqlConnectorBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MySqlConnectorConstants.RowCountThresholdForPhysicalTable ?
                 MySqlConnectorBulkImportPseudoTableType.Physical :
-                    MySqlConnectorBulkImportPseudoTableType.Physical; // pseudoTableType; // TODO: ODP.NET Limitation, force to Physical for now
+                    MySqlConnectorBulkImportPseudoTableType.Physical;
 
         /// <summary>
         /// 
@@ -284,8 +284,11 @@ namespace RepoDb
                 var columnMappings = mappings.AsList();
                 foreach (var mapping in columnMappings)
                 {
+                    // MySqlBulkCopy back-tick-quotes DestinationColumn itself (see QuoteIdentifier in
+                    // MySqlBulkCopy.cs) - passing an already-quoted name here double-quotes it, producing a
+                    // literal (and nonexistent) column reference like "`Id`" instead of "Id".
                     bulkCopy.ColumnMappings.Add(
-                        new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn.AsQuoted(true, dbSetting)));
+                        new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn));
                 }
             }
             else
@@ -293,7 +296,7 @@ namespace RepoDb
                 foreach (DataColumn column in table.Columns)
                 {
                     bulkCopy.ColumnMappings.Add(
-                        new MySqlBulkCopyColumnMapping(table.Columns.IndexOf(column), column.ColumnName.AsQuoted(true, dbSetting)));
+                        new MySqlBulkCopyColumnMapping(table.Columns.IndexOf(column), column.ColumnName));
                 }
             }
             return bulkCopy;
@@ -327,8 +330,9 @@ namespace RepoDb
             var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader).AsList();
             foreach (var mapping in columnMappings)
             {
+                // See the remarks in CreateBulkCopyForDataTable - MySqlBulkCopy quotes DestinationColumn itself.
                 bulkCopy.ColumnMappings.Add(
-                    new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn.AsQuoted(true, dbSetting)));
+                    new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn));
             }
             return bulkCopy;
         }

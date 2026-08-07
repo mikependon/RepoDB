@@ -130,7 +130,7 @@ namespace RepoDb
             string traceKey,
             MySqlTransaction transaction)
         {
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierField = GetQualifierFields(tableName, dbFields).First();
 
@@ -183,7 +183,7 @@ namespace RepoDb
             MySqlTransaction transaction,
             CancellationToken cancellationToken)
         {
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var qualifierField = GetQualifierFields(tableName, dbFields).First();
 

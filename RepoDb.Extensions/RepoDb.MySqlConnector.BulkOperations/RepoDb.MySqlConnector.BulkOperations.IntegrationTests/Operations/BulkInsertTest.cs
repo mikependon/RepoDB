@@ -261,7 +261,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -303,7 +303,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -368,7 +368,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -422,7 +422,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -702,7 +702,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -744,7 +744,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -809,7 +809,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -863,7 +863,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -896,7 +896,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -929,7 +929,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -962,7 +962,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1004,7 +1004,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1065,7 +1065,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1119,7 +1119,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1152,7 +1152,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1185,7 +1185,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1435,7 +1435,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1477,7 +1477,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1542,7 +1542,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1596,7 +1596,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1885,7 +1885,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1927,7 +1927,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1992,7 +1992,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2046,7 +2046,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2079,7 +2079,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2112,7 +2112,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2145,7 +2145,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2187,7 +2187,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2248,7 +2248,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2302,7 +2302,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2335,7 +2335,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2368,7 +2368,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2614,7 +2614,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2661,7 +2661,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2728,7 +2728,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -2787,7 +2787,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3035,7 +3035,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3082,7 +3082,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3149,7 +3149,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3208,7 +3208,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3241,7 +3241,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3274,7 +3274,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3307,7 +3307,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3354,7 +3354,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3421,7 +3421,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3480,7 +3480,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3513,7 +3513,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3546,7 +3546,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3788,7 +3788,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3835,7 +3835,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3902,7 +3902,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -3961,7 +3961,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4200,7 +4200,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4247,7 +4247,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4314,7 +4314,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4373,7 +4373,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4406,7 +4406,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4439,7 +4439,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4481,7 +4481,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4528,7 +4528,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4595,7 +4595,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4654,7 +4654,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4687,7 +4687,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4720,7 +4720,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
                     using (var table = new DataTable())
                     {
@@ -4751,7 +4751,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                 {
                     // Act
@@ -4779,7 +4779,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                 {
                     // Act

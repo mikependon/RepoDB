@@ -131,7 +131,7 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -217,7 +217,7 @@ namespace RepoDb
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
@@ -360,7 +360,7 @@ namespace RepoDb
         {
             var rows = GetDataRows(table, rowState)?.ToArray();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -434,7 +434,7 @@ namespace RepoDb
         {
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
@@ -520,7 +520,7 @@ namespace RepoDb
             // Identify the columns - row count is unknown for a streaming reader, so Auto-resolution (see
             // ResolvePseudoTableType's remarks) is passed a null hint; it is currently a no-op regardless.
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
@@ -669,7 +669,7 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -743,7 +743,7 @@ namespace RepoDb
             // Identify the columns
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
@@ -890,7 +890,7 @@ namespace RepoDb
         {
             var rows = GetDataRows(table, rowState)?.ToArray();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
 
@@ -963,7 +963,7 @@ namespace RepoDb
         {
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 
@@ -1036,7 +1036,7 @@ namespace RepoDb
         {
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK MERGE INTO {tableName}", bulkCopyTimeout, transaction);
 

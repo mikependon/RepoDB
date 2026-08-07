@@ -66,7 +66,7 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -136,7 +136,7 @@ namespace RepoDb
             MySqlTransaction transaction = null)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -208,7 +208,7 @@ namespace RepoDb
             // Row count is unknown for a streaming reader (see the remarks on the DbDataReader BulkMerge
             // overload); Auto-resolution is currently a no-op regardless.
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -283,7 +283,7 @@ namespace RepoDb
         {
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -353,7 +353,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -421,7 +421,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
-            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType);
+            var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
