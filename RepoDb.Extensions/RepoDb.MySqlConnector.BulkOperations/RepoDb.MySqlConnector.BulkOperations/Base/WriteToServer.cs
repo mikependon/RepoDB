@@ -21,7 +21,7 @@ namespace RepoDb
         #region WriteToServerInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -30,19 +30,21 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal<TEntity>(MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null)
+            int? batchSize = null,
+            MySqlTransaction transaction = null)
             where TEntity : class
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout);
-            bulkCopy.WriteToServer(reader);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction);
+            bulkCopy.WriteToServer(filteredReader);
             return entities != null ? entities.Count() : 0;
         }
 
@@ -88,18 +90,20 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal(MySqlConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null)
+            int? batchSize = null,
+            MySqlTransaction transaction = null)
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
-            var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout);
-            bulkCopy.WriteToServer(countingReader);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction);
+            bulkCopy.WriteToServer(filteredReader);
             return countingReader.Count;
         }
 
@@ -118,6 +122,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal<TEntity>(MySqlConnection connection,
             string tableName,
@@ -125,18 +130,15 @@ namespace RepoDb
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            MySqlTransaction transaction = null)
             where TEntity : class
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                using var reader = new DataEntityDataReader<TEntity>(entities);
-                var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout);
-                bulkCopy.WriteToServer(reader);
-                return entities != null ? entities.Count() : 0;
-            },
-            cancellationToken);
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction);
+            await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
+            return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
@@ -178,6 +180,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
             string tableName,
@@ -185,14 +188,15 @@ namespace RepoDb
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            MySqlTransaction transaction = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 var countingReader = new CountingDataReader(reader);
-                var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout);
-                bulkCopy.WriteToServer(countingReader);
+                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction);
+                bulkCopy.WriteToServer(filteredReader);
                 return countingReader.Count;
             },
             cancellationToken);
@@ -303,38 +307,45 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        /// Builds the <see cref="MySqlBulkCopy"/> for a reader-based bulk write, together with the reader it
+        /// should actually be pointed at (<paramref name="reader"/> filtered down to just the mapped columns -
+        /// see <see cref="ColumnFilteredDataReader"/> for why the original <paramref name="reader"/> must
+        /// never be handed to <see cref="MySqlBulkCopy"/> directly when it may expose "extra", unmapped
+        /// columns).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <returns></returns>
-        private static MySqlBulkCopy CreateBulkCopyForDataReader(MySqlConnection connection,
+        /// <param name="transaction"></param>
+        /// <returns>The configured <see cref="MySqlBulkCopy"/> and the reader to call <c>WriteToServer</c> with.</returns>
+        private static (MySqlBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MySqlConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout)
+            int? bulkCopyTimeout,
+            MySqlTransaction transaction)
         {
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new MySqlBulkCopy(connection)
             {
-                // See the remarks in CreateBulkCopyForDataTable - same quoting requirement applies here.
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
             {
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
             }
-            var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader).AsList();
-            foreach (var mapping in columnMappings)
+            var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList();
+            var sourceOrdinals = new int[columnMappings.Count];
+            for (var i = 0; i < columnMappings.Count; i++)
             {
-                // See the remarks in CreateBulkCopyForDataTable - MySqlBulkCopy quotes DestinationColumn itself.
-                bulkCopy.ColumnMappings.Add(
-                    new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn));
+                sourceOrdinals[i] = reader.GetOrdinal(columnMappings[i].SourceColumn);
+                bulkCopy.ColumnMappings.Add(new MySqlBulkCopyColumnMapping(i, columnMappings[i].DestinationColumn));
             }
-            return bulkCopy;
+            var filteredReader = new ColumnFilteredDataReader(reader, sourceOrdinals);
+
+            return (bulkCopy, filteredReader);
         }
 
         /// <summary>
@@ -355,9 +366,10 @@ namespace RepoDb
         /// </remarks>
         private static IEnumerable<MySqlConnectorBulkInsertMapItem> GetDefaultMappingsForDataReader(MySqlConnection connection,
             string tableName,
-            IDataReader reader)
+            IDataReader reader,
+            MySqlTransaction transaction)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName, null);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
 
             for (var i = 0; i < reader.FieldCount; i++)

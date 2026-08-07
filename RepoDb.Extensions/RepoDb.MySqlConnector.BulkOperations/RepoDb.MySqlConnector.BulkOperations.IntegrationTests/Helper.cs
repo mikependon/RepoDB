@@ -1485,12 +1485,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests
                     ColumnFloat = index,
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}",
-                    ExtraField = $"ExtraField{index}",
-                    IdentityTables = new[]
-                    {
-                        CreateBulkOperationIdentityTable(),
-                        CreateBulkOperationIdentityTable()
-                    }
+                    ExtraField = $"ExtraField{index}"
                 });
             }
             return tables;
