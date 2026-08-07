@@ -169,6 +169,8 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A and community chat.
 - [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
 
+Read our [contibuting](CONTRIBUTING.md) page for more.
+
 ### Resources
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md)
