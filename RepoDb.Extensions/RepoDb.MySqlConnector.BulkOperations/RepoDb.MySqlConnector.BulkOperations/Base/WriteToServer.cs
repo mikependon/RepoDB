@@ -31,6 +31,11 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
+        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static int WriteToServerInternal<TEntity>(MySqlConnection connection,
             string tableName,
@@ -38,12 +43,13 @@ namespace RepoDb
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            MySqlTransaction transaction = null)
+            MySqlTransaction transaction = null,
+            Field excludeField = null)
             where TEntity : class
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
             bulkCopy.WriteToServer(filteredReader);
             return entities != null ? entities.Count() : 0;
         }
@@ -58,6 +64,11 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="CreateBulkCopyForDataTable"/> for why a plain
+        /// (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static int WriteToServerInternal(MySqlConnection connection,
             string tableName,
@@ -65,10 +76,11 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null)
+            int? batchSize = null,
+            Field excludeField = null)
         {
             connection.EnsureOpen();
-            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout);
+            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
             bulkCopy.WriteToServer(rows, table.Columns.Count);
             return rows != null ? rows.Length : 0;
@@ -91,6 +103,11 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
+        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static int WriteToServerInternal(MySqlConnection connection,
             string tableName,
@@ -98,11 +115,12 @@ namespace RepoDb
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            MySqlTransaction transaction = null)
+            MySqlTransaction transaction = null,
+            Field excludeField = null)
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
             bulkCopy.WriteToServer(filteredReader);
             return countingReader.Count;
         }
@@ -123,6 +141,11 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="transaction"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
+        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal<TEntity>(MySqlConnection connection,
             string tableName,
@@ -131,12 +154,13 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
-            MySqlTransaction transaction = null)
+            MySqlTransaction transaction = null,
+            Field excludeField = null)
             where TEntity : class
         {
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
             await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
             return entities != null ? entities.Count() : 0;
         }
@@ -152,6 +176,11 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="CreateBulkCopyForDataTable"/> for why a plain
+        /// (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
             string tableName,
@@ -160,10 +189,11 @@ namespace RepoDb
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout);
+            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
             await bulkCopy.WriteToServerAsync(rows, table.Columns.Count, cancellationToken);
             return rows != null ? rows.Length : 0;
@@ -181,6 +211,11 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="transaction"></param>
+        /// <param name="excludeField">
+        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
+        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
+        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
+        /// </param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
             string tableName,
@@ -189,13 +224,14 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
-            MySqlTransaction transaction = null)
+            MySqlTransaction transaction = null,
+            Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 var countingReader = new CountingDataReader(reader);
-                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction);
+                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
                 bulkCopy.WriteToServer(filteredReader);
                 return countingReader.Count;
             },
@@ -259,20 +295,31 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        /// Builds the <see cref="MySqlBulkCopy"/> for a <see cref="DataTable"/>-based bulk write.
         /// </summary>
+        /// <remarks>
+        /// When <paramref name="mappings"/> is not supplied, every <see cref="DataTable"/> column is mapped
+        /// to a same-named destination column by default - except <paramref name="excludeField"/>, which is
+        /// skipped entirely. This mirrors <see cref="GetDefaultMappingsForDataReader"/>'s <c>excludeField</c>
+        /// handling (see its remarks for the full rationale): a plain (non-return-identity) <c>BulkInsert</c>
+        /// uses this to leave the identity column out of the mapping, so <c>AUTO_INCREMENT</c> generates a
+        /// fresh value per row instead of colliding with whatever identity value the source
+        /// <see cref="DataTable"/> already carries (e.g. when the table was loaded from a reader over the very
+        /// destination table it's now being bulk-inserted back into).
+        /// </remarks>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
+        /// <param name="excludeField">A column to leave out of the default mapping - ignored when <paramref name="mappings"/> is explicitly supplied.</param>
         /// <returns></returns>
         private static MySqlBulkCopy CreateBulkCopyForDataTable(MySqlConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings,
-            int? bulkCopyTimeout)
+            int? bulkCopyTimeout,
+            Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new MySqlBulkCopy(connection)
@@ -291,14 +338,25 @@ namespace RepoDb
                     // MySqlBulkCopy back-tick-quotes DestinationColumn itself (see QuoteIdentifier in
                     // MySqlBulkCopy.cs) - passing an already-quoted name here double-quotes it, producing a
                     // literal (and nonexistent) column reference like "`Id`" instead of "Id".
+                    //
+                    // The source ordinal must be the mapping's position within `table.Columns`, not its
+                    // position within `columnMappings` - those diverge whenever a caller-supplied mapping
+                    // list omits or reorders columns relative to the DataTable (e.g. leaving out an
+                    // identity column), and using the list index instead reads the wrong DataTable column
+                    // for every row (surfacing as a type-mismatch error at the destination, since the wrong
+                    // source column rarely matches the mapped destination column's type).
                     bulkCopy.ColumnMappings.Add(
-                        new MySqlBulkCopyColumnMapping(columnMappings.IndexOf(mapping), mapping.DestinationColumn));
+                        new MySqlBulkCopyColumnMapping(table.Columns.IndexOf(mapping.SourceColumn), mapping.DestinationColumn));
                 }
             }
             else
             {
                 foreach (DataColumn column in table.Columns)
                 {
+                    if (excludeField != null && string.Equals(column.ColumnName, excludeField.Name, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
                     bulkCopy.ColumnMappings.Add(
                         new MySqlBulkCopyColumnMapping(table.Columns.IndexOf(column), column.ColumnName));
                 }
@@ -319,13 +377,15 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="excludeField">Forwarded to <see cref="GetDefaultMappingsForDataReader"/> - see its remarks.</param>
         /// <returns>The configured <see cref="MySqlBulkCopy"/> and the reader to call <c>WriteToServer</c> with.</returns>
         private static (MySqlBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MySqlConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings,
             int? bulkCopyTimeout,
-            MySqlTransaction transaction)
+            MySqlTransaction transaction,
+            Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new MySqlBulkCopy(connection)
@@ -336,7 +396,7 @@ namespace RepoDb
             {
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
             }
-            var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList();
+            var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, excludeField).AsList();
             var sourceOrdinals = new int[columnMappings.Count];
             for (var i = 0; i < columnMappings.Count; i++)
             {
@@ -355,6 +415,7 @@ namespace RepoDb
         /// <paramref name="tableName"/>'s real columns.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Needed because a <c>TEntity</c> can carry "extra" properties that have no corresponding column
         /// at all (e.g. a computed/joined field, or a navigation collection - see the <c>...WithExtraFields</c>
         /// integration test entities). Left unfiltered, <see cref="MySqlBulkCopy"/> falls back to
@@ -363,11 +424,30 @@ namespace RepoDb
         /// <c>ORA-50029: Column mapping is invalid</c>. Extra reader columns with no matching destination
         /// field are silently skipped (never written), exactly like the explicit-mappings path already does
         /// for a caller-supplied mapping that omits a column.
+        /// </para>
+        /// <para>
+        /// <paramref name="excludeField"/> additionally drops one specific matched column from the mapping -
+        /// used by a plain (non-return-identity) <c>BulkInsert</c> to leave the identity column out entirely.
+        /// Unlike SQL Server's <c>SqlBulkCopy</c> (which skips/regenerates an identity column automatically
+        /// unless <c>SqlBulkCopyOptions.KeepIdentity</c> is set) or Oracle's <c>GENERATED ALWAYS</c> identity
+        /// (which rejects an explicit value outright), MySQL's <c>AUTO_INCREMENT</c> just accepts whatever
+        /// value it's given - so if the source data already carries real, previously-assigned identity values
+        /// (e.g. bulk-inserting rows read back from the very table they came from) and the default mapping
+        /// includes that column verbatim, every row collides with its own existing primary key. MySQL's
+        /// <c>LOAD DATA LOCAL INFILE</c> (which <see cref="MySqlBulkCopy"/> always uses - see
+        /// <c>MySqlBulkLoader.Local</c>) treats a duplicate-key conflict the same as <c>IGNORE</c> in that
+        /// case (the server has no way to ask the client to stop mid-transfer), so instead of a clear
+        /// duplicate-key error, every row is silently dropped and <see cref="MySqlBulkCopy"/> throws
+        /// <c>"N rows were copied ... but only 0 were inserted"</c>. Leaving the identity column out of the
+        /// mapping entirely - the same way a caller-supplied mapping list can already choose to omit any
+        /// column - lets <c>AUTO_INCREMENT</c> generate a fresh value per row instead.
+        /// </para>
         /// </remarks>
         private static IEnumerable<MySqlConnectorBulkInsertMapItem> GetDefaultMappingsForDataReader(MySqlConnection connection,
             string tableName,
             IDataReader reader,
-            MySqlTransaction transaction)
+            MySqlTransaction transaction,
+            Field excludeField = null)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
@@ -376,7 +456,7 @@ namespace RepoDb
             {
                 var columnName = reader.GetName(i);
                 var dbField = dbFields.GetByUnquotedName(columnName.AsUnquoted(true, dbSetting));
-                if (dbField != null)
+                if (dbField != null && !string.Equals(dbField.Name, excludeField?.Name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     yield return new MySqlConnectorBulkInsertMapItem(columnName, dbField.Name);
                 }

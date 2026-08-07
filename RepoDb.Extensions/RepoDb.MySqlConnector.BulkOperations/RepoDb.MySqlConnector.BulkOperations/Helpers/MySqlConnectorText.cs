@@ -184,25 +184,49 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds a query that reports the current <c>AUTO_INCREMENT</c> counter for <c>@TableName</c> (the
-        /// next value MySQL would generate on its own), used to seed the identity pre-assignment sequence in
-        /// <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>/<see cref="GetMergeFromPseudoTableForReturnIdentitySql"/>.
+        /// Builds a query that reports the next identity value for <paramref name="tableName"/> (one past the
+        /// highest <paramref name="identityField"/> value currently stored), used to seed the identity
+        /// pre-assignment sequence in <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>/
+        /// <see cref="GetMergeFromPseudoTableForReturnIdentitySql"/>.
         /// This replaces Oracle's <c>ALL_TAB_IDENTITY_COLS</c> lookup - MySQL has no named sequence object to
         /// look up at all, so the two-column, one-row shape the caller expects
         /// (<c>MySqlConnectorExecution.GetIdentitySequenceMetadata</c>) is kept for signature compatibility,
         /// but column 0 now holds the numeric seed (as a string) rather than a sequence name, and column 1 is
         /// always <c>'NO'</c> - MySQL's <c>AUTO_INCREMENT</c> has no Oracle-style <c>GENERATED ALWAYS</c>
-        /// distinction; an explicit value is always accepted. Reading this value and later using it to seed the
-        /// pre-assignment statement are two separate round trips, which leaves a small race window against a
-        /// concurrent writer to the same table - see the remarks on
-        /// <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>.
+        /// distinction; an explicit value is always accepted.
         /// </summary>
-        /// <returns>The <c>information_schema.TABLES</c> lookup SQL text.</returns>
-        public static string GetIdentitySequenceMetadataSql() =>
-            "SELECT CAST(COALESCE(`AUTO_INCREMENT`, 1) AS CHAR) AS `SequenceName`, 'NO' AS `GenerationType` " +
-            "FROM `information_schema`.`TABLES` " +
-            "WHERE `TABLE_SCHEMA` = COALESCE(@Schema, DATABASE()) " +
-            "AND `TABLE_NAME` = @TableName";
+        /// <remarks>
+        /// Deliberately reads <c>MAX(identityColumn)</c> off <paramref name="tableName"/> itself rather than
+        /// <c>information_schema.TABLES.AUTO_INCREMENT</c> (the original implementation). MySQL 8 caches
+        /// <c>information_schema.TABLES</c>' dynamic columns - including <c>AUTO_INCREMENT</c> - in
+        /// <c>mysql.innodb_table_stats</c> for <c>information_schema_stats_expiry</c> seconds (24 hours by
+        /// default), refreshed only via <c>ANALYZE TABLE</c> or expiry - not on every insert. That let a stale,
+        /// pre-insert counter get reused as the seed here, so a return-identity bulk insert straight after a
+        /// row was already inserted elsewhere in the same table (see the integration test that inserts 10 rows
+        /// via <c>InsertAll</c> and then bulk-inserts 10 more with <c>ReturnIdentity</c>) collided on the same
+        /// primary key ("Duplicate entry '1' for key ...PRIMARY") instead of continuing after the existing
+        /// rows. <c>MAX(identityColumn) + 1</c> is always read live off the table's actual row data, so it can
+        /// never be stale - at the cost of reusing an id freed by a deleted row instead of skipping past it the
+        /// way the real <c>AUTO_INCREMENT</c> counter would (harmless: MySQL never reserves a deleted row's id).
+        /// Reading this value and later using it to seed the pre-assignment statement are still two separate
+        /// round trips, which leaves a small race window against a concurrent writer to the same table - see
+        /// the remarks on <see cref="GetInsertFromPseudoTableForReturnIdentitySql"/>.
+        /// </remarks>
+        /// <param name="tableName">The real table whose next identity value is being seeded.</param>
+        /// <param name="identityField">The identity column to read the current maximum of.</param>
+        /// <param name="dbSetting">The current <see cref="IDbSetting"/>.</param>
+        /// <returns>The live <c>MAX(identityColumn) + 1</c> lookup SQL text.</returns>
+        public static string GetIdentitySequenceMetadataSql(string tableName,
+            Field identityField,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+
+            return string.Concat(
+                "SELECT CAST(COALESCE(MAX(", quotedIdentityColumn, "), 0) + 1 AS CHAR) AS `SequenceName`, ",
+                "'NO' AS `GenerationType` FROM ", quotedTableName);
+        }
 
         /// <summary>
         /// Builds the multi-statement SQL that moves every row of <paramref name="pseudoTableName"/> into

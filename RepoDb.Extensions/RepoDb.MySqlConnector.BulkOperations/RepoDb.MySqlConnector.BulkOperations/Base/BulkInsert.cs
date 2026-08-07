@@ -195,13 +195,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
+            // Actual Execution - the identity column (if any) is left out of the default mapping so
+            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
+            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var result = WriteToServerInternal(connection,
                 tableName,
                 entities,
                 mappings,
                 bulkCopyTimeout,
-                batchSize);
+                batchSize,
+                transaction,
+                identityField);
 
             // After Execution
             Tracer
@@ -380,6 +385,11 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
+            // Leave the identity column out of the default mapping - see the remarks on
+            // CreateBulkCopyForDataTable/GetDefaultMappingsForDataReader for why (a plain insert must not
+            // carry over identity values already present in the source DataTable).
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+
             // Actual Execution
             var result = WriteToServerInternal(connection,
                 tableName,
@@ -387,7 +397,8 @@ namespace RepoDb
                 rowState,
                 mappings,
                 bulkCopyTimeout,
-                batchSize);
+                batchSize,
+                identityField);
 
             // After Execution
             Tracer
@@ -441,13 +452,18 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution
+            // Actual Execution - the identity column (if any) is left out of the default mapping so
+            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
+            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var result = WriteToServerInternal(connection,
                 tableName,
                 reader,
                 mappings,
                 bulkCopyTimeout,
-                batchSize);
+                batchSize,
+                transaction,
+                identityField);
 
             // After Execution
             Tracer
@@ -634,14 +650,19 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            // Actual Execution
+            // Actual Execution - the identity column (if any) is left out of the default mapping so
+            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
+            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 entities,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                cancellationToken);
+                cancellationToken,
+                transaction,
+                identityField);
 
             // After Execution
             await Tracer
@@ -824,6 +845,11 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
+            // Leave the identity column out of the default mapping - see the remarks on
+            // CreateBulkCopyForDataTable/GetDefaultMappingsForDataReader for why (a plain insert must not
+            // carry over identity values already present in the source DataTable).
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+
             // Actual Execution
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
@@ -832,7 +858,8 @@ namespace RepoDb
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                cancellationToken);
+                cancellationToken,
+                identityField);
 
             // After Execution
             await Tracer
@@ -879,14 +906,19 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            // Actual Execution
+            // Actual Execution - the identity column (if any) is left out of the default mapping so
+            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
+            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 reader,
                 mappings,
                 bulkCopyTimeout,
                 batchSize,
-                cancellationToken);
+                cancellationToken,
+                transaction,
+                identityField);
 
             // After Execution
             await Tracer

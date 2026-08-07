@@ -220,15 +220,9 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
             MySqlTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = MySqlConnectorText.GetIdentitySequenceMetadataSql();
-            var param = new
-            {
-                Schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
-                ColumnName = identityField.Name.AsUnquoted(dbSetting)
-            };
+            var commandText = MySqlConnectorText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, param: param, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             reader.Read();
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
@@ -253,15 +247,9 @@ namespace RepoDb.MySqlConnector.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = MySqlConnectorText.GetIdentitySequenceMetadataSql();
-            var param = new
-            {
-                Schema = DataEntityExtension.GetSchema(tableName, dbSetting)?.AsUnquoted(dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, dbSetting).AsUnquoted(dbSetting),
-                ColumnName = identityField.Name.AsUnquoted(dbSetting)
-            };
+            var commandText = MySqlConnectorText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param: param, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             await reader.ReadAsync(cancellationToken);
             return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
         }
