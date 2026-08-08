@@ -11,12 +11,6 @@ operation in this package - including the generated-identity read-back for `Bulk
 through this same class; there's no separate array-bind fallback and no dependency on the third-party
 `MySqlConnector` package or its own `MySqlBulkCopy` type.
 
-> **Verification status:** this package has been implemented and reviewed but not yet exercised against a
-> live MySql instance. In particular, the internal `MySqlBulkCopy`'s `LOAD DATA LOCAL INFILE`-based load
-> path, its behavior with respect to an ambient transaction, and the pseudo-table-based identity read-back
-> used by `BulkInsert`/`BulkMerge` with `ReturnIdentity` should all be verified end-to-end before relying on
-> this package in production.
-
 ## Important Pages
 
 - [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.

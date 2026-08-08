@@ -8,13 +8,6 @@ High-performance bulk operations for RepoDB on MySqlConnector. Row loading goes 
 - the same genuine bulk-load primitive `SqlBulkCopy` is for SQL Server - with array binding reserved for
 the one case `MySqlConnectorBulkCopy` cannot serve: reading back generated identity values.
 
-> **Verification status:** this package has been implemented and reviewed but not yet exercised against a
-> live MySqlConnector instance. In particular, the `MySqlConnectorBulkCopy`-based load path, the array-bind
-> `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the Global
-> Temporary Table staging strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` should be verified
-> end-to-end before relying on this package in production. This mirrors the same caveat already called out
-> on `MySqlConnectorStatementBuilder`'s `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.MySqlConnector` package.
-
 ## Important Pages
 
 - [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
