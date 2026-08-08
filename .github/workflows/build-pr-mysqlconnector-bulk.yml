@@ -1,0 +1,20 @@
+name: PR - Build & Run Tests - RepoDb.MySqlConnector.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MySqlConnector/**'
+      - 'RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-mysqlconnector-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations
+      solution-file: RepoDb.MySqlConnector.BulkOperations.sln
+      artifact-name: release-pr
+      db-engine: mysql

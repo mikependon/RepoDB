@@ -33,6 +33,7 @@ services:
       - repodb
     environment:
       MYSQL_ROOT_PASSWORD: RepoDB2026
+    command: --local-infile=1
 
 
   oracle:
