@@ -513,7 +513,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<AggregateException>(() => connection.BulkMerge(tables, mappings: mappings));
+                Assert.Throws<InvalidTypeException>(() => connection.BulkMerge(tables, mappings: mappings));
             }
         }
 
@@ -687,33 +687,13 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
                 }
             }
         }
-
-        //[TestMethod, ExpectedException(typeof(NullReferenceException))]
-        //public void ThrowExceptionOnMySqlConnectionBulkMergeForNullEntities()
-        //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
-        //    {
-        //        Assert.Throws<NullReferenceException>(() => connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null));
-        //    }
-        //}
-
-        //[TestMethod, ExpectedException(typeof(EmptyException))]
-        //public void ThrowExceptionOnMySqlConnectionBulkMergeForEmptyEntities()
-        //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
-        //    {
-        //        connection.BulkMerge(Enumerable.Empty<BulkOperationIdentityTable>());
-        //    }
-        //}
-
-        
 
         [TestMethod]
         public void ThrowExceptionOnMySqlConnectionBulkMergeForNullDataTable()
@@ -1478,7 +1458,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -1679,7 +1659,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -3966,7 +3946,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<AggregateException>(() => connection.BulkMerge(tables, mappings: mappings));
+                Assert.Throws<InvalidTypeException>(() => connection.BulkMerge(tables, mappings: mappings));
             }
         }
 
@@ -4140,7 +4120,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
@@ -4893,7 +4873,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -5094,7 +5074,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
