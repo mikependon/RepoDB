@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, oracle'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, oracle, db2'
         required: true
         type: string
 
@@ -36,6 +36,8 @@ env:
   REPODB_SQLITE_IS_IN_MEMORY: "true"
   # Oracle
   REPODB_ORACLE_CONSTR: "User Id=system;Password=RepoDB2026;Data Source=127.0.0.1:1521/FREEPDB1;"
+  # Db2
+  REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
 
 jobs:
 
@@ -184,6 +186,63 @@ jobs:
           - 127.0.0.1:3306:3306
         env:
           MYSQL_ROOT_PASSWORD: RepoDB2026
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # Db2 only (e.g. RepoDb.Db2, RepoDb.Db2.BulkOperations)
+  build-db2:
+    if: inputs.db-engine == 'db2'
+    runs-on: ubuntu-latest
+
+    services:
+      db2:
+        image: icr.io/db2_community/db2:latest
+        ports:
+          - 127.0.0.1:50000:50000
+        env:
+          LICENSE: accept
+          DB2INSTANCE: db2inst1
+          DB2INST1_PASSWORD: RepoDB2026
+          DBNAME: REPODB
+        options: >-
+          --privileged
+          --health-cmd "exit 0"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 1
+          --health-start-period 1s
 
     steps:
       - name: Check out repository code

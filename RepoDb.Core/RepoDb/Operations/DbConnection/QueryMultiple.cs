@@ -9566,7 +9566,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -10355,7 +10355,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -11339,7 +11339,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -12511,7 +12511,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -13872,7 +13872,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -15422,7 +15422,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -20996,7 +20996,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -21810,7 +21810,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -22822,7 +22822,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -24026,7 +24026,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -25422,7 +25422,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -27010,7 +27010,7 @@ namespace RepoDb
             else
             {
                 // The provider cannot execute multiple SQL statements in a single command text (e.g.
-                // Oracle, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
                 // round-trip per sub-query instead of one combined command + shared reader.
                 if (item1 == null)
                 {
@@ -32352,7 +32352,7 @@ namespace RepoDb
         /// <summary>
         /// Executes a single QueryMultiple sub-query as its own standalone round-trip. Used as a fallback
         /// for providers whose <see cref="IDbSetting.IsMultiStatementExecutable"/> is <c>false</c> (e.g.
-        /// Oracle), which cannot execute multiple SELECT statements joined into a single command text the
+        /// Db2), which cannot execute multiple SELECT statements joined into a single command text the
         /// way the combined/single-round-trip code path above does.
         /// </summary>
         /// <typeparam name="T">The target type.</typeparam>
@@ -32426,7 +32426,7 @@ namespace RepoDb
         /// <summary>
         /// Executes a single QueryMultiple sub-query as its own standalone round-trip in an asynchronous
         /// way. Used as a fallback for providers whose <see cref="IDbSetting.IsMultiStatementExecutable"/>
-        /// is <c>false</c> (e.g. Oracle), which cannot execute multiple SELECT statements joined into a
+        /// is <c>false</c> (e.g. Db2), which cannot execute multiple SELECT statements joined into a
         /// single command text the way the combined/single-round-trip code path above does.
         /// </summary>
         /// <typeparam name="T">The target type.</typeparam>

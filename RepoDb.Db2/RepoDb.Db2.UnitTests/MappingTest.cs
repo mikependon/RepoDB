@@ -1,0 +1,47 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using IBM.Data.Db2;
+
+namespace RepoDb.Db2.UnitTests
+{
+    [TestClass]
+    public class MappingTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            GlobalConfiguration
+                .Setup()
+                .UseDb2();
+        }
+
+        [TestMethod]
+        public void TestDb2StatementBuilderMapper()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<Db2Connection>();
+
+            // Assert
+            Assert.IsNotNull(builder);
+        }
+
+        [TestMethod]
+        public void TestDb2DbHelperMapper()
+        {
+            // Setup
+            var helper = DbHelperMapper.Get<Db2Connection>();
+
+            // Assert
+            Assert.IsNotNull(helper);
+        }
+
+        [TestMethod]
+        public void TestDb2DbSettingMapper()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<Db2Connection>();
+
+            // Assert
+            Assert.IsNotNull(setting);
+        }
+    }
+}
