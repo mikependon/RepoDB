@@ -5,7 +5,7 @@
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
-    <Description>An extension library that contains the official Bulk Operations of RepoDB for MySqlConnector.</Description>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for MySQL (using MySqlConnector).</Description>
     <PackageTags>orm hybrid-orm micro-orm mysqlconnector bulkoperations</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/mysqlconnectorbulk</PackageReleaseNotes>
