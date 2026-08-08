@@ -1,0 +1,20 @@
+name: PR - Build & Run Tests - RepoDb.MySql.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MySql/**'
+      - 'RepoDb.Extensions/RepoDb.MySql.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-mysql-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.MySql.BulkOperations
+      solution-file: RepoDb.MySql.BulkOperations.sln
+      artifact-name: release-pr
+      db-engine: mysql

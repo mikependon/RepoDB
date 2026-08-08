@@ -4,16 +4,18 @@
 
 # [RepoDb.MySql.BulkOperations](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations)
 
-High-performance bulk operations for RepoDB on MySql. Row loading goes through ODP.NET's `MySqlBulkCopy`
-- the same genuine bulk-load primitive `SqlBulkCopy` is for SQL Server - with array binding reserved for
-the one case `MySqlBulkCopy` cannot serve: reading back generated identity values.
+High-performance bulk operations for RepoDB on MySql. Row loading goes through this package's own internal
+`MySqlBulkCopy` class - a `LOAD DATA LOCAL INFILE`-based stand-in built on top of `MySql.Data`'s
+`MySqlBulkLoader`, since `MySql.Data` ships no genuine streaming bulk-copy API of its own. Every bulk
+operation in this package - including the generated-identity read-back for `BulkInsert`/`BulkMerge` - goes
+through this same class; there's no separate array-bind fallback and no dependency on the third-party
+`MySqlConnector` package or its own `MySqlBulkCopy` type.
 
 > **Verification status:** this package has been implemented and reviewed but not yet exercised against a
-> live MySql instance. In particular, the `MySqlBulkCopy`-based load path, the array-bind
-> `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the Global
-> Temporary Table staging strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` should be verified
-> end-to-end before relying on this package in production. This mirrors the same caveat already called out
-> on `MySqlStatementBuilder`'s `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.MySql` package.
+> live MySql instance. In particular, the internal `MySqlBulkCopy`'s `LOAD DATA LOCAL INFILE`-based load
+> path, its behavior with respect to an ambient transaction, and the pseudo-table-based identity read-back
+> used by `BulkInsert`/`BulkMerge` with `ReturnIdentity` should all be verified end-to-end before relying on
+> this package in production.
 
 ## Important Pages
 
@@ -23,13 +25,14 @@ the one case `MySqlBulkCopy` cannot serve: reading back generated identity value
 ## Core Features
 
 - [Special Arguments](#special-arguments)
-- [How Rows Are Loaded: MySqlBulkCopy and the Transaction Boundary](#how-rows-are-loaded-mysqlconnectorbulkcopy-and-the-transaction-boundary)
+- [How Rows Are Loaded: MySqlBulkCopy and the Transaction Boundary](#how-rows-are-loaded-mysqlbulkcopy-and-the-transaction-boundary)
 - [The Staging Table Lifecycle: Auto, Memory, and Physical](#the-staging-table-lifecycle-auto-memory-and-physical)
 - [Async Methods](#async-methods)
 - [BulkInsert](#bulkinsert)
 - [BulkMerge](#bulkmerge)
 - [BulkUpdate](#bulkupdate)
 - [BulkDelete](#bulkdelete)
+- [BulkDeleteByKey](#bulkdeletebykey)
 
 ## Community
 
@@ -56,6 +59,13 @@ Then initialize the bootstrapper once at application startup:
 RepoDb.MySqlBootstrap.Initialize();
 ```
 
+The connection string needs `AllowLoadLocalInfile=True;AllowUserVariables=True;` - the former lets the
+client send `LOAD DATA LOCAL INFILE`, which this package's internal `MySqlBulkCopy` uses for every row-load,
+and the latter lets the staging-table SQL use session user variables (`SET @repodb_...`) and
+`PREPARE`/`EXECUTE` for its identity pre-assignment and nullability-toggling steps. The server also needs its
+`local_infile` global variable turned on (`SET GLOBAL local_infile = 1;`, requires
+`SUPER`/`SYSTEM_VARIABLES_ADMIN`) - it's off by default.
+
 Or visit the [installation](https://repodb.net/tutorial/installation) page for more options.
 
 ## Special Arguments
@@ -63,131 +73,107 @@ Or visit the [installation](https://repodb.net/tutorial/installation) page for m
 **`qualifiers`** — defines the fields used in the matching criteria for `BulkMerge`, `BulkUpdate`, and
 `BulkDelete`. Defaults to the primary key column.
 
-**`mappings`** (`BulkInsert` only) — an explicit list of `MySqlBulkInsertMapItem` describing which
-source properties/columns map to which destination columns, and (optionally) which
-`MySql.ManagedDataAccess.Client.MySqlDbType` to bind each one as. When omitted, the matching
-properties/columns from the target table are used automatically, honoring each property's
-`[MySqlDbType]`/`[MySqlDbTypeEx]` attribute exactly like the rest of this MySql provider. The explicit
-`MySqlDbType` override only takes effect when `identityBehavior: ReturnIdentity` forces the array-bind
-path (see [How Rows Are Loaded](#how-rows-are-loaded-mysqlconnectorbulkcopy-and-the-transaction-boundary)) -
-`MySqlBulkCopy` has no equivalent per-column type override and instead infers the wire type from each
-value's own CLR type, which is sufficient for ordinary column types but is worth keeping in mind for
-LOB/interval/timestamp-with-local-time-zone columns that previously relied on an explicit override.
+**`mappings`** (`BulkInsert`, `BulkMerge`, `BulkUpdate`) — an explicit list of `MySqlBulkInsertMapItem`
+describing which source properties/columns map to which destination columns. When omitted, the matching
+properties/columns from the target table are used automatically. Each mapping can optionally carry a
+`MySql.Data.MySqlClient.MySqlDbType` override, but this package's internal `MySqlBulkCopy` (see
+[How Rows Are Loaded](#how-rows-are-loaded-mysqlbulkcopy-and-the-transaction-boundary)) has no per-column
+type slot to feed it into - it infers each field's on-the-wire representation from the value's own CLR type
+when serializing rows to the `LOAD DATA LOCAL INFILE` temp file, so the override currently has no effect.
 
 **`identityBehavior`** — controls identity handling for `BulkInsert` and `BulkMerge`:
 
-- `Unspecified` *(default)* — the identity column is neither sent nor read back.
-- `KeepIdentity` — the identity property's existing value is sent and used as-is.
-- `ReturnIdentity` — the database-generated (or matched) identity value is read back and written onto
-  each entity/row. On `BulkInsert`, requesting this switches the row-load itself from `MySqlBulkCopy`
-  back to array binding with `RETURNING ... INTO`, since `MySqlBulkCopy` has no way to report back
-  generated values - see [How Rows Are Loaded](#how-rows-are-loaded-mysqlconnectorbulkcopy-and-the-transaction-boundary).
+- `KeepIdentity` *(default)* — the identity column is left out of the bulk-loaded row set entirely, so
+  MySQL's own `AUTO_INCREMENT` assigns each row's value as usual.
+- `ReturnIdentity` — the row load is redirected into a staging pseudo table instead of the real table, an
+  identity value is pre-assigned to each staged row (see
+  [The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)), then copied into
+  the real table and read back onto each entity/row - in the original bulk-load order - via a follow-up
+  `SELECT`.
 
-**`pseudoTableType`** (`BulkMerge`, `BulkUpdate`, `BulkDelete` only) — an `MySqlBulkImportPseudoTableType`
-controlling what kind of staging table backs the operation:
+**`pseudoTableType`** (`BulkMerge`, `BulkUpdate`, `BulkDelete`, `BulkDeleteByKey`, and `BulkInsert` with
+`ReturnIdentity`) — a `MySqlBulkImportPseudoTableType` controlling what kind of staging table backs the
+operation:
 
 - `Auto` *(default)* — picks `Physical` when the entity/row count being bulk-written is 5,000 or more,
   otherwise `Memory`.
-- `Memory` — a Global Temporary Table (GTT). Session-private rows, safe for concurrent callers writing to
-  the same table from different connections.
-- `Physical` — an ordinary heap table. No session isolation - see the caveat below before using this.
+- `Memory` — a MySQL `TEMPORARY TABLE`. Session-private rows, safe for concurrent callers writing to the
+  same table from different connections.
+- `Physical` — an ordinary persistent table. No session isolation - see the caveat below before using this.
 
 > **Currently, every value above resolves to `Physical` at runtime**, including `Memory` and `Auto`'s
 > row-count threshold. See [The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)
 > for why.
 
-Unlike the PostgreSQL bulk package, there is no `BulkImportMergeCommandType` (MySql has exactly one
-native upsert construct, `MERGE INTO`).
+MySQL has no native `MERGE` statement, so unlike the PostgreSQL or SQL Server bulk packages there is no
+`BulkImportMergeCommandType` to pick between alternate upsert strategies here. `BulkMerge` always performs
+the same two-statement translation: an `UPDATE ... INNER JOIN` against the rows that match on `qualifiers`,
+followed by an `INSERT ... SELECT` guarded by a `LEFT JOIN ... WHERE ... IS NULL` anti-join for the rows
+that don't.
 
 ## How Rows Are Loaded: MySqlBulkCopy and the Transaction Boundary
 
-Every other provider's bulk insert loads rows into a staging table first. MySql's `BulkInsert` skips
-that step entirely - it writes straight to the destination table (the real table for a plain `BulkInsert`
-call, or the staging table when `BulkMerge`/`BulkUpdate`/`BulkDelete` call it internally; see below) using
-one of two mechanisms:
+Every bulk operation in this package moves rows through exactly one mechanism: this package's own internal
+`MySqlBulkCopy` class (`Helpers/MySqlBulkCopy.cs`) - not a type from the third-party `MySqlConnector` NuGet
+package, and not something `MySql.Data` ships itself (it has no class of that name). `MySql.Data`'s only
+genuine bulk-load primitive is `MySqlBulkLoader`, which can only load from a file via
+`LOAD DATA [LOCAL] INFILE` - unlike `SqlBulkCopy`, it has no reader-streaming `WriteToServer(IDataReader)`
+overload. So this package's `MySqlBulkCopy` first serializes whatever rows it's given (entities, a
+`DataTable`, or a reader) to a temporary tab-delimited file, hands that file to `MySqlBulkLoader`, then
+deletes it once the load completes.
 
-- **`MySqlBulkCopy`** *(the default, used whenever identities aren't being returned)* - ODP.NET's genuine
-  bulk-load primitive, the same kind of API `SqlBulkCopy` is for SQL Server. This is what actually moves
-  the data in every bulk operation in this package.
-- **Array binding with `RETURNING ... INTO`** *(only when `identityBehavior: ReturnIdentity` is requested
-  on `BulkInsert`)* - `MySqlBulkCopy` has no mechanism to report back generated or matched values, so
-  this one scenario still binds an array-bound `INSERT ... VALUES (...)` statement with a
-  `RETURNING <col> INTO :out` clause, which returns one identity value per bound row - in the same order
-  the rows were bound - as a single output parameter array.
+This is the *only* row-load path in the package - a plain `BulkInsert` writes straight to the destination
+table with it; `BulkInsert` with `ReturnIdentity` and every `BulkMerge`/`BulkUpdate`/`BulkDelete` call route
+their rows through it into a staging pseudo table first (see
+[The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)). There is no separate
+array-bind or parameterized fallback for any scenario, including returning generated identities - those are
+read back with a follow-up `SELECT` against the staging table instead (see `identityBehavior` above).
 
-**`BulkMerge`, `BulkUpdate`, and `BulkDelete` call `BulkInsert` internally** to load their staging table -
-there is exactly one "write rows into an MySql table" code path in this package, and every bulk operation
-uses it. Staging loads never request `ReturnIdentity` (identity correlation for `BulkMerge` is handled
-separately - see [BulkMerge](#bulkmerge)), so they always go through `MySqlBulkCopy`.
-
-**The transaction boundary this creates.** Per MySql's own ODP.NET documentation, *"all bulk copy
-operations are agnostic of any local or distributed transaction created by the application"* -
-`MySqlBulkCopy` has no constructor or property that accepts an `MySqlTransaction`, and rows it writes
-commit independently of whatever transaction the caller is in. Concretely:
-
-- Creating/clearing the staging table, and the final `MERGE`/`UPDATE`/`DELETE` statement that follows the
-  load, all still run inside your transaction exactly as before.
-- The row-load step itself (the `MySqlBulkCopy` call) does **not** - if your transaction is later rolled
-  back, rows already bulk-copied into the real table (a plain `BulkInsert`) or into the staging table (for
-  `BulkMerge`/`BulkUpdate`/`BulkDelete`) are **not** undone.
-
-For a plain `BulkInsert` without `ReturnIdentity`, this means a rolled-back transaction will **not** remove
-rows that were already bulk-copied into the real table. For `BulkMerge`/`BulkUpdate`/`BulkDelete`, the
-practical impact is smaller: the final `MERGE`/`UPDATE`/`DELETE` statement against the real table is still
-fully transactional, so a rollback there behaves as expected for your actual data - the only thing that can
-be left behind is now-orphaned rows in the (ephemeral, reusable) staging table, which the next call against
-that staging table clears unconditionally before loading anything new. For `Memory` staging tables this
-is invisible outside your own session; for `Physical` staging tables this is within the same
-already-documented concurrency caveat as [everything else about `Physical`](#the-staging-table-lifecycle-auto-memory-and-physical).
-If a plain `BulkInsert`'s all-or-nothing behavior with respect to your transaction matters for your
-workload, request `identityBehavior: ReturnIdentity` to force the array-bind path, which does honor your
-transaction like every other command in this package.
+**The transaction boundary.** This package's `MySqlBulkCopy` is constructed from a bare `MySqlConnection`
+and never receives a `MySqlTransaction`, and it issues `LOAD DATA LOCAL INFILE` directly against that
+connection rather than through a `MySqlCommand` enlisted in your transaction. Whether that means a
+rolled-back transaction leaves already-loaded rows behind has not been verified against a live server (see
+the verification-status note at the top of this document) - treat it as unconfirmed until you've checked the
+behavior for your MySQL version and storage engine.
 
 ## The Staging Table Lifecycle: Auto, Memory, and Physical
 
-`BulkMerge`, `BulkUpdate`, and `BulkDelete` stage rows into a per-table pseudo table before running one
-set-based `MERGE INTO` / `DELETE ... WHERE EXISTS` statement against it. MySql's `CREATE TABLE` and
-`DROP TABLE` are DDL and cause an **implicit COMMIT** - so unlike PostgreSQL, which creates and drops its
-pseudo table on every call, this package creates the staging table **once** per (table name, pseudo table
-type) the first time it's needed in the process, and merely `DELETE`s its contents (plain DML,
-transaction-safe) before every subsequent call. The `pseudoTableType` argument picks which kind of table
-backs this:
+`BulkMerge`, `BulkUpdate`, `BulkDelete`, `BulkDeleteByKey`, and `BulkInsert` with `ReturnIdentity` stage rows
+into a per-call pseudo table before running a set-based statement against it. Every call - not just the
+first one for a given table - issues a fresh `DROP TABLE IF EXISTS` followed by `CREATE TABLE ... AS SELECT ... WHERE (1 = 0)`
+(or `CREATE TEMPORARY TABLE ...` for `Memory`) to (re)create the pseudo table, shaped after the real table's
+columns, plus one extra surrogate column - `__RepoDbBulkRowOrder__ BIGINT AUTO_INCREMENT PRIMARY KEY` - that
+gives the staged rows a deterministic order to read back in. The pseudo table is dropped again once the
+operation finishes.
+
+Because `CREATE TABLE`/`DROP TABLE` are DDL, and DDL causes an **implicit COMMIT** in MySQL, **every**
+`BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey`/`BulkInsert`-with-`ReturnIdentity` call implicitly commits any other
+uncommitted work already pending on that connection - both when the pseudo table is (re)created at the start
+of the call and again when it's dropped at the end. This happens on every call, not just the first one for a
+table. Keep this in mind if you're bulk-writing inside a larger transaction alongside other statements.
+
+The `pseudoTableType` argument picks which kind of table backs this:
 
 - **`Auto`** *(default)* — resolves to `Physical` when the number of entities/rows being bulk-written is
-  5,000 or more, otherwise resolves to `Memory`. This favors the session-safe `Memory` staging table
-  for typical batch sizes, while stepping up to the lower-overhead `Physical` table for very large loads
-  where GTT overhead is more likely to matter. If your workload has concurrent callers writing to the same
-  table, see the `Physical` caveat below before relying on the `Auto` threshold for large batches.
-- **`Memory`** — `CREATE GLOBAL TEMPORARY TABLE ... ON COMMIT PRESERVE ROWS`. Rows are private to each
-  session, so concurrent connections bulk-writing to the same target table never see or interfere with each
-  other's staged data, even though they share one table definition. This is the safe choice for
-  concurrent/multi-connection workloads.
-- **`Physical`** — `CREATE TABLE ... AS SELECT ...`, an ordinary heap table. It carries **no per-session
-  data isolation** - every session/connection reads and writes the *same* rows. Two connections
+  5,000 or more, otherwise resolves to `Memory`.
+- **`Memory`** — `CREATE TEMPORARY TABLE`. Rows are private to each session, so concurrent connections
+  bulk-writing to the same target table never see or interfere with each other's staged data, even though
+  they share one table definition. This is the safe choice for concurrent/multi-connection workloads.
+- **`Physical`** — `CREATE TABLE ... AS SELECT ...`, an ordinary persistent table. It carries **no
+  per-session data isolation** - every session/connection reads and writes the *same* rows. Two connections
   bulk-writing to the same target table concurrently with `Physical` will corrupt or race each other's
   staged data. Only use this for workloads where calls against the same table are known to be sequential
-  (e.g. a single-threaded batch job), in exchange for avoiding whatever session-temporary-object overhead
-  your MySql environment attaches to GTTs. `Memory` and `Physical` staging tables for the same real
-  table are named distinctly, so switching between them (directly or via `Auto`) for the same table is
-  safe and won't collide.
+  (e.g. a single-threaded batch job). `Memory` and `Physical` staging tables for the same real table are
+  named distinctly, so switching between them (directly or via `Auto`) for the same table is safe and won't
+  collide.
 
-**`Memory` is currently not usable - every pseudo table is `Physical` for now, regardless of what you
-pass.** `MySqlBulkCopy.WriteToServer` (see [How Rows Are Loaded](#how-rows-are-loaded-mysqlconnectorbulkcopy-and-the-transaction-boundary))
-always performs a direct-path load internally, and MySql's direct-path engine cannot write into a Global
-Temporary Table at all - this fails live with `ORA-39826: Direct path load of view or synonym (...) could
-not be resolved`, MySql's generic error for a direct-path destination it can't support. Since the staging
-table is always loaded via `MySqlBulkCopy`, a GTT-backed staging table can never actually receive data as
-this package is currently built - so `Memory` and `Auto`'s row-count threshold are both overridden to
-`Physical` until a working strategy exists (e.g. loading a GTT via array-bound `INSERT`s instead of
-`MySqlBulkCopy`). This means the concurrency caveat above for `Physical` currently applies unconditionally,
-not just when you explicitly request it.
-
-**Practical implication:** the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a given table
-(for a given `pseudoTableType`) in a process will issue a `CREATE TABLE` or `CREATE GLOBAL TEMPORARY TABLE`
-statement. If that first call happens inside a transaction that already has other uncommitted work
-pending, that work will be implicitly committed at that point. Consider "warming up" the staging table for
-tables you'll bulk-write to (e.g. with a throwaway call at application startup, outside of any transaction
-you care about) if this matters for your workload.
+**`Memory` is currently not reachable - every pseudo table is `Physical` for now, regardless of what you
+pass.** The `TEMPORARY TABLE` branch is fully implemented in the SQL builder, but the code that resolves
+`pseudoTableType` before it gets there (`ResolvePseudoTableType` in `Base/WriteToServer.cs`) currently maps
+every input - including an explicit `Memory` and `Auto`'s row-count threshold - to `Physical`
+unconditionally, until that path has been enabled and verified against a live server. This means the
+concurrency caveat for `Physical` above currently applies unconditionally, not just when you explicitly
+request it.
 
 ## Async Methods
 
@@ -279,15 +265,15 @@ using (var connection = new MySqlConnection(ConnectionString))
 }
 ```
 
-`BulkMerge` never uses MySql's `RETURNING` clause on the `MERGE` statement itself (that's only supported
-starting with MySql Database 23ai). When `identityBehavior: MySqlBulkImportIdentityBehavior.ReturnIdentity` is
-requested, a second, version-independent query correlates the staged rows back to the real table by the
-same qualifiers immediately after the `MERGE` completes.
+When `identityBehavior: MySqlBulkImportIdentityBehavior.ReturnIdentity` is requested, a matched row keeps
+its existing identity value and an unmatched row gets a freshly pre-assigned one - both are read back onto
+the corresponding entity/row via the same staging-table `SELECT` described in
+[Special Arguments](#special-arguments).
 
 `BulkMerge`, `BulkUpdate`, and `BulkDelete` also accept `pseudoTableType` (see
 [Special Arguments](#special-arguments) and
 [The Staging Table Lifecycle](#the-staging-table-lifecycle-auto-memory-and-physical)) to pick between
-auto-selection (the default), a session-isolated Global Temporary Table, and a shared physical table:
+auto-selection (the default), a session-isolated temporary table, and a shared physical table:
 
 ```csharp
 using (var connection = new MySqlConnection(ConnectionString))
@@ -367,5 +353,26 @@ using (var connection = new MySqlConnection(ConnectionString))
 }
 ```
 
-`BulkDelete` only ever stages the qualifier columns (not the whole row) - it's the lightest of the four
-operations. It accepts `pseudoTableType` the same way `BulkMerge` does.
+`BulkDelete` only ever stages the qualifier columns (not the whole row) - it's the lightest of the
+entity/`DataTable`-based operations. It accepts `pseudoTableType` the same way `BulkMerge` does. When you
+only have the primary key values on hand (no entities or `DataTable`), use
+[BulkDeleteByKey](#bulkdeletebykey) instead.
+
+## BulkDeleteByKey
+
+Deletes existing rows from the database in bulk, matched by their primary (or identity) key value alone -
+no entities or `DataTable` involved, just the list of key values to remove. Returns the number of deleted
+rows.
+
+```csharp
+using (var connection = new MySqlConnection(ConnectionString))
+{
+    var primaryKeys = new [] { 10045, 10046, 10047 };
+    var deletedRows = connection.BulkDeleteByKey("Customer", primaryKeys);
+}
+```
+
+`BulkDeleteByKey` stages only the key column - the same one `qualifiers` would default to for `BulkDelete`
+- into its own pseudo table (named distinctly from `BulkDelete`'s, so the two never collide even against the
+same real table). It has no `qualifiers` argument of its own, since the key values themselves are the match
+criteria; it accepts `pseudoTableType` the same way `BulkMerge` does.
