@@ -22,7 +22,7 @@ namespace RepoDb
         #region WriteToServerInternal
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -32,11 +32,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
-        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal<TEntity>(MySqlConnection connection,
             string tableName,
@@ -56,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -65,11 +61,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="CreateBulkCopyForDataTable"/> for why a plain
-        /// (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal(MySqlConnection connection,
             string tableName,
@@ -88,14 +80,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Streams <paramref name="reader"/> directly into <paramref name="tableName"/> via <see cref="MySqlBulkCopy"/>
-        /// without ever materializing it into a list or <see cref="DataTable"/> first - the whole point of the
-        /// <see cref="DbDataReader"/> overloads is to let a source query keep streaming into the destination
-        /// as it's read, instead of buffering every row in memory up front (as the <c>TEntity</c>/<see cref="DataTable"/>
-        /// overloads do). Since <paramref name="reader"/> is forward-only and single-pass, there's no way to know
-        /// the row count ahead of time the way the other overloads do (<c>entities.Count()</c>/<c>rows.Length</c>) -
-        /// so this wraps it in <see cref="CountingDataReader"/>, which tallies exactly how many rows
-        /// <see cref="MySqlBulkCopy"/> actually pulled through <see cref="IDataReader.Read"/>.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -104,11 +89,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
-        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static int WriteToServerInternal(MySqlConnection connection,
             string tableName,
@@ -142,11 +123,7 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
-        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal<TEntity>(MySqlConnection connection,
             string tableName,
@@ -167,7 +144,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -177,11 +154,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="CreateBulkCopyForDataTable"/> for why a plain
-        /// (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
             string tableName,
@@ -201,8 +174,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="WriteToServerInternal(MySqlConnection, string, DbDataReader, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -212,11 +184,7 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField">
-        /// A field to leave out of the default column mapping - ignored when <paramref name="mappings"/> is
-        /// explicitly supplied. See the remarks on <see cref="GetDefaultMappingsForDataReader"/> for why a
-        /// plain (non-return-identity) <c>BulkInsert</c> into an identity table needs this.
-        /// </param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
             string tableName,
@@ -244,27 +212,11 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Resolves <paramref name="pseudoTableType"/> to the pseudo table type actually used for a bulk
-        /// operation.
+        /// 
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// <b>Temporarily forced to <see cref="MySqlConnectorBulkImportPseudoTableType.Physical"/> for every input</b>
-        /// (including an explicit <see cref="MySqlConnectorBulkImportPseudoTableType.Memory"/> request, and regardless
-        /// of <paramref name="rowCount"/>) - <see cref="MySqlBulkCopy.WriteToServer(System.Data.DataRow[])"/>
-        /// always performs a direct-path load internally (ODP.NET's <c>MySqlConnectorBulkCopyOptions</c> has no
-        /// conventional-path alternative), and MySqlConnector's direct-path engine cannot write into a Global
-        /// Temporary Table at all - confirmed live via <c>ORA-39826: Direct path load of view or synonym
-        /// (...) could not be resolved</c>, MySqlConnector's generic error for an unsupported direct-path destination
-        /// object type. Since every pseudo table is bulk-written to via <see cref="MySqlBulkCopy"/>
-        /// (see <see cref="WriteToServerInternal{TEntity}"/>/<see cref="WriteToServerInternal(MySqlConnection, string, System.Data.DataTable, System.Data.DataRowState?, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?)"/>),
-        /// a <c>Memory</c> (GTT) pseudo table can never actually be used as a bulk-copy destination as
-        /// currently built - so <see cref="MySqlConnectorBulkImportPseudoTableType.Auto"/>'s row-count threshold
-        /// logic is a no-op for now too, until a working strategy for a session-isolated staging table
-        /// (e.g. writing to a GTT via array-bound <c>INSERT</c>s instead of <see cref="MySqlBulkCopy"/>)
-        /// is designed and implemented.
-        /// </para>
-        /// </remarks>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="rowCount"></param>
+        /// <returns></returns>
         private static MySqlConnectorBulkImportPseudoTableType ResolvePseudoTableType(MySqlConnectorBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
             pseudoTableType == MySqlConnectorBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MySqlConnectorConstants.RowCountThresholdForPhysicalTable ?
@@ -277,6 +229,7 @@ namespace RepoDb
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
         /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException"></exception>
         private static IEnumerable<DataRow> GetDataRows(DataTable dataTable,
             DataRowState? rowState = null)
         {
@@ -296,25 +249,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds the <see cref="MySqlBulkCopy"/> for a <see cref="DataTable"/>-based bulk write.
+        /// 
         /// </summary>
-        /// <remarks>
-        /// When <paramref name="mappings"/> is not supplied, every <see cref="DataTable"/> column is mapped
-        /// to a same-named destination column by default - except <paramref name="excludeField"/>, which is
-        /// skipped entirely. This mirrors <see cref="GetDefaultMappingsForDataReader"/>'s <c>excludeField</c>
-        /// handling (see its remarks for the full rationale): a plain (non-return-identity) <c>BulkInsert</c>
-        /// uses this to leave the identity column out of the mapping, so <c>AUTO_INCREMENT</c> generates a
-        /// fresh value per row instead of colliding with whatever identity value the source
-        /// <see cref="DataTable"/> already carries (e.g. when the table was loaded from a reader over the very
-        /// destination table it's now being bulk-inserted back into).
-        /// </remarks>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="excludeField">A column to leave out of the default mapping - ignored when <paramref name="mappings"/> is explicitly supplied.</param>
+        /// <param name="excludeField"></param>
         /// <returns></returns>
+        /// <exception cref="InvalidTypeException"></exception>
         private static MySqlBulkCopy CreateBulkCopyForDataTable(MySqlConnection connection,
             string tableName,
             DataTable table,
@@ -342,29 +286,12 @@ namespace RepoDb
                     {
                         throw new InvalidTypeException($"The source column '{mapping.SourceColumn}' defined in the mappings was not found in the given data table.");
                     }
-
-                    // Guards against a mapping whose source and destination don't actually agree on a type
-                    // (e.g. a caller-supplied mapping list that got the source/destination pair swapped) -
-                    // MySqlBulkCopy/LOAD DATA LOCAL INFILE silently coerces a mismatched value (a non-numeric
-                    // string into an INT column becomes 0, for instance) instead of failing, so an invalid
-                    // mapping would otherwise go undetected until the wrong data quietly lands in the table.
                     var destinationField = dbFields?.GetByUnquotedName(mapping.DestinationColumn.AsUnquoted(true, dbSetting));
                     var sourceType = table.Columns[sourceOrdinal].DataType;
                     if (destinationField?.Type != null && sourceType != null && !AreMappingTypesCompatible(sourceType, destinationField.Type))
                     {
                         throw new InvalidTypeException($"The type of the source column '{mapping.SourceColumn}' ({sourceType}) does not match the type of the destination column '{mapping.DestinationColumn}' ({destinationField.Type}).");
                     }
-
-                    // MySqlBulkCopy back-tick-quotes DestinationColumn itself (see QuoteIdentifier in
-                    // MySqlBulkCopy.cs) - passing an already-quoted name here double-quotes it, producing a
-                    // literal (and nonexistent) column reference like "`Id`" instead of "Id".
-                    //
-                    // The source ordinal must be the mapping's position within `table.Columns`, not its
-                    // position within `columnMappings` - those diverge whenever a caller-supplied mapping
-                    // list omits or reorders columns relative to the DataTable (e.g. leaving out an
-                    // identity column), and using the list index instead reads the wrong DataTable column
-                    // for every row (surfacing as a type-mismatch error at the destination, since the wrong
-                    // source column rarely matches the mapped destination column's type).
                     bulkCopy.ColumnMappings.Add(
                         new MySqlBulkCopyColumnMapping(sourceOrdinal, mapping.DestinationColumn));
                 }
@@ -385,34 +312,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Determines whether <paramref name="sourceType"/> (a mapped <see cref="DataTable"/> column's live
-        /// <see cref="DataColumn.DataType"/>) and <paramref name="destinationType"/> (the destination
-        /// <see cref="DbField.Type"/>, resolved from the database's own type name) represent the same kind of
-        /// value, tolerating a couple of known MySqlConnector-specific mismatches that are not actually
-        /// incompatible:
-        /// <list type="bullet">
-        /// <item><description><see cref="Guid"/> vs. <see cref="string"/> - MySqlConnector reads a
-        /// <c>CHAR(36)</c> column back as <see cref="Guid"/>, while the resolver used to build the
-        /// destination's <see cref="DbField"/> collection maps that same MySQL <c>char</c> type name to
-        /// <see cref="string"/>.</description></item>
-        /// <item><description>Any pair of integral types (e.g. <see cref="byte"/> vs. <see cref="sbyte"/>) -
-        /// an unsigned column (e.g. <c>TINYINT UNSIGNED</c>) reads back as its unsigned CLR type, while the
-        /// resolver maps the MySQL type name alone (blind to the <c>UNSIGNED</c> modifier) to its signed
-        /// counterpart.</description></item>
-        /// </list>
-        /// A genuine mismatch (e.g. a numeric source mapped to a string destination, or vice versa) still
-        /// falls through to <see langword="false"/>.
+        /// 
         /// </summary>
-        /// <param name="sourceType">
-        /// The source column's CLR type - either a <see cref="DataTable"/> column's <see cref="DataColumn.DataType"/>
-        /// (never <see cref="Nullable{T}"/> - a nullable <see cref="DataColumn"/> just uses the plain value type plus
-        /// <see cref="DataColumn.AllowDBNull"/>), or an entity property's declared type as reported by
-        /// <c>DataEntityDataReader{TEntity}.GetFieldType</c> (which, unlike a <see cref="DataColumn"/>, can be a
-        /// genuine <see cref="Nullable{T}"/> for a property like <c>int?</c> - unwrapped below so it still lines up
-        /// with the destination's non-nullable <see cref="DbField.Type"/>).
-        /// </param>
-        /// <param name="destinationType">The destination column's resolved CLR type.</param>
-        /// <returns><see langword="true"/> if the two types are the same or a known-equivalent pair.</returns>
+        /// <param name="sourceType"></param>
+        /// <param name="destinationType"></param>
+        /// <returns></returns>
         private static bool AreMappingTypesCompatible(Type sourceType,
             Type destinationType)
         {
@@ -440,11 +344,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds the <see cref="MySqlBulkCopy"/> for a reader-based bulk write, together with the reader it
-        /// should actually be pointed at (<paramref name="reader"/> filtered down to just the mapped columns -
-        /// see <see cref="ColumnFilteredDataReader"/> for why the original <paramref name="reader"/> must
-        /// never be handed to <see cref="MySqlBulkCopy"/> directly when it may expose "extra", unmapped
-        /// columns).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -452,8 +352,9 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
-        /// <param name="excludeField">Forwarded to <see cref="GetDefaultMappingsForDataReader"/> - see its remarks.</param>
-        /// <returns>The configured <see cref="MySqlBulkCopy"/> and the reader to call <c>WriteToServer</c> with.</returns>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidTypeException"></exception>
         private static (MySqlBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MySqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -472,11 +373,6 @@ namespace RepoDb
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
             }
             var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, excludeField).AsList();
-            // Only an explicitly caller-supplied mapping needs validating - the default mapping built by
-            // GetDefaultMappingsForDataReader is already derived from the destination's own dbFields, so it
-            // can never disagree with them on type. See the remarks on AreMappingTypesCompatible for why a
-            // mismatch here (e.g. a mapping list with the source/destination pair swapped) has to be caught
-            // client-side instead of relying on MySqlBulkCopy/LOAD DATA LOCAL INFILE to fail on bad data.
             var dbFields = mappings != null ? DbFieldCache.Get(connection, tableName, transaction) : null;
             var sourceOrdinals = new int[columnMappings.Count];
             for (var i = 0; i < columnMappings.Count; i++)
@@ -500,40 +396,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds a default source-to-destination column mapping for <paramref name="reader"/> when the
-        /// caller did not supply an explicit one - by intersecting the reader's own columns (every public
-        /// property of the source <c>TEntity</c>, per <see cref="DataEntityDataReader{TEntity}"/>) against
-        /// <paramref name="tableName"/>'s real columns.
+        /// 
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Needed because a <c>TEntity</c> can carry "extra" properties that have no corresponding column
-        /// at all (e.g. a computed/joined field, or a navigation collection - see the <c>...WithExtraFields</c>
-        /// integration test entities). Left unfiltered, <see cref="MySqlBulkCopy"/> falls back to
-        /// ordinal column mapping when <see cref="MySqlBulkCopy.ColumnMappings"/> is left empty, and a
-        /// column-count/type mismatch between the reader and the destination table fails with
-        /// <c>ORA-50029: Column mapping is invalid</c>. Extra reader columns with no matching destination
-        /// field are silently skipped (never written), exactly like the explicit-mappings path already does
-        /// for a caller-supplied mapping that omits a column.
-        /// </para>
-        /// <para>
-        /// <paramref name="excludeField"/> additionally drops one specific matched column from the mapping -
-        /// used by a plain (non-return-identity) <c>BulkInsert</c> to leave the identity column out entirely.
-        /// Unlike SQL Server's <c>SqlBulkCopy</c> (which skips/regenerates an identity column automatically
-        /// unless <c>SqlBulkCopyOptions.KeepIdentity</c> is set) or Oracle's <c>GENERATED ALWAYS</c> identity
-        /// (which rejects an explicit value outright), MySQL's <c>AUTO_INCREMENT</c> just accepts whatever
-        /// value it's given - so if the source data already carries real, previously-assigned identity values
-        /// (e.g. bulk-inserting rows read back from the very table they came from) and the default mapping
-        /// includes that column verbatim, every row collides with its own existing primary key. MySQL's
-        /// <c>LOAD DATA LOCAL INFILE</c> (which <see cref="MySqlBulkCopy"/> always uses - see
-        /// <c>MySqlBulkLoader.Local</c>) treats a duplicate-key conflict the same as <c>IGNORE</c> in that
-        /// case (the server has no way to ask the client to stop mid-transfer), so instead of a clear
-        /// duplicate-key error, every row is silently dropped and <see cref="MySqlBulkCopy"/> throws
-        /// <c>"N rows were copied ... but only 0 were inserted"</c>. Leaving the identity column out of the
-        /// mapping entirely - the same way a caller-supplied mapping list can already choose to omit any
-        /// column - lets <c>AUTO_INCREMENT</c> generate a fresh value per row instead.
-        /// </para>
-        /// </remarks>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="transaction"></param>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
         private static IEnumerable<MySqlConnectorBulkInsertMapItem> GetDefaultMappingsForDataReader(MySqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -555,13 +425,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Resolves the field(s) used to match an existing row during the <c>MERGE</c> (the <c>ON</c> clause).
-        /// Falls back to the table's primary key, then its identity key, when <paramref name="qualifiers"/>
-        /// is not provided.
+        /// 
         /// </summary>
-        /// <exception cref="PrimaryFieldNotFoundException">
-        /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
-        /// </exception>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
+        /// <exception cref="PrimaryFieldNotFoundException"></exception>
         private static IEnumerable<Field> GetQualifierFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<Field> qualifiers = null)
@@ -583,18 +453,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds a lightweight <see cref="MySqlConnectorCommand"/> that is never executed - it exists purely to
-        /// carry a descriptive <c>CommandText</c> into <see cref="Tracer.InvokeBeforeExecution"/>/
-        /// <see cref="Tracer.InvokeBeforeExecutionAsync"/> (see the <c>Base/BulkInsert.cs</c>,
-        /// <c>Base/BulkMerge.cs</c>, <c>Base/BulkUpdate.cs</c> and <c>Base/BulkDelete.cs</c> leaf
-        /// execution methods that call this). A bulk operation's actual data movement goes through
-        /// <see cref="MySqlBulkCopy"/> (plus, for BulkMerge/BulkUpdate/BulkDelete, a handful of staging
-        /// table DDL/DML statements) rather than a single <see cref="DbCommand"/> - so unlike
-        /// <see cref="RepoDb.Extensions.DbConnectionExtension.ExecuteNonQuery"/> and friends, there is no
-        /// command for the trace machinery to pick up for free; this synthesizes one.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
-        /// <param name="commandText">A human-readable description of the bulk operation being traced (not executed).</param>
+        /// <param name="commandText"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>

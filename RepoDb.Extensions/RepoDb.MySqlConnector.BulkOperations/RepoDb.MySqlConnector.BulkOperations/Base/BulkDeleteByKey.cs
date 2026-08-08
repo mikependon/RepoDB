@@ -16,22 +16,19 @@ namespace RepoDb
         #region Sync
 
         /// <summary>
-        /// Deletes existing rows from <paramref name="tableName"/> in bulk, matched by their primary (or
-        /// identity) key value, via a staging (pseudo) table. See <see cref="BulkDeleteBaseViaKeyValues"/>
-        /// for the detailed steps (and for where the <see cref="Tracer"/> Before/After pair is actually
-        /// invoked - this overload is a pure pass-through so the bulk operation is only traced once).
+        /// 
         /// </summary>
-        /// <typeparam name="TPrimaryKey">The type of the primary/identity key values.</typeparam>
+        /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="primaryKeys">The list of primary/identity key values to be bulk-deleted.</param>
+        /// <param name="primaryKeys"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static int BulkDeleteByKeyBase<TPrimaryKey>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -61,10 +58,9 @@ namespace RepoDb
         #region Async
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkDeleteByKeyBase{TPrimaryKey}"/> - see its remarks for
-        /// the detailed behavior (identical here).
+        /// 
         /// </summary>
-        /// <typeparam name="TPrimaryKey">The type of the primary/identity key values.</typeparam>
+        /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="primaryKeys"></param>
@@ -75,7 +71,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -107,19 +103,18 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by a list of raw scalar
-        /// key values (e.g. primary key values), via a staging (pseudo) table: the key values are bulk-written
-        /// into a single-column pseudo table shaped after <paramref name="qualifiers"/> (defaulting to the
-        /// primary/identity key when not provided), and a single <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c>
-        /// statement removes every matched row from the real table. Shared by the dedicated <c>BulkDeleteByKey</c> overload
-        /// and by the <c>TEntity</c> overload's raw-key-value redirect (see <see cref="IsKeyValueCollection{TEntity}"/>).
-        /// This is the "actual base execution" for both of those callers - the single
-        /// <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair wraps
-        /// the entire create/truncate/write/delete/drop sequence below.
+        /// 
         /// </summary>
-        /// <exception cref="PrimaryFieldNotFoundException">
-        /// No <paramref name="qualifiers"/> were given, and the table has neither a primary nor an identity key.
-        /// </exception>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="keyValues"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkDeleteBaseViaKeyValues(MySqlConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
@@ -169,9 +164,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkDeleteBaseViaKeyValues"/> - see its remarks for the
-        /// detailed behavior (identical here).
+        /// 
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="keyValues"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(MySqlConnection connection,
             string tableName,
             IEnumerable<object> keyValues,

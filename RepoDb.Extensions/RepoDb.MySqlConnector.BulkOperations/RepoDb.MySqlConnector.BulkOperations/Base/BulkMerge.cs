@@ -89,23 +89,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Upserts <paramref name="entities"/> into <paramref name="tableName"/> via a staging (pseudo)
-        /// table, following the same staging-table lifecycle as <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/>,
-        /// but additionally resolves (for a row that already exists in <paramref name="tableName"/>) or
-        /// pre-generates (for a brand new row) every row's identity value and assigns it back onto the
-        /// matching element of <paramref name="entities"/> - see the remarks on
-        /// <see cref="MySqlConnectorText.GetMergeFromPseudoTableForReturnIdentitySql"/> for the full technique and
-        /// for why this doesn't rely on a <c>RETURNING</c> clause the way a single-row <c>MERGE</c> can (that
-        /// path - see <c>MySqlConnectorStatementBuilder.CreateMerge</c> - additionally requires MySqlConnector 23ai; this one
-        /// does not, since it never uses <c>RETURNING</c> at all). This is the "actual base execution" - the
-        /// single <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair
-        /// for the whole <c>BulkMerge</c> call wraps the entire create/truncate/write/merge/drop sequence below.
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
+        /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
@@ -114,7 +104,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        /// <returns></returns>
         private static int BulkMergeBaseForReturnIdentity<TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -171,36 +161,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Upserts <paramref name="entities"/> into <paramref name="tableName"/> via a staging (pseudo)
-        /// table: the pseudo table is (re)used and cleared, the entities are bulk-written into it, and a
-        /// single <c>MERGE</c> statement upserts every staged row into the real table. This is the "actual
-        /// base execution" - the single <see cref="Tracer.InvokeBeforeExecution"/>/
-        /// <see cref="Tracer.InvokeAfterExecution"/> pair for the whole <c>BulkMerge</c> call wraps the
-        /// entire create/truncate/write/merge/drop sequence below.
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
-        /// <param name="mappings">
-        /// The explicit source-to-destination column mapping. When provided, only the destination columns named here
-        /// (plus, always, the qualifier column(s)) are staged and merged - if a qualifier column is intentionally
-        /// left out of <paramref name="mappings"/>, that column will never be populated on the staging table and
-        /// every row will be treated as new (insert-only) rather than matched for update.
-        /// </param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
-        /// <param name="transaction">
-        /// The transaction under which the staging-table DDL and the final <c>MERGE</c> statement run. Note that
-        /// the bulk-write step in between (<see cref="MySqlBulkCopy"/>) is transaction-agnostic - ODP.NET does not
-        /// support enlisting a bulk-copy operation into a transaction, so that specific step always commits
-        /// immediately regardless of this parameter.
-        /// </param>
-        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkMergeBaseNoReturnIdentity<TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -325,10 +300,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// <see cref="DataTable"/> counterpart of <see cref="BulkMergeBaseForReturnIdentity{TEntity}"/> - see
-        /// its remarks for the detailed behavior (identical here), except the identity values are assigned
-        /// back onto the matching row's identity column of <paramref name="table"/> instead of an entity
-        /// property.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -343,7 +315,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        /// <returns></returns>
         private static int BulkMergeBaseForReturnIdentity(this MySqlConnection connection,
             string tableName,
             DataTable table,
@@ -400,11 +372,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Upserts the rows of <paramref name="table"/> into <paramref name="tableName"/> via a staging
-        /// (pseudo) table, following the same steps as the <c>TEntity</c> overload - see
-        /// <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/> for the detailed remarks (identical
-        /// caveats around <paramref name="mappings"/> and <paramref name="transaction"/> apply here).
-        /// This is the "actual base execution" that the <see cref="Tracer"/> Before/After pair wraps.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -418,7 +386,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        /// <returns></returns>
         private static int BulkMergeBaseNoReturnIdentity(this MySqlConnection connection,
             string tableName,
             DataTable table,
@@ -476,35 +444,20 @@ namespace RepoDb
         #region BulkMergeBase<DbDataReader>
 
         /// <summary>
-        /// Upserts <paramref name="reader"/> into <paramref name="tableName"/> via a staging (pseudo)
-        /// table, streaming straight from the reader into it - see <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/>
-        /// for the detailed staging-table steps (identical caveats around <paramref name="mappings"/> and
-        /// <paramref name="transaction"/> apply here). Unlike the <c>TEntity</c>/<see cref="DataTable"/>
-        /// overloads, there is no return-identity branch - a forward-only, single-pass reader cannot be
-        /// rewound to retry/reconcile identity values - so this is both the "outer" call and the "actual
-        /// base execution" in one, and there is no <c>identityBehavior</c> parameter at all.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
-        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
-        /// <param name="mappings">
-        /// The explicit source-to-destination column mapping. When provided, only the destination columns named here
-        /// (plus, always, the qualifier column(s)) are staged and merged - see the same caveat documented on
-        /// <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/> regarding leaving a qualifier column out of the mapping.
-        /// </param>
+        /// <param name="qualifiers"></param>
+        /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
-        /// <param name="transaction">
-        /// The transaction under which the staging-table DDL and the final <c>MERGE</c> statement run. Note that
-        /// the bulk-write step in between (<see cref="MySqlBulkCopy"/>) is transaction-agnostic - ODP.NET does not
-        /// support enlisting a bulk-copy operation into a transaction, so that specific step always commits
-        /// immediately regardless of this parameter.
-        /// </param>
-        /// <returns>The number of rows affected by the <c>MERGE</c>.</returns>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkMergeBase(this MySqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -517,8 +470,7 @@ namespace RepoDb
             string traceKey = MySqlConnectorTraceKeys.MySqlConnectorBulkMerge,
             MySqlTransaction transaction = null)
         {
-            // Identify the columns - row count is unknown for a streaming reader, so Auto-resolution (see
-            // ResolvePseudoTableType's remarks) is passed a null hint; it is currently a no-op regardless.
+            // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForMerge(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -634,8 +586,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkMergeBaseForReturnIdentity{TEntity}"/> - see its
-        /// remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -709,8 +660,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/> - see its remarks
-        /// for the detailed behavior and caveats (identical here).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -855,8 +805,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseForReturnIdentity(MySqlConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?, MySqlConnectorBulkImportIdentityBehavior, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -930,8 +879,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseNoReturnIdentity(MySqlConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior and caveats (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1005,8 +953,7 @@ namespace RepoDb
         #region BulkMergeBaseAsync<DbDataReader>
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkMergeBase(MySqlConnection, string, DbDataReader, IEnumerable{Field}, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior and caveats (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1080,12 +1027,14 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Resolves the full set of fields to stage and merge (both inserted and, where not a qualifier,
-        /// updated). When <paramref name="mappings"/> is provided, only its destination columns - plus,
-        /// always, <paramref name="qualifierFields"/> (needed for the <c>ON</c> clause regardless of
-        /// whether they were explicitly mapped) - are kept.
+        /// 
         /// </summary>
-        /// <exception cref="MissingFieldsException">The resulting field list is empty.</exception>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="mappings"></param>
+        /// <param name="qualifierFields"></param>
+        /// <returns></returns>
+        /// <exception cref="MissingFieldsException"></exception>
         private static IEnumerable<Field> GetMergeFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings,

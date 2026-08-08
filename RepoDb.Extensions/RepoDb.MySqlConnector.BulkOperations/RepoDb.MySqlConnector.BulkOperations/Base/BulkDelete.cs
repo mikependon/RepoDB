@@ -24,34 +24,20 @@ namespace RepoDb
         #region BulkDeleteBase<TEntity>
 
         /// <summary>
-        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by <paramref name="entities"/>,
-        /// via a staging (pseudo) table: the entities are bulk-written into the pseudo table, and a single
-        /// <c>DELETE ... WHERE ROWID IN (SELECT ... INNER JOIN ...)</c> statement removes every row on the
-        /// real table matched (on <paramref name="qualifiers"/>, defaulting to the primary/identity key) by
-        /// a staged row. This is the "actual base execution" for the non-redirected path - the single
-        /// <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair wraps
-        /// the entire create/truncate/write/delete/drop sequence below (the key-value redirect below is
-        /// already traced once, inside <see cref="BulkDeleteBaseViaKeyValues"/>).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="entities">
-        /// The list of entities to be bulk-deleted. When <typeparamref name="TEntity"/> is <see cref="object"/>
-        /// and every element is a raw scalar/struct value (e.g. boxed <see cref="int"/> or <see cref="Guid"/>
-        /// primary key values, routed here via a named <c>entities:</c> argument rather than the dedicated
-        /// <c>BulkDeleteByKey</c> overload) - as opposed to a real entity/anonymous-type instance with properties -
-        /// this is routed through the same key-value staging path as the <c>BulkDeleteByKey</c> overload instead,
-        /// since there are no properties to bulk-write as a full entity.
-        /// </param>
-        /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static int BulkDeleteBase<TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -106,10 +92,7 @@ namespace RepoDb
         #region BulkDeleteBase<DataTable>
 
         /// <summary>
-        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by the rows of
-        /// <paramref name="table"/>, following the same steps as the <c>TEntity</c> overload - see
-        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks. This is the "actual base
-        /// execution" that the <see cref="Tracer"/> Before/After pair wraps.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -122,7 +105,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static int BulkDeleteBase(this MySqlConnection connection,
             string tableName,
             DataTable table,
@@ -176,12 +159,7 @@ namespace RepoDb
         #region BulkDeleteBase<DbDataReader>
 
         /// <summary>
-        /// Deletes rows from <paramref name="tableName"/> in bulk that are matched by streaming
-        /// <paramref name="reader"/> straight into a staging (pseudo) table - see
-        /// <see cref="BulkDeleteBase{TEntity}"/> for the detailed remarks. A reader is always columnar/tabular
-        /// like a <see cref="DataTable"/> (never a bare list of scalar key values), so unlike the
-        /// <c>TEntity</c> overload there is no raw-key-value redirect to consider here - this is always the
-        /// "actual base execution" directly.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -193,7 +171,7 @@ namespace RepoDb
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static int BulkDeleteBase(this MySqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -205,8 +183,6 @@ namespace RepoDb
             string traceKey = MySqlConnectorTraceKeys.MySqlConnectorBulkDelete,
             MySqlTransaction transaction = null)
         {
-            // Row count is unknown for a streaming reader (see the remarks on the DbDataReader BulkMerge
-            // overload); Auto-resolution is currently a no-op regardless.
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = MySqlConnectorText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
 
@@ -252,8 +228,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<TEntity>
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkDeleteBase{TEntity}"/> - see its remarks for the
-        /// detailed behavior and caveats (identical here).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -267,7 +242,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync<TEntity>(this MySqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -323,8 +298,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DataTable>
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkDeleteBase(MySqlConnection, string, DataTable, IEnumerable{Field}, DataRowState?, int?, int?, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -338,7 +312,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync(this MySqlConnection connection,
             string tableName,
             DataTable table,
@@ -393,8 +367,7 @@ namespace RepoDb
         #region BulkDeleteBaseAsync<DbDataReader>
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkDeleteBase(MySqlConnection, string, DbDataReader, IEnumerable{Field}, int?, int?, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -407,7 +380,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns>The number of rows deleted.</returns>
+        /// <returns></returns>
         private static async Task<int> BulkDeleteBaseAsync(this MySqlConnection connection,
             string tableName,
             IDataReader reader,
@@ -463,10 +436,11 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Builds a single-column <see cref="DataTable"/> (named and typed after <paramref name="qualifierField"/>)
-        /// populated with <paramref name="keyValues"/> - one row per value. Used to bulk-write raw scalar key
-        /// values into the staging/pseudo table, since they have no properties/columns of their own to reflect.
+        /// 
         /// </summary>
+        /// <param name="qualifierField"></param>
+        /// <param name="keyValues"></param>
+        /// <returns></returns>
         private static DataTable CreateKeyValuesDataTable(Field qualifierField,
             IEnumerable<object> keyValues)
         {

@@ -86,14 +86,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts <paramref name="entities"/> into <paramref name="tableName"/> via a staging (pseudo)
-        /// table: the entities are bulk-written into the pseudo table, and a single set-based
-        /// <c>INSERT ... SELECT ... RETURNING ... BULK COLLECT INTO ...</c> statement moves every staged
-        /// row into the real table, assigning every generated identity value back onto the matching
-        /// element of <paramref name="entities"/> - see the remarks on
-        /// <see cref="MySqlConnectorText.GetInsertFromPseudoTableForReturnIdentitySql"/> for the ordering caveat.
-        /// This is the "actual base execution" - the single <see cref="Tracer.InvokeBeforeExecution"/>/
-        /// <see cref="Tracer.InvokeAfterExecution"/> pair for the whole <c>BulkInsert</c> call wraps it.
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -161,11 +154,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-writes <paramref name="entities"/> directly into <paramref name="tableName"/> (no staging
-        /// table - a plain <c>BulkInsert</c> has nothing to reconcile against existing rows the way
-        /// <c>BulkMerge</c>/<c>BulkUpdate</c>/<c>BulkDelete</c> do). This is the "actual base execution" -
-        /// the single <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/>
-        /// pair for the whole <c>BulkInsert</c> call wraps it.
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -195,9 +184,7 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution - the identity column (if any) is left out of the default mapping so
-            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
-            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var result = WriteToServerInternal(connection,
                 tableName,
@@ -385,12 +372,8 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Leave the identity column out of the default mapping - see the remarks on
-            // CreateBulkCopyForDataTable/GetDefaultMappingsForDataReader for why (a plain insert must not
-            // carry over identity values already present in the source DataTable).
-            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
-
             // Actual Execution
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var result = WriteToServerInternal(connection,
                 tableName,
                 table,
@@ -412,14 +395,7 @@ namespace RepoDb
         #region BulkInsertBase<DbDataReader>
 
         /// <summary>
-        /// Streams <paramref name="reader"/> directly into <paramref name="tableName"/> - no staging
-        /// table, no identity return-value support (a forward-only, single-pass reader cannot be rewound
-        /// to retry/reconcile identity values the way the in-memory <c>TEntity</c>/<see cref="DataTable"/>
-        /// overloads eventually will via <see cref="MySqlConnectorBulkImportIdentityBehavior.ReturnIdentity"/> -
-        /// hence no <c>identityBehavior</c> parameter here at all). This is both the "outer" call and the
-        /// "actual base execution" in one - there is no return-identity branch to redirect through, so the
-        /// single <see cref="Tracer.InvokeBeforeExecution"/>/<see cref="Tracer.InvokeAfterExecution"/> pair
-        /// wraps the whole thing directly.
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -427,10 +403,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="pseudoTableType">
-        /// Unused for a plain streaming insert (there is no staging table to create) - accepted purely for
-        /// signature symmetry with the other <c>DbDataReader</c> bulk operations, where it does matter.
-        /// </param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
@@ -452,9 +425,7 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
-            // Actual Execution - the identity column (if any) is left out of the default mapping so
-            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
-            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var result = WriteToServerInternal(connection,
                 tableName,
@@ -546,8 +517,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkInsertBaseForReturnIdentity{TEntity}"/> - see its
-        /// remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -617,8 +587,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkInsertBaseNoReturnIdentity{TEntity}"/> - see its
-        /// remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -650,9 +619,7 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            // Actual Execution - the identity column (if any) is left out of the default mapping so
-            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
-            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
@@ -742,8 +709,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkInsertBaseForReturnIdentity(MySqlConnection, string, DataTable, DataRowState?, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?, MySqlConnectorBulkImportIdentityBehavior, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -845,12 +811,8 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            // Leave the identity column out of the default mapping - see the remarks on
-            // CreateBulkCopyForDataTable/GetDefaultMappingsForDataReader for why (a plain insert must not
-            // carry over identity values already present in the source DataTable).
-            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
-
             // Actual Execution
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
                 table,
@@ -873,8 +835,7 @@ namespace RepoDb
         #region BulkInsertBaseAsync<DbDataReader>
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkInsertBase(MySqlConnection, string, DbDataReader, IEnumerable{MySqlConnectorBulkInsertMapItem}, int?, int?, MySqlConnectorBulkImportPseudoTableType, ITrace, string, MySqlTransaction)"/> -
-        /// see its remarks for the detailed behavior (identical here).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -906,9 +867,7 @@ namespace RepoDb
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            // Actual Execution - the identity column (if any) is left out of the default mapping so
-            // AUTO_INCREMENT generates a fresh value per row instead of colliding with whatever identity
-            // value the source data already carries (see the remarks on GetDefaultMappingsForDataReader).
+            // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
@@ -934,12 +893,13 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Resolves the field(s) to insert - every real column, filtered down to just the ones named in
-        /// <paramref name="mappings"/> when provided. Used only by the identity-return path, which (unlike
-        /// the plain fire-and-forget path) needs an explicit column list to build the pseudo-table-to-real-table
-        /// <c>INSERT ... SELECT</c> statement.
+        /// 
         /// </summary>
-        /// <exception cref="MissingFieldsException">No field(s) were found for <paramref name="tableName"/>.</exception>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        /// <exception cref="MissingFieldsException"></exception>
         private static IEnumerable<Field> GetInsertFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<MySqlConnectorBulkInsertMapItem> mappings)
