@@ -12,6 +12,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/mysqlconnector</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.MySqlConnector.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbMySqlConnectorVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbMySqlConnectorVersion)' != ''">$(RepoDbMySqlConnectorVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
