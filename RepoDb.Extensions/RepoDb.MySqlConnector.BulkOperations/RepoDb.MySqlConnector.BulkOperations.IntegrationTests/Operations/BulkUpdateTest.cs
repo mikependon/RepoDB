@@ -337,15 +337,9 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<AggregateException>(() => connection.BulkUpdate(tables, mappings: mappings));
+                Assert.Throws<InvalidTypeException>(() => connection.BulkUpdate(tables, mappings: mappings));
             }
         }
-
-        
-
-        
-
-        
 
         [TestMethod]
         public void TestMySqlConnectionBulkUpdateForEntitiesDataTable()
@@ -470,7 +464,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
@@ -888,7 +882,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -1089,7 +1083,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -2610,7 +2604,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<AggregateException>(() => connection.BulkUpdate(tables, mappings: mappings));
+                Assert.Throws<InvalidTypeException>(() => connection.BulkUpdate(tables, mappings: mappings));
             }
         }
 
@@ -2737,7 +2731,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
                                 mappings: mappings));
                         }
                     }
@@ -3126,7 +3120,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
@@ -3327,7 +3321,7 @@ namespace RepoDb.MySqlConnector.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
+                            Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
                                 mappings: mappings));
                         }
