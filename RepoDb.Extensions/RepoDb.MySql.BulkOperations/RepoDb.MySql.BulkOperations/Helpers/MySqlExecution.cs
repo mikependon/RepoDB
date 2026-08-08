@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations.MySql;
 using RepoDb.Extensions;

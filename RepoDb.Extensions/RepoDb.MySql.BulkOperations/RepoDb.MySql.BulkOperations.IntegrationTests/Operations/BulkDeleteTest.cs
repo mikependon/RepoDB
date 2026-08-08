@@ -1,3 +1,4 @@
+using MySql.Data.MySqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using RepoDb.Enumerations.MySql;
 using System.Linq;
-using MySql;
 
 namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
 {

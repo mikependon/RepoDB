@@ -1,9 +1,9 @@
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql;
 using RepoDb.Enumerations.MySql;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;

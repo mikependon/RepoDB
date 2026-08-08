@@ -1,4 +1,4 @@
-using MySql;
+using MySql.Data.MySqlClient;
 using RepoDb.MySql.BulkOperations.IntegrationTests.Models;
 using System;
 

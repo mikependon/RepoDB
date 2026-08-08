@@ -1,4 +1,3 @@
-using MySql;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations.MySql;
 using RepoDb.Interfaces;
