@@ -32,7 +32,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.DeleteAll<CompleteTable>();
@@ -48,7 +48,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -73,7 +73,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var keysToDelete = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables.Take(5), e => e.Id);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.DeleteAll<CompleteTable>(keysToDelete);
@@ -89,7 +89,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>());
@@ -106,7 +106,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var keysToDelete = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables.Take(5), e => e.Id);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), keysToDelete);
@@ -126,7 +126,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.DeleteAllAsync<CompleteTable>();
@@ -142,7 +142,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -167,7 +167,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var keysToDelete = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables.Take(5), e => e.Id);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.DeleteAllAsync<CompleteTable>(keysToDelete);
@@ -183,7 +183,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
@@ -200,7 +200,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var keysToDelete = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables.Take(5), e => e.Id);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), keysToDelete);

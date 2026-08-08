@@ -32,7 +32,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\"");
@@ -47,7 +47,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -70,7 +70,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"CompleteTable\"");
@@ -85,7 +85,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: bind variables are prefixed with ":" (not "@") for Db2.
             var result = connection.ExecuteScalar<string>("SELECT \"ColumnVarchar\" FROM \"CompleteTable\" WHERE \"Id\" = :Id",
@@ -105,7 +105,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\"");
@@ -120,7 +120,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -143,7 +143,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\"");
@@ -158,7 +158,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteScalarAsync<string>("SELECT \"ColumnVarchar\" FROM \"CompleteTable\" WHERE \"Id\" = :Id",

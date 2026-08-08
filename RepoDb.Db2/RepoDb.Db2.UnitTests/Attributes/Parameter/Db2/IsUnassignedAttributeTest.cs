@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class SourceColumnAttributeTest
+    public class IsUnassignedAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class SourceColumnAttributeTestClass
+        private class IsUnassignedAttributeTestClass
         {
-            [SourceColumn("MappedColumnName")]
+            [IsUnassigned(true)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestSourceColumnAttributeViaEntityViaCreateParameters()
+        public void TestIsUnassignedAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new SourceColumnAttributeTestClass
+                .CreateParameters(command, new IsUnassignedAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.IsUnassigned);
         }
 
         [TestMethod]
-        public void TestSourceColumnAttributeViaAnonymousViaCreateParameters()
+        public void TestIsUnassignedAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(SourceColumnAttributeTestClass));
+                typeof(IsUnassignedAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.IsUnassigned);
         }
     }
 }

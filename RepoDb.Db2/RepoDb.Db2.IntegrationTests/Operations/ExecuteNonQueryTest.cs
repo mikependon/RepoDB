@@ -41,7 +41,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"");
@@ -57,7 +57,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -81,7 +81,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: bind variables are prefixed with ":" (not "@") for Db2.
             var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\" WHERE \"Id\" = :Id",
@@ -98,7 +98,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteNonQuery("UPDATE \"CompleteTable\" SET \"ColumnVarchar\" = :ColumnVarchar WHERE \"Id\" = :Id",
@@ -118,7 +118,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"");
@@ -134,7 +134,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -158,7 +158,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = :Id",
@@ -175,7 +175,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteNonQueryAsync("UPDATE \"CompleteTable\" SET \"ColumnVarchar\" = :ColumnVarchar WHERE \"Id\" = :Id",

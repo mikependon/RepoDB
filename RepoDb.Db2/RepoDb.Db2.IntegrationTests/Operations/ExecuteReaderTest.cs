@@ -42,7 +42,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             using var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
@@ -67,7 +67,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -100,7 +100,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             using var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\"");
@@ -117,7 +117,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: quoted, mixed-case identifiers so the resulting dynamic property names line up
             // exactly with the declared column names.
@@ -145,7 +145,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
@@ -170,7 +170,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -203,7 +203,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             using var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\"");
@@ -220,7 +220,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             using var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnVarchar\", \"ColumnInt\" FROM \"CompleteTable\"");

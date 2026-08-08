@@ -32,7 +32,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\"");
@@ -48,7 +48,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -72,7 +72,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: bind variables are prefixed with ":" (not "@") for Db2.
             var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = :Id",
@@ -89,7 +89,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: Db2 has no "SELECT TOP n" - "FETCH FIRST n ROWS ONLY" is the equivalent.
             var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY \"Id\" FETCH FIRST 5 ROWS ONLY");
@@ -101,7 +101,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         [TestMethod]
         public void TestDb2ConnectionExecuteQueryWithNoResult()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\"");
@@ -120,7 +120,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");
@@ -136,7 +136,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -160,7 +160,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = :Id",
@@ -177,7 +177,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" ORDER BY \"Id\" FETCH FIRST 5 ROWS ONLY");
@@ -189,7 +189,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         [TestMethod]
         public async Task TestDb2ConnectionExecuteQueryAsyncWithNoResult()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\"");

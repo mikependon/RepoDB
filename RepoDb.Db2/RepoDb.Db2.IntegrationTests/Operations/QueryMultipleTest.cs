@@ -48,7 +48,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -70,7 +70,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -100,7 +100,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -126,7 +126,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -156,7 +156,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -190,7 +190,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -228,7 +228,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -270,7 +270,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -290,7 +290,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -313,7 +313,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -339,7 +339,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -368,7 +368,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -400,7 +400,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -439,7 +439,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var firstHalfIds = tables.Take(5).Select(t => t.Id).ToArray();
             var secondHalfIds = tables.Skip(5).Select(t => t.Id).ToArray();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => firstHalfIds.Contains(e.Id),
@@ -459,7 +459,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -483,7 +483,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -505,7 +505,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -535,7 +535,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -561,7 +561,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -591,7 +591,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -625,7 +625,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -663,7 +663,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -705,7 +705,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -725,7 +725,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -748,7 +748,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -774,7 +774,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -803,7 +803,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -835,7 +835,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -872,7 +872,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var firstHalfIds = tables.Take(5).Select(t => t.Id).ToArray();
             var secondHalfIds = tables.Skip(5).Select(t => t.Id).ToArray();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => firstHalfIds.Contains(e.Id),
@@ -892,7 +892,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert
                 await Assert.ThrowsAsync<NotSupportedException>(() =>

@@ -12,43 +12,43 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForInt64()
         {
-            Assert.AreEqual("NUMBER(19)", m_resolver.Resolve(DbType.Int64));
+            Assert.AreEqual("BIGINT", m_resolver.Resolve(DbType.Int64));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForInt32()
         {
-            Assert.AreEqual("NUMBER(10)", m_resolver.Resolve(DbType.Int32));
+            Assert.AreEqual("INTEGER", m_resolver.Resolve(DbType.Int32));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForInt16()
         {
-            Assert.AreEqual("NUMBER(5)", m_resolver.Resolve(DbType.Int16));
+            Assert.AreEqual("SMALLINT", m_resolver.Resolve(DbType.Int16));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForByte()
         {
-            Assert.AreEqual("NUMBER(3)", m_resolver.Resolve(DbType.Byte));
+            Assert.AreEqual("SMALLINT", m_resolver.Resolve(DbType.Byte));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForBoolean()
         {
-            Assert.AreEqual("NUMBER(1)", m_resolver.Resolve(DbType.Boolean));
+            Assert.AreEqual("SMALLINT", m_resolver.Resolve(DbType.Boolean));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForString()
         {
-            Assert.AreEqual("NVARCHAR2(2000)", m_resolver.Resolve(DbType.String));
+            Assert.AreEqual("VARCHAR(2000)", m_resolver.Resolve(DbType.String));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForAnsiString()
         {
-            Assert.AreEqual("VARCHAR2(2000)", m_resolver.Resolve(DbType.AnsiString));
+            Assert.AreEqual("VARCHAR(2000)", m_resolver.Resolve(DbType.AnsiString));
         }
 
         [TestMethod]
@@ -60,7 +60,9 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForDateTime()
         {
-            Assert.AreEqual("DATE", m_resolver.Resolve(DbType.DateTime));
+            // Db2's DATE type has no time-of-day component, unlike Oracle's - a plain DateTime is
+            // cast to TIMESTAMP instead so the time portion isn't silently truncated.
+            Assert.AreEqual("TIMESTAMP", m_resolver.Resolve(DbType.DateTime));
         }
 
         [TestMethod]
@@ -72,74 +74,84 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForDateTimeOffset()
         {
-            Assert.AreEqual("TIMESTAMP WITH TIME ZONE", m_resolver.Resolve(DbType.DateTimeOffset));
+            // The IBM.Data.Db2 DB2Type enumeration has no timezone-aware member - "TIMESTAMP" is
+            // used on a best-effort basis; the offset itself is not preserved.
+            Assert.AreEqual("TIMESTAMP", m_resolver.Resolve(DbType.DateTimeOffset));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForDecimal()
         {
-            Assert.AreEqual("NUMBER(18,2)", m_resolver.Resolve(DbType.Decimal));
+            Assert.AreEqual("DECIMAL(18,2)", m_resolver.Resolve(DbType.Decimal));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForDouble()
         {
-            Assert.AreEqual("BINARY_DOUBLE", m_resolver.Resolve(DbType.Double));
+            Assert.AreEqual("DOUBLE", m_resolver.Resolve(DbType.Double));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForSingle()
         {
-            Assert.AreEqual("BINARY_FLOAT", m_resolver.Resolve(DbType.Single));
+            Assert.AreEqual("REAL", m_resolver.Resolve(DbType.Single));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForGuid()
         {
-            Assert.AreEqual("RAW(16)", m_resolver.Resolve(DbType.Guid));
+            // Db2 has no native GUID/UNIQUEIDENTIFIER type; the idiomatic storage for one is a
+            // fixed-length 16-byte "CHAR(16) FOR BIT DATA" column.
+            Assert.AreEqual("CHAR(16) FOR BIT DATA", m_resolver.Resolve(DbType.Guid));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForBinary()
         {
-            Assert.AreEqual("BLOB", m_resolver.Resolve(DbType.Binary));
+            Assert.AreEqual("BLOB(1M)", m_resolver.Resolve(DbType.Binary));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForXml()
         {
-            Assert.AreEqual("XMLTYPE", m_resolver.Resolve(DbType.Xml));
+            Assert.AreEqual("XML", m_resolver.Resolve(DbType.Xml));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForAnsiStringFixedLength()
         {
-            Assert.AreEqual("CHAR(2000)", m_resolver.Resolve(DbType.AnsiStringFixedLength));
+            // Db2 CHAR's maximum length is 254 bytes (unlike Oracle's, whose maximum is 2000).
+            Assert.AreEqual("CHAR(254)", m_resolver.Resolve(DbType.AnsiStringFixedLength));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForStringFixedLength()
         {
-            Assert.AreEqual("NCHAR(2000)", m_resolver.Resolve(DbType.StringFixedLength));
+            // Db2 has no "NCHAR" type; GRAPHIC is its fixed-length double-byte/graphic string type,
+            // with a maximum length of 127 characters.
+            Assert.AreEqual("GRAPHIC(127)", m_resolver.Resolve(DbType.StringFixedLength));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForObject()
         {
-            Assert.AreEqual("BLOB", m_resolver.Resolve(DbType.Object));
+            Assert.AreEqual("BLOB(1M)", m_resolver.Resolve(DbType.Object));
         }
 
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForTime()
         {
-            Assert.AreEqual("INTERVAL DAY(0) TO SECOND(7)", m_resolver.Resolve(DbType.Time));
+            // Db2's TIME type has no sub-second precision at all - there is no lossless Db2
+            // equivalent for a fractional-second duration the way Oracle's INTERVAL DAY TO SECOND
+            // provides one.
+            Assert.AreEqual("TIME", m_resolver.Resolve(DbType.Time));
         }
 
         [TestMethod]
-        public void TestDbTypeToDb2StringNameResolverFallsBackToNVarchar2ForUnmappedDbTypes()
+        public void TestDbTypeToDb2StringNameResolverFallsBackToVarcharForUnmappedDbTypes()
         {
             // DbType.Currency has no explicit case in the switch, so it should hit the default arm.
-            Assert.AreEqual("NVARCHAR2(2000)", m_resolver.Resolve(DbType.Currency));
+            Assert.AreEqual("VARCHAR(2000)", m_resolver.Resolve(DbType.Currency));
         }
     }
 }

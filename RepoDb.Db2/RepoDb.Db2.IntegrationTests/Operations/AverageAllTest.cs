@@ -39,7 +39,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.AverageAll<CompleteTable>(e => e.ColumnSmallInt);
@@ -55,7 +55,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -79,7 +79,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -98,7 +98,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnSmallInt);
@@ -114,7 +114,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -138,7 +138,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -161,7 +161,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -182,7 +182,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),

@@ -18,7 +18,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderMapper()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<Db2Connection>();
+            var builder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsNotNull(builder);
@@ -28,7 +28,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbHelperMapper()
         {
             // Setup
-            var helper = DbHelperMapper.Get<Db2Connection>();
+            var helper = DbHelperMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsNotNull(helper);
@@ -38,7 +38,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingMapper()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsNotNull(setting);

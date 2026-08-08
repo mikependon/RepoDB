@@ -21,7 +21,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "Field".AsQuoted(true, setting);
@@ -34,7 +34,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " Field ".AsQuoted(true, setting);
@@ -47,7 +47,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " Field ".AsQuoted(setting);
@@ -60,7 +60,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuotedForPreQuoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "\"Field\"".AsQuoted(setting);
@@ -73,7 +73,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuotedForPreQuotedWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "\" Field \"".AsQuoted(setting);
@@ -86,7 +86,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " \" Field \" ".AsQuoted(true, setting);
@@ -103,7 +103,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "\"Field\"".AsUnquoted(true, setting);
@@ -116,7 +116,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " \" Field \" ".AsUnquoted(true, setting);
@@ -129,7 +129,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "\" Field \"".AsUnquoted(setting);
@@ -142,7 +142,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquotedForPlain()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = "Field".AsUnquoted(setting);
@@ -155,7 +155,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquotedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " Field ".AsUnquoted(setting);
@@ -168,7 +168,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2QuotationForUnquotedAndTrimmedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Act
             var result = " Field ".AsUnquoted(true, setting);

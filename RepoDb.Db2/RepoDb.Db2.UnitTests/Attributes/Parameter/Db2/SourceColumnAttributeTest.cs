@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class OffsetAttributeTest
+    public class SourceColumnAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class OffsetAttributeTestClass
+        private class SourceColumnAttributeTestClass
         {
-            [Offset(1000)]
+            [SourceColumn("MappedColumnName")]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestOffsetAttributeViaEntityViaCreateParameters()
+        public void TestSourceColumnAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new OffsetAttributeTestClass
+                .CreateParameters(command, new SourceColumnAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(1000, parameter.Offset);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
         }
 
         [TestMethod]
-        public void TestOffsetAttributeViaAnonymousViaCreateParameters()
+        public void TestSourceColumnAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(OffsetAttributeTestClass));
+                typeof(SourceColumnAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(1000, parameter.Offset);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual("MappedColumnName", parameter.SourceColumn);
         }
     }
 }

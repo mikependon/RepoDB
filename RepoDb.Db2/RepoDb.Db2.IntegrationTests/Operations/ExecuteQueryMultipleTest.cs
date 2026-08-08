@@ -55,12 +55,12 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act & Assert: see the class-level remarks above - ODP.NET rejects multiple
             // statements in a single command text outright, so the raw-SQL ExecuteQueryMultiple
             // API cannot be used this way on Db2.
-            Assert.Throws<Db2Exception>(() =>
+            Assert.Throws<DB2Exception>(() =>
                 connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
         }
 
@@ -70,13 +70,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
             {
                 // Act & Assert: the multi-statement limitation is independent of ConversionType.
-                Assert.Throws<Db2Exception>(() =>
+                Assert.Throws<DB2Exception>(() =>
                     connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
             }
             finally
@@ -95,10 +95,10 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act & Assert: async counterpart of the same known Db2 limitation.
-            await Assert.ThrowsAsync<Db2Exception>(() =>
+            await Assert.ThrowsAsync<DB2Exception>(() =>
                 connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
         }
 
@@ -108,13 +108,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
             {
                 // Act & Assert: the multi-statement limitation is independent of ConversionType.
-                await Assert.ThrowsAsync<Db2Exception>(() =>
+                await Assert.ThrowsAsync<DB2Exception>(() =>
                     connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
             }
             finally

@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class UdtTypeNameAttributeTest
+    public class IsDefaultAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class UdtTypeNameAttributeTestClass
+        private class IsDefaultAttributeTestClass
         {
-            [UdtTypeName("SCHEMA.MY_TYPE")]
+            [IsDefault(true)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestUdtTypeNameAttributeViaEntityViaCreateParameters()
+        public void TestIsDefaultAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new UdtTypeNameAttributeTestClass
+                .CreateParameters(command, new IsDefaultAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("SCHEMA.MY_TYPE", parameter.UdtTypeName);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.IsDefault);
         }
 
         [TestMethod]
-        public void TestUdtTypeNameAttributeViaAnonymousViaCreateParameters()
+        public void TestIsDefaultAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(UdtTypeNameAttributeTestClass));
+                typeof(IsDefaultAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual("SCHEMA.MY_TYPE", parameter.UdtTypeName);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.IsDefault);
         }
     }
 }

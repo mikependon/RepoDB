@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class StatusAttributeTest
+    public class ArrayLengthAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class StatusAttributeTestClass
+        private class ArrayLengthAttributeTestClass
         {
-            [Status(Db2ParameterStatus.NullFetched)]
+            [ArrayLength(4000)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestStatusAttributeViaEntityViaCreateParameters()
+        public void TestArrayLengthAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new StatusAttributeTestClass
+                .CreateParameters(command, new ArrayLengthAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(Db2ParameterStatus.NullFetched, parameter.Status);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual(4000, parameter.ArrayLength);
         }
 
         [TestMethod]
-        public void TestStatusAttributeViaAnonymousViaCreateParameters()
+        public void TestArrayLengthAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(StatusAttributeTestClass));
+                typeof(ArrayLengthAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(Db2ParameterStatus.NullFetched, parameter.Status);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual(4000, parameter.ArrayLength);
         }
     }
 }

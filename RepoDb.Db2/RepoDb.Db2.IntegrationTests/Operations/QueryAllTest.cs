@@ -32,7 +32,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var queryResult = connection.QueryAll<CompleteTable>();
@@ -48,7 +48,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -72,7 +72,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: typed via the mapped-name overload (rather than the untyped/dynamic one) so the
             // result can still go through Helper.AssertPropertiesEquality below.
@@ -89,7 +89,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: Db2DbSetting.AreTableHintsSupported is false - any non-null/non-whitespace
             // "hints" argument must throw rather than silently being ignored.
@@ -106,7 +106,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var queryResult = await connection.QueryAllAsync<CompleteTable>();
@@ -122,7 +122,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -146,7 +146,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var queryResult = await connection.QueryAllAsync<CompleteTable>(ClassMappedNameCache.Get<CompleteTable>());
@@ -162,7 +162,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: Db2DbSetting.AreTableHintsSupported is false - any non-null/non-whitespace
             // "hints" argument must throw rather than silently being ignored.

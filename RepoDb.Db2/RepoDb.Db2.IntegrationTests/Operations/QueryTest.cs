@@ -39,7 +39,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(table.Id).First();
@@ -54,7 +54,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -77,7 +77,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(e => e.Id == table.Id).First();
@@ -92,7 +92,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(new { table.Id }).First();
@@ -107,7 +107,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(new QueryField("Id", table.Id)).First();
@@ -127,7 +127,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(queryFields).First();
@@ -148,7 +148,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Query<CompleteTable>(queryGroup).First();
@@ -163,7 +163,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: exercises the "FETCH FIRST n ROWS ONLY" override.
             var result = connection.Query<CompleteTable>((object)null,
@@ -187,7 +187,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
@@ -202,7 +202,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -225,7 +225,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id)).First();
@@ -240,7 +240,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(new { table.Id })).First();
@@ -255,7 +255,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id))).First();
@@ -275,7 +275,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(queryFields)).First();
@@ -296,7 +296,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = (await connection.QueryAsync<CompleteTable>(queryGroup)).First();
@@ -311,7 +311,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.QueryAsync<CompleteTable>((object)null,
@@ -340,7 +340,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         [TestMethod]
         public void TestDb2ConnectionQueryWithHintsThrows()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
@@ -351,7 +351,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         [TestMethod]
         public async Task TestDb2ConnectionQueryAsyncWithHintsThrows()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.

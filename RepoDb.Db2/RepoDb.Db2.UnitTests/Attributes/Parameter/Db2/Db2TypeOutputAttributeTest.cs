@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class CollectionTypeAttributeTest
+    public class Db2TypeOutputAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class CollectionTypeAttributeTestClass
+        private class Db2TypeOutputAttributeTestClass
         {
-            [CollectionType(Db2CollectionType.PLSQLAssociativeArray)]
+            [Db2TypeOutput(true)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestCollectionTypeAttributeViaEntityViaCreateParameters()
+        public void TestDb2TypeOutputAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new CollectionTypeAttributeTestClass
+                .CreateParameters(command, new Db2TypeOutputAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(Db2CollectionType.PLSQLAssociativeArray, parameter.CollectionType);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.DB2TypeOutput);
         }
 
         [TestMethod]
-        public void TestCollectionTypeAttributeViaAnonymousViaCreateParameters()
+        public void TestDb2TypeOutputAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(CollectionTypeAttributeTestClass));
+                typeof(Db2TypeOutputAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.AreEqual(Db2CollectionType.PLSQLAssociativeArray, parameter.CollectionType);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.IsTrue(parameter.DB2TypeOutput);
         }
     }
 }

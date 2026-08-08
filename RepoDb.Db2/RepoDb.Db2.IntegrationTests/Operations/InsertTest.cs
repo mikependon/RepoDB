@@ -45,7 +45,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Insert<CompleteTable>(table);
@@ -68,7 +68,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -103,7 +103,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.InsertAsync<CompleteTable>(table);
@@ -126,7 +126,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -171,7 +171,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(), table);
@@ -198,7 +198,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(), table);
@@ -227,7 +227,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
@@ -241,7 +241,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.

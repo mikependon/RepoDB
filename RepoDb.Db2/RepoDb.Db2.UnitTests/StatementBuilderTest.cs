@@ -31,7 +31,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverage()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -47,7 +47,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverageWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -67,7 +67,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverageWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var field = new Field("Field1");
 
@@ -83,7 +83,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverageWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -96,7 +96,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateAverageIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -108,7 +108,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateAverageIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var field = new Field("Field1");
 
             // Act
@@ -124,7 +124,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverageAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -140,7 +140,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateAverageAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -153,7 +153,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateAverageAllIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -169,7 +169,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQueryFirstBatch()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -196,7 +196,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQuerySecondBatch()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -223,7 +223,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -241,7 +241,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQueryWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
@@ -270,7 +270,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -297,7 +297,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -324,7 +324,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateBatchQueryWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -344,7 +344,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
@@ -362,7 +362,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
@@ -380,7 +380,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
@@ -398,7 +398,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
@@ -416,7 +416,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -435,7 +435,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -458,7 +458,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCount()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act - Db2 has no BIGINT-forcing "COUNT_BIG" equivalent need (NUMBER already handles
@@ -475,7 +475,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var where = new QueryGroup(new QueryField("Id", 1));
 
@@ -494,7 +494,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -509,7 +509,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -524,7 +524,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -536,7 +536,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateCountIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -551,7 +551,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -566,7 +566,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -581,7 +581,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -596,7 +596,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateCountAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -608,7 +608,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateCountAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -623,7 +623,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDelete()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -638,7 +638,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var where = new QueryGroup(new QueryField("Id", 1));
 
@@ -656,7 +656,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -671,7 +671,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -686,7 +686,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -698,7 +698,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -709,7 +709,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -720,7 +720,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -735,7 +735,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -750,7 +750,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -765,7 +765,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -780,7 +780,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateDeleteAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -792,7 +792,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -803,7 +803,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -814,7 +814,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateDeleteAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -829,7 +829,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateExists()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var where = new QueryGroup(new QueryField("Id", 1));
 
@@ -849,7 +849,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateExistsWithoutWhere()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -867,7 +867,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateExistsWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -885,7 +885,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateExistsWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -903,7 +903,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateExistsWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -915,7 +915,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateExistsIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -926,7 +926,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateExistsIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -937,7 +937,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateExistsIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -952,7 +952,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -975,7 +975,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
@@ -1003,7 +1003,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
@@ -1034,7 +1034,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithQuotedTableSchemaAndNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1057,7 +1057,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithUnquotedTableSchemaAndNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1080,7 +1080,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithQuotedTableSchemaAndIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
@@ -1108,7 +1108,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -1121,7 +1121,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -1133,7 +1133,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -1145,7 +1145,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -1157,7 +1157,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -1169,7 +1169,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
@@ -1186,7 +1186,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var identityField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
@@ -1207,7 +1207,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
@@ -1236,7 +1236,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1251,7 +1251,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertAllWithNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1275,7 +1275,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
@@ -1304,7 +1304,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateInsertAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -1320,7 +1320,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -1332,7 +1332,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateInsertAllIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -1348,7 +1348,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMax()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -1364,7 +1364,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMaxWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -1384,7 +1384,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMaxWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -1397,7 +1397,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMaxIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -1409,7 +1409,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMaxIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var field = new Field("Field1");
 
             // Act
@@ -1425,7 +1425,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMaxAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -1441,7 +1441,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMaxAllIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -1457,7 +1457,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1486,7 +1486,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfThereAreNoQualifiersAndNoPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1503,7 +1503,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1532,7 +1532,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1561,7 +1561,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithCoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1598,7 +1598,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithUncoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1637,7 +1637,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithCoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1674,7 +1674,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithUncoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1711,7 +1711,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1728,7 +1728,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
@@ -1741,7 +1741,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
@@ -1754,7 +1754,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
@@ -1767,7 +1767,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var qualifiers = Field.From("Field1");
 
@@ -1780,7 +1780,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
@@ -1798,7 +1798,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1821,7 +1821,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1838,7 +1838,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeAllWithNoKeyColumn()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1868,7 +1868,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeAllWithIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1906,7 +1906,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMergeAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -1924,7 +1924,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
@@ -1940,7 +1940,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfThereAreNoQualifiersAndNoPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -1962,7 +1962,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMin()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -1978,7 +1978,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMinWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -1998,7 +1998,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMinWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -2011,7 +2011,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMinIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2023,7 +2023,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMinIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var field = new Field("Field1");
 
             // Act
@@ -2039,7 +2039,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateMinAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -2055,7 +2055,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateMinAllIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2071,7 +2071,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQuery()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2087,7 +2087,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithTop()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2103,7 +2103,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
@@ -2123,7 +2123,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithOrderBy()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2143,7 +2143,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2159,7 +2159,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2175,7 +2175,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateQueryWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2188,7 +2188,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateQueryIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2200,7 +2200,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateQueryIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2212,7 +2212,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateQueryIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2224,7 +2224,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateQueryIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2240,7 +2240,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSkipQuery()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2267,7 +2267,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSkipQueryWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
@@ -2296,7 +2296,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSkipQueryWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2323,7 +2323,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSkipQueryWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2350,7 +2350,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSkipQueryWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2370,7 +2370,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2387,7 +2387,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2404,7 +2404,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2421,7 +2421,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
 
@@ -2439,7 +2439,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2457,7 +2457,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheSkipIsLessThanZero()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2476,7 +2476,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSkipQueryIfTheTakeIsLessThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -2499,7 +2499,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSum()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -2515,7 +2515,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSumWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -2535,7 +2535,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSumWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -2548,7 +2548,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSumIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2560,7 +2560,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSumIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var field = new Field("Field1");
 
             // Act
@@ -2576,7 +2576,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateSumAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var field = new Field("Field1");
 
@@ -2592,7 +2592,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateSumAllIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2608,7 +2608,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateTruncate()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
 
             // Act
@@ -2623,7 +2623,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateTruncateWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
 
             // Act
@@ -2638,7 +2638,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateTruncateWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
 
             // Act
@@ -2653,7 +2653,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateTruncateIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -2664,7 +2664,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateTruncateIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -2675,7 +2675,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateTruncateIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -2690,7 +2690,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAppliesUpdateParameterPrefixToWhereClause()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2719,7 +2719,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateDoesNotDoublePrefixAnAlreadyPrefixedWhereParameter()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2746,7 +2746,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdate()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -2764,7 +2764,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2782,7 +2782,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2800,7 +2800,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateWithPrimaryExcludedFromSetClause()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
@@ -2823,7 +2823,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateWithIdentityExcludedFromSetClause()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
@@ -2846,7 +2846,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
 
@@ -2863,7 +2863,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2875,7 +2875,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2" });
 
             // Act
@@ -2887,7 +2887,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateIfThereAreNoUpdatableFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1" });
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
@@ -2910,7 +2910,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -2935,7 +2935,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAllWithPrimaryAsQualifierFallback()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
@@ -2961,7 +2961,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "\"SCHEMA\".\"Table\"";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -2984,7 +2984,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "SCHEMA.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -3007,7 +3007,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2StatementBuilderCreateUpdateAllWithHintsThrowsSinceDb2DoesNotSupportTableHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -3025,7 +3025,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
@@ -3042,7 +3042,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
@@ -3058,7 +3058,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var qualifiers = Field.From("Field1");
 
@@ -3074,7 +3074,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Id");
@@ -3091,7 +3091,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
@@ -3110,7 +3110,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfThereAreNoQualifiersAndNoPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -3128,7 +3128,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
@@ -3147,7 +3147,7 @@ namespace RepoDb.Db2.UnitTests
         public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get<Db2Connection>();
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");

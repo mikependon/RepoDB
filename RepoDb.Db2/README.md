@@ -4,11 +4,11 @@
 
 # RepoDb.Db2 — RepoDB for Db2 Database
 
-The Db2 provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [ODP.NET (Db2.ManagedDataAccess.Core)](https://www.nuget.org/packages/Db2.ManagedDataAccess.Core).
+The Db2 provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and the [IBM Data Server .NET Provider (Net.IBM.Data.Db2)](https://www.nuget.org/packages/Net.IBM.Data.Db2).
 
 ## Target
 
-Db2 Database 12c and later. Earlier versions are not supported (the provider relies on native `IDENTITY` columns, `OFFSET/FETCH` paging, and implicit result sets, all of which require 12c+).
+Db2 for Linux, UNIX, and Windows (LUW) 10.5 and later. Earlier versions are not supported (the provider relies on `OFFSET ... FETCH NEXT ... ROWS ONLY` paging, which requires 10.5+). Db2 for z/OS and Db2 for i are not currently tested against.
 
 ## Important Pages
 
@@ -24,7 +24,7 @@ Db2 Database 12c and later. Earlier versions are not supported (the provider rel
 
 ## Dependencies
 
-- [Db2.ManagedDataAccess.Core](https://www.nuget.org/packages/Db2.ManagedDataAccess.Core/) — ODP.NET Db2 data provider.
+- [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) — IBM's Data Server .NET provider for Db2.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
@@ -51,12 +51,12 @@ GlobalConfiguration
     .UseDb2();
 ```
 
-Then use any RepoDB operation directly on your `Db2Connection`:
+Then use any RepoDB operation directly on your `DB2Connection`:
 
 ### Query
 
 ```csharp
-using (var connection = new Db2Connection(ConnectionString))
+using (var connection = new DB2Connection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -71,7 +71,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new Db2Connection(ConnectionString))
+using (var connection = new DB2Connection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -80,7 +80,7 @@ using (var connection = new Db2Connection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new Db2Connection(ConnectionString))
+using (var connection = new DB2Connection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -92,7 +92,7 @@ using (var connection = new Db2Connection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new Db2Connection(ConnectionString))
+using (var connection = new DB2Connection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);
@@ -103,35 +103,27 @@ using (var connection = new Db2Connection(ConnectionString))
 
 [`QueryMultiple`/`QueryMultipleAsync`](http://repodb.net/operation/executequerymultiple) return several result sets — one per target type — from a single call.
 
-ODP.NET rejects a command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Db2`), so `QueryMultiple` automatically falls back to issuing one round trip per requested type instead of one combined command. This fallback is transparent — the same `QueryMultiple<T1, T2, ...>` call works unchanged against Db2 — but it means a call that costs 1 round trip on SQL Server/MySQL/PostgreSQL costs *N* round trips (one per type) on Db2. Keep this in mind for latency-sensitive code paths that call `QueryMultiple` with many types against an Db2 database.
+Db2's IBM Data Server provider rejects a command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Db2`), so `QueryMultiple` automatically falls back to issuing one round trip per requested type instead of one combined command. This fallback is transparent — the same `QueryMultiple<T1, T2, ...>` call works unchanged against Db2 — but it means a call that costs 1 round trip on SQL Server/MySQL/PostgreSQL costs *N* round trips (one per type) on Db2. Keep this in mind for latency-sensitive code paths that call `QueryMultiple` with many types against a Db2 database.
 
 ## Known limitations (v1)
 
 ### `InsertAll` / `MergeAll`
 
-Execute one row per round-trip for now (`IsMultiStatementExecutable = false`); true multi-row batching with a single implicit-result-set return will follow in a later release.
+Execute one row per round-trip for now (`IsMultiStatementExecutable = false`); true multi-row batching in a single round trip will follow in a later release.
 
-### Identity/primary-key
+### Identity/primary-key retrieval — unverified against a real Db2 instance
 
-Retrieval on `Insert`/`Merge` relies on an Db2 12c+ implicit result set (`DBMS_SQL.RETURN_RESULT`) wrapped in an anonymous PL/SQL block, since Db2's native `RETURNING ... INTO` binds to an output parameter that RepoDb's core execution pipeline does not read back.
+Db2's idiomatic way to read back a generated key on `Insert`/`Merge` is `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))` — an ANSI-SQL-adjacent construct that returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. Unlike Oracle, this same mechanism works uniformly for both `Insert` and `Merge`, on any supported Db2 version — there is no version gate to worry about.
 
-```csharp
-DECLARE l_repodb_result "CompleteTable"."Id"%TYPE; l_repodb_cursor SYS_REFCURSOR; BEGIN INSERT INTO "CompleteTable" ( "SessionId", "ColumnVarchar", "ColumnNumber", "ColumnDate", "ColumnTimestamp" ) VALUES ( :SessionId, :ColumnVarchar, :ColumnNumber, :ColumnDate, :ColumnTimestamp ) RETURNING "Id" INTO l_repodb_result; OPEN l_repodb_cursor FOR SELECT l_repodb_result AS "Result" FROM DUAL; DBMS_SQL.RETURN_RESULT(l_repodb_cursor); END;
-```
-
-This should be verified against your own Db2 instance before relying on it in production.
-
-### RETURNING on MERGE
-
-A `RETURNING` clause on `MERGE` specifically is only supported starting with **Db2 Database 23ai** - it does not work on 12c/18c/19c/21c at all (fails with `ORA-00933`). This provider otherwise targets 12c+, but `Merge` against a table with a primary/identity key requires 23ai+ to get the key value back. On older versions, `Insert`/`Update`/`Query`/etc. are unaffected - only identity-returning `Merge` calls are impacted.
+The statement-building logic that wires this up has not yet been verified end-to-end against a live Db2 server. If `Insert`/`Merge` calls that request the generated key fail or return unexpected results, this is the first place to look — verify it against your own Db2 instance before relying on it in production.
 
 ### GUID/UNIQUEIDENTIFIER
 
-Db2 has no native GUID/`UNIQUEIDENTIFIER` type. A `System.Guid` data entity property will throw `ArgumentException: Value does not fall within the expected range.` from `Db2Parameter.Value` if bound directly, because (unlike `SqlParameter`/`NpgsqlParameter`) ODP.NET does not accept a raw `Guid` value. If a column stores a GUID as `RAW(16)`, map it as `byte[]` on the entity, or keep it as `Guid` and register `RepoDb.Db2.PropertyHandlers.GuidToByteArrayPropertyHandler` for that specific property:
+Db2 has no native GUID/`UNIQUEIDENTIFIER` type. A `System.Guid` data entity property cannot be bound directly to a `DB2Parameter` the way it can with `SqlParameter`/`NpgsqlParameter`. The idiomatic Db2 storage for a GUID is a fixed-length 16-byte `CHAR(16) FOR BIT DATA` column — map it as `byte[]` on the entity, or keep it as `Guid` and register `RepoDb.Db2.PropertyHandlers.Db2GuidToByteArrayPropertyHandler` for that specific property:
 
 ```csharp
-PropertyHandlerMapper.Add<YourEntity, GuidToByteArrayPropertyHandler>(
-    e => e.YourGuidProperty, new GuidToByteArrayPropertyHandler(), true);
+PropertyHandlerMapper.Add<YourEntity, Db2GuidToByteArrayPropertyHandler>(
+    e => e.YourGuidProperty, new Db2GuidToByteArrayPropertyHandler(), true);
 ```
 
 Register it per-property (not globally for `typeof(Guid)`) if your process also uses another RepoDb provider that handles `Guid` natively, since a type-level `PropertyHandlerMapper` registration applies process-wide across all connections.

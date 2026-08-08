@@ -135,7 +135,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithText(1).First();
@@ -154,7 +154,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithText(1).First();
@@ -172,7 +172,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithText(10).AsList();
@@ -194,7 +194,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithInteger(1).First();
@@ -213,7 +213,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithInteger(1).First();
@@ -231,7 +231,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithInteger(10).AsList();
@@ -253,7 +253,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithTextAsInteger(1).First();
@@ -271,7 +271,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithTextAsInteger(10).AsList();
@@ -293,7 +293,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsTextAsNull()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithText(1).First();
@@ -312,7 +312,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsText()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithText(1).First();
@@ -330,7 +330,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsTextByBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithText(10).AsList();
@@ -352,7 +352,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsIntegerAsNull()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithInteger(1).First();
@@ -371,7 +371,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsInteger()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithInteger(1).First();
@@ -389,7 +389,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsIntegerAsBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithInteger(10).AsList();
@@ -411,7 +411,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsTextAsInt()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var person = GetPersonWithTextAsInteger(1).First();
@@ -429,7 +429,7 @@ namespace RepoDb.Db2.IntegrationTests
         [TestMethod]
         public async Task TestInsertAndQueryAsyncEnumAsTextAsIntAsBatch()
         {
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             var people = GetPersonWithTextAsInteger(10).AsList();

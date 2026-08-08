@@ -45,8 +45,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Attributes\Parameter\Db2\" />
-  </ItemGroup>
-
 </Project>

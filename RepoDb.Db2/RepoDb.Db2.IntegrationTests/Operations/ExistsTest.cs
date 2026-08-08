@@ -35,7 +35,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>((object)null);
@@ -51,7 +51,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -76,7 +76,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(e => ids.Contains(e.Id));
@@ -93,7 +93,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var missingId = tables.Max(t => t.Id) + 1000;
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(e => e.Id == missingId);
@@ -109,7 +109,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(new { tables.First().Id });
@@ -125,7 +125,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -146,7 +146,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(queryFields);
@@ -168,7 +168,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists<CompleteTable>(queryGroup);
@@ -184,7 +184,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -203,7 +203,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>((object)null);
@@ -219,7 +219,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -244,7 +244,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id));
@@ -261,7 +261,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var missingId = tables.Max(t => t.Id) + 1000;
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(e => e.Id == missingId);
@@ -277,7 +277,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id });
@@ -293,7 +293,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -314,7 +314,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(queryFields);
@@ -336,7 +336,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync<CompleteTable>(queryGroup);
@@ -352,7 +352,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -375,7 +375,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
@@ -392,7 +392,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
@@ -409,7 +409,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
@@ -431,7 +431,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
@@ -454,7 +454,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
@@ -475,7 +475,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -492,7 +492,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -509,7 +509,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -531,7 +531,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -554,7 +554,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),

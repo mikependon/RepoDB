@@ -18,7 +18,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingAreTableHintsSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsFalse(setting.AreTableHintsSupported);
@@ -28,7 +28,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingAverageableTypeProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.AreEqual(typeof(double), setting.AverageableType);
@@ -38,7 +38,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingClosingQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.AreEqual("\"", setting.ClosingQuote);
@@ -48,7 +48,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingDefaultSchemaProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsNull(setting.DefaultSchema);
@@ -58,7 +58,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingIsDirectionSupportedSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsTrue(setting.IsDirectionSupported);
@@ -68,7 +68,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsTrue(setting.IsExecuteReaderDisposable);
@@ -78,7 +78,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsFalse(setting.IsMultiStatementExecutable);
@@ -88,7 +88,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingIsUseUpsertProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsFalse(setting.IsUseUpsert);
@@ -98,7 +98,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingIsPreparableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsTrue(setting.IsPreparable);
@@ -108,7 +108,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingOpeningQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.AreEqual("\"", setting.OpeningQuote);
@@ -118,7 +118,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbSettingParameterPrefixProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<Db2Connection>();
+            var setting = DbSettingMapper.Get<DB2Connection>();
 
             // Assert
             Assert.AreEqual(":", setting.ParameterPrefix);

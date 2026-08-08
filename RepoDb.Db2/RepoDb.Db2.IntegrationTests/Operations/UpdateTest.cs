@@ -49,7 +49,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -72,7 +72,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -103,7 +103,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -126,7 +126,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -149,7 +149,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -177,7 +177,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -206,7 +206,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -233,7 +233,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -256,7 +256,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -287,7 +287,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -310,7 +310,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -333,7 +333,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -361,7 +361,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -390,7 +390,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -425,7 +425,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -448,7 +448,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -471,7 +471,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -499,7 +499,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -528,7 +528,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -555,7 +555,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -578,7 +578,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -601,7 +601,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -629,7 +629,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("ColumnInt", table.ColumnInt)
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -658,7 +658,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             UpdateCompleteTableProperties(table);
 
@@ -687,7 +687,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.
@@ -701,7 +701,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act/Assert: AreTableHintsSupported = false for Db2 - BaseStatementBuilder.GuardHints
             // throws for any non-null/non-whitespace hints, regardless of operation.

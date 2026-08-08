@@ -31,27 +31,27 @@ namespace RepoDb.Db2.IntegrationTests
 
         // Re-maps onto the real "CompleteTable" physical table (see Setup/Database.cs). "SessionId" is
         // typed as byte[] here (instead of Guid) specifically so this class can exercise
-        // Db2DbTypeAttribute directly on the parameter without also going through the separate
-        // Guid<->byte[] PropertyHandler mechanism used elsewhere in this suite - RAW(16) already maps
-        // to byte[] natively, no conversion needed.
+        // Db2TypeAttribute directly on the parameter without also going through the separate
+        // Guid<->byte[] PropertyHandler mechanism used elsewhere in this suite - "CHAR(16) FOR BIT
+        // DATA" already maps to byte[] natively via DB2Type.Binary, no conversion needed.
         [Table("CompleteTable")]
         public class Db2AttributeTable
         {
             public int Id { get; set; }
 
-            [Db2DbType(Db2DbType.Raw)]
+            [Db2Type(DB2Type.Binary)]
             public byte[] SessionId { get; set; }
 
-            [Db2DbType(Db2DbType.NVarchar2)]
+            [Db2Type(DB2Type.VarChar)]
             public string ColumnVarchar { get; set; }
 
-            [Db2DbType(Db2DbType.Decimal)]
+            [Db2Type(DB2Type.Decimal)]
             public decimal ColumnNumber { get; set; }
 
-            [Db2DbType(Db2DbType.Date)]
+            [Db2Type(DB2Type.Date)]
             public DateTime ColumnDate { get; set; }
 
-            [Db2DbType(Db2DbType.TimeStamp)]
+            [Db2Type(DB2Type.Timestamp)]
             public DateTime ColumnTimestamp { get; set; }
         }
 
@@ -85,7 +85,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var table = CreateDb2AttributeTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             connection.Insert<Db2AttributeTable>(table);
@@ -106,7 +106,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var tables = CreateDb2AttributeTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             connection.InsertAll<Db2AttributeTable>(tables);
@@ -127,7 +127,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var table = CreateDb2AttributeTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var id = connection.Insert<Db2AttributeTable>(table);
@@ -145,7 +145,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var tables = CreateDb2AttributeTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             connection.InsertAll<Db2AttributeTable>(tables);
@@ -163,7 +163,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var table = CreateDb2AttributeTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             await connection.InsertAsync<Db2AttributeTable>(table);
@@ -184,7 +184,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var tables = CreateDb2AttributeTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             await connection.InsertAllAsync<Db2AttributeTable>(tables);
@@ -205,7 +205,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var table = CreateDb2AttributeTables(1).First();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var id = connection.Insert<Db2AttributeTable>(table);
@@ -223,7 +223,7 @@ namespace RepoDb.Db2.IntegrationTests
             // Setup
             var tables = CreateDb2AttributeTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             connection.InsertAll<Db2AttributeTable>(tables);

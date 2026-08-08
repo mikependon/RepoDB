@@ -42,7 +42,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -59,7 +59,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -85,7 +85,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -102,7 +102,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -119,7 +119,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -141,7 +141,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -164,7 +164,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average<CompleteTable>(e => e.ColumnSmallInt,
@@ -181,7 +181,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -200,7 +200,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -217,7 +217,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -243,7 +243,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             var tables = Database.CreateCompleteTables(10).ToList();
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -260,7 +260,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -277,7 +277,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -299,7 +299,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -322,7 +322,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnSmallInt,
@@ -339,7 +339,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act/Assert: AreTableHintsSupported == false for Db2 - any non-null/non-whitespace
                 // "hints" argument must throw, rather than silently being ignored.
@@ -362,7 +362,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -380,7 +380,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -398,7 +398,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -421,7 +421,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -445,7 +445,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
@@ -467,7 +467,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -485,7 +485,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -503,7 +503,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).ToList();
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -526,7 +526,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -550,7 +550,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),

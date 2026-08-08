@@ -33,7 +33,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Truncate<CompleteTable>();
@@ -50,7 +50,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -79,7 +79,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.TruncateAsync<CompleteTable>();
@@ -96,7 +96,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
                 try
@@ -129,7 +129,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Truncate(ClassMappedNameCache.Get<CompleteTable>());
@@ -150,7 +150,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             Database.CreateCompleteTables(10);
 
-            using (var connection = new Db2Connection(Database.ConnectionString))
+            using (var connection = new DB2Connection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());

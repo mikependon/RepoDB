@@ -33,7 +33,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table =>
@@ -62,7 +62,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table =>
@@ -103,7 +103,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new Field("Id", typeof(int))
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");
@@ -128,7 +128,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");
@@ -157,7 +157,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table =>
@@ -186,7 +186,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table =>
@@ -227,7 +227,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new Field("Id", typeof(int))
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");
@@ -252,7 +252,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Updated-{table.Id}");

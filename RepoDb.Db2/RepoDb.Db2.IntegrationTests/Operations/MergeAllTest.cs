@@ -36,7 +36,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.MergeAll<CompleteTable>(tables);
@@ -60,7 +60,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -92,7 +92,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
@@ -122,7 +122,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new Field("Id", typeof(int))
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
@@ -148,7 +148,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(), tables);
@@ -175,7 +175,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.MergeAllAsync<CompleteTable>(tables);
@@ -199,7 +199,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -231,7 +231,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
@@ -261,7 +261,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 new Field("Id", typeof(int))
             };
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Setup
             tables.ForEach(table => table.ColumnVarchar = $"Merged-{table.Id}");
@@ -287,7 +287,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);

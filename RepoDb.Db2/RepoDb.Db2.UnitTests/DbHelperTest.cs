@@ -48,7 +48,7 @@ namespace RepoDb.Db2.UnitTests
         public void TestDb2DbHelperMapperUsesDb2DbHelper()
         {
             // Setup
-            var helper = DbHelperMapper.Get<Db2Connection>();
+            var helper = DbHelperMapper.Get<DB2Connection>();
 
             // Assert
             Assert.IsInstanceOfType(helper, typeof(Db2DbHelper));
@@ -90,7 +90,7 @@ namespace RepoDb.Db2.UnitTests
         {
             // Setup
             var helper = new Db2DbHelper();
-            var parameter = new Db2Parameter("Field1", 1);
+            var parameter = new DB2Parameter("Field1", 1);
 
             // Act - should not throw; the current implementation is a documented no-op placeholder
             helper.DynamicHandler(parameter, "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]");
@@ -101,7 +101,7 @@ namespace RepoDb.Db2.UnitTests
         {
             // Setup
             var helper = new Db2DbHelper();
-            var parameter = new Db2Parameter("Field1", 1);
+            var parameter = new DB2Parameter("Field1", 1);
 
             // Act - unrecognized keys are silently ignored (no cast, no invocation)
             helper.DynamicHandler(parameter, "RepoDb.Internal.Compiler.Events[SomeOtherEvent]");

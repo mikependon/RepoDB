@@ -33,7 +33,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = connection.InsertAll<CompleteTable>(tables);
@@ -57,7 +57,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -89,7 +89,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act: the mapped-name overload still returns typed CompleteTable rows once queried back below,
             // so this is a genuine additional scenario rather than a re-run of the test above.
@@ -117,7 +117,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.InsertAllAsync<CompleteTable>(tables);
@@ -141,7 +141,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
@@ -173,7 +173,7 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateCompleteTables(10).AsList();
 
-            using var connection = new Db2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
             // Act
             var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);

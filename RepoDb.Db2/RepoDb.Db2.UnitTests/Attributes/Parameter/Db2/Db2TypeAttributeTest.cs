@@ -7,33 +7,33 @@ using RepoDb.Extensions;
 namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
 {
     [TestClass]
-    public class SkipConversionToLocalTimeAttributeTest
+    public class Db2TypeAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<Db2Connection>(new Db2DbSetting(), true);
+            DbSettingMapper.Add<DB2Connection>(new Db2DbSetting(), true);
         }
 
         #region Classes
 
-        private class SkipConversionToLocalTimeAttributeTestClass
+        private class Db2TypeAttributeTestClass
         {
-            [SkipConversionToLocalTime(true)]
+            [Db2Type(DB2Type.VarChar)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestSkipConversionToLocalTimeAttributeViaEntityViaCreateParameters()
+        public void TestDb2TypeAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
-                .CreateParameters(command, new SkipConversionToLocalTimeAttributeTestClass
+                .CreateParameters(command, new Db2TypeAttributeTestClass
                 {
                     ColumnName = "Test"
                 });
@@ -42,15 +42,15 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.IsTrue(parameter.SkipConversionToLocalTime);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual(DB2Type.VarChar, parameter.DB2Type);
         }
 
         [TestMethod]
-        public void TestSkipConversionToLocalTimeAttributeViaAnonymousViaCreateParameters()
+        public void TestDb2TypeAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using var connection = new Db2Connection();
+            using var connection = new DB2Connection();
             using var command = connection.CreateCommand();
 
             DbCommandExtension
@@ -58,14 +58,14 @@ namespace RepoDb.Db2.UnitTests.Attributes.Parameter.Db2
                 {
                     ColumnName = "Test"
                 },
-                typeof(SkipConversionToLocalTimeAttributeTestClass));
+                typeof(Db2TypeAttributeTestClass));
 
             // Assert
             Assert.AreEqual(1, command.Parameters.Count);
 
             // Assert
-            var parameter = (Db2Parameter)command.Parameters[":ColumnName"];
-            Assert.IsTrue(parameter.SkipConversionToLocalTime);
+            var parameter = (DB2Parameter)command.Parameters[":ColumnName"];
+            Assert.AreEqual(DB2Type.VarChar, parameter.DB2Type);
         }
     }
 }
