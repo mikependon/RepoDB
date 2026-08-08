@@ -77,7 +77,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Core", "RepoDb.Core"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Oracle", "RepoDb.Oracle", "{652F9471-137E-BBE7-0DF7-A57E7AFCC25F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySqlConnector.BulkOperations.IntegrationTests\RepoDb.MySqlConnector.BulkOperations.IntegrationTests.csproj", "{E8B0D86C-48B5-48FC-ABD5-110F90A13F9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySqlConnector.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.MySqlConnector.BulkOperations\RepoDb.MySql.BulkOperations.IntegrationTests\RepoDb.MySqlConnector.BulkOperations.IntegrationTests.csproj", "{E8B0D86C-48B5-48FC-ABD5-110F90A13F9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

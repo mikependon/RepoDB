@@ -12,6 +12,13 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.MySql.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbMySqlVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbMySqlVersion)' != ''">$(RepoDbMySqlVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Attributes\MySqlTypeMapAttribute.cs" />

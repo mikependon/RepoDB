@@ -1,27 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>RepoDb.MySqlConnector.BulkOperations</Title>
-    <AssemblyName>RepoDb.MySqlConnector.BulkOperations</AssemblyName>
+    <Title>RepoDb.MySql.BulkOperations</Title>
+    <AssemblyName>RepoDb.MySql.BulkOperations</AssemblyName>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
-    <Description>An extension library that contains the official Bulk Operations of RepoDB for MySQL (using MySqlConnector).</Description>
-    <PackageTags>orm hybrid-orm micro-orm mysqlconnector bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations</RepositoryUrl>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for MySQL (using MySql.Data).</Description>
+    <PackageTags>orm hybrid-orm micro-orm mysql bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/mysqlconnectorbulk</PackageReleaseNotes>
-    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysqlconnector</PackageProjectUrl>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <!--
       Pins the version this project is stamped as when it is a ProjectReference dependency of another
       package, independently of the consuming package's own -p:Version. Pass
-      -p:RepoDbMySqlConnectorBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      -p:RepoDbMySqlBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
       Version) because it is not overridden by the global Version property.
     -->
-    <PackageVersion Condition="'$(RepoDbMySqlConnectorBulkOperationsVersion)' != ''">$(RepoDbMySqlConnectorBulkOperationsVersion)</PackageVersion>
+    <PackageVersion Condition="'$(RepoDbMySqlBulkOperationsVersion)' != ''">$(RepoDbMySqlBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MySqlConnector" Version="2.6.1" />
+    <PackageReference Include="MySql.Data" Version="9.7.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
@@ -30,6 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\..\..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj" />
   </ItemGroup>
 </Project>
