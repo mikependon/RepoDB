@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -332,9 +333,28 @@ namespace RepoDb
             }
             if (mappings != null)
             {
+                var dbFields = DbFieldCache.Get(connection, tableName, null);
                 var columnMappings = mappings.AsList();
                 foreach (var mapping in columnMappings)
                 {
+                    var sourceOrdinal = table.Columns.IndexOf(mapping.SourceColumn);
+                    if (sourceOrdinal < 0)
+                    {
+                        throw new InvalidTypeException($"The source column '{mapping.SourceColumn}' defined in the mappings was not found in the given data table.");
+                    }
+
+                    // Guards against a mapping whose source and destination don't actually agree on a type
+                    // (e.g. a caller-supplied mapping list that got the source/destination pair swapped) -
+                    // MySqlBulkCopy/LOAD DATA LOCAL INFILE silently coerces a mismatched value (a non-numeric
+                    // string into an INT column becomes 0, for instance) instead of failing, so an invalid
+                    // mapping would otherwise go undetected until the wrong data quietly lands in the table.
+                    var destinationField = dbFields?.GetByUnquotedName(mapping.DestinationColumn.AsUnquoted(true, dbSetting));
+                    var sourceType = table.Columns[sourceOrdinal].DataType;
+                    if (destinationField?.Type != null && sourceType != null && !AreMappingTypesCompatible(sourceType, destinationField.Type))
+                    {
+                        throw new InvalidTypeException($"The type of the source column '{mapping.SourceColumn}' ({sourceType}) does not match the type of the destination column '{mapping.DestinationColumn}' ({destinationField.Type}).");
+                    }
+
                     // MySqlBulkCopy back-tick-quotes DestinationColumn itself (see QuoteIdentifier in
                     // MySqlBulkCopy.cs) - passing an already-quoted name here double-quotes it, producing a
                     // literal (and nonexistent) column reference like "`Id`" instead of "Id".
@@ -346,7 +366,7 @@ namespace RepoDb
                     // for every row (surfacing as a type-mismatch error at the destination, since the wrong
                     // source column rarely matches the mapped destination column's type).
                     bulkCopy.ColumnMappings.Add(
-                        new MySqlBulkCopyColumnMapping(table.Columns.IndexOf(mapping.SourceColumn), mapping.DestinationColumn));
+                        new MySqlBulkCopyColumnMapping(sourceOrdinal, mapping.DestinationColumn));
                 }
             }
             else
@@ -362,6 +382,61 @@ namespace RepoDb
                 }
             }
             return bulkCopy;
+        }
+
+        /// <summary>
+        /// Determines whether <paramref name="sourceType"/> (a mapped <see cref="DataTable"/> column's live
+        /// <see cref="DataColumn.DataType"/>) and <paramref name="destinationType"/> (the destination
+        /// <see cref="DbField.Type"/>, resolved from the database's own type name) represent the same kind of
+        /// value, tolerating a couple of known MySqlConnector-specific mismatches that are not actually
+        /// incompatible:
+        /// <list type="bullet">
+        /// <item><description><see cref="Guid"/> vs. <see cref="string"/> - MySqlConnector reads a
+        /// <c>CHAR(36)</c> column back as <see cref="Guid"/>, while the resolver used to build the
+        /// destination's <see cref="DbField"/> collection maps that same MySQL <c>char</c> type name to
+        /// <see cref="string"/>.</description></item>
+        /// <item><description>Any pair of integral types (e.g. <see cref="byte"/> vs. <see cref="sbyte"/>) -
+        /// an unsigned column (e.g. <c>TINYINT UNSIGNED</c>) reads back as its unsigned CLR type, while the
+        /// resolver maps the MySQL type name alone (blind to the <c>UNSIGNED</c> modifier) to its signed
+        /// counterpart.</description></item>
+        /// </list>
+        /// A genuine mismatch (e.g. a numeric source mapped to a string destination, or vice versa) still
+        /// falls through to <see langword="false"/>.
+        /// </summary>
+        /// <param name="sourceType">
+        /// The source column's CLR type - either a <see cref="DataTable"/> column's <see cref="DataColumn.DataType"/>
+        /// (never <see cref="Nullable{T}"/> - a nullable <see cref="DataColumn"/> just uses the plain value type plus
+        /// <see cref="DataColumn.AllowDBNull"/>), or an entity property's declared type as reported by
+        /// <c>DataEntityDataReader{TEntity}.GetFieldType</c> (which, unlike a <see cref="DataColumn"/>, can be a
+        /// genuine <see cref="Nullable{T}"/> for a property like <c>int?</c> - unwrapped below so it still lines up
+        /// with the destination's non-nullable <see cref="DbField.Type"/>).
+        /// </param>
+        /// <param name="destinationType">The destination column's resolved CLR type.</param>
+        /// <returns><see langword="true"/> if the two types are the same or a known-equivalent pair.</returns>
+        private static bool AreMappingTypesCompatible(Type sourceType,
+            Type destinationType)
+        {
+            sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
+            destinationType = Nullable.GetUnderlyingType(destinationType) ?? destinationType;
+
+            if (sourceType == destinationType)
+            {
+                return true;
+            }
+            if ((sourceType == typeof(Guid) && destinationType == typeof(string)) ||
+                (sourceType == typeof(string) && destinationType == typeof(Guid)))
+            {
+                return true;
+            }
+
+            static bool IsIntegral(Type type)
+            {
+                var code = Type.GetTypeCode(type);
+                return code is TypeCode.SByte or TypeCode.Byte or TypeCode.Int16 or TypeCode.UInt16
+                    or TypeCode.Int32 or TypeCode.UInt32 or TypeCode.Int64 or TypeCode.UInt64;
+            }
+
+            return IsIntegral(sourceType) && IsIntegral(destinationType);
         }
 
         /// <summary>
@@ -397,10 +472,26 @@ namespace RepoDb
                 bulkCopy.BulkCopyTimeout = bulkCopyTimeout.Value;
             }
             var columnMappings = mappings?.AsList() ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, excludeField).AsList();
+            // Only an explicitly caller-supplied mapping needs validating - the default mapping built by
+            // GetDefaultMappingsForDataReader is already derived from the destination's own dbFields, so it
+            // can never disagree with them on type. See the remarks on AreMappingTypesCompatible for why a
+            // mismatch here (e.g. a mapping list with the source/destination pair swapped) has to be caught
+            // client-side instead of relying on MySqlBulkCopy/LOAD DATA LOCAL INFILE to fail on bad data.
+            var dbFields = mappings != null ? DbFieldCache.Get(connection, tableName, transaction) : null;
             var sourceOrdinals = new int[columnMappings.Count];
             for (var i = 0; i < columnMappings.Count; i++)
             {
-                sourceOrdinals[i] = reader.GetOrdinal(columnMappings[i].SourceColumn);
+                var sourceOrdinal = reader.GetOrdinal(columnMappings[i].SourceColumn);
+                if (dbFields != null)
+                {
+                    var destinationField = dbFields.GetByUnquotedName(columnMappings[i].DestinationColumn.AsUnquoted(true, dbSetting));
+                    var sourceType = reader.GetFieldType(sourceOrdinal);
+                    if (destinationField?.Type != null && sourceType != null && !AreMappingTypesCompatible(sourceType, destinationField.Type))
+                    {
+                        throw new InvalidTypeException($"The type of the source column '{columnMappings[i].SourceColumn}' ({sourceType}) does not match the type of the destination column '{columnMappings[i].DestinationColumn}' ({destinationField.Type}).");
+                    }
+                }
+                sourceOrdinals[i] = sourceOrdinal;
                 bulkCopy.ColumnMappings.Add(new MySqlBulkCopyColumnMapping(i, columnMappings[i].DestinationColumn));
             }
             var filteredReader = new ColumnFilteredDataReader(reader, sourceOrdinals);
