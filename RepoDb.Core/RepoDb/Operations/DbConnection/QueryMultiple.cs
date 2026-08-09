@@ -32532,6 +32532,11 @@ namespace RepoDb
         {
             foreach (var commandText in commandTexts)
             {
+                if (string.IsNullOrEmpty(commandText))
+                {
+                    yield return commandText;
+                    continue;
+                }
                 yield return !commandText.Trim().EndsWith(separator) ? $"{commandText}{separator}" : commandText;
             }
         }
