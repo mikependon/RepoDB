@@ -24,7 +24,7 @@ Db2 for Linux, UNIX, and Windows (LUW) 10.5 and later. Earlier versions are not 
 
 ## Dependencies
 
-- [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) — IBM's Data Server .NET provider for Db2.
+- [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) — IBM's Data Server .NET provider for Db2. IBM ships this as separate, platform-specific packages rather than one cross-platform package: `Net.IBM.Data.Db2` (Windows x64), `Net.IBM.Data.Db2-lnx` (Linux AMD64), and others (`-osx`, `-zlnx`, `-ppc`) not referenced by this project. The published `RepoDb.Db2` package currently depends on the Windows package (`RepoDb.Db2.csproj` selects it via an `$(OS)`-conditional `PackageReference`, resolved when the package is built/packed) — if you consume `RepoDb.Db2` on Linux, add a direct `PackageReference` to `Net.IBM.Data.Db2-lnx` yourself.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
