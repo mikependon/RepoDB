@@ -9500,7 +9500,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
                 TraceResult traceResult = null;
@@ -10277,7 +10278,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
                 TraceResult traceResult = null;
@@ -11250,7 +11252,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
                 TraceResult traceResult = null;
@@ -12412,7 +12415,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
                 TraceResult traceResult = null;
@@ -13762,7 +13766,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
                 TraceResult traceResult = null;
@@ -15301,7 +15306,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
                 TraceResult traceResult = null;
@@ -16007,7 +16013,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -16594,7 +16601,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -17318,7 +17326,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -18172,7 +18181,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -19158,7 +19168,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -20275,7 +20286,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -20927,7 +20939,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
                 TraceResult traceResult = null;
@@ -21729,7 +21742,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
                 TraceResult traceResult = null;
@@ -22729,7 +22743,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
                 TraceResult traceResult = null;
@@ -23921,7 +23936,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
                 TraceResult traceResult = null;
@@ -25305,7 +25321,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
                 TraceResult traceResult = null;
@@ -26881,7 +26898,8 @@ namespace RepoDb
                 }
 
                 // Shared variables
-                var commandText = string.Join(" ", commandTexts);
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
                 var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
                 Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
                 TraceResult traceResult = null;
@@ -27618,7 +27636,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -28225,7 +28244,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -28970,7 +28990,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -29848,7 +29869,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -30859,7 +30881,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -32003,7 +32026,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -32499,6 +32523,16 @@ namespace RepoDb
                     .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                 return result;
+            }
+        }
+
+        private static IEnumerable<string> EnsureMultipleStatementSeparator(
+            IList<string> commandTexts,
+            string separator)
+        {
+            foreach (var commandText in commandTexts)
+            {
+                yield return !commandText.Trim().EndsWith(separator) ? $"{commandText}{separator}" : commandText;
             }
         }
 
