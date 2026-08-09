@@ -925,39 +925,44 @@ namespace RepoDb.StatementBuilders
         /// the remarks on <see cref="WrapWithReturningResult"/>), so the key has to be re-queried
         /// after the MERGE completes instead of being read directly off it.
         /// <para>
-        /// This relies on two things, both confirmed against a live Db2 LUW instance:
+        /// This relies on the IBM Data Server .NET Provider accepting more than one statement in a
+        /// single command text and executing all of them in one round trip (confirmed for a
+        /// "SELECT ...; SELECT ...;" read-only batch - see ExecuteQueryMultipleTest.cs.
+        /// ExecuteScalar() itself only ever reads the *first* result set of a multi-statement
+        /// batch, which is why the SELECT is appended *after* the MERGE, not before). A single
+        /// command text sends its parameters once; the same named parameter marker (e.g. ":Id")
+        /// can be referenced again in the trailing SELECT and is bound to the same value the MERGE
+        /// used, without declaring a duplicate parameter.
         /// </para>
-        /// <list type="number">
-        /// <item><description>
-        /// The IBM Data Server .NET Provider accepts more than one statement in a single command
-        /// text and executes all of them in one round trip (confirmed for a "SELECT ...; SELECT
-        /// ...;" read-only batch - see ExecuteQueryMultipleTest.cs. ExecuteScalar() itself only
-        /// ever reads the *first* result set of a multi-statement batch, which is why the SELECT
-        /// is appended *after* the MERGE, not before - by the time ExecuteScalar() reads "the
-        /// first result set", the MERGE has already run and the SELECT's result set is what comes
-        /// back.)
-        /// </description></item>
-        /// <item><description>
-        /// A single command text sends its parameters once; the same named parameter marker (e.g.
-        /// ":Id") can be referenced again in the trailing SELECT and is bound to the same value the
-        /// MERGE used, without declaring a duplicate parameter.
-        /// </description></item>
-        /// </list>
         /// <para>
         /// The re-query predicate is the same qualifier predicate as the MERGE's own ON clause
         /// (e.g. "WHERE ("Id" = :Id)"), so it deterministically finds whichever row the MERGE just
         /// touched - <c>except</c> when the qualifier field is itself the auto-generated identity
         /// column and the row was newly inserted: the caller's bound value for that parameter is
         /// whatever placeholder/default they passed in (not the real generated value), so the
-        /// lookup by that value would find nothing. <c>COALESCE(...)</c> covers exactly that case
-        /// by falling back to <c>IDENTITY_VAL_LOCAL()</c>, which reflects whatever value Db2 just
-        /// generated for the identity column on *this* connection - correct immediately after the
-        /// MERGE's INSERT branch fires, and simply unused (short-circuited by COALESCE) whenever
-        /// the qualifier lookup already found a row, i.e. every UPDATE-branch case and every
-        /// INSERT-branch case where the qualifier isn't the identity column itself. When the table
-        /// has no identity column at all, the fallback is a literal NULL instead - IDENTITY_VAL_LOCAL()
-        /// would either return NULL anyway (nothing generated it this connection) or, worse, a
-        /// stale value left over from some unrelated identity-table insert earlier in the session.
+        /// lookup by that value would find nothing.
+        /// </para>
+        /// <para>
+        /// <b>This used to fall back to <c>IDENTITY_VAL_LOCAL()</c> for that case. Confirmed live,
+        /// that was wrong</b>: IBM's docs state <c>IDENTITY_VAL_LOCAL()</c> returns NULL "if ...a
+        /// COMMIT or ROLLBACK of a unit of work occurred since the most recent qualifying data
+        /// change statement" - and Db2 LUW's autocommit semantics commit after *each individual
+        /// SQL statement*, not after the client's round trip/command text as a whole. So even
+        /// though the MERGE and the follow-up SELECT are sent together in one command text/round
+        /// trip, the MERGE's own autocommit fires between them, clearing the identity register
+        /// before the SELECT ever reads it - <c>IDENTITY_VAL_LOCAL()</c> came back NULL 100% of the
+        /// time for a fresh INSERT, which <c>COALESCE</c> then propagated as an overall NULL,
+        /// silently read back as 0 for every merged entity's identity property
+        /// (<c>MergeAllForEmptyTable</c> failing "table.Id &gt; 0" was the symptom).
+        /// </para>
+        /// <para>
+        /// The fallback here instead re-reads <c>MAX(&lt;identity column&gt;)</c> off the table
+        /// itself - ordinary committed data, unaffected by the autocommit-clears-the-register
+        /// problem above, since the row is already durably committed by the time this SELECT runs.
+        /// This is a best-effort approximation, not a guarantee: it assumes no other connection
+        /// concurrently inserts into the same table between the MERGE and this SELECT. That's an
+        /// inherent limitation of not having a true FINAL TABLE/OUTPUT-clause equivalent for MERGE
+        /// on Db2 LUW - see the "Known limitations" section of the package README.
         /// </para>
         /// </summary>
         private string WrapMergeWithReturningResult(string mergeStatementWithoutTrailingSemicolon,
@@ -977,8 +982,24 @@ namespace RepoDb.StatementBuilders
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .WhereFrom(qualifiers, 0, DbSetting)
-                .WriteText("),")
-                .WriteText(identityField != null ? "IDENTITY_VAL_LOCAL())" : "NULL)")
+                .WriteText("),");
+
+            if (identityField != null)
+            {
+                selectBuilder
+                    .WriteText("(")
+                    .Select()
+                    .WriteText("MAX(").WriteText(quotedKeyColumn).WriteText(")")
+                    .From()
+                    .TableNameFrom(tableName, DbSetting)
+                    .WriteText("))");
+            }
+            else
+            {
+                selectBuilder.WriteText("NULL)");
+            }
+
+            selectBuilder
                 .From()
                 .WriteText("SYSIBM.SYSDUMMY1");
 

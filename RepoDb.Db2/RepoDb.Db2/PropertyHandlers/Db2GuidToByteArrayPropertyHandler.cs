@@ -5,24 +5,8 @@ using System;
 namespace RepoDb.Db2.PropertyHandlers
 {
     /// <summary>
-    /// A <see cref="IPropertyHandler{TInput, TResult}"/> that converts a <see cref="Guid"/> data entity
-    /// property to/from an array of <see cref="byte"/> for binding against a Db2 <c>CHAR(16) FOR BIT DATA</c> column.
+    /// A property handler that handles the converstions of array of <see cref="byte"/> and <see cref="System.Guid"/>.
     /// </summary>
-    /// <remarks>
-    /// Db2 has no native GUID/UNIQUEIDENTIFIER type, so the idiomatic storage for a GUID is a
-    /// fixed-length 16-byte <c>CHAR(16) FOR BIT DATA</c> column.
-    /// <para>
-    /// Use this handler if needed as it is intentionally NOT registered automatically for every <see cref="Guid"/> property,
-    /// since <see cref="PropertyHandlerMapper"/> registrations keyed by CLR type are global across the
-    /// whole process — auto-registering it would also affect
-    /// unrelated connections. Register it explicitly, scoped to the specific entity property that maps
-    /// to a <c>CHAR(16) FOR BIT DATA</c> column:
-    /// <code>
-    /// PropertyHandlerMapper.Add&lt;CompleteTable, Db2GuidToByteArrayPropertyHandler&gt;(
-    ///     e => e.SessionId, new Db2GuidToByteArrayPropertyHandler(), true);
-    /// </code>
-    /// </para>
-    /// </remarks>
     public class Db2GuidToByteArrayPropertyHandler : IPropertyHandler<byte[], Guid>
     {
         /// <summary>

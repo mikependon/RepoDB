@@ -49,20 +49,6 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private string GetCommandText()
         {
-            // Db2's catalog has no equivalent of Oracle's ALL_TAB_COLUMNS/ALL_CONSTRAINTS/
-            // ALL_TAB_IDENTITY_COLS views. SYSCAT.COLUMNS alone carries everything needed here:
-            // KEYSEQ (> 0 when the column participates in the table's primary key, so no join to a
-            // separate constraints view is required) and IDENTITY ('Y'/'N') for identity columns.
-            // "CURRENT SCHEMA" is Db2's special register for the connection's default schema -
-            // the equivalent of Oracle's SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA').
-            //
-            // LENGTH is NOT usable as "Precision" for every type the way Oracle's DATA_PRECISION
-            // is (which is NULL for non-numeric columns): per IBM's SYSCAT.COLUMNS reference, LENGTH
-            // holds the numeric precision only for DECIMAL/NUMERIC columns - for every other type
-            // (CHAR/VARCHAR/CLOB/BLOB/...) it's the declared byte length instead, which routinely
-            // exceeds 255 (e.g. VARCHAR(256), CLOB(1M)) and overflows DbField.Precision's "byte?"
-            // when ReaderToDbField below does Convert.ToByte(...) on it. Only surface LENGTH as
-            // Precision for actual DECIMAL/NUMERIC columns; NULL (mapped to 0) for everything else.
             return @"
                 SELECT COLNAME AS ColumnName
                     , CASE WHEN KEYSEQ > 0 THEN 1 ELSE 0 END AS IsPrimary
@@ -86,10 +72,6 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private DbField ReaderToDbField(DbDataReader reader)
         {
-            // SYSCAT.COLUMNS.LENGTH is INTEGER and SCALE/KEYSEQ are SMALLINT (unlike Oracle's
-            // NUMBER-typed DATA_PRECISION/DATA_SCALE) - convert via the boxed value rather than
-            // reader.GetDecimal/GetInt32 directly, since the exact CLR type the driver hands back
-            // for each of those isn't guaranteed to line up 1:1 with the catalog's declared SQL type.
             return new DbField(reader.GetString(0),
                 !reader.IsDBNull(1) && Convert.ToInt32(reader.GetValue(1)) == 1,
                 !reader.IsDBNull(2) && Convert.ToInt32(reader.GetValue(2)) == 1,
@@ -112,8 +94,6 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            // See the non-async ReaderToDbField above for why these go through a boxed value
-            // conversion rather than a strongly-typed GetFieldValueAsync<int>/<decimal> call.
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
                 !await reader.IsDBNullAsync(1, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(1, cancellationToken)) == 1,
                 !await reader.IsDBNullAsync(2, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<object>(2, cancellationToken)) == 1,

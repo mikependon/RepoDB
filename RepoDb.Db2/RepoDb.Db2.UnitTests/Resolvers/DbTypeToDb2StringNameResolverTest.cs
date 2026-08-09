@@ -82,7 +82,7 @@ namespace RepoDb.Db2.UnitTests.Resolvers
         [TestMethod]
         public void TestDbTypeToDb2StringNameResolverForDecimal()
         {
-            Assert.AreEqual("DECIMAL(18,2)", m_resolver.Resolve(DbType.Decimal));
+            Assert.AreEqual("DECIMAL(31,15)", m_resolver.Resolve(DbType.Decimal));
         }
 
         [TestMethod]

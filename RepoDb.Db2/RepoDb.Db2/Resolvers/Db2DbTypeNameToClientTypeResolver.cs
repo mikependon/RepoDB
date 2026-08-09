@@ -43,30 +43,14 @@ namespace RepoDb.Resolvers
                 "smallint" => typeof(short),
                 "integer" or "int" => typeof(int),
                 "bigint" => typeof(long),
-                // DECIMAL/NUMERIC carry no fixed CLR equivalent (they can represent both integers
-                // and fractional values depending on precision/scale); decimal is the safest
-                // lossless default. Callers with access to the catalog's precision/scale columns
-                // (see Db2DbHelper) can refine this further.
                 "decimal" or "numeric" or "dec" or "decfloat" => typeof(decimal),
                 "real" => typeof(float),
                 "double" or "double precision" or "float" => typeof(double),
-                // Db2 has no distinct "NVARCHAR2"/"VARCHAR2" the way Oracle does - VARCHAR/CHAR
-                // already store whatever the database's configured code page/encoding is. GRAPHIC/
-                // VARGRAPHIC are Db2's fixed/variable-length double-byte/graphic string types (the
-                // closest equivalent to Oracle's NCHAR/NVARCHAR2), and CLOB/DBCLOB are their large-
-                // object counterparts (DBCLOB being the closest equivalent to Oracle's NCLOB).
                 "char" or "character" or "varchar" or "long varchar" or
                     "graphic" or "vargraphic" or "long vargraphic" or
                     "clob" or "dbclob" or "xml" or "rowid" => typeof(string),
                 "date" => typeof(DateTime),
-                // Db2's TIME type has no sub-second precision at all (unlike Oracle's INTERVAL DAY
-                // TO SECOND workaround for a fractional TimeSpan) - it maps to the whole-second
-                // resolution of TimeSpan.
                 "time" => typeof(TimeSpan),
-                // BINARY/VARBINARY are the newer (Db2 11.1+) dedicated binary types; CHAR/VARCHAR/
-                // LONG VARCHAR "FOR BIT DATA" columns are also reported as BLOB-compatible byte[]
-                // here since the catalog's TYPENAME for those doesn't distinguish "FOR BIT DATA"
-                // from the plain character type by name alone.
                 "blob" or "binary" or "varbinary" => typeof(byte[]),
                 "boolean" => typeof(bool),
                 _ => typeof(object),

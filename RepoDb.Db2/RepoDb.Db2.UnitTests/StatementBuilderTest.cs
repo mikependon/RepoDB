@@ -1625,8 +1625,11 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             // identityField is non-null here, so the fallback for "qualifier lookup found nothing"
-            // (i.e. this MERGE call just inserted a new row) is IDENTITY_VAL_LOCAL(), which reflects
-            // the value Db2 just generated for the identity column on this connection.
+            // (i.e. this MERGE call just inserted a new row) is a re-read of MAX(<key>) off the
+            // table itself, not IDENTITY_VAL_LOCAL() - confirmed live that IDENTITY_VAL_LOCAL()
+            // comes back NULL here, since Db2's autocommit fires per-statement (even within one
+            // multi-statement command text/round trip), clearing the identity register before this
+            // trailing SELECT runs. See WrapMergeWithReturningResult's remarks for the full story.
             var expected = $"" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
@@ -1636,7 +1639,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
                 $"VALUES ( S.\"Field2\", S.\"Field3\" ); " +
-                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), ( SELECT MAX( \"Field1\" ) FROM \"Table\" )) " +
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
@@ -1668,7 +1671,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
                 $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ); " +
-                $"SELECT COALESCE(( SELECT \"Id\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"SELECT COALESCE(( SELECT \"Id\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), ( SELECT MAX( \"Id\" ) FROM \"Table\" )) " +
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
@@ -1858,7 +1861,7 @@ namespace RepoDb.Db2.UnitTests
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
                 $"VALUES ( S.\"Field2\", S.\"Field3\" ); " +
-                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), ( SELECT MAX( \"Field1\" ) FROM \"Table\" )) " +
                 $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert

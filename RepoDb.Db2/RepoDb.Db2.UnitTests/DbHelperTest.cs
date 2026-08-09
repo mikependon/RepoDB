@@ -58,26 +58,41 @@ namespace RepoDb.Db2.UnitTests
 
         #region GetScopeIdentity
 
+        // NOTE: unlike Oracle (which has no session-wide "last identity" construct at all - its
+        // OracleDbHelper.GetScopeIdentity/Async unconditionally throw NotSupportedException, and
+        // this test file used to assert the same thing here, having been originally copied from
+        // OracleDbHelper's test suite), Db2 *does* have one: IDENTITY_VAL_LOCAL(). Db2DbHelper's
+        // GetScopeIdentity/GetScopeIdentityAsync are real, working implementations that delegate to
+        // "SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1" via connection.ExecuteScalar(Async).
+        // Neither method special-cases a null connection, so calling either with one still fails -
+        // just for the ordinary "nothing to execute against" reason
+        // (NullReferenceException, from IDbConnection.EnsureOpen() accessing connection.State),
+        // not because the feature itself is unsupported. That's exactly what these two tests now
+        // confirm, in place of the stale NotSupportedException expectation.
+
         [TestMethod]
-        public void ThrowExceptionOnDb2DbHelperGetScopeIdentitySinceDb2HasNoSessionWideScopeIdentity()
+        public void TestDb2DbHelperGetScopeIdentityThrowsNullReferenceExceptionForANullConnection()
         {
             // Setup
             var helper = new Db2DbHelper();
 
-            // Act
-            Assert.Throws<NotSupportedException>(() =>
+            // Act - the method throws synchronously (not inside a Task) since it is not declared
+            // with the 'async' keyword; the exception surfaces immediately upon invocation.
+            Assert.Throws<NullReferenceException>(() =>
                 helper.GetScopeIdentity<int>(connection: null));
         }
 
         [TestMethod]
-        public void ThrowExceptionOnDb2DbHelperGetScopeIdentityAsyncSinceDb2HasNoSessionWideScopeIdentity()
+        public async Task TestDb2DbHelperGetScopeIdentityAsyncThrowsNullReferenceExceptionForANullConnection()
         {
             // Setup
             var helper = new Db2DbHelper();
 
-            // Act - the method throws synchronously (not inside the returned Task) since it is not
-            // declared with the 'async' keyword; the exception surfaces immediately upon invocation.
-            Assert.Throws<NotSupportedException>(() =>
+            // Act - unlike the sync overload, the underlying implementation is a genuine 'async'
+            // method, so the NullReferenceException is captured into the returned Task's fault
+            // state rather than thrown synchronously at the point of invocation; it only surfaces
+            // once the task is awaited.
+            await Assert.ThrowsAsync<NullReferenceException>(() =>
                 helper.GetScopeIdentityAsync<int>(connection: null));
         }
 
