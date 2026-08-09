@@ -88,21 +88,22 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
-        public void TestDb2DbSettingQueryMultipleSeparatorProperty()
+        public void TestDb2DbSettingMultiStatementSeparatorProperty()
         {
             // Setup
             var setting = (BaseDbSetting)DbSettingMapper.Get<DB2Connection>();
 
-            // Assert - RepoDb.Core's QueryMultiple/QueryMultipleAsync join each type's
-            // independently-built CreateQuery() text using this separator. Db2's CreateQuery
-            // deliberately never self-terminates its own output with a trailing " ;" (unlike
-            // every other provider's default CreateQuery), so the base class's default " "
-            // separator would join two Db2 queries with no delimiter between them at all -
-            // confirmed live, this fails with SQL0104N. "; " matches the interior-separator,
-            // no-trailing-terminator pattern already confirmed working for Db2 multi-statement
+            // Assert - RepoDb.Core's QueryMultiple/QueryMultipleAsync ensure each type's
+            // independently-built CreateQuery() text ends with this separator (via
+            // EnsureMultipleStatementSeparator) before joining all of them with a plain " ".
+            // Db2's CreateQuery deliberately never self-terminates its own output with a
+            // trailing ";" (unlike every other provider's default CreateQuery, which already
+            // does), so without this, two Db2 queries would be joined with no delimiter between
+            // them at all - confirmed live, that fails with SQL0104N. ";" matches the
+            // interior-separator pattern already confirmed working for Db2 multi-statement
             // command text elsewhere in this provider (see ExecuteQueryMultipleTest.cs and
             // Db2StatementBuilder.WrapMergeWithReturningResult).
-            Assert.AreEqual("; ", setting.MultiStatementSeparator);
+            Assert.AreEqual(";", setting.MultiStatementSeparator);
         }
 
         [TestMethod]
