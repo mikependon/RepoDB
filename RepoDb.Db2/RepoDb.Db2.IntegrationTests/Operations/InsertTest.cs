@@ -10,8 +10,8 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 {
     /// <summary>
     /// This is the highest-risk test in the suite: it exercises Db2StatementBuilder's
-    /// DECLARE/BEGIN/RETURNING-INTO/DBMS_SQL.RETURN_RESULT wrapping used to surface the
-    /// generated identity value through RepoDb.Core's ExecuteScalar()-based Insert pipeline.
+    /// "SELECT ... FROM FINAL TABLE (INSERT ...)" wrapping used to surface the generated
+    /// identity value through RepoDb.Core's ExecuteScalar()-based Insert pipeline.
     /// Run this first against a real Db2 instance before trusting anything else in this
     /// provider that relies on identity retrieval (Insert, Merge).
     /// </summary>

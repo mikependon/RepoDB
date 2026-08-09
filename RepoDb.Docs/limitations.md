@@ -23,6 +23,11 @@ We want the .NET community to understand the limitations of this library before 
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table)
   - [Verification Status](#verification-status)
+- DB2
+  - [QueryMultiple Round Trips](#querymultiple-round-trips-1)
+  - [InsertAll / MergeAll Batching](#insertall--mergeall-batching-1)
+  - [Identity/Primary Key Retrieval](#identityprimary-key-retrieval-1)
+  - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-1)
 
 ## Core
 
@@ -451,3 +456,34 @@ Because Oracle's `CREATE TABLE`/`CREATE GLOBAL TEMPORARY TABLE` are DDL and caus
 ### Verification Status
 
 `RepoDb.Oracle.BulkOperations` has been implemented and reviewed but not yet exercised against a live Oracle instance. In particular, verify the `OracleBulkCopy` load path, the array-bind `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the staging table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` end-to-end before relying on this package in production. The same caveat applies to the `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.Oracle` package (see [Identity/Primary Key Retrieval](#identityprimary-key-retrieval)).
+
+-----
+
+## DB2
+
+These limitations are specific to the [RepoDb.Db2](https://www.nuget.org/packages/RepoDb.Db2) package, on top of the [Core](#core) limitations above.
+
+### QueryMultiple Round Trips
+
+IBM's Data Server .NET Provider rejects command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Db2`), so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Db2. Keep this in mind for latency-sensitive code paths with many types.
+
+### InsertAll / MergeAll Batching
+
+`InsertAll` and `MergeAll` currently execute one row per round trip (`IsMultiStatementExecutable = false`). True multi-row batching in a single round trip will follow in a later release.
+
+### Identity/Primary Key Retrieval
+
+Identity/primary key retrieval on `Insert`/`Merge` uses `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))` — an ANSI-SQL-adjacent construct that returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. This same mechanism works uniformly for both `Insert` and `Merge`, on any Db2 version 9.7+ (well within this provider's 10.5+ target), so there is no version gate to worry about.
+
+An earlier revision of this provider wrapped the key column in an Oracle-style `DECLARE ... DBMS_SQL.RETURN_RESULT(...)` PL/SQL block, which doesn't exist in Db2 — that has been replaced with the `FINAL TABLE` form described above. Verify `Insert`/`Merge` calls that request the generated key against your own Db2 instance before relying on this in production.
+
+### GUID/UNIQUEIDENTIFIER
+
+Db2 has no native GUID/`UNIQUEIDENTIFIER` type. A `System.Guid` data entity property cannot be bound directly to a `DB2Parameter` the way it can with `SqlParameter`/`NpgsqlParameter`. The idiomatic Db2 storage for a GUID is a fixed-length 16-byte `CHAR(16) FOR BIT DATA` column — map it as `byte[]` on the entity, or keep it as `Guid` and register `RepoDb.Db2.PropertyHandlers.Db2GuidToByteArrayPropertyHandler` for that specific property:
+
+```csharp
+PropertyHandlerMapper.Add<YourEntity, Db2GuidToByteArrayPropertyHandler>(
+    e => e.YourGuidProperty, new Db2GuidToByteArrayPropertyHandler(), true);
+```
+
+Register it per-property (not globally for `typeof(Guid)`) if your process also uses another RepoDb provider that handles `Guid` natively, since a type-level `PropertyHandlerMapper` registration applies process-wide across all connections.

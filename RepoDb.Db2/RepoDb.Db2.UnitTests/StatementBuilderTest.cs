@@ -988,14 +988,9 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
-                $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1019,14 +1014,9 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
-                $"INSERT INTO \"Table\" ( \"Field1\", \"Field2\", \"Field3\" ) VALUES ( :Field1, :Field2, :Field3 ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"Table\" ( \"Field1\", \"Field2\", \"Field3\" ) VALUES ( :Field1, :Field2, :Field3 )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1093,14 +1083,9 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"SCHEMA\".\"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
-                $"INSERT INTO \"SCHEMA\".\"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"SCHEMA\".\"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1221,14 +1206,9 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
-                $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1289,14 +1269,9 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"SCHEMA\".\"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
-                $"INSERT INTO \"SCHEMA\".\"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"SCHEMA\".\"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1576,9 +1551,7 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
@@ -1586,11 +1559,8 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1615,9 +1585,7 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: primaryField,
                 identityField: null);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Id\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
+                $"SELECT \"Id\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
@@ -1625,11 +1593,8 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ) " +
-                $"RETURNING \"Id\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1652,9 +1617,7 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
@@ -1662,11 +1625,8 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field2\", S.\"Field3\" ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"VALUES ( S.\"Field2\", S.\"Field3\" )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1689,9 +1649,7 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Id\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
+                $"SELECT \"Id\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
@@ -1699,11 +1657,8 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ) " +
-                $"RETURNING \"Id\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1884,9 +1839,7 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"DECLARE l_repodb_result \"Table\".\"Field1\"%TYPE; " +
-                $"l_repodb_cursor SYS_REFCURSOR; " +
-                $"BEGIN " +
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
                 $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
@@ -1894,11 +1847,8 @@ namespace RepoDb.Db2.UnitTests
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field2\", S.\"Field3\" ) " +
-                $"RETURNING \"Field1\" INTO l_repodb_result; " +
-                $"OPEN l_repodb_cursor FOR SELECT l_repodb_result AS \"Result\" FROM DUAL; " +
-                $"DBMS_SQL.RETURN_RESULT(l_repodb_cursor); " +
-                $"END;";
+                $"VALUES ( S.\"Field2\", S.\"Field3\" )" +
+                $")";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -2615,7 +2565,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateTruncate(tableName: tableName);
-            var expected = "TRUNCATE TABLE \"Table\"";
+            var expected = "TRUNCATE TABLE \"Table\" IMMEDIATE";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -2630,7 +2580,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateTruncate(tableName: tableName);
-            var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\"";
+            var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\" IMMEDIATE";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -2645,7 +2595,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateTruncate(tableName: tableName);
-            var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\"";
+            var expected = "TRUNCATE TABLE \"SCHEMA\".\"Table\" IMMEDIATE";
 
             // Assert
             Assert.AreEqual(expected, actual);

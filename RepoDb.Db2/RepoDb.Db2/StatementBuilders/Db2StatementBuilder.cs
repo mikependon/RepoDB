@@ -57,8 +57,8 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query. Db2 has no "TOP" keyword; "FETCH FIRST n ROWS ONLY" (12c+) is
-            // the ANSI-standard equivalent and must be placed at the end of the statement.
+            // Build the query. Db2 has no "TOP" keyword; "FETCH FIRST n ROWS ONLY" is the
+            // ANSI-standard equivalent and must be placed at the end of the statement.
             builder.Clear()
                 .Select()
                 .WriteText(string.Concat("1 AS ", "ExistsValue".AsQuoted(DbSetting)))
@@ -69,8 +69,8 @@ namespace RepoDb.StatementBuilders
                 .WriteText("FETCH FIRST 1 ROWS ONLY");
 
             // Return the query. NOTE: deliberately no ".End()" here - it appends a trailing " ;",
-            // which Db2 rejects with "ORA-00911: invalid character after" on any plain
-            // (non-PL/SQL-block) statement, SELECT included, regardless of execute method.
+            // which the IBM Data Server .NET Provider rejects with a syntax error on any plain
+            // (non-compound-statement) command, SELECT included, regardless of execute method.
             return builder.GetString();
         }
 
@@ -304,14 +304,14 @@ namespace RepoDb.StatementBuilders
             {
                 // No key column requested. A plain INSERT executed via ExecuteScalar() simply
                 // yields no rows in Db2 (no error), so no further wrapping is necessary - but
-                // the base statement still ends in " ;", which Db2 rejects on any plain
-                // (non-PL/SQL-block) statement (ORA-00911), so it still needs trimming.
+                // the base statement still ends in " ;", which the driver rejects on any plain
+                // (non-compound-statement) command, so it still needs trimming.
                 return TrimTrailingSemicolon(insertStatement);
             }
 
             // Return the query, wrapped so the generated key can flow back through the same
             // ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
-            return WrapWithReturningResult(TrimTrailingSemicolon(insertStatement), tableName, keyColumn);
+            return WrapWithReturningResult(TrimTrailingSemicolon(insertStatement), keyColumn);
         }
 
         #endregion
@@ -466,16 +466,10 @@ namespace RepoDb.StatementBuilders
             }
 
             // Return the query, wrapped so the generated/matched key can flow back through the
-            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
-            // IMPORTANT: a RETURNING clause on MERGE is only supported starting with Db2
-            // Database 23ai - NOT 12.2 as originally assumed here. On 12c/18c/19c/21c this will
-            // fail (with a different error, ORA-00933, since those versions don't parse RETURNING
-            // after MERGE at all). This provider targets 12c+ for every other operation, but
-            // Merge-with-identity-retrieval specifically requires 23ai+. If you're on an older
-            // version, either omit the primary/identity field from the qualifiers so no RETURNING
-            // is requested (see the keyColumn == null branch above), or avoid Merge for
-            // identity-generating tables and use Insert instead.
-            return WrapWithReturningResult(builder.GetString(), tableName, keyColumn);
+            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider. Db2's
+            // "SELECT ... FROM FINAL TABLE (MERGE ...)" data-change-table-reference is supported
+            // since Db2 9.7, well within this provider's 10.5+ target - no version gate needed.
+            return WrapWithReturningResult(builder.GetString(), keyColumn);
         }
 
         #endregion
@@ -601,7 +595,12 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>A sql statement for truncate operation.</returns>
         public override string CreateTruncate(string tableName) =>
-            TrimTrailingSemicolon(base.CreateTruncate(tableName));
+            // Db2 requires the trailing IMMEDIATE keyword on a bare "TRUNCATE TABLE t" statement -
+            // unlike SQL Server/MySql/PostgreSql, omitting it is a syntax error (SQL0104N,
+            // "... Expected tokens may include: IMMEDIATE"). IMMEDIATE only became optional in Db2
+            // 11.5 Mod Pack 2+; this provider targets 10.5+, so it's always included for broad
+            // version compatibility (it remains valid, non-deprecated syntax on newer versions too).
+            string.Concat(TrimTrailingSemicolon(base.CreateTruncate(tableName)), " IMMEDIATE");
 
         #endregion
 
@@ -780,8 +779,8 @@ namespace RepoDb.StatementBuilders
         /// guarantee a WHERE-clause bind variable can never collide with a same-named SET-clause one.
         /// This prefix starts with a letter, so it is legal for every provider's bind-variable syntax,
         /// including Db2's (<c>:m_Id</c> is fine; an earlier, no-longer-current version of this
-        /// constant was a bare underscore, which Db2 rejected with
-        /// <c>ORA-00911: invalid character after</c> since Db2 bind variables must start with a letter).
+        /// constant was a bare underscore, which Db2 rejected with a syntax error since Db2 host
+        /// variables must start with a letter).
         /// <para>
         /// This call is a defensive no-op in the normal end-to-end path (<c>Parameter.PrependText</c> is
         /// idempotent - it only prepends if the name doesn't already start with the prefix, and Core has
@@ -805,50 +804,33 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Every <c>Create*</c> method in <see cref="BaseStatementBuilder"/> ends its generated SQL with
         /// <c>QueryBuilder.End()</c>, which unconditionally appends <c>" ;"</c>. SQL Server/PostgreSQL's
-        /// drivers tolerate a trailing semicolon on an ordinary (non-PL/SQL-block) statement sent via
-        /// <c>ExecuteNonQuery()</c>/<c>ExecuteScalar()</c>, but Db2's OCI/ODP.NET layer does not -
-        /// it fails with <c>ORA-00911: invalid character after</c>. Strip it for every base-inherited
-        /// method (Update/UpdateAll/Delete/DeleteAll/Truncate) and before manually appending the
-        /// RETURNING/DBMS_SQL.RETURN_RESULT wrapper on Insert/Merge.
+        /// drivers tolerate a trailing semicolon on an ordinary (non-compound-statement) command sent via
+        /// <c>ExecuteNonQuery()</c>/<c>ExecuteScalar()</c>, but the IBM Data Server .NET Provider does
+        /// not - it fails with a syntax error. Strip it for every base-inherited method
+        /// (Update/UpdateAll/Delete/DeleteAll/Truncate) and before manually appending the
+        /// "SELECT ... FROM FINAL TABLE (...)" wrapper on Insert/Merge.
         /// </summary>
         private static string TrimTrailingSemicolon(string sql) =>
             sql?.TrimEnd().TrimEnd(';').TrimEnd();
 
         /// <summary>
         /// Wraps a single DML statement (INSERT or MERGE, without its trailing semicolon) so that
-        /// the value of <paramref name="keyColumn"/> - captured via Db2's native
-        /// "RETURNING ... INTO ..." clause - flows back to the caller as an Db2 12c+ implicit
-        /// result set (<c>DBMS_SQL.RETURN_RESULT</c>). Db2's RETURNING clause only binds to a
-        /// PL/SQL variable/OUT parameter; it cannot, by itself, produce a result set that
-        /// <c>ExecuteScalar()</c> can read the way SQL Server's trailing SELECT or PostgreSql's
-        /// RETURNING-as-resultset can. Implicit result sets are Db2's mechanism for exposing
-        /// PL/SQL results to ordinary result-set-reading client code without any special output
-        /// parameter handling, which is exactly what RepoDb.Core's ExecuteScalar()-based Insert/
-        /// Merge pipeline needs. This is the least-proven part of this provider - verify it
-        /// against a real Db2 instance before relying on it in production.
+        /// the value of <paramref name="keyColumn"/> flows back to the caller as an ordinary result
+        /// set, via Db2's "SELECT ... FROM FINAL TABLE (...)" data-change-table-reference. The rows
+        /// produced by the wrapped INSERT/MERGE - including any Db2-generated identity column value
+        /// - become a queryable result table whose columns can be referenced in the outer SELECT's
+        /// column list. This is exactly what RepoDb.Core's ExecuteScalar()-based Insert/Merge
+        /// pipeline needs, with no PL/SQL block, OUT parameter, or cursor plumbing required (unlike
+        /// Oracle's RETURNING ... INTO). Supported since Db2 9.7, well within this provider's
+        /// 10.5+ target.
         /// </summary>
         private string WrapWithReturningResult(string dmlStatementWithoutTrailingSemicolon,
-            string tableName,
             DbField keyColumn)
         {
-            var quotedTable = tableName.AsQuoted(true, DbSetting);
             var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
-            var resultAlias = "Result".AsQuoted(DbSetting);
 
-            // NOTE: DBMS_SQL.RETURN_RESULT takes a SYS_REFCURSOR argument. A `CURSOR(SELECT ...)`
-            // expression is a SQL-only construct (e.g. valid inside a SELECT's column list or as a
-            // table function argument) and is NOT allowed as a PL/SQL procedure-call argument -
-            // passing it directly here fails with "PLS-00405: subquery not allowed in this context".
-            // The cursor must instead be OPENed into a local SYS_REFCURSOR variable first, then that
-            // variable is passed to DBMS_SQL.RETURN_RESULT.
-            return string.Concat(
-                "DECLARE l_repodb_result ", quotedTable, ".", quotedKeyColumn, "%TYPE; ",
-                "l_repodb_cursor SYS_REFCURSOR; ",
-                "BEGIN ",
-                dmlStatementWithoutTrailingSemicolon, " RETURNING ", quotedKeyColumn, " INTO l_repodb_result; ",
-                "OPEN l_repodb_cursor FOR SELECT l_repodb_result AS ", resultAlias, " FROM DUAL; ",
-                "DBMS_SQL.RETURN_RESULT(l_repodb_cursor); ",
-                "END;");
+            return string.Concat("SELECT ", quotedKeyColumn,
+                " FROM FINAL TABLE (", dmlStatementWithoutTrailingSemicolon, ")");
         }
 
         #endregion

@@ -23,11 +23,19 @@ namespace RepoDb.Db2.IntegrationTests.Setup
         public static void Initialize()
         {
             // RepoDb connection. Defaults match the 'db2' service in docker-compose.yml at the
-            // repo root (a Db2 community/Db2Connect image, Db2INST1_PASSWORD=RepoDb2026), which
+            // repo root (a Db2 community/Db2Connect image, Db2INST1_PASSWORD=RepoDB2026), which
             // exposes the "db2inst1" user against the "REPODB" database on the default port 50000.
+            // "HostVarParameters=True;" is required: every RepoDb.Db2 statement/query (see
+            // Db2StatementBuilder and Db2DbHelper) binds using ":Name"-style host variables, but
+            // IBM.Data.Db2's support for that syntax is OFF by default - without this flag the
+            // driver doesn't recognize ":Name" as a parameter marker at all, so any parameter count
+            // it computes for a prepared statement comes out as 0/mismatched, and every parameterized
+            // call fails with DB2Exception SQL0313N ("the number of variables in the EXECUTE
+            // statement ... is not equal to the number of values required"). If you override this via
+            // REPODB_Db2_CONSTR, make sure your connection string also includes this flag.
             ConnectionString =
                 Environment.GetEnvironmentVariable("REPODB_Db2_CONSTR") ??
-                "Server=localhost:50000;Database=REPODB;UID=db2inst1;PWD=RepoDb2026;";
+                "Server=localhost:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;HostVarParameters=True;";
 
             // Initialize Db2
             GlobalConfiguration
@@ -44,6 +52,17 @@ namespace RepoDb.Db2.IntegrationTests.Setup
                 e => e.SessionId, new Db2GuidToByteArrayPropertyHandler(), true);
             PropertyHandlerMapper.Add<NonIdentityCompleteTable, Db2GuidToByteArrayPropertyHandler>(
                 e => e.SessionId, new Db2GuidToByteArrayPropertyHandler(), true);
+
+            // Db2 has no native TINYINT type; "ColumnTinyInt" is stored as a SMALLINT column. The
+            // IBM Data Server .NET Provider does not marshal a raw, boxed System.Byte parameter value
+            // cleanly against it (InvalidCastException: "Unable to cast object of type 'System.Byte'
+            // to type 'System.Byte[]'" at execution time, regardless of the DB2Type/DbType already
+            // being correctly resolved to SmallInt/Int16) - convert to System.Int16 first, same
+            // scoping rationale as the Guid<->byte[] handler above.
+            PropertyHandlerMapper.Add<CompleteTable, Db2ByteToInt16PropertyHandler>(
+                e => e.ColumnTinyInt, new Db2ByteToInt16PropertyHandler(), true);
+            PropertyHandlerMapper.Add<NonIdentityCompleteTable, Db2ByteToInt16PropertyHandler>(
+                e => e.ColumnTinyInt, new Db2ByteToInt16PropertyHandler(), true);
 
             // Create tables
             CreateTables();

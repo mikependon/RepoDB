@@ -51,6 +51,12 @@ GlobalConfiguration
     .UseDb2();
 ```
 
+Every statement RepoDb.Db2 generates binds parameters using `":Name"`-style host variables (e.g. `WHERE "Id" = :Id`). IBM's Data Server .NET Provider disables host-variable support by default, so your connection string **must** include `HostVarParameters=True;`, otherwise every parameterized call fails with `DB2Exception` `SQL0313N`:
+
+```
+Server=localhost:50000;Database=REPODB;UID=db2inst1;PWD=yourpassword;HostVarParameters=True;
+```
+
 Then use any RepoDB operation directly on your `DB2Connection`:
 
 ### Query
@@ -111,11 +117,11 @@ Db2's IBM Data Server provider rejects a command text containing more than one S
 
 Execute one row per round-trip for now (`IsMultiStatementExecutable = false`); true multi-row batching in a single round trip will follow in a later release.
 
-### Identity/primary-key retrieval — unverified against a real Db2 instance
+### Identity/primary-key retrieval
 
-Db2's idiomatic way to read back a generated key on `Insert`/`Merge` is `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))` — an ANSI-SQL-adjacent construct that returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. Unlike Oracle, this same mechanism works uniformly for both `Insert` and `Merge`, on any supported Db2 version — there is no version gate to worry about.
+Db2's idiomatic way to read back a generated key on `Insert`/`Merge` is `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))` — an ANSI-SQL-adjacent construct that returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. This same mechanism works uniformly for both `Insert` and `Merge`, on any Db2 version 9.7+ (well within this provider's 10.5+ target) — there is no version gate to worry about.
 
-The statement-building logic that wires this up has not yet been verified end-to-end against a live Db2 server. If `Insert`/`Merge` calls that request the generated key fail or return unexpected results, this is the first place to look — verify it against your own Db2 instance before relying on it in production.
+An earlier revision of this provider wrapped the key column in an Oracle-style `DECLARE ... DBMS_SQL.RETURN_RESULT(...)` PL/SQL block, which doesn't exist in Db2 — that has been replaced with the `FINAL TABLE` form described above. Verify `Insert`/`Merge` calls that request the generated key against your own Db2 instance before relying on this in production.
 
 ### GUID/UNIQUEIDENTIFIER
 

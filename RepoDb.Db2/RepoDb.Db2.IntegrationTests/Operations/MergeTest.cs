@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
     /// <summary>
-    /// Also exercises Db2StatementBuilder's RETURNING/DBMS_SQL.RETURN_RESULT wrapping (see
-    /// InsertTest), plus Db2's own extra restriction that a MERGE RETURNING clause requires
-    /// 12.2+ and exactly one affected row.
+    /// Also exercises Db2StatementBuilder's "SELECT ... FROM FINAL TABLE (MERGE ...)" wrapping
+    /// (see InsertTest).
     /// </summary>
     [TestClass]
     public class MergeTest
