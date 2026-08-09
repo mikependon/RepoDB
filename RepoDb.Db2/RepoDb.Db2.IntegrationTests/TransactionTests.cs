@@ -29,10 +29,11 @@ namespace RepoDb.Db2.IntegrationTests
         /*
          * Some tests here are only triggers (ie: BatchQuery, Count, CountAll, Query, QueryAll, Truncate)
          *
-         * NOTE ON InsertAll/MergeAll/UpdateAll: Db2DbSetting.IsMultiStatementExecutable is false, so
-         * these operations execute one round-trip per row under the hood instead of a single batched
-         * statement. That is transparent to the public API used below - all round-trips still run on the
-         * same DB2Connection/transaction pair - so commit/rollback semantics are unaffected.
+         * NOTE ON InsertAll/MergeAll/UpdateAll: Db2DbSetting.IsMultiStatementExecutable is true, so
+         * these operations now batch multiple rows into a single multi-statement round-trip (see
+         * Db2StatementBuilder.cs) instead of one round-trip per row. Either way this is transparent
+         * to the public API used below - every statement in a batch still runs on the same
+         * DB2Connection/transaction pair - so commit/rollback semantics are unaffected.
          */
 
         #region DbTransaction

@@ -16,9 +16,10 @@ namespace RepoDb.DbSettings
             DefaultSchema = null;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
-            IsMultiStatementExecutable = false; // TODO: This should be 'True'
+            IsMultiStatementExecutable = true;
             IsPreparable = true;
             IsUseUpsert = false;
+            MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";
         }

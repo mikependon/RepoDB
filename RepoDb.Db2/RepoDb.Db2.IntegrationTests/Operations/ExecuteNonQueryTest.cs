@@ -16,12 +16,13 @@ namespace RepoDb.Db2.IntegrationTests.Operations
     /// batches - see ExecuteQueryMultipleTest.cs, where a "SELECT ...; SELECT ...;" command text
     /// now demonstrably returns two correct result sets.
     ///
-    /// <see cref="TestDb2ConnectionExecuteNonQueryWithMultiStatementText"/> below is the DML half
-    /// of that same open investigation: whether a multi-statement *write* batch also applies both
-    /// statements in one round trip. That distinction matters because
-    /// <c>Db2DbSetting.IsMultiStatementExecutable</c> (currently hard-coded to false) is what
-    /// forces InsertAll/MergeAll/UpdateAll down to one round-trip per row - flipping it is only
-    /// justified once DML batching is confirmed too, not just SELECT batching.
+    /// <see cref="TestDb2ConnectionExecuteNonQueryWithMultiStatementText"/> below confirms the DML
+    /// half of that same investigation: a multi-statement *write* batch also applies both
+    /// statements in one round trip. That's what justified flipping
+    /// <c>Db2DbSetting.IsMultiStatementExecutable</c> to <c>true</c>, which now lets
+    /// InsertAll/MergeAll/UpdateAll batch multiple entities into a single round trip instead of
+    /// one round trip per row - see Db2StatementBuilder.cs's CreateInsertAll/CreateMergeAll/
+    /// CreateUpdateAll for the mechanism.
     /// </summary>
     [TestClass]
     public class ExecuteNonQueryTest

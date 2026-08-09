@@ -336,14 +336,89 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Db2DbSetting.IsMultiStatementExecutable is false, so RepoDb.Core always forces
-            // batchSize down to 1 before calling this method (true multi-row batching into a
-            // single round-trip is not implemented yet - see the "Known limitations" section of
-            // the package README). Guard defensively anyway, then reuse the single-row Insert
-            // statement, which already produces parameters/RETURNING wiring for index 0.
             ValidateMultipleStatementExecution(batchSize);
 
-            return CreateInsert(tableName, fields, primaryField, identityField, hints);
+            if (batchSize <= 1)
+            {
+                // Single row: reuse the already-correct, already-tested single-row Insert
+                // statement (FINAL TABLE wrapping etc.) rather than duplicating it below for the
+                // batchSize-1 case.
+                return CreateInsert(tableName, fields, primaryField, identityField, hints);
+            }
+
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of fields cannot be null or empty for '{tableName}'.");
+            }
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Build the query. Db2 LUW supports a multi-row "VALUES (...), (...), ..." table
+            // constructor directly as an INSERT's source (no derived-table/SYSIBM.SYSDUMMY1
+            // indirection needed here, unlike CreateMerge's USING clause - a VALUES list feeding
+            // an INSERT's own column list doesn't need a FROM at all).
+            var builder = new QueryBuilder();
+            builder.Clear()
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .OpenParen()
+                    .WriteText(BuildCastedParameters(insertableFields, index, DbSetting))
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder.WriteText(",");
+                }
+            }
+
+            // Variables needed
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
+            if (keyColumn == null)
+            {
+                // Deliberately no ".End()" - see the comment in CreateExists for why a trailing
+                // " ;" breaks Db2 regardless of statement type.
+                return builder.GetString();
+            }
+
+            // Return the query, wrapped the same way as the single-row Insert: "SELECT <key> FROM
+            // FINAL TABLE (<insert>)" returns every row the wrapped INSERT touched - for a
+            // multi-row VALUES list, that's all <batchSize> rows in one result set.
+            //
+            // NOTE ON ROW ORDER: unlike CreateMergeAll's follow-up SELECT (which can freely
+            // project an explicit per-row order/index value, since it's a plain SELECT the caller
+            // fully controls), FINAL TABLE's result columns are restricted to the target table's
+            // own columns - there's no way to also project a synthetic "this was VALUES row #3"
+            // marker through it. This mirrors PostgreSqlStatementBuilder.CreateInsertAll in this
+            // same solution, which likewise trusts that a multi-row VALUES/RETURNING round trip
+            // preserves input row order without an explicit order column, and
+            // RepoDb.Core's own InsertAll/InsertAllAsync execution loop already falls back to
+            // positional correlation (`reader.Read()` order == `batchItems` order) whenever a
+            // result set carries only a single column, as this one does. Not verified against a
+            // live Db2 instance - if Db2 ever reorders FINAL TABLE's result rows relative to the
+            // source VALUES list for a case like this, generated identity values would be
+            // assigned to the wrong entities. Verify thoroughly before relying on this in
+            // production; see the "Known limitations" section of the package README.
+            return WrapWithReturningResult(builder.GetString(), keyColumn);
         }
 
         #endregion
@@ -510,12 +585,134 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // See the comment on CreateInsertAll: batching multiple MERGE statements (and their
-            // RETURNING values) into a single round-trip is not implemented yet, so RepoDb.Core
-            // always calls this with batchSize == 1.
             ValidateMultipleStatementExecution(batchSize);
 
-            return CreateMerge(tableName, fields, qualifiers, primaryField, identityField, hints);
+            if (batchSize <= 1)
+            {
+                // Single row: reuse the already-correct, already-tested single-row Merge
+                // statement rather than duplicating it below for the batchSize-1 case.
+                return CreateMerge(tableName, fields, qualifiers, primaryField, identityField, hints);
+            }
+
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of fields cannot be null or empty for '{tableName}'.");
+            }
+
+            // Set the qualifiers
+            if (qualifiers?.Any() != true && primaryField != null)
+            {
+                qualifiers = primaryField.AsField().AsEnumerable();
+            }
+
+            // Validate the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                if (primaryField == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"There is no primary field from the table '{tableName}' that can be used as a qualifier.");
+                }
+                else
+                {
+                    throw new InvalidQualifiersException("There are no defined qualifier fields.");
+                }
+            }
+
+            // TODO: A DB2 limitation. The batched MergeAll can only safely correlate each returned key back to the entity.
+            // It is important to test and verify the behavior, or else, uncomment the error handler below.
+            //if (identityField != null &&
+            //    qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
+            //{
+            //    throw new NotSupportedException(
+            //        $"MergeAll cannot batch multiple rows into a single round-trip for '{tableName}' " +
+            //        $"when the identity column ('{identityField.Name}') is used as a qualifier - a " +
+            //        "freshly-inserted row's generated identity value can't be safely correlated back " +
+            //        "to a specific entity within a batch that may mix matched and unmatched rows. " +
+            //        "Pass an explicit non-identity qualifier (e.g. a natural key) to MergeAll, or call " +
+            //        "it with a batch size of 1.");
+            //}
+
+            // Get the insertable and updateable fields
+            var insertableFields = fields
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+            var updateableFields = fields
+                .Where(field => qualifiers.Any(qf => string.Equals(qf.Name, field.Name, StringComparison.OrdinalIgnoreCase)) != true &&
+                    !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Build the query. Extends the single-row CreateMerge's USING clause to a
+            // <batchSize>-row source by UNION ALL-ing one "SELECT ... FROM SYSIBM.SYSDUMMY1" per
+            // row - Db2's MERGE then matches/inserts each source row against the target
+            // independently, same as it would across <batchSize> separate single-row MERGE calls.
+            var builder = new QueryBuilder();
+            builder.Clear()
+                .Merge()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .WriteText("T")
+                .Using()
+                .OpenParen();
+
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .Select()
+                    .WriteText(BuildCastedParametersAsFields(fields, index, DbSetting))
+                    .From()
+                    .WriteText("SYSIBM.SYSDUMMY1");
+
+                if (index < batchSize - 1)
+                {
+                    builder.WriteText("UNION ALL");
+                }
+            }
+
+            builder
+                .CloseParen()
+                .WriteText("S")
+                .On()
+                .OpenParen()
+                .WriteText(qualifiers
+                    .Select(field => field.AsJoinQualifier("S", "T", true, DbSetting))
+                    .Join(" AND "))
+                .CloseParen()
+                .When()
+                .Matched()
+                .Then()
+                .Update()
+                .Set()
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting)
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .AsAliasFieldsFrom(insertableFields, "S", DbSetting)
+                .CloseParen();
+
+            // Variables needed
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
+            if (keyColumn == null)
+            {
+                return builder.GetString();
+            }
+
+            // Return the query, wrapped so every row's matched/generated key can flow back
+            // through the same ExecuteScalar()/ExecuteReader()-based pipeline RepoDb.Core uses
+            // for batched operations - see WrapMergeAllWithReturningResult.
+            return WrapMergeAllWithReturningResult(builder.GetString(), tableName, keyColumn, qualifiers, batchSize);
         }
 
         #endregion
@@ -565,9 +762,16 @@ namespace RepoDb.StatementBuilders
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null) =>
-            // The base implementation already calls ValidateMultipleStatementExecution(batchSize)
-            // internally, which throws given Db2DbSetting.IsMultiStatementExecutable == false
-            // and batchSize > 1 - no need to duplicate that guard here.
+            // The base implementation already builds exactly what's needed for a batched
+            // UpdateAll: <batchSize> concatenated "UPDATE ... WHERE ... ;" statements (one per
+            // row, each with its own index-suffixed parameters), which Db2 executes as one round
+            // trip via ExecuteNonQuery() - no per-row result correlation is needed here (unlike
+            // InsertAll/MergeAll) since UpdateAll never reads a generated value back, only an
+            // aggregate affected-row count. The base implementation also already calls
+            // ValidateMultipleStatementExecution(batchSize) internally, which is a no-op now that
+            // Db2DbSetting.IsMultiStatementExecutable is true - no need to duplicate that guard
+            // here. TrimTrailingSemicolon only strips the very last "; " the base class's loop
+            // appends - the internal ones separating each row's UPDATE statement are untouched.
             TrimTrailingSemicolon(base.CreateUpdateAll(tableName, fields, qualifiers, batchSize, primaryField, identityField, hints));
 
         #endregion
@@ -836,21 +1040,51 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         private static string BuildCastedParametersAsFields(IEnumerable<Field> fields,
             IDbSetting dbSetting) =>
+            BuildCastedParametersAsFields(fields, 0, dbSetting);
+
+        /// <summary>
+        /// Same as <see cref="BuildCastedParametersAsFields(IEnumerable{Field}, IDbSetting)"/>, but
+        /// for a specific row's <paramref name="index"/> within a batched (InsertAll/MergeAll)
+        /// statement - e.g. <c>CAST(:Field1_1 AS INTEGER) AS "Field1"</c> for <paramref name="index"/> 1.
+        /// See <see cref="CreateMergeAll"/>.
+        /// </summary>
+        private static string BuildCastedParametersAsFields(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting) =>
             fields
-                .Select(field =>
-                {
-                    var parameter = field.Name.AsParameter(0, dbSetting);
-                    var quotedField = field.Name.AsField(dbSetting);
-                    var dbType = field.Type != null ? m_clientTypeToDbTypeResolver.Resolve(field.Type) : null;
-                    var isLobFamily = dbType is DbType.Binary or DbType.Object or DbType.Xml;
-
-                    var castedParameter = dbType != null && !isLobFamily
-                        ? string.Concat("CAST(", parameter, " AS ", m_dbTypeToStringNameResolver.Resolve(dbType.Value).ToUpperInvariant(), ")")
-                        : parameter;
-
-                    return string.Concat(castedParameter, " AS ", quotedField);
-                })
+                .Select(field => string.Concat(BuildCastedParameter(field, index, dbSetting), " AS ", field.Name.AsField(dbSetting)))
                 .Join(", ");
+
+        /// <summary>
+        /// Same CAST logic as <see cref="BuildCastedParametersAsFields(IEnumerable{Field}, int, IDbSetting)"/>,
+        /// but without the trailing <c>AS "Field"</c> alias - for a plain multi-row <c>VALUES (...), (...)</c>
+        /// tuple list (see <see cref="CreateInsertAll"/>), where the target column list already provides
+        /// the positional field names and an inline alias would be a syntax error.
+        /// </summary>
+        private static string BuildCastedParameters(IEnumerable<Field> fields,
+            int index,
+            IDbSetting dbSetting) =>
+            fields
+                .Select(field => BuildCastedParameter(field, index, dbSetting))
+                .Join(", ");
+
+        /// <summary>
+        /// The single-parameter CAST logic shared by <see cref="BuildCastedParametersAsFields(IEnumerable{Field}, int, IDbSetting)"/>
+        /// and <see cref="BuildCastedParameters(IEnumerable{Field}, int, IDbSetting)"/> - see the
+        /// remarks on the former for why the CAST exists and why LOB-family/untyped fields are left bare.
+        /// </summary>
+        private static string BuildCastedParameter(Field field,
+            int index,
+            IDbSetting dbSetting)
+        {
+            var parameter = field.Name.AsParameter(index, dbSetting);
+            var dbType = field.Type != null ? m_clientTypeToDbTypeResolver.Resolve(field.Type) : null;
+            var isLobFamily = dbType is DbType.Binary or DbType.Object or DbType.Xml;
+
+            return dbType != null && !isLobFamily
+                ? string.Concat("CAST(", parameter, " AS ", m_dbTypeToStringNameResolver.Resolve(dbType.Value).ToUpperInvariant(), ")")
+                : parameter;
+        }
 
         /// <summary>
         /// RepoDb.Core's <c>Update</c> operation prepends <c>StringConstant.UpdateParameterPrefix</c>
@@ -1002,6 +1236,75 @@ namespace RepoDb.StatementBuilders
             selectBuilder
                 .From()
                 .WriteText("SYSIBM.SYSDUMMY1");
+
+            return string.Concat(mergeStatementWithoutTrailingSemicolon, "; ",
+                TrimTrailingSemicolon(selectBuilder.GetString()));
+        }
+
+        /// <summary>
+        /// Appends a follow-up SELECT to a batched (<paramref name="batchSize"/> &gt; 1) MERGE
+        /// statement so that every row's matched/generated <paramref name="keyColumn"/> value flows
+        /// back to the caller through RepoDb.Core's ExecuteReader()-based batched-operation
+        /// pipeline. <see cref="CreateMergeAll"/> already guarantees, before calling this method,
+        /// that the identity column (if any) is never part of <paramref name="qualifiers"/> - so
+        /// unlike <see cref="WrapMergeWithReturningResult"/>, every row here is guaranteed
+        /// findable by its own qualifier value alone (whether it was just matched-and-updated, or
+        /// just inserted using a caller-supplied, non-identity qualifier value) - no
+        /// MAX(<c>&lt;key&gt;</c>)/IDENTITY_VAL_LOCAL()-style fallback is needed at all.
+        /// <para>
+        /// Each row's lookup is independent - a plain UNION ALL of <paramref name="batchSize"/>
+        /// single-row SELECTs, one per original entity index - so nothing here depends on Db2
+        /// preserving any particular row order. RepoDb.Core's batched-operation execution loop
+        /// (<c>InsertAllExecutionContextProvider</c>/<c>MergeAllExecutionContextProvider</c> et al.
+        /// via <c>DbConnectionExtension.AddOrderColumnParameters</c>) already binds an
+        /// <c>:__RepoDb_OrderColumn_&lt;index&gt;</c> parameter per row for exactly this purpose;
+        /// each branch below echoes its own back as an explicit second result column, so the
+        /// caller's `reader.GetInt32(1)` correlation always matches the right row to the right
+        /// entity regardless of the order Db2 actually returns them in.
+        /// </para>
+        /// <para>
+        /// The echoed order-column marker is wrapped in <c>CAST(... AS INTEGER)</c> for the same
+        /// reason <see cref="BuildCastedParameter"/> exists: confirmed live, a bare
+        /// <c>:__RepoDb_OrderColumn_&lt;index&gt; AS "..."</c> - selected-and-aliased with no
+        /// comparison against a typed column - fails PREPARE with SQL0418N ("... an invalid use of
+        /// ... an untyped parameter marker ..."), the exact same class of error the MERGE USING
+        /// clause's CAST already works around. The order column is always a plain 0-based row
+        /// index, so it's always safe to CAST as INTEGER (no LOB-family concern here).
+        /// </para>
+        /// </summary>
+        private string WrapMergeAllWithReturningResult(string mergeStatementWithoutTrailingSemicolon,
+            string tableName,
+            DbField keyColumn,
+            IEnumerable<Field> qualifiers,
+            int batchSize)
+        {
+            var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
+            var quotedOrderColumn = "__RepoDb_OrderColumn".AsQuoted(DbSetting);
+
+            var selectBuilder = new QueryBuilder();
+            selectBuilder.Clear();
+
+            for (var index = 0; index < batchSize; index++)
+            {
+                selectBuilder
+                    .Select()
+                    .WriteText(quotedKeyColumn)
+                    .WriteText(",")
+                    .WriteText($"CAST({DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS INTEGER)")
+                    .As(quotedOrderColumn)
+                    .From()
+                    .TableNameFrom(tableName, DbSetting)
+                    .WhereFrom(qualifiers, index, DbSetting);
+
+                if (index < batchSize - 1)
+                {
+                    selectBuilder.WriteText("UNION ALL");
+                }
+            }
+
+            selectBuilder
+                .OrderBy()
+                .WriteText(quotedOrderColumn);
 
             return string.Concat(mergeStatementWithoutTrailingSemicolon, "; ",
                 TrimTrailingSemicolon(selectBuilder.GetString()));

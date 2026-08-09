@@ -9,6 +9,16 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
+    /// <summary>
+    /// NOTE: now that Db2DbSetting.IsMultiStatementExecutable is true, every 10-row InsertAll call
+    /// below genuinely batches into a single "SELECT <key> FROM FINAL TABLE (INSERT ... VALUES
+    /// (...), (...), ...)" round trip instead of 10 separate single-row round trips. This makes
+    /// the "table.Id > 0" and per-row AssertPropertiesEquality (matched by the returned Id)
+    /// assertions below the live verification of Db2StatementBuilder.CreateInsertAll's documented
+    /// assumption that FINAL TABLE's result rows come back in the same order as the source VALUES
+    /// list - if that assumption is ever wrong, a returned identity would be paired with the wrong
+    /// entity, and AssertPropertiesEquality's lookup-by-Id would immediately surface a mismatch.
+    /// </summary>
     [TestClass]
     public class InsertAllTest
     {

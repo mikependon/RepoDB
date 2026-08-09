@@ -1215,18 +1215,56 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnDb2StatementBuilderCreateInsertAllIfBatchSizeIsGreaterThanOne()
+        public void TestDb2StatementBuilderCreateInsertAllWithBatchSizeGreaterThanOneAndNoKeyColumn()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
-            // Act
-            Assert.Throws<NotSupportedException>(() =>
-                statementBuilder.CreateInsertAll(tableName: tableName,
-                    fields: fields,
-                    batchSize: 2));
+            // Act - Db2DbSetting.IsMultiStatementExecutable is now true, so a batchSize greater
+            // than 1 produces a genuine multi-row "VALUES (...), (...)" table constructor instead
+            // of throwing NotSupportedException.
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
+                fields: fields,
+                batchSize: 2,
+                primaryField: null,
+                identityField: null);
+            var expected = $"" +
+                $"INSERT INTO \"Table\" ( \"Field1\", \"Field2\", \"Field3\" ) " +
+                $"VALUES " +
+                $"( :Field1, :Field2, :Field3 ) , " +
+                $"( :Field1_1, :Field2_1, :Field3_1 )";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestDb2StatementBuilderCreateInsertAllWithBatchSizeGreaterThanOneAndIdentity()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act - the generated key is read back via "SELECT <key> FROM FINAL TABLE (<insert>)",
+            // same as the single-row case; for a multi-row VALUES list, FINAL TABLE returns every
+            // inserted row in one result set (see the remarks on CreateInsertAll for the row-order
+            // caveat this relies on).
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
+                fields: fields,
+                batchSize: 2,
+                primaryField: null,
+                identityField: identityField);
+            var expected = $"" +
+                $"SELECT \"Field1\" FROM FINAL TABLE (" +
+                $"INSERT INTO \"Table\" ( \"Field2\", \"Field3\" ) VALUES ( :Field2, :Field3 ) , ( :Field2_1, :Field3_1 )" +
+                $")";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -1789,7 +1827,7 @@ namespace RepoDb.Db2.UnitTests
         #region CreateMergeAll
 
         [TestMethod]
-        public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOne()
+        public void TestDb2StatementBuilderCreateMergeAllWithBatchSizeGreaterThanOneAndNoKeyColumn()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
@@ -1797,12 +1835,91 @@ namespace RepoDb.Db2.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
-            // Act
+            // Act - Db2DbSetting.IsMultiStatementExecutable is now true, so a batchSize greater
+            // than 1 extends the single-row USING clause to a multi-row source via UNION ALL
+            // instead of throwing NotSupportedException. No key column requested here, so there's
+            // no follow-up SELECT to worry about correlating back to specific rows.
+            var actual = statementBuilder.CreateMergeAll(tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 2,
+                primaryField: null,
+                identityField: null);
+            var expected = $"" +
+                $"MERGE INTO \"Table\" T " +
+                $"USING ( " +
+                $"SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 UNION ALL " +
+                $"SELECT :Field1_1 AS \"Field1\", :Field2_1 AS \"Field2\", :Field3_1 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
+                $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestDb2StatementBuilderCreateMergeAllWithBatchSizeGreaterThanOneAndIdentityAsNonQualifier()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field2"); // NOT the identity column - safe to batch.
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act - since the qualifier isn't the identity column, every row (matched or freshly
+            // inserted) is deterministically re-findable by its own qualifier value alone, so the
+            // follow-up SELECT needs no MAX()/COALESCE fallback - just one independent per-row
+            // lookup, UNION ALL'd together and correlated back via an explicit order column.
+            var actual = statementBuilder.CreateMergeAll(tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 2,
+                primaryField: null,
+                identityField: identityField);
+            var expected = $"" +
+                $"MERGE INTO \"Table\" T " +
+                $"USING ( " +
+                $"SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 UNION ALL " +
+                $"SELECT :Field1_1 AS \"Field1\", :Field2_1 AS \"Field2\", :Field3_1 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
+                $"S ON ( (S.\"Field2\" = T.\"Field2\" OR (S.\"Field2\" IS NULL AND T.\"Field2\" IS NULL)) ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.\"Field3\" = S.\"Field3\" " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( \"Field2\", \"Field3\" ) " +
+                $"VALUES ( S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT \"Field1\" , CAST(:__RepoDb_OrderColumn_0 AS INTEGER) AS \"__RepoDb_OrderColumn\" FROM \"Table\" WHERE (\"Field2\" = :Field2) UNION ALL " +
+                $"SELECT \"Field1\" , CAST(:__RepoDb_OrderColumn_1 AS INTEGER) AS \"__RepoDb_OrderColumn\" FROM \"Table\" WHERE (\"Field2\" = :Field2_1) " +
+                $"ORDER BY \"__RepoDb_OrderColumn\"";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOneAndIdentityIsTheQualifier()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act - the identity column is (the default) qualifier here, so a freshly-inserted
+            // row's generated identity can't be safely correlated back to a specific entity within
+            // a batch that may mix matched/unmatched rows - see the remarks on CreateMergeAll.
             Assert.Throws<NotSupportedException>(() =>
                 statementBuilder.CreateMergeAll(tableName: tableName,
                     fields: fields,
                     qualifiers: qualifiers,
-                    batchSize: 2));
+                    batchSize: 2,
+                    primaryField: null,
+                    identityField: identityField));
         }
 
         [TestMethod]
@@ -2988,7 +3105,7 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnDb2StatementBuilderCreateUpdateAllIfBatchSizeIsGreaterThanOne()
+        public void TestDb2StatementBuilderCreateUpdateAllWithBatchSizeGreaterThanOne()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
@@ -2996,12 +3113,21 @@ namespace RepoDb.Db2.UnitTests
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
 
-            // Act
-            Assert.Throws<NotSupportedException>(() =>
-                statementBuilder.CreateUpdateAll(tableName: tableName,
-                    fields: fields,
-                    qualifiers: qualifiers,
-                    batchSize: 2));
+            // Act - Db2DbSetting.IsMultiStatementExecutable is now true, so a batchSize greater
+            // than 1 produces <batchSize> concatenated "UPDATE ... ;" statements (executed as one
+            // round trip via ExecuteNonQuery()) instead of throwing NotSupportedException. Only
+            // the very last statement's trailing " ;" is trimmed - the internal one separating the
+            // two UPDATE statements stays, since Db2 accepts (and requires) it there.
+            var actual = statementBuilder.CreateUpdateAll(tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 2);
+            var expected = $"" +
+                $"UPDATE \"Table\" SET \"Field2\" = :Field2, \"Field3\" = :Field3 WHERE (\"Field1\" = :Field1) ; " +
+                $"UPDATE \"Table\" SET \"Field2\" = :Field2_1, \"Field3\" = :Field3_1 WHERE (\"Field1\" = :Field1_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]

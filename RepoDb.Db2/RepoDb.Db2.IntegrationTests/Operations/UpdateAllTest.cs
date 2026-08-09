@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
+    /// <summary>
+    /// NOTE: now that Db2DbSetting.IsMultiStatementExecutable is true, every 10-row UpdateAll call
+    /// below genuinely batches into a single round trip (10 concatenated "UPDATE ... ;" statements
+    /// in one command text, executed via ExecuteNonQuery()) instead of 10 separate round trips.
+    /// UpdateAll never needs to read a generated value back (only an aggregate affected-row
+    /// count), so unlike InsertAll/MergeAll there's no row-correlation concern here.
+    /// </summary>
     [TestClass]
     public class UpdateAllTest
     {

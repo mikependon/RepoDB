@@ -11,11 +11,12 @@ using System.Threading.Tasks;
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
     /// <summary>
-    /// NOTE: Db2DbSetting.IsMultiStatementExecutable is false, so QueryMultiple/QueryMultipleAsync
-    /// transparently perform one round-trip per requested type instead of a single combined command.
-    /// That is fully transparent to the calls below - they use the exact same public API shape as
-    /// every other provider. All arities (T2 through T7) are covered here; TransactionTests.cs also
-    /// exercises T2 through T7 within a transaction, but the scenarios below are independent of that.
+    /// NOTE: Db2DbSetting.IsMultiStatementExecutable is true, so QueryMultiple/QueryMultipleAsync
+    /// now run as a single combined multi-statement command (one round trip) instead of one round
+    /// trip per requested type. That is fully transparent to the calls below - they use the exact
+    /// same public API shape as every other provider. All arities (T2 through T7) are covered
+    /// here; TransactionTests.cs also exercises T2 through T7 within a transaction, but the
+    /// scenarios below are independent of that.
     ///
     /// This project only has a single entity/table (CompleteTable) - unlike the SqlServer reference,
     /// which queries two distinct entity types for its T2 case. Here, CompleteTable is used for every

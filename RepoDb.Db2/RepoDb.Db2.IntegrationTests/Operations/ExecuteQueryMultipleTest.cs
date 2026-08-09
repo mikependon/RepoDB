@@ -26,11 +26,12 @@ namespace RepoDb.Db2.IntegrationTests.Operations
     /// The tests below now verify that behavior is genuinely correct (two distinct, correctly
     /// populated result sets - not just "no exception").
     ///
-    /// This does NOT by itself mean <c>Db2DbSetting.IsMultiStatementExecutable</c> should become
-    /// true: that flag also governs whether batched DML (InsertAll/MergeAll/UpdateAll) can be sent
-    /// as one multi-statement round-trip, which is a separate question from read-only SELECT
-    /// batching and has not yet been confirmed - see ExecuteNonQueryTest.cs for that half of the
-    /// investigation. Leave IsMultiStatementExecutable as-is until both halves are confirmed.
+    /// See ExecuteNonQueryTest.cs for the other half of this investigation - whether a
+    /// multi-statement *write* batch also applies in one round trip, which is what justified
+    /// flipping <c>Db2DbSetting.IsMultiStatementExecutable</c> to <c>true</c> (now also used by
+    /// InsertAll/MergeAll/UpdateAll batching - see Db2StatementBuilder.cs - and by this class's
+    /// own QueryMultiple/QueryMultipleAsync, which now run as one combined command instead of one
+    /// round trip per requested type).
     /// </summary>
     [TestClass]
     public class ExecuteQueryMultipleTest

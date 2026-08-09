@@ -12,11 +12,12 @@ using System.Threading.Tasks;
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
     /// <summary>
-    /// NOTE: unlike the SqlServer counterpart of this file, there is no
-    /// "...WithMultipleStatements" test here - ODP.NET's Db2Command does not support multiple
-    /// SQL statements in a single command text under any circumstances. See
-    /// Db2DbSetting.IsMultiStatementExecutable (always false for this provider) and
-    /// ExecuteQueryMultipleTest.cs for a test that documents this limitation explicitly.
+    /// NOTE: this file previously claimed (an assumption inherited from the Oracle provider this
+    /// project was originally templated from, never verified against a live Db2 instance) that
+    /// ODP.NET's Db2Command does not support multiple SQL statements in a single command text
+    /// under any circumstances. That turned out to be wrong - see ExecuteQueryMultipleTest.cs and
+    /// Db2DbSetting.IsMultiStatementExecutable (now true). The "...WithMultipleStatements" tests
+    /// below mirror the SqlServer counterpart of this file.
     /// </summary>
     [TestClass]
     public class ExecuteReaderTest
@@ -135,6 +136,36 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDb2ConnectionExecuteReaderWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new DB2Connection(Database.ConnectionString);
+
+            // Act
+            using var reader = connection.ExecuteReader(
+                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; " +
+                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+            do
+            {
+                while (reader.Read())
+                {
+                    // Act
+                    var id = reader.GetInt32(0);
+                    var columnInt = reader.GetInt32(1);
+                    var columnDate = reader.GetDateTime(2);
+                    var table = tables.FirstOrDefault(e => e.Id == id);
+
+                    // Assert
+                    Assert.IsNotNull(table);
+                    Assert.AreEqual(columnInt, table.ColumnInt);
+                    Assert.AreEqual(columnDate, table.ColumnDate);
+                }
+            } while (reader.NextResult());
+        }
+
         #endregion
 
         #region Async
@@ -235,6 +266,36 @@ namespace RepoDb.Db2.IntegrationTests.Operations
                 Assert.AreEqual(table.ColumnVarchar, row["ColumnVarchar"]);
                 Assert.AreEqual(table.ColumnInt, System.Convert.ToInt32(row["ColumnInt"]));
             }
+        }
+
+        [TestMethod]
+        public async Task TestDb2ConnectionExecuteReaderAsyncWithMultipleStatements()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+
+            using var connection = new DB2Connection(Database.ConnectionString);
+
+            // Act
+            using var reader = await connection.ExecuteReaderAsync(
+                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; " +
+                "SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"");
+            do
+            {
+                while (reader.Read())
+                {
+                    // Act
+                    var id = reader.GetInt32(0);
+                    var columnInt = reader.GetInt32(1);
+                    var columnDate = reader.GetDateTime(2);
+                    var table = tables.FirstOrDefault(e => e.Id == id);
+
+                    // Assert
+                    Assert.IsNotNull(table);
+                    Assert.AreEqual(columnInt, table.ColumnInt);
+                    Assert.AreEqual(columnDate, table.ColumnDate);
+                }
+            } while (reader.NextResult());
         }
 
         #endregion

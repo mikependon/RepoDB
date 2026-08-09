@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IBM.Data.Db2;
+using RepoDb.DbSettings;
 
 namespace RepoDb.Db2.UnitTests
 {
@@ -80,8 +81,28 @@ namespace RepoDb.Db2.UnitTests
             // Setup
             var setting = DbSettingMapper.Get<DB2Connection>();
 
-            // Assert
-            Assert.IsFalse(setting.IsMultiStatementExecutable);
+            // Assert - Db2's IBM Data Server .NET Provider executes multi-statement command text
+            // in a single round trip (confirmed live - see ExecuteQueryMultipleTest.cs and
+            // Db2StatementBuilder.cs's CreateInsertAll/CreateMergeAll/CreateUpdateAll).
+            Assert.IsTrue(setting.IsMultiStatementExecutable);
+        }
+
+        [TestMethod]
+        public void TestDb2DbSettingQueryMultipleSeparatorProperty()
+        {
+            // Setup
+            var setting = (BaseDbSetting)DbSettingMapper.Get<DB2Connection>();
+
+            // Assert - RepoDb.Core's QueryMultiple/QueryMultipleAsync join each type's
+            // independently-built CreateQuery() text using this separator. Db2's CreateQuery
+            // deliberately never self-terminates its own output with a trailing " ;" (unlike
+            // every other provider's default CreateQuery), so the base class's default " "
+            // separator would join two Db2 queries with no delimiter between them at all -
+            // confirmed live, this fails with SQL0104N. "; " matches the interior-separator,
+            // no-trailing-terminator pattern already confirmed working for Db2 multi-statement
+            // command text elsewhere in this provider (see ExecuteQueryMultipleTest.cs and
+            // Db2StatementBuilder.WrapMergeWithReturningResult).
+            Assert.AreEqual("; ", setting.MultiStatementSeparator);
         }
 
         [TestMethod]
