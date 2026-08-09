@@ -120,9 +120,21 @@ namespace RepoDb.Db2.IntegrationTests
                     // Unspecified before formatting, so a Utc-vs-Unspecified Kind mismatch doesn't
                     // surface as a false "O"-format ('Z' suffix) inequality.
                     // User of the library should handle their own type in their Db2 database.
+                    //
+                    // Db2's TIMESTAMP column ("ColumnTimestamp" in Database.cs, declared without an
+                    // explicit precision) defaults to TIMESTAMP(6) - microsecond (6 fractional digit)
+                    // resolution - one digit coarser than .NET DateTime's native 100-nanosecond (7
+                    // fractional digit) resolution. A value generated via DateTime.UtcNow (which
+                    // carries sub-microsecond ticks) therefore has its trailing decimal digit
+                    // truncated (not rounded) on a round-trip through the database - e.g.
+                    // ".7038701" comes back as ".7038700". Truncate both sides down to that same
+                    // microsecond boundary (the nearest 10-tick/1-microsecond floor) before
+                    // formatting, so this expected precision loss isn't mistaken for a bug.
+                    var truncatedD1 = new DateTime(d1.Ticks - (d1.Ticks % 10), d1.Kind);
+                    var truncatedD2 = new DateTime(d2.Ticks - (d2.Ticks % 10), d2.Kind);
                     (value1, value2) = (
-                        DateTime.SpecifyKind(d1, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture),
-                        DateTime.SpecifyKind(d2, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture));
+                        DateTime.SpecifyKind(truncatedD1, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture),
+                        DateTime.SpecifyKind(truncatedD2, DateTimeKind.Unspecified).ToString("O", CultureInfo.InvariantCulture));
                 }
                 else if (value1 is byte[] bytes1 && value2 is byte[] bytes2)
                 {

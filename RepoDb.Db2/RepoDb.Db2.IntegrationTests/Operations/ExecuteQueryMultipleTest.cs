@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using IBM.Data.Db2;
 using RepoDb.Enumerations;
 using RepoDb.Db2.IntegrationTests.Setup;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.Db2.IntegrationTests.Operations
@@ -15,21 +16,21 @@ namespace RepoDb.Db2.IntegrationTests.Operations
     /// this file - it relies on the *driver* accepting several statements batched into one
     /// command text and returning several result sets for a single execution.
     ///
-    /// ODP.NET's Db2Command does not support that at all: a single command text may contain
-    /// exactly one SQL statement (or one PL/SQL block); anything else - even after removing the
-    /// trailing semicolon a lone Db2 statement requires be absent - fails immediately with
-    /// ORA-00911 ("invalid character") as soon as the parser reaches the statement-separating
-    /// semicolon. This is a hard incompatibility, not a style difference, and it is corroborated
-    /// by Db2DbSetting.IsMultiStatementExecutable being hard-coded to false for this provider
-    /// (see RepoDb.Db2/DbSettings/Db2DbSetting.cs) - the same flag that forces every
-    /// batched fluent operation (InsertAll/MergeAll/UpdateAll) down to one round-trip per row.
+    /// UPDATE: this file previously asserted that Db2 rejects a multi-statement command text
+    /// outright (an assumption inherited, along with an Oracle-specific error code, from the
+    /// Oracle provider this project was originally templated from - see git history for
+    /// "Initial template checkin - copied over from Oracle implementation"). That assumption was
+    /// never actually verified against a live Db2 instance, and turned out to be wrong: the IBM
+    /// Data Server .NET Provider *does* accept more than one SELECT statement in a single command
+    /// text and steps through their result sets via NextResult(), same as SqlServer/PostgreSql.
+    /// The tests below now verify that behavior is genuinely correct (two distinct, correctly
+    /// populated result sets - not just "no exception").
     ///
-    /// Unlike those fluent APIs, RepoDb.Core has no opportunity to rewrite raw SQL text the
-    /// caller supplied into N separate round-trips - it does not parse or split the string. So
-    /// there is no meaningful "ported" version of the SqlServer scenarios in this file: instead,
-    /// the tests below assert the actual (and only) behavior a caller gets if they try the
-    /// classic multi-statement raw-SQL pattern against Db2 - an exception - so this limitation
-    /// is documented and regression-tested rather than silently unsupported.
+    /// This does NOT by itself mean <c>Db2DbSetting.IsMultiStatementExecutable</c> should become
+    /// true: that flag also governs whether batched DML (InsertAll/MergeAll/UpdateAll) can be sent
+    /// as one multi-statement round-trip, which is a separate question from read-only SELECT
+    /// batching and has not yet been confirmed - see ExecuteNonQueryTest.cs for that half of the
+    /// investigation. Leave IsMultiStatementExecutable as-is until both halves are confirmed.
     /// </summary>
     [TestClass]
     public class ExecuteQueryMultipleTest
@@ -50,34 +51,44 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDb2ConnectionExecuteQueryMultipleThrowsOnMultiStatementText()
+        public void TestDb2ConnectionExecuteQueryMultipleWithMultiStatementText()
         {
-            // Setup
-            Database.CreateCompleteTables(10);
-
             using var connection = new DB2Connection(Database.ConnectionString);
 
-            // Act & Assert: see the class-level remarks above - ODP.NET rejects multiple
-            // statements in a single command text outright, so the raw-SQL ExecuteQueryMultiple
-            // API cannot be used this way on Db2.
-            Assert.Throws<DB2Exception>(() =>
-                connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+            // Act: contrary to this provider's original (Oracle-inherited, never-verified)
+            // assumption, Db2 accepts two SELECT statements in a single command text. Assert on
+            // the actual, distinct values from each result set - not merely that no exception was
+            // thrown - to confirm this is genuine multi-resultset support and not, say, the driver
+            // silently only running the first statement.
+            using var extractor = connection.ExecuteQueryMultiple(
+                "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+
+            var first = extractor.Extract().Single();
+            var second = extractor.Extract().Single();
+
+            // Assert
+            Assert.AreEqual(1, (int)first.Value);
+            Assert.AreEqual(2, (int)second.Value);
         }
 
         [TestMethod]
-        public void TestDb2ConnectionExecuteQueryMultipleThrowsOnMultiStatementTextWithAutomaticConversion()
+        public void TestDb2ConnectionExecuteQueryMultipleWithMultiStatementTextWithAutomaticConversion()
         {
-            // Setup
-            Database.CreateCompleteTables(10);
-
             using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
             {
-                // Act & Assert: the multi-statement limitation is independent of ConversionType.
-                Assert.Throws<DB2Exception>(() =>
-                    connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+                // Act
+                using var extractor = connection.ExecuteQueryMultiple(
+                    "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+
+                var first = extractor.Extract().Single();
+                var second = extractor.Extract().Single();
+
+                // Assert
+                Assert.AreEqual(1, (int)first.Value);
+                Assert.AreEqual(2, (int)second.Value);
             }
             finally
             {
@@ -90,32 +101,40 @@ namespace RepoDb.Db2.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestDb2ConnectionExecuteQueryMultipleAsyncThrowsOnMultiStatementText()
+        public async Task TestDb2ConnectionExecuteQueryMultipleAsyncWithMultiStatementText()
         {
-            // Setup
-            Database.CreateCompleteTables(10);
-
             using var connection = new DB2Connection(Database.ConnectionString);
 
-            // Act & Assert: async counterpart of the same known Db2 limitation.
-            await Assert.ThrowsAsync<DB2Exception>(() =>
-                connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+            // Act
+            using var extractor = await connection.ExecuteQueryMultipleAsync(
+                "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+
+            var first = extractor.Extract().Single();
+            var second = extractor.Extract().Single();
+
+            // Assert
+            Assert.AreEqual(1, (int)first.Value);
+            Assert.AreEqual(2, (int)second.Value);
         }
 
         [TestMethod]
-        public async Task TestDb2ConnectionExecuteQueryMultipleAsyncThrowsOnMultiStatementTextWithAutomaticConversion()
+        public async Task TestDb2ConnectionExecuteQueryMultipleAsyncWithMultiStatementTextWithAutomaticConversion()
         {
-            // Setup
-            Database.CreateCompleteTables(10);
-
             using var connection = new DB2Connection(Database.ConnectionString);
 
             GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             try
             {
-                // Act & Assert: the multi-statement limitation is independent of ConversionType.
-                await Assert.ThrowsAsync<DB2Exception>(() =>
-                    connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; SELECT * FROM \"CompleteTable\""));
+                // Act
+                using var extractor = await connection.ExecuteQueryMultipleAsync(
+                    "SELECT 1 AS \"Value\" FROM SYSIBM.SYSDUMMY1; SELECT 2 AS \"Value\" FROM SYSIBM.SYSDUMMY1");
+
+                var first = extractor.Extract().Single();
+                var second = extractor.Extract().Single();
+
+                // Assert
+                Assert.AreEqual(1, (int)first.Value);
+                Assert.AreEqual(2, (int)second.Value);
             }
             finally
             {

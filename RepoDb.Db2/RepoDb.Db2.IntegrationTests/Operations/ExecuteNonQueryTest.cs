@@ -9,13 +9,19 @@ using System.Threading.Tasks;
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
     /// <summary>
-    /// NOTE: unlike the SqlServer counterpart of this file, there is no
-    /// "...WithMultipleStatement" test here - ODP.NET's Db2Command does not support multiple
-    /// SQL statements in a single command text under any circumstances (a plain, non-PL/SQL-block
-    /// statement is rejected outright with ORA-00911 as soon as it hits the separating
-    /// semicolon). See Db2DbSetting.IsMultiStatementExecutable (always false for this
-    /// provider) and ExecuteQueryMultipleTest.cs for a test that documents this limitation
-    /// explicitly.
+    /// NOTE: this file previously claimed (copied, along with an Oracle-specific error code, from
+    /// the Oracle provider this project was templated from) that Db2 rejects multiple SQL
+    /// statements in a single command text under any circumstances. That assumption was never
+    /// verified against a live Db2 instance and turned out to be wrong for read-only SELECT
+    /// batches - see ExecuteQueryMultipleTest.cs, where a "SELECT ...; SELECT ...;" command text
+    /// now demonstrably returns two correct result sets.
+    ///
+    /// <see cref="TestDb2ConnectionExecuteNonQueryWithMultiStatementText"/> below is the DML half
+    /// of that same open investigation: whether a multi-statement *write* batch also applies both
+    /// statements in one round trip. That distinction matters because
+    /// <c>Db2DbSetting.IsMultiStatementExecutable</c> (currently hard-coded to false) is what
+    /// forces InsertAll/MergeAll/UpdateAll down to one round-trip per row - flipping it is only
+    /// justified once DML batching is confirmed too, not just SELECT batching.
     /// </summary>
     [TestClass]
     public class ExecuteNonQueryTest
@@ -108,6 +114,29 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             Assert.AreEqual(1, result);
         }
 
+        [TestMethod]
+        public void TestDb2ConnectionExecuteNonQueryWithMultiStatementText()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+            var idsToDelete = tables.Take(2).Select(t => t.Id).ToArray();
+
+            using var connection = new DB2Connection(Database.ConnectionString);
+
+            // Act: diagnostic for the open investigation described in the class-level remarks -
+            // does a DML multi-statement batch also apply both statements in a single round trip,
+            // the way the read-only SELECT;SELECT case in ExecuteQueryMultipleTest.cs already
+            // does? Literal IDs are inlined (rather than parameterized) to keep this test isolated
+            // to just the multi-statement-execution question.
+            var result = connection.ExecuteNonQuery(
+                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[0]}; " +
+                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[1]}");
+
+            // Assert: if only the first statement actually ran, this comes back as
+            // (tables.Count - 1) instead of (tables.Count - 2).
+            Assert.AreEqual(tables.Count - 2, connection.CountAll<CompleteTable>());
+        }
+
         #endregion
 
         #region Async
@@ -183,6 +212,25 @@ namespace RepoDb.Db2.IntegrationTests.Operations
 
             // Assert
             Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public async Task TestDb2ConnectionExecuteNonQueryAsyncWithMultiStatementText()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10).ToList();
+            var idsToDelete = tables.Take(2).Select(t => t.Id).ToArray();
+
+            using var connection = new DB2Connection(Database.ConnectionString);
+
+            // Act: async counterpart of the same DML multi-statement diagnostic - see the sync
+            // version above and the class-level remarks for what this is investigating.
+            var result = await connection.ExecuteNonQueryAsync(
+                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[0]}; " +
+                $"DELETE FROM \"CompleteTable\" WHERE \"Id\" = {idsToDelete[1]}");
+
+            // Assert
+            Assert.AreEqual(tables.Count - 2, connection.CountAll<CompleteTable>());
         }
 
         #endregion
