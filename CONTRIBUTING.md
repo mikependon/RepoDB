@@ -1,6 +1,6 @@
-# Contributing to RepoDB
-
 <img width="1717" height="916" alt="image" src="https://github.com/user-attachments/assets/771905a9-0c9a-4f9e-9b3f-830fe4ad6558" />
+
+# Contributing to RepoDB
 
 RepoDB started as a simple idea: give .NET developers a data access library that is fast, honest about what it's doing, and free — forever. That ORM is now the foundation of something bigger: a full productivity ecosystem for data access, spanning bulk operations, telemetry, and multi-database support, all built in the open by the community that uses it.
 
