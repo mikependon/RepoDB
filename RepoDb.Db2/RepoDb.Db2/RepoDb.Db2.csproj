@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Title>RepoDb.Db2</Title>
+    <AssemblyName>RepoDb.Db2</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>A hybrid .NET ORM library for Db2 Database.</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm db2 odp.net</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Db2</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/db2</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-db2</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!--
+	  Pins the version this project is stamped as when it is a ProjectReference dependency of another
+	  package, independently of the consuming package's own -p:Version. Pass
+	  -p:RepoDbDb2Version=<version> to set it. PackageVersion is used (not Version) because it is
+	  not overridden by the global Version property.
+	-->
+    <PackageVersion Condition="'$(RepoDbDb2Version)' != ''">$(RepoDbDb2Version)</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <!-- IBM only ships net10.0 binaries starting with the 10.x package line; net8.0/net9.0 stay on the 9.x line, whose net8.0 assets are forward-compatible with net9.0. -->
+    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

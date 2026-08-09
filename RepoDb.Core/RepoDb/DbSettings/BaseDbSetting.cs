@@ -31,6 +31,7 @@ namespace RepoDb.DbSettings
             IsMultiStatementExecutable = true;
             IsPreparable = true;
             IsUseUpsert = false;
+            MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
         }
@@ -83,6 +84,11 @@ namespace RepoDb.DbSettings
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsert { get; protected set; }
+
+        /// <summary>
+        /// Gets the string used to join the individual per-type command texts generated.
+        /// </summary>
+        public string MultiStatementSeparator { get; protected set; }
 
         /// <summary>
         /// Gets the character (or string) used for opening quote.
@@ -166,6 +172,12 @@ namespace RepoDb.DbSettings
                 hashCode = HashCode.Combine(hashCode, ParameterPrefix);
             }
 
+            // MultiStatementSeparator
+            if (!string.IsNullOrWhiteSpace(MultiStatementSeparator))
+            {
+                hashCode = HashCode.Combine(hashCode, MultiStatementSeparator);
+            }
+
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
         }
@@ -178,7 +190,7 @@ namespace RepoDb.DbSettings
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -190,7 +202,7 @@ namespace RepoDb.DbSettings
         public bool Equals(BaseDbSetting other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 

@@ -424,7 +424,7 @@ namespace RepoDb
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
                         commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                        traceKey: traceKey,
                         transaction: transaction,
                         trace: trace,
                         statementBuilder: statementBuilder);
@@ -439,7 +439,7 @@ namespace RepoDb
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
                         commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                        traceKey: traceKey,
                         transaction: transaction,
                         trace: trace,
                         statementBuilder: statementBuilder);

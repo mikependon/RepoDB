@@ -64,6 +64,11 @@ namespace RepoDb.Interfaces
         string ParameterPrefix { get; }
 
         /// <summary>
+        /// Gets the string used to join the individual per-type command texts generated for a <c>QueryMultiple</c>/<c>QueryMultipleAsync</c> call into one combined command text.
+        /// </summary>
+        public string MultiStatementSeparator { get; }
+
+        /// <summary>
         /// Gets the character (or string) used for dot notation.
         /// </summary>
         string SchemaSeparator { get; }

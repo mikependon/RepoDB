@@ -26,6 +26,7 @@
             IsMultiStatementExecutable = true;
             IsPreparable = true;
             IsUseUpsert = true;
+            MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
         }
