@@ -19,6 +19,7 @@ namespace RepoDb.DbSettings
             IsMultiStatementExecutable = false;
             IsPreparable = true;
             IsUseUpsert = false;
+            MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";
         }
