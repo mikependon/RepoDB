@@ -6,7 +6,7 @@ namespace RepoDb.Db2.PropertyHandlers
 {
     /// <summary>
     /// A <see cref="IPropertyHandler{TInput, TResult}"/> that converts a <see cref="Guid"/> data entity
-    /// property to/from a <see cref="byte[]"/> for binding against a Db2 <c>CHAR(16) FOR BIT DATA</c> column.
+    /// property to/from an array of <see cref="byte"/> for binding against a Db2 <c>CHAR(16) FOR BIT DATA</c> column.
     /// </summary>
     /// <remarks>
     /// Db2 has no native GUID/UNIQUEIDENTIFIER type, so the idiomatic storage for a GUID is a
@@ -26,14 +26,14 @@ namespace RepoDb.Db2.PropertyHandlers
     public class Db2GuidToByteArrayPropertyHandler : IPropertyHandler<byte[], Guid>
     {
         /// <summary>
-        /// Converts the <see cref="byte[]"/> value read back from the <c>CHAR(16) FOR BIT DATA</c> column into a <see cref="Guid"/>.
+        /// Converts the array of <see cref="byte"/> value read back from the <c>CHAR(16) FOR BIT DATA</c> column into a <see cref="Guid"/>.
         /// </summary>
         public Guid Get(byte[] input,
             PropertyHandlerGetOptions options) =>
             input == null || input.Length == 0 ? Guid.Empty : new Guid(input);
 
         /// <summary>
-        /// Converts the <see cref="Guid"/> data entity property value into a <see cref="byte[]"/> before it is
+        /// Converts the <see cref="Guid"/> data entity property value into an array of <see cref="byte"/> before it is
         /// bound to the underlying <c>DB2Parameter</c>.
         /// </summary>
         public byte[] Set(Guid input,

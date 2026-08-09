@@ -24,8 +24,10 @@ namespace RepoDb.Db2.UnitTests
         // before building the SQL - even when the caller never set a Field.Type. Since
         // Db2DbSetting.AverageableType is typeof(double), an untyped field ends up with
         // Type = typeof(double), which is non-null, so Db2ConvertFieldResolver then wraps it in a
-        // CAST(... AS BINARY_DOUBLE). This CAST only happens for Average/AverageAll - Count/Max/Min/Sum
-        // never touch field.Type, so they never get cast (see the other regions in this file).
+        // CAST(... AS DOUBLE) - Db2's real double-precision floating-point type (there is no
+        // "BINARY_DOUBLE" in Db2; that's Oracle's name for the same concept). This CAST only happens
+        // for Average/AverageAll - Count/Max/Min/Sum never touch field.Type, so they never get cast
+        // (see the other regions in this file).
 
         [TestMethod]
         public void TestDb2StatementBuilderCreateAverage()
@@ -37,7 +39,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateAverage(tableName: tableName, field: field, where: null);
-            var expected = "SELECT AVG (CAST(\"Field1\" AS BINARY_DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
+            var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -55,7 +57,7 @@ namespace RepoDb.Db2.UnitTests
             // Act
             var actual = statementBuilder.CreateAverage(tableName: tableName, field: field, where: where);
             var expected = $"" +
-                $"SELECT AVG (CAST(\"Field1\" AS BINARY_DOUBLE)) AS \"AverageValue\" " +
+                $"SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" " +
                 $"FROM \"Table\" " +
                 $"WHERE (\"Id\" = :Id)";
 
@@ -73,7 +75,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateAverage(tableName: tableName, field: field, where: null);
-            var expected = "SELECT AVG (CAST(\"Field1\" AS BINARY_DOUBLE)) AS \"AverageValue\" FROM \"SCHEMA\".\"Table\"";
+            var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"SCHEMA\".\"Table\"";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -130,7 +132,7 @@ namespace RepoDb.Db2.UnitTests
 
             // Act
             var actual = statementBuilder.CreateAverageAll(tableName: tableName, field: field);
-            var expected = "SELECT AVG (CAST(\"Field1\" AS BINARY_DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
+            var expected = "SELECT AVG (CAST(\"Field1\" AS DOUBLE)) AS \"AverageValue\" FROM \"Table\"";
 
             // Assert
             Assert.AreEqual(expected, actual);
