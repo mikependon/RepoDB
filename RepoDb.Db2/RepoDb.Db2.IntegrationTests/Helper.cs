@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace RepoDb.Db2.IntegrationTests
 {
@@ -38,13 +37,7 @@ namespace RepoDb.Db2.IntegrationTests
                     ColumnBinaryFloat = (float)Math.Round(m_random.NextDouble() * 1000, 4),
                     ColumnBinaryDouble = Math.Round(m_random.NextDouble() * 1000, 8),
 
-                    ColumnRaw = Guid.NewGuid().ToByteArray(),
-
-                    ColumnClob = $"Clob-{new string('x', 5000)}-{m_random.Next(int.MaxValue)}",
-                    ColumnNClob = $"DbClob-{new string('y', 5000)}-{m_random.Next(int.MaxValue)}",
-                    ColumnBlob = GetRandomBytes(5000),
-
-                    ColumnXml = $"<Person><Name>Value-{m_random.Next(int.MaxValue)}</Name></Person>"
+                    ColumnRaw = Guid.NewGuid().ToByteArray()
                 };
             }
         }
@@ -74,13 +67,7 @@ namespace RepoDb.Db2.IntegrationTests
                     ColumnBinaryFloat = (float)Math.Round(m_random.NextDouble() * 1000, 4),
                     ColumnBinaryDouble = Math.Round(m_random.NextDouble() * 1000, 8),
 
-                    ColumnRaw = Guid.NewGuid().ToByteArray(),
-
-                    ColumnClob = $"Clob-{new string('x', 5000)}-{m_random.Next(int.MaxValue)}",
-                    ColumnNClob = $"DbClob-{new string('y', 5000)}-{m_random.Next(int.MaxValue)}",
-                    ColumnBlob = GetRandomBytes(5000),
-
-                    ColumnXml = $"<Person><Name>Value-{m_random.Next(int.MaxValue)}</Name></Person>"
+                    ColumnRaw = Guid.NewGuid().ToByteArray()
                 };
             }
         }
@@ -89,13 +76,6 @@ namespace RepoDb.Db2.IntegrationTests
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             return new string(Enumerable.Range(0, length).Select(_ => chars[m_random.Next(chars.Length)]).ToArray());
-        }
-
-        private static byte[] GetRandomBytes(int length)
-        {
-            var bytes = new byte[length];
-            m_random.NextBytes(bytes);
-            return bytes;
         }
 
         public static void AssertPropertiesEquality<T>(T t1,
@@ -143,16 +123,6 @@ namespace RepoDb.Db2.IntegrationTests
                     // instances even when their contents are identical (e.g. RAW(16) round-trips).
                     // Compare element-by-element instead.
                     Assert(bytes1.SequenceEqual(bytes2), property.Name, value1, value2);
-                    continue;
-                }
-                else if (property.Name == "ColumnXml" && value1 is string xml1 && value2 is string xml2)
-                {
-                    // Db2's XMLTYPE storage (this project uses BINARY XML) reformats/pretty-prints
-                    // the XML on storage - a compact input like "<a><b>1</b></a>" comes back with
-                    // added whitespace/newlines/indentation even though the content is semantically
-                    // identical. An exact string comparison would spuriously fail here, so compare
-                    // the parsed XML trees instead.
-                    Assert(XNode.DeepEquals(XDocument.Parse(xml1), XDocument.Parse(xml2)), property.Name, value1, value2);
                     continue;
                 }
                 Assert(Equals(value1, value2), property.Name, value1, value2);

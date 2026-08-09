@@ -1447,7 +1447,7 @@ namespace RepoDb.Db2.UnitTests
                 identityField: null);
             var expected = $"" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
@@ -1493,7 +1493,7 @@ namespace RepoDb.Db2.UnitTests
                 identityField: null);
             var expected = $"" +
                 $"MERGE INTO \"SCHEMA\".\"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
@@ -1522,7 +1522,7 @@ namespace RepoDb.Db2.UnitTests
                 identityField: null);
             var expected = $"" +
                 $"MERGE INTO \"SCHEMA\".\"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
@@ -1550,17 +1550,23 @@ namespace RepoDb.Db2.UnitTests
                 qualifiers: qualifiers,
                 primaryField: primaryField,
                 identityField: null);
+            // Db2 LUW's MERGE doesn't support FINAL TABLE (confirmed via live SQL0104N - see
+            // WrapMergeWithReturningResult's remarks in Db2StatementBuilder.cs), so the key is
+            // re-queried by the same qualifier predicate as the MERGE's own ON clause, in a second
+            // statement appended to the same command text. No identityField here, so the fallback
+            // (for the case where the qualifier lookup finds nothing) is a literal NULL rather than
+            // IDENTITY_VAL_LOCAL() - there's no identity column on this table to generate one.
             var expected = $"" +
-                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
-                $")";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), NULL) " +
+                $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1584,17 +1590,19 @@ namespace RepoDb.Db2.UnitTests
                 qualifiers: qualifiers,
                 primaryField: primaryField,
                 identityField: null);
+            // The re-query predicate uses the qualifiers ("Field1"), not the primary field ("Id") -
+            // qualifiers and the RETURNING key column are independent inputs to CreateMerge.
             var expected = $"" +
-                $"SELECT \"Id\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
-                $")";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT COALESCE(( SELECT \"Id\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), NULL) " +
+                $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1616,17 +1624,20 @@ namespace RepoDb.Db2.UnitTests
                 qualifiers: qualifiers,
                 primaryField: null,
                 identityField: identityField);
+            // identityField is non-null here, so the fallback for "qualifier lookup found nothing"
+            // (i.e. this MERGE call just inserted a new row) is IDENTITY_VAL_LOCAL(), which reflects
+            // the value Db2 just generated for the identity column on this connection.
             var expected = $"" +
-                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field2\", S.\"Field3\" )" +
-                $")";
+                $"VALUES ( S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1649,16 +1660,16 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"SELECT \"Id\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field1\", \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" )" +
-                $")";
+                $"VALUES ( S.\"Field1\", S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT COALESCE(( SELECT \"Id\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1809,7 +1820,7 @@ namespace RepoDb.Db2.UnitTests
                 identityField: null);
             var expected = $"" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
@@ -1839,16 +1850,16 @@ namespace RepoDb.Db2.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"SELECT \"Field1\" FROM FINAL TABLE (" +
                 $"MERGE INTO \"Table\" T " +
-                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM DUAL ) " +
+                $"USING ( SELECT :Field1 AS \"Field1\", :Field2 AS \"Field2\", :Field3 AS \"Field3\" FROM SYSIBM.SYSDUMMY1 ) " +
                 $"S ON ( (S.\"Field1\" = T.\"Field1\" OR (S.\"Field1\" IS NULL AND T.\"Field1\" IS NULL)) ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.\"Field2\" = S.\"Field2\", T.\"Field3\" = S.\"Field3\" " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( \"Field2\", \"Field3\" ) " +
-                $"VALUES ( S.\"Field2\", S.\"Field3\" )" +
-                $")";
+                $"VALUES ( S.\"Field2\", S.\"Field3\" ); " +
+                $"SELECT COALESCE(( SELECT \"Field1\" FROM \"Table\" WHERE (\"Field1\" = :Field1) ), IDENTITY_VAL_LOCAL()) " +
+                $"FROM SYSIBM.SYSDUMMY1";
 
             // Assert
             Assert.AreEqual(expected, actual);

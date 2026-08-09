@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
-    // NOTE: MergeAll's identity-returning behavior (populating "Id" for newly-inserted rows) requires
-    // Db2 23ai+ - the docker-compose target is 23ai Free, and this is already proven working
-    // against a live instance in TransactionTests.cs.
     [TestClass]
     public class MergeAllTest
     {

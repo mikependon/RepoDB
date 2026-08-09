@@ -4,6 +4,7 @@ using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace RepoDb.StatementBuilders
@@ -409,14 +410,21 @@ namespace RepoDb.StatementBuilders
 
             // Build the query. Db2 requires "MERGE INTO" (not just "MERGE") and requires the
             // USING source subquery to have a FROM clause even when only selecting bind
-            // variables/constants (hence "FROM DUAL"). NOTE: unlike a SELECT's column aliases,
-            // Db2's MERGE syntax does NOT accept the "AS" keyword before a table/subquery
-            // alias - "MERGE INTO t AS T" is illegal and fails to parse (every alias in Db2's
-            // own MERGE examples is bare, e.g. "MERGE INTO bonuses D USING (...) S ON (...)").
-            // Using ".As(...)" here previously produced "AS T"/"AS S", which Db2's parser
-            // rejected with a confusing "ORA-38107: Invalid syntax with MERGE without USING
-            // clause" pointing at the start of the statement - it aborts as soon as it hits the
-            // unexpected "AS" token, before it ever reaches the (perfectly valid) USING clause.
+            // variables/constants. NOTE: this used to write "FROM DUAL" here - Oracle's
+            // universally-available single-row dummy table - on the (unverified, wrong)
+            // assumption that Db2 has the same thing. It doesn't: confirmed live against Db2 LUW,
+            // "FROM DUAL" fails with SQL0204N ("DB2INST1.DUAL is an undefined name"). Db2's
+            // equivalent is the catalog table SYSIBM.SYSDUMMY1 (already relied on elsewhere in
+            // this provider - see ExecuteQueryMultipleTest.cs and WrapMergeWithReturningResult
+            // below), referenced unquoted/schema-qualified like any other system catalog object.
+            // Also: unlike a SELECT's column aliases, Db2's MERGE syntax does NOT accept the "AS"
+            // keyword before a table/subquery alias - "MERGE INTO t AS T" is illegal and fails to
+            // parse (every alias in Db2's own MERGE examples is bare, e.g. "MERGE INTO bonuses D
+            // USING (...) S ON (...)"). Using ".As(...)" here previously produced "AS T"/"AS S",
+            // which Db2's parser rejected with a confusing "ORA-38107: Invalid syntax with MERGE
+            // without USING clause" pointing at the start of the statement - it aborts as soon as
+            // it hits the unexpected "AS" token, before it ever reaches the (perfectly valid)
+            // USING clause.
             builder.Clear()
                 .Merge()
                 .Into()
@@ -425,9 +433,9 @@ namespace RepoDb.StatementBuilders
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom(fields, 0, DbSetting)
+                .WriteText(BuildCastedParametersAsFields(fields, DbSetting))
                 .From()
-                .WriteText("DUAL")
+                .WriteText("SYSIBM.SYSDUMMY1")
                 .CloseParen()
                 .WriteText("S")
                 .On()
@@ -466,10 +474,17 @@ namespace RepoDb.StatementBuilders
             }
 
             // Return the query, wrapped so the generated/matched key can flow back through the
-            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider. Db2's
-            // "SELECT ... FROM FINAL TABLE (MERGE ...)" data-change-table-reference is supported
-            // since Db2 9.7, well within this provider's 10.5+ target - no version gate needed.
-            return WrapWithReturningResult(builder.GetString(), keyColumn);
+            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
+            //
+            // NOTE: this used to reuse the same "SELECT ... FROM FINAL TABLE (...)" wrapper as
+            // CreateInsert, on the (unverified, wrong) assumption that Db2's data-change-table-
+            // reference works identically for MERGE as it does for INSERT. Verified against a
+            // live Db2 LUW instance: it does not - "FROM FINAL TABLE (MERGE ...)" fails with
+            // SQL0104N ("... Expected tokens may include: <insert-statement> ..."), and Db2 LUW's
+            // official MERGE statement reference has no FINAL TABLE mention at all (this appears
+            // to be a Db2 for z/OS-only extension). See WrapMergeWithReturningResult for the
+            // actual (multi-statement SELECT-based) mechanism used instead.
+            return WrapMergeWithReturningResult(builder.GetString(), tableName, keyColumn, qualifiers, identityField);
         }
 
         #endregion
@@ -772,6 +787,71 @@ namespace RepoDb.StatementBuilders
 
         #region Helpers
 
+        private static readonly IResolver<Type, DbType?> m_clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
+        private static readonly IResolver<DbType, string> m_dbTypeToStringNameResolver = new DbTypeToDb2StringNameResolver();
+
+        /// <summary>
+        /// Builds the SELECT list for a MERGE statement's USING source subquery
+        /// (<c>SELECT &lt;this&gt; FROM SYSIBM.SYSDUMMY1</c>), casting each bind variable to its
+        /// column's Db2 type before aliasing it to the field name - e.g.
+        /// <c>CAST(:Field1 AS INTEGER) AS "Field1"</c> rather than the bare <c>:Field1 AS "Field1"</c>
+        /// that <see cref="QueryBuilder.ParametersAsFieldsFrom(IEnumerable{Field}, int, IDbSetting)"/>
+        /// (used by every other provider's MERGE/upsert equivalent) produces.
+        /// <para>
+        /// Confirmed necessary against a live Db2 LUW instance: without the CAST, PREPARE fails
+        /// with SQL0418N ("... an invalid use of ... an untyped parameter marker ..."). Db2 cannot
+        /// infer a parameter marker's type just from it being selected-and-aliased in a derived
+        /// table that a MERGE's ON/UPDATE SET clauses later reference by that alias - unlike, say,
+        /// a marker compared directly against a typed column, which is why the qualifier lookup in
+        /// <see cref="WrapMergeWithReturningResult"/> doesn't need this treatment.
+        /// </para>
+        /// <para>
+        /// Fields with no known <see cref="Field.Type"/> (possible when a caller builds a
+        /// <see cref="Field"/> list by hand rather than letting RepoDb.Core resolve it from the
+        /// entity's mapped properties) fall back to the bare, uncast form - the common
+        /// RepoDb.Core-driven path always supplies a type here.
+        /// </para>
+        /// <para>
+        /// LOB-family targets (<see cref="DbType.Binary"/>, <see cref="DbType.Object"/>,
+        /// <see cref="DbType.Xml"/> - i.e. whatever <see cref="DbTypeToDb2StringNameResolver"/> maps
+        /// to <c>BLOB(1M)</c>/<c>XML</c>) are deliberately excluded from the CAST and left bare.
+        /// Confirmed live: a CLR <c>byte[]</c> property can map to either a genuine LOB column
+        /// (e.g. "ColumnBlob" BLOB(1M)) or a plain short binary column (e.g. "ColumnRaw"
+        /// VARCHAR(500) FOR BIT DATA) - <see cref="Field.Type"/> can't tell these apart, it's just
+        /// <c>typeof(byte[])</c> either way. CASTing the latter's parameter to <c>BLOB(1M)</c> broke
+        /// the driver's own parameter marshaling with SQL0301N ("... cannot be used because of its
+        /// data type") from <c>DB2Command.StreamInputParameters</c> - LOB and non-LOB parameters are
+        /// streamed to the server differently, and the CAST's declared type has to match how the
+        /// *value* was actually bound, not just be type-compatible with it in the abstract. Since
+        /// there's no reliable way to tell "ColumnRaw" and "ColumnBlob" apart from here, both are
+        /// left uncast rather than risk asserting the wrong binding style for either.
+        /// </para>
+        /// <para>
+        /// XML columns are unsupported through this path entirely (there is no CAST/wrapping that
+        /// makes them work here - see git history for a since-abandoned attempt via a dedicated
+        /// wrapper type). A data entity property mapped to a Db2 XML column should not be included
+        /// in a <c>Merge</c>/<c>MergeAll</c> call's fields; <c>Insert</c>/<c>Update</c>/<c>Query</c>
+        /// are unaffected.
+        /// </para>
+        /// </summary>
+        private static string BuildCastedParametersAsFields(IEnumerable<Field> fields,
+            IDbSetting dbSetting) =>
+            fields
+                .Select(field =>
+                {
+                    var parameter = field.Name.AsParameter(0, dbSetting);
+                    var quotedField = field.Name.AsField(dbSetting);
+                    var dbType = field.Type != null ? m_clientTypeToDbTypeResolver.Resolve(field.Type) : null;
+                    var isLobFamily = dbType is DbType.Binary or DbType.Object or DbType.Xml;
+
+                    var castedParameter = dbType != null && !isLobFamily
+                        ? string.Concat("CAST(", parameter, " AS ", m_dbTypeToStringNameResolver.Resolve(dbType.Value).ToUpperInvariant(), ")")
+                        : parameter;
+
+                    return string.Concat(castedParameter, " AS ", quotedField);
+                })
+                .Join(", ");
+
         /// <summary>
         /// RepoDb.Core's <c>Update</c> operation prepends <c>StringConstant.UpdateParameterPrefix</c>
         /// ("m_") to every WHERE-clause parameter name before any <see cref="IStatementBuilder"/> runs
@@ -814,15 +894,19 @@ namespace RepoDb.StatementBuilders
             sql?.TrimEnd().TrimEnd(';').TrimEnd();
 
         /// <summary>
-        /// Wraps a single DML statement (INSERT or MERGE, without its trailing semicolon) so that
-        /// the value of <paramref name="keyColumn"/> flows back to the caller as an ordinary result
-        /// set, via Db2's "SELECT ... FROM FINAL TABLE (...)" data-change-table-reference. The rows
-        /// produced by the wrapped INSERT/MERGE - including any Db2-generated identity column value
-        /// - become a queryable result table whose columns can be referenced in the outer SELECT's
-        /// column list. This is exactly what RepoDb.Core's ExecuteScalar()-based Insert/Merge
-        /// pipeline needs, with no PL/SQL block, OUT parameter, or cursor plumbing required (unlike
-        /// Oracle's RETURNING ... INTO). Supported since Db2 9.7, well within this provider's
-        /// 10.5+ target.
+        /// Wraps a single INSERT statement (without its trailing semicolon) so that the value of
+        /// <paramref name="keyColumn"/> flows back to the caller as an ordinary result set, via
+        /// Db2's "SELECT ... FROM FINAL TABLE (...)" data-change-table-reference. The row produced
+        /// by the wrapped INSERT - including any Db2-generated identity column value - becomes a
+        /// queryable result table whose columns can be referenced in the outer SELECT's column
+        /// list. This is exactly what RepoDb.Core's ExecuteScalar()-based Insert pipeline needs,
+        /// with no PL/SQL block, OUT parameter, or cursor plumbing required (unlike Oracle's
+        /// RETURNING ... INTO). Confirmed working against a live Db2 LUW instance.
+        /// <para>
+        /// INSERT-only: Db2 LUW's MERGE statement does not support FINAL TABLE (confirmed via
+        /// SQL0104N on a live instance - see the remarks on <see cref="WrapMergeWithReturningResult"/>
+        /// for the mechanism used for MERGE instead).
+        /// </para>
         /// </summary>
         private string WrapWithReturningResult(string dmlStatementWithoutTrailingSemicolon,
             DbField keyColumn)
@@ -831,6 +915,75 @@ namespace RepoDb.StatementBuilders
 
             return string.Concat("SELECT ", quotedKeyColumn,
                 " FROM FINAL TABLE (", dmlStatementWithoutTrailingSemicolon, ")");
+        }
+
+        /// <summary>
+        /// Appends a follow-up SELECT to a MERGE statement (as a second statement in the same
+        /// command text, separated by ";") so that the merged/matched row's <paramref name="keyColumn"/>
+        /// value flows back to the caller through the same ExecuteScalar()-based pipeline
+        /// RepoDb.Core uses for every provider. Db2 LUW's MERGE does not support FINAL TABLE (see
+        /// the remarks on <see cref="WrapWithReturningResult"/>), so the key has to be re-queried
+        /// after the MERGE completes instead of being read directly off it.
+        /// <para>
+        /// This relies on two things, both confirmed against a live Db2 LUW instance:
+        /// </para>
+        /// <list type="number">
+        /// <item><description>
+        /// The IBM Data Server .NET Provider accepts more than one statement in a single command
+        /// text and executes all of them in one round trip (confirmed for a "SELECT ...; SELECT
+        /// ...;" read-only batch - see ExecuteQueryMultipleTest.cs. ExecuteScalar() itself only
+        /// ever reads the *first* result set of a multi-statement batch, which is why the SELECT
+        /// is appended *after* the MERGE, not before - by the time ExecuteScalar() reads "the
+        /// first result set", the MERGE has already run and the SELECT's result set is what comes
+        /// back.)
+        /// </description></item>
+        /// <item><description>
+        /// A single command text sends its parameters once; the same named parameter marker (e.g.
+        /// ":Id") can be referenced again in the trailing SELECT and is bound to the same value the
+        /// MERGE used, without declaring a duplicate parameter.
+        /// </description></item>
+        /// </list>
+        /// <para>
+        /// The re-query predicate is the same qualifier predicate as the MERGE's own ON clause
+        /// (e.g. "WHERE ("Id" = :Id)"), so it deterministically finds whichever row the MERGE just
+        /// touched - <c>except</c> when the qualifier field is itself the auto-generated identity
+        /// column and the row was newly inserted: the caller's bound value for that parameter is
+        /// whatever placeholder/default they passed in (not the real generated value), so the
+        /// lookup by that value would find nothing. <c>COALESCE(...)</c> covers exactly that case
+        /// by falling back to <c>IDENTITY_VAL_LOCAL()</c>, which reflects whatever value Db2 just
+        /// generated for the identity column on *this* connection - correct immediately after the
+        /// MERGE's INSERT branch fires, and simply unused (short-circuited by COALESCE) whenever
+        /// the qualifier lookup already found a row, i.e. every UPDATE-branch case and every
+        /// INSERT-branch case where the qualifier isn't the identity column itself. When the table
+        /// has no identity column at all, the fallback is a literal NULL instead - IDENTITY_VAL_LOCAL()
+        /// would either return NULL anyway (nothing generated it this connection) or, worse, a
+        /// stale value left over from some unrelated identity-table insert earlier in the session.
+        /// </para>
+        /// </summary>
+        private string WrapMergeWithReturningResult(string mergeStatementWithoutTrailingSemicolon,
+            string tableName,
+            DbField keyColumn,
+            IEnumerable<Field> qualifiers,
+            DbField identityField)
+        {
+            var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
+
+            var selectBuilder = new QueryBuilder();
+            selectBuilder.Clear()
+                .Select()
+                .WriteText("COALESCE((")
+                .Select()
+                .WriteText(quotedKeyColumn)
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .WhereFrom(qualifiers, 0, DbSetting)
+                .WriteText("),")
+                .WriteText(identityField != null ? "IDENTITY_VAL_LOCAL())" : "NULL)")
+                .From()
+                .WriteText("SYSIBM.SYSDUMMY1");
+
+            return string.Concat(mergeStatementWithoutTrailingSemicolon, "; ",
+                TrimTrailingSemicolon(selectBuilder.GetString()));
         }
 
         #endregion

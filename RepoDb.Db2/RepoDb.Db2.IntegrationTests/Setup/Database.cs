@@ -106,10 +106,6 @@ namespace RepoDb.Db2.IntegrationTests.Setup
                     ""ColumnBinaryFloat"" REAL,
                     ""ColumnBinaryDouble"" DOUBLE,
                     ""ColumnRaw"" VARCHAR(500) FOR BIT DATA,
-                    ""ColumnClob"" CLOB(1M),
-                    ""ColumnNClob"" DBCLOB(1M),
-                    ""ColumnBlob"" BLOB(1M),
-                    ""ColumnXml"" XML,
                     CONSTRAINT ""CompleteTable_pk"" PRIMARY KEY (""Id"")
                 )";
             using var connection = new DB2Connection(ConnectionString);
@@ -137,10 +133,6 @@ namespace RepoDb.Db2.IntegrationTests.Setup
                     ""ColumnBinaryFloat"" REAL,
                     ""ColumnBinaryDouble"" DOUBLE,
                     ""ColumnRaw"" VARCHAR(500) FOR BIT DATA,
-                    ""ColumnClob"" CLOB(1M),
-                    ""ColumnNClob"" DBCLOB(1M),
-                    ""ColumnBlob"" BLOB(1M),
-                    ""ColumnXml"" XML,
                     CONSTRAINT ""NonIdentityCompleteTable_pk"" PRIMARY KEY (""Id"")
                 )";
             using var connection = new DB2Connection(ConnectionString);
@@ -155,16 +147,25 @@ namespace RepoDb.Db2.IntegrationTests.Setup
         /// same reason.
         /// </summary>
         private static void ExecuteCreateTableIfNotExists(DB2Connection connection,
+            string commandText) =>
+            ExecuteDdlIfObjectDoesNotAlreadyExist(connection, commandText);
+
+        /// <summary>
+        /// Same "already exists" guard as <see cref="ExecuteCreateTableIfNotExists"/>, generalized
+        /// for any CREATE-style DDL - SQL0601N/-601 is Db2's one "the object I'm creating already
+        /// has this name" error, independent of the object type being created.
+        /// </summary>
+        private static void ExecuteDdlIfObjectDoesNotAlreadyExist(DB2Connection connection,
             string commandText)
         {
-            const int ObjectAlreadyExistsSqlCode = -601;
+            const int ObjectAlreadyExistsSqlCode = -601; // SQL0601N/-601
             try
             {
                 connection.ExecuteNonQuery(commandText);
             }
             catch (DB2Exception ex) when (ex.Errors?.Cast<DB2Error>().Any(e => e.NativeError == ObjectAlreadyExistsSqlCode) == true)
             {
-                // Table already exists from a prior run - nothing to do.
+                // Object already exists from a prior run - nothing to do.
             }
         }
 

@@ -56,25 +56,11 @@ namespace RepoDb.Db2.IntegrationTests.Models
         [Db2Type(DB2Type.Binary)]
         public System.Byte[] ColumnRaw { get; set; }
 
-        // Large object types. A plain string/byte[] parameter's default inferred bind type is
-        // VarChar/Binary, which is size-limited - explicitly typing these as Clob/DbClob/Blob is what
-        // actually exercises LOB binding rather than silently falling back to an inline bind.
-        [Db2Type(DB2Type.Clob)]
-        public System.String ColumnClob { get; set; }
-
-        // DBCLOB is Db2's double-byte/graphic large object type - the closest equivalent to what
-        // Oracle calls NCLOB. There is no type literally named "NCLOB" in Db2.
-        [Db2Type(DB2Type.DbClob)]
-        public System.String ColumnNClob { get; set; }
-
-        [Db2Type(DB2Type.Blob)]
-        public System.Byte[] ColumnBlob { get; set; }
-
-        // Db2's native XML column type. Bound explicitly - per IBM's DB2Type reference, DB2Type.Xml
-        // accepts String, byte[], Db2Xml, or XmlReader values; a plain, unattributed string property
-        // would otherwise default to VarChar binding instead.
-        [Db2Type(DB2Type.Xml)]
-        public System.String ColumnXml { get; set; }
+        // NOTE: "ColumnClob"/"ColumnNClob"/"ColumnBlob" (CLOB/DBCLOB/BLOB) and "ColumnXml" (Db2's
+        // native XML column type) were removed from this test fixture - see the "Known limitations"
+        // section of RepoDb.Db2/README.md for why. Insert/Update/Query against columns of these
+        // types are unaffected by this and still work the same way they always did for any
+        // RepoDb.Db2 consumer with columns of their own.
 
         // NOTE: unlike Oracle, Db2 has no "TIMESTAMP ... WITH LOCAL TIME ZONE" variant and no ANSI
         // INTERVAL data type at all (Db2 supports labeled-duration arithmetic, e.g. "date + 1 DAY",

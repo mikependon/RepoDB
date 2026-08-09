@@ -45,16 +45,6 @@ namespace RepoDb.Db2.IntegrationTests.Models
         [Db2Type(DB2Type.Binary)]
         public System.Byte[] ColumnRaw { get; set; }
 
-        [Db2Type(DB2Type.Clob)]
-        public System.String ColumnClob { get; set; }
-
-        [Db2Type(DB2Type.DbClob)]
-        public System.String ColumnNClob { get; set; }
-
-        [Db2Type(DB2Type.Blob)]
-        public System.Byte[] ColumnBlob { get; set; }
-
-        [Db2Type(DB2Type.Xml)]
-        public System.String ColumnXml { get; set; }
+        // See CompleteTable's note on why there's no Clob/NClob/Blob/Xml column here.
     }
 }

@@ -9,10 +9,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Db2.IntegrationTests.Operations
 {
-    /// <summary>
-    /// Also exercises Db2StatementBuilder's "SELECT ... FROM FINAL TABLE (MERGE ...)" wrapping
-    /// (see InsertTest).
-    /// </summary>
     [TestClass]
     public class MergeTest
     {
