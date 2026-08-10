@@ -70,35 +70,22 @@ You can do this in all supported DB providers.
 
 ## Why RepoDB?
 
-As a hybrid ORM, RepoDB gives you the raw performance and control of manual data access with the convenience of a full-featured library.
-
 | Feature | Description |
 |---|---|
-| **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
-| **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
-| **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
-| **🔀 Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
-| **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
-| **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
-
-As a productivity platform, RepoDB goes beyond the ORM with enterprise-grade capabilities that help developers build, operate, and scale with confidence.
-
-| Feature | Description |
-|---|---|
-| **🏢 Enterprise-Grade Bulk Operations** | Perform high-performance bulk inserts, updates, merges, and deletes designed for demanding production workloads. |
-| **🔄 Data Replication & Integration** *(Planned)* | Build scalable data movement and synchronization solutions across multiple database platforms. |
-| **📊 Default Telemetry with Insights** | Gain immediate visibility into database operations, execution times, failures, and application behavior with minimal configuration. |
-| **📚 Multi-Database Ecosystem** | Support a growing range of relational database providers with a consistent development experience. |
-| **🏢 Enterprise Ready** | Designed for performance, scalability, observability, and long-term maintainability. |
-| **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation capabilities. |
-
-## Our Commitment
-
-The RepoDB ORM will always remain the heart of the ecosystem and will continue to be free and open source, just as it has been since the project began.
-
-Our investment is now focused on building additional capabilities around that foundation—expanding RepoDB into a comprehensive suite of enterprise-grade productivity tools for developers, architects, and organizations. Every new capability is designed to complement the ORM, enabling teams to build faster, operate smarter, and prepare their applications for the future without changing the way they work today.
-
-RepoDB is no longer just an ORM in the near future — it is becoming a complete ecosystem for modern data development.
+| **➡️ As a hybrid ORM** | **It gives you the raw performance and control of manual data access with the convenience of a full-featured library.** |
+| **✔️ Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
+| **✔️ High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
+| **✔️ Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
+| **✔️ Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
+| **✔️ Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
+| **✔️ Always Free** | Apache 2.0 licensed, forever open source. |
+| **➡️ As a productivity platform** | **It goes beyond the ORM with enterprise-grade capabilities that help developers build, operate, and scale with confidence.** |
+| **✔️ Enterprise-Grade Bulk Operations** | Perform high-performance bulk inserts, updates, merges, and deletes designed for demanding production workloads. |
+| **✔️ Data Replication & Integration** | Build scalable data movement and synchronization solutions across multiple database platforms. |
+| **✔️ Default Telemetry with Insights** | Gain immediate visibility into database operations, execution times, failures, and application behavior with minimal configuration. |
+| **✔️ Multi-Database Ecosystem** | Support a growing range of relational database providers with a consistent development experience. |
+| **✔️ Enterprise Ready** | Designed for performance, scalability, observability, and long-term maintainability. |
+| **✔️ AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation capabilities. |
 
 ## Get Started
 
