@@ -23,22 +23,21 @@
     <PackageVersion Condition="'$(RepoDbDb2Version)' != ''">$(RepoDbDb2Version)</PackageVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
-    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.200" />
+  </ItemGroup>-->
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
-    <!-- IBM only ships net10.0 binaries starting with the 10.x package line; net8.0/net9.0 stay on the 9.x line, whose net8.0 assets are forward-compatible with net9.0. -->
-    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
     <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
