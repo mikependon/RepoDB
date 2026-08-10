@@ -13,6 +13,44 @@ Whether you're building business applications, processing millions of records, i
 
 Write raw SQL when you need absolute control. Use fluent APIs when productivity matters. Switch seamlessly between both approaches within the same application without sacrificing performance or maintainability.
 
+## Easiest to Use .NET ORM
+
+Every RepoDB operation is an extension method on `IDbConnection`. Open a connection and you're already working with your database — no repositories to scaffold, no context classes, no code generation.
+
+You do this in all supported DB providers.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    // Query
+    var customer = connection.Query<Customer>(c => c.Id == 10045).FirstOrDefault();
+
+    // Insert
+    var id = connection.Insert<Customer>(new Customer { FirstName = "John", LastName = "Doe" });
+
+    // Update
+    customer.LastName = "Smith";
+    connection.Update<Customer>(customer);
+
+    // Delete
+    connection.Delete<Customer>(customer);
+}
+```
+
+Moving thousands (or millions) of rows at once? Add the `.BulkOperations` package for your provider (e.g. [`RepoDb.SqlServer.BulkOperations`](RepoDb.Extensions/RepoDb.SqlServer.BulkOperations)) and keep using the same connection:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var customers = GetCustomers(); // thousands or millions of rows
+
+    connection.BulkInsert<Customer>(customers);
+    connection.BulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
+}
+```
+
+Same connection, same fluent style, whether you're touching one row or one million. See [Get Started](#get-started) below for the quick-start guide for your specific database.
+
 ## Packages and Build Status
 
 | Project | Nuget | Downloads | Status |
@@ -40,24 +78,23 @@ As a hybrid ORM, RepoDB gives you the raw performance and control of manual data
 
 | Feature | Description |
 |---|---|
-| **Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
-| **High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
-| **Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
-| **Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
-| **Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
-| **Always Free** | Apache 2.0 licensed, forever open source. |
+| **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
+| **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
+| **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
+| **🔀 Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
+| **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
+| **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
 
 As a productivity platform, RepoDB goes beyond the ORM with enterprise-grade capabilities that help developers build, operate, and scale with confidence.
 
 | Feature | Description |
 |---|---|
-| **Hybrid Data Access** | Combine raw SQL and fluent APIs in a single, consistent programming model. |
-| **Enterprise-Grade Bulk Operations** | Perform high-performance bulk inserts, updates, merges, and deletes designed for demanding production workloads. |
-| **Data Replication & Integration** *(Planned)* | Build scalable data movement and synchronization solutions across multiple database platforms. |
-| **Default Telemetry with Insights** | Gain immediate visibility into database operations, execution times, failures, and application behavior with minimal configuration. |
-| **Multi-Database Ecosystem** | Support a growing range of relational database providers with a consistent development experience. |
-| **Enterprise Ready** | Designed for performance, scalability, observability, and long-term maintainability. |
-| **AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation capabilities. |
+| **🏢 Enterprise-Grade Bulk Operations** | Perform high-performance bulk inserts, updates, merges, and deletes designed for demanding production workloads. |
+| **🔄 Data Replication & Integration** *(Planned)* | Build scalable data movement and synchronization solutions across multiple database platforms. |
+| **📊 Default Telemetry with Insights** | Gain immediate visibility into database operations, execution times, failures, and application behavior with minimal configuration. |
+| **📚 Multi-Database Ecosystem** | Support a growing range of relational database providers with a consistent development experience. |
+| **🏢 Enterprise Ready** | Designed for performance, scalability, observability, and long-term maintainability. |
+| **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation capabilities. |
 
 ## Our Commitment
 
