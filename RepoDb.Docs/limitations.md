@@ -1,8 +1,8 @@
 # RepoDB Limitations
 
-We want the .NET community to understand the limitations of this library before deciding to use it. RepoDB is a micro-ORM built to handle advanced use cases, but it still has limitations that may not fit every scenario.
+We want the .NET community to understand this library's limitations before using it. RepoDB is a micro-ORM built for advanced use cases. It still has limitations that may not fit every scenario.
 
-**Disclaimer:** This page may not list every limitation, as some use cases are still being discovered. We will keep updating this page as new unsupported scenarios are found.
+**Disclaimer:** This page may not list every limitation. Some use cases are still being discovered. We will update this page as we find new unsupported scenarios.
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@ We want the .NET community to understand the limitations of this library before 
 
 ### Composite Keys
 
-RepoDB does not support Composite Keys as a default qualifier. Push operations ([Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge), etc.) use the primary key as the qualifier, so a table with composite keys behaves unexpectedly unless you explicitly target the composite columns.
+RepoDB does not support composite keys as a default qualifier. Push operations ([Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge), etc.) use the primary key as the qualifier. A table with composite keys behaves unexpectedly unless you explicitly target the composite columns.
 
 #### Scenario 1 - Insert
 
@@ -57,7 +57,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Here, `10045` points to a single PK column. If your table instead has composite keys on `Name` and `DateOfBirth`, passing a full entity like below will not behave as expected:
+Here, `10045` points to a single PK column. If your table has composite keys on `Name` and `DateOfBirth` instead, passing a full entity like below will not behave as expected:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -115,17 +115,17 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ### Auto-Generated Primary Column
 
-Earlier versions of RepoDB assumed the identity column was always the primary column, and push operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) would fail when the identity and primary columns were separate.
+Earlier versions of RepoDB assumed the identity column was always the primary column. Push operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) would fail when the identity and primary columns were separate.
 
-As of issue #1027 (versions > 1.12.10), RepoDB now hydrates only the identity column's value back onto the model and ignores the primary column, along with any other column that has a default value.
+As of issue #1027 (versions > 1.12.10), RepoDB hydrates only the identity column's value back onto the model. It ignores the primary column, along with any other column that has a default value.
 
-This remains a limitation because RepoDB only returns a single value, and it always prioritizes the identity column over other column types.
+This remains a limitation because RepoDB only returns a single value. It always prioritizes the identity column over other column types.
 
 **Note:** The same applies when the primary column has a default value of its own (e.g., `UUID` in MySQL).
 
 ### Computed Columns
 
-Computed columns are supported in all fluent-based GET operations ([Query](https://repodb.net/operation/query), [QueryAll](https://repodb.net/operation/queryall), etc.), but not in fluent-based PUSH operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) by default. See Microsoft's [documentation](https://docs.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table?view=sql-server-ver15) on computed columns for background.
+Computed columns are supported in all fluent-based GET operations ([Query](https://repodb.net/operation/query), [QueryAll](https://repodb.net/operation/queryall), etc.). They are not supported in fluent-based PUSH operations ([Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc.) by default. See Microsoft's [documentation](https://docs.microsoft.com/en-us/sql/relational-databases/tables/specify-computed-columns-in-a-table?view=sql-server-ver15) on computed columns for background.
 
 Non-fluent, table-targeted methods like [Query(TableName)](https://repodb.net/operation/query#targetting-a-table) and [Insert(TableName)](https://repodb.net/operation/insert#targetting-a-table) do support computed columns.
 
@@ -226,7 +226,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ### JOIN Query (Support)
 
-RepoDB does not support JOIN queries. We leave relationship handling (constraints, cascading, delegation, etc.) to the caller, to keep the library predictable and avoid the added complexity ORMs typically take on for this feature.
+RepoDB does not support JOIN queries. We leave relationship handling (constraints, cascading, delegation, etc.) to the caller. This keeps the library predictable and avoids the added complexity ORMs typically take on for this feature.
 
 **Example**
 
@@ -288,7 +288,7 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 
 ### Cache Invalidation
 
-RepoDB does not automatically invalidate cache entries. Adding that layer would mean extra validation and background work, which goes against keeping the library lightweight.
+RepoDB does not automatically invalidate cache entries. Adding that layer would mean extra validation and background work. This goes against keeping the library lightweight.
 
 By default, cache items expire after 180 minutes ([Constant.DefaultCacheItemExpirationInMinutes](https://github.com/mikependon/RepoDb/blob/0c3d4b503a0a7da30b344341cbf6860e98955d9e/RepoDb.Core/RepoDb/Constant.cs#L16)).
 
@@ -302,7 +302,7 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 }
 ```
 
-The result is cached under `"AllCustomers"` for 180 minutes and will not refresh automatically if the underlying data changes.
+The result is cached under `"AllCustomers"` for 180 minutes. It will not refresh automatically if the underlying data changes.
 
 **Alternative Solution**
 
@@ -317,7 +317,7 @@ Any subsequent fetch using the `"AllCustomers"` key will then read fresh data fr
 
 ### Advance Query Tree Expression
 
-RepoDB only supports a shallow query tree expression. As noted above, RepoDB also does not support JOINs, so the deeper expression trees common in libraries like Entity Framework are not supported either.
+RepoDB only supports a shallow query tree expression. As noted above, RepoDB also does not support JOINs. The deeper expression trees common in libraries like Entity Framework are not supported either.
 
 #### Scenario 1 - 2nd Level Deep or Deeper
 
@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS public."Person"
 );
 ```
 
-RepoDB's core statement builder only supports a single identity column per table, across all supported RDBMS. Any additional identity column beyond the primary one is excluded from parameter passing in push operations, which causes the operation to fail.
+RepoDB's core statement builder only supports a single identity column per table, across all supported RDBMS. Any additional identity column beyond the primary one is excluded from parameter passing in push operations. This causes the operation to fail.
 
 There is currently no workaround other than keeping a single identity column per table.
 
@@ -397,7 +397,7 @@ These limitations are specific to the [RepoDb.Oracle](https://www.nuget.org/pack
 
 ### QueryMultiple Round Trips
 
-ODP.NET rejects command text with more than one SQL statement, so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Oracle. Keep this in mind for latency-sensitive code paths with many types.
+ODP.NET rejects command text with more than one SQL statement. [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Oracle. Keep this in mind for latency-sensitive code paths with many types.
 
 ### InsertAll / MergeAll Batching
 
@@ -405,7 +405,7 @@ ODP.NET rejects command text with more than one SQL statement, so [QueryMultiple
 
 ### Identity/Primary Key Retrieval
 
-Identity/primary key retrieval on `Insert`/`Merge` relies on an Oracle 12c+ implicit result set (`DBMS_SQL.RETURN_RESULT`) wrapped in an anonymous PL/SQL block. This works around Oracle's native `RETURNING ... INTO`, which binds to an output parameter that RepoDb's core execution pipeline does not read back.
+Identity/primary key retrieval on `Insert`/`Merge` relies on an Oracle 12c+ implicit result set (`DBMS_SQL.RETURN_RESULT`) wrapped in an anonymous PL/SQL block. This works around Oracle's native `RETURNING ... INTO`. That construct binds to an output parameter that RepoDb's core execution pipeline does not read back.
 
 ```sql
 DECLARE l_repodb_result "CompleteTable"."Id"%TYPE; l_repodb_cursor SYS_REFCURSOR; BEGIN INSERT INTO "CompleteTable" ( "SessionId", "ColumnVarchar", "ColumnNumber", "ColumnDate", "ColumnTimestamp" ) VALUES ( :SessionId, :ColumnVarchar, :ColumnNumber, :ColumnDate, :ColumnTimestamp ) RETURNING "Id" INTO l_repodb_result; OPEN l_repodb_cursor FOR SELECT l_repodb_result AS "Result" FROM DUAL; DBMS_SQL.RETURN_RESULT(l_repodb_cursor); END;
@@ -415,11 +415,11 @@ Verify this against your own Oracle instance before relying on it in production.
 
 ### RETURNING on MERGE
 
-A `RETURNING` clause on `MERGE` is only supported starting with **Oracle Database 23ai** — it fails with `ORA-00933` on 12c/18c/19c/21c. This provider otherwise targets 12c+, but `Merge` against a table with a primary/identity key needs 23ai+ to get the key value back. `Insert`, `Update`, `Query`, and other operations are unaffected on older versions — only identity-returning `Merge` calls are impacted.
+A `RETURNING` clause on `MERGE` is only supported starting with **Oracle Database 23ai**. It fails with `ORA-00933` on 12c/18c/19c/21c. This provider otherwise targets 12c+, but `Merge` against a table with a primary/identity key needs 23ai+ to get the key value back. `Insert`, `Update`, `Query`, and other operations are unaffected on older versions — only identity-returning `Merge` calls are impacted.
 
 ### GUID/UNIQUEIDENTIFIER
 
-Oracle has no native GUID/`UNIQUEIDENTIFIER` type. Unlike `SqlParameter`/`NpgsqlParameter`, ODP.NET does not accept a raw `Guid` value, so binding a `System.Guid` property directly throws `ArgumentException: Value does not fall within the expected range.` from `OracleParameter.Value`.
+Oracle has no native GUID/`UNIQUEIDENTIFIER` type. Unlike `SqlParameter`/`NpgsqlParameter`, ODP.NET does not accept a raw `Guid` value. Binding a `System.Guid` property directly throws `ArgumentException: Value does not fall within the expected range.` from `OracleParameter.Value`.
 
 If a column stores a GUID as `RAW(16)`, either map the property as `byte[]`, or keep it as `Guid` and register `RepoDb.Oracle.PropertyHandlers.GuidToByteArrayPropertyHandler` for that specific property:
 
@@ -428,18 +428,18 @@ PropertyHandlerMapper.Add<YourEntity, GuidToByteArrayPropertyHandler>(
     e => e.YourGuidProperty, new GuidToByteArrayPropertyHandler(), true);
 ```
 
-Register it per-property rather than globally for `typeof(Guid)` if your process also uses another RepoDb provider that handles `Guid` natively — a type-level registration applies process-wide, across all connections.
+Register it per-property rather than globally for `typeof(Guid)` if your process also uses another RepoDb provider that handles `Guid` natively. A type-level registration applies process-wide, across all connections.
 
 ### Bulk Operations and Transactions
 
-`OracleBulkCopy` — the mechanism behind every bulk load in `RepoDb.Oracle.BulkOperations` except identity-returning `BulkInsert` — is not aware of the caller's transaction. Per Oracle's own ODP.NET documentation, bulk copy operations are agnostic of any local or distributed transaction, and rows it writes commit independently of the caller's transaction.
+`OracleBulkCopy` — the mechanism behind every bulk load in `RepoDb.Oracle.BulkOperations` except identity-returning `BulkInsert` — is not aware of the caller's transaction. Per Oracle's own ODP.NET documentation, bulk copy operations are agnostic of any local or distributed transaction. Rows it writes commit independently of the caller's transaction.
 
 In practice:
 
 - For a plain `BulkInsert` without `ReturnIdentity`, a rolled-back transaction will **not** remove rows already written by `OracleBulkCopy`.
-- For `BulkMerge`/`BulkUpdate`/`BulkDelete`, the final `MERGE`/`UPDATE`/`DELETE` against the real table stays fully transactional, so a rollback behaves correctly for your actual data. Only orphaned rows in the reusable staging table can be left behind, and the next call against that table clears them before loading anything new.
+- For `BulkMerge`/`BulkUpdate`/`BulkDelete`, the final `MERGE`/`UPDATE`/`DELETE` against the real table stays fully transactional, so a rollback behaves correctly for your actual data. Only orphaned rows in the reusable staging table can be left behind. The next call against that table clears them before loading anything new.
 
-If a plain `BulkInsert` needs all-or-nothing behavior with respect to your transaction, request `identityBehavior: ReturnIdentity` to force the array-bind path (`RETURNING ... INTO`), which does honor your transaction.
+If a plain `BulkInsert` needs all-or-nothing behavior with respect to your transaction, request `identityBehavior: ReturnIdentity` to force the array-bind path (`RETURNING ... INTO`). That path does honor your transaction.
 
 ### Bulk Operations Staging Table
 
@@ -449,13 +449,13 @@ If a plain `BulkInsert` needs all-or-nothing behavior with respect to your trans
 - **`Physical`** — an ordinary heap table, shared by every session. Concurrent connections writing to the same table can corrupt or race each other's staged data. Only use it for sequential, single-threaded workloads.
 - **`Auto`** *(default)* — picks `Physical` at 5,000+ rows, otherwise `Memory`.
 
-**`Memory` is currently not usable — every pseudo table resolves to `Physical` regardless of what you pass.** `OracleBulkCopy` always performs a direct-path load, and Oracle's direct-path engine cannot write into a GTT (`ORA-39826`). Until a working strategy exists (e.g., loading a GTT via array-bound `INSERT`s), `Memory` and `Auto`'s row-count threshold both fall back to `Physical`, so the `Physical` concurrency caveat above applies unconditionally.
+**`Memory` is currently not usable — every pseudo table resolves to `Physical` regardless of what you pass.** `OracleBulkCopy` always performs a direct-path load. Oracle's direct-path engine cannot write into a GTT (`ORA-39826`). Until a working strategy exists (e.g., loading a GTT via array-bound `INSERT`s), `Memory` and `Auto`'s row-count threshold both fall back to `Physical`. The `Physical` concurrency caveat above applies unconditionally.
 
-Because Oracle's `CREATE TABLE`/`CREATE GLOBAL TEMPORARY TABLE` are DDL and cause an implicit commit, the staging table is created once per (table name, pseudo table type) the first time it's needed, not on every call. This means the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a table in a process will implicitly commit any other uncommitted work already pending in that transaction. If this matters for your workload, "warm up" the staging table with a throwaway call at application startup, outside any transaction you care about.
+Oracle's `CREATE TABLE`/`CREATE GLOBAL TEMPORARY TABLE` are DDL and cause an implicit commit. So the staging table is created once per (table name, pseudo table type) the first time it's needed, not on every call. This means the very first `BulkMerge`/`BulkUpdate`/`BulkDelete` call against a table in a process will implicitly commit any other uncommitted work already pending in that transaction. If this matters for your workload, "warm up" the staging table with a throwaway call at application startup, outside any transaction you care about.
 
 ### Verification Status
 
-`RepoDb.Oracle.BulkOperations` has been implemented and reviewed but not yet exercised against a live Oracle instance. In particular, verify the `OracleBulkCopy` load path, the array-bind `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the staging table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete` end-to-end before relying on this package in production. The same caveat applies to the `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.Oracle` package (see [Identity/Primary Key Retrieval](#identityprimary-key-retrieval)).
+`RepoDb.Oracle.BulkOperations` has been implemented and reviewed but not yet exercised against a live Oracle instance. Verify these end-to-end before relying on this package in production: the `OracleBulkCopy` load path, the array-bind `RETURNING ... INTO` identity read-back used by `BulkInsert` with `ReturnIdentity`, and the staging table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete`. The same caveat applies to the `DBMS_SQL.RETURN_RESULT` identity trick in the core `RepoDb.Oracle` package (see [Identity/Primary Key Retrieval](#identityprimary-key-retrieval)).
 
 -----
 
@@ -465,7 +465,7 @@ These limitations are specific to the [RepoDb.Db2](https://www.nuget.org/package
 
 ### QueryMultiple Round Trips
 
-IBM's Data Server .NET Provider rejects command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Db2`), so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Db2. Keep this in mind for latency-sensitive code paths with many types.
+IBM's Data Server .NET Provider rejects command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Db2`). [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type instead of a single combined command. The call still works unchanged, but a `QueryMultiple<T1, T2, ...>` that costs one round trip on SQL Server, MySQL, or PostgreSQL costs *N* round trips on Db2. Keep this in mind for latency-sensitive code paths with many types.
 
 ### InsertAll / MergeAll Batching
 
@@ -473,17 +473,17 @@ IBM's Data Server .NET Provider rejects command text containing more than one SQ
 
 ### Identity/Primary Key Retrieval
 
-Identity/primary key retrieval on `Insert`/`Merge` uses `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))` — an ANSI-SQL-adjacent construct that returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. This same mechanism works uniformly for both `Insert` and `Merge`, on any Db2 version 9.7+ (well within this provider's 10.5+ target), so there is no version gate to worry about.
+Identity/primary key retrieval on `Insert`/`Merge` uses `SELECT ... FROM FINAL TABLE (INSERT INTO ... VALUES (...))`. This ANSI-SQL-adjacent construct returns the post-insert row (including any identity-generated column) as an ordinary result set, with no PL/SQL block, output parameter, or cursor plumbing required. This same mechanism works uniformly for both `Insert` and `Merge`, on any Db2 version 9.7+ (well within this provider's 10.5+ target). There is no version gate to worry about.
 
-An earlier revision of this provider wrapped the key column in an Oracle-style `DECLARE ... DBMS_SQL.RETURN_RESULT(...)` PL/SQL block, which doesn't exist in Db2 — that has been replaced with the `FINAL TABLE` form described above. Verify `Insert`/`Merge` calls that request the generated key against your own Db2 instance before relying on this in production.
+An earlier revision of this provider wrapped the key column in an Oracle-style `DECLARE ... DBMS_SQL.RETURN_RESULT(...)` PL/SQL block, which doesn't exist in Db2. That has been replaced with the `FINAL TABLE` form described above. Verify `Insert`/`Merge` calls that request the generated key against your own Db2 instance before relying on this in production.
 
 ### GUID/UNIQUEIDENTIFIER
 
-Db2 has no native GUID/`UNIQUEIDENTIFIER` type. A `System.Guid` data entity property cannot be bound directly to a `DB2Parameter` the way it can with `SqlParameter`/`NpgsqlParameter`. The idiomatic Db2 storage for a GUID is a fixed-length 16-byte `CHAR(16) FOR BIT DATA` column — map it as `byte[]` on the entity, or keep it as `Guid` and register `RepoDb.Db2.PropertyHandlers.Db2GuidToByteArrayPropertyHandler` for that specific property:
+Db2 has no native GUID/`UNIQUEIDENTIFIER` type. A `System.Guid` data entity property cannot be bound directly to a `DB2Parameter` the way it can with `SqlParameter`/`NpgsqlParameter`. The idiomatic Db2 storage for a GUID is a fixed-length 16-byte `CHAR(16) FOR BIT DATA` column. Map it as `byte[]` on the entity, or keep it as `Guid` and register `RepoDb.Db2.PropertyHandlers.Db2GuidToByteArrayPropertyHandler` for that specific property:
 
 ```csharp
 PropertyHandlerMapper.Add<YourEntity, Db2GuidToByteArrayPropertyHandler>(
     e => e.YourGuidProperty, new Db2GuidToByteArrayPropertyHandler(), true);
 ```
 
-Register it per-property (not globally for `typeof(Guid)`) if your process also uses another RepoDb provider that handles `Guid` natively, since a type-level `PropertyHandlerMapper` registration applies process-wide across all connections.
+Register it per-property (not globally for `typeof(Guid)`) if your process also uses another RepoDb provider that handles `Guid` natively. A type-level `PropertyHandlerMapper` registration applies process-wide across all connections.
