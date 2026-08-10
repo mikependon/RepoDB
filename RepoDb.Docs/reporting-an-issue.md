@@ -73,8 +73,8 @@ A question is not a strict issue, so you (as the asker) can contact us anytime i
 See below.
 
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
-- [Email](https://repodb.readthedocs.io/en/latest/pages/contact.html)
-- [Twitter](https://twitter.com/home) - notifying the [author](https://twitter.com/mike_pendon) or placing a tag **#RepoDB**.
+- [Email](mailto:michael.c.pendon@outlook.com)
+- [X / Twitter](https://twitter.com/home) - notifying the [author](https://x.com/mike_pendon) or placing a tag **#RepoDB**.
 
 ### Nice-To-Have
 

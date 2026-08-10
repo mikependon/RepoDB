@@ -4,7 +4,7 @@
 
 # [RepoDb.Sqlite.Microsoft](https://repodb.net/tutorial/get-started-sqlite) — RepoDB for SQLite (Microsoft.Data.Sqlite)
 
-The SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Backed by `Microsoft.Data.Sqlite`.
+The SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite).
 
 ## Important Pages
 
@@ -14,9 +14,8 @@ The SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you us
 ## Community
 
 - [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
-- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## Dependencies
 
@@ -25,7 +24,7 @@ The SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you us
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
@@ -90,6 +89,33 @@ using (var connection = new SqliteConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);
+}
+```
+
+### ExecuteQuery
+
+```csharp
+using (var connection = new SqliteConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [Customer] WHERE (Id = @Id);", new { Id = 10045 }).FirstOrDefault();
+}
+```
+
+### ExecuteNonQuery
+
+```csharp
+using (var connection = new SqliteConnection(ConnectionString))
+{
+	var affectedRows = connection.ExecuteNonQuery("UPDATE [Customer] SET FirstName = @FirstName WHERE (Id = @Id);", new { FirstName = "John", Id = 10045 });
+}
+```
+
+### ExecuteScalar
+
+```csharp
+using (var connection = new SqliteConnection(ConnectionString))
+{
+	var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [Customer];");
 }
 ```
 

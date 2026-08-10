@@ -18,18 +18,17 @@ Db2 for Linux, UNIX, and Windows (LUW) 10.5 and later. Earlier versions are not 
 ## Community
 
 - [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
-- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## Dependencies
 
-- [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) — IBM's Data Server .NET provider for Db2. IBM ships this as separate, platform-specific packages rather than one cross-platform package: `Net.IBM.Data.Db2` (Windows x64), `Net.IBM.Data.Db2-lnx` (Linux AMD64), and others (`-osx`, `-zlnx`, `-ppc`) not referenced by this project. The published `RepoDb.Db2` package currently depends on the Windows package (`RepoDb.Db2.csproj` selects it via an `$(OS)`-conditional `PackageReference`, resolved when the package is built/packed) — if you consume `RepoDb.Db2` on Linux, add a direct `PackageReference` to `Net.IBM.Data.Db2-lnx` yourself.
+- [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/) — IBM's Data Server .NET provider for Db2. IBM ships this as separate, platform-specific packages instead of one cross-platform package: `Net.IBM.Data.Db2` (Windows x64), `Net.IBM.Data.Db2-lnx` (Linux AMD64), and others (`-osx`, `-zlnx`, `-ppc`) not referenced by this project. The published `RepoDb.Db2` package depends on the Windows package by default. If you consume `RepoDb.Db2` on Linux, add a direct `PackageReference` to `Net.IBM.Data.Db2-lnx` yourself.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
@@ -39,7 +38,7 @@ Db2 for Linux, UNIX, and Windows (LUW) 10.5 and later. Earlier versions are not 
 Install-Package RepoDb.Db2
 ```
 
-Unlike the other providers, `RepoDb.Db2` does **not** carry a transitive dependency on the underlying IBM ADO.NET driver. Because IBM ships a separate, platform-specific driver package for each operating system/architecture, Windows and other environment users must explicitly install the matching `Net.IBM.Data.Db2*` package on their own alongside `RepoDb.Db2`.
+Unlike the other providers, `RepoDb.Db2` does **not** carry a transitive dependency on the underlying IBM ADO.NET driver. IBM ships a separate driver package per platform, so you must install the matching `Net.IBM.Data.Db2*` package yourself alongside `RepoDb.Db2`.
 
 ```csharp
 // Windows
@@ -133,4 +132,31 @@ using (var connection = new DB2Connection(ConnectionString))
 }
 ```
 
-Visit the [get-started](http://repodb.net/tutorial/get-started-db2) page for the full PostgreSQL guide.
+### ExecuteQuery
+
+```csharp
+using (var connection = new DB2Connection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM \"Customer\" WHERE (\"Id\" = :Id);", new { Id = 10045 }).FirstOrDefault();
+}
+```
+
+### ExecuteNonQuery
+
+```csharp
+using (var connection = new DB2Connection(ConnectionString))
+{
+	var affectedRows = connection.ExecuteNonQuery("UPDATE \"Customer\" SET \"FirstName\" = :FirstName WHERE (\"Id\" = :Id);", new { FirstName = "John", Id = 10045 });
+}
+```
+
+### ExecuteScalar
+
+```csharp
+using (var connection = new DB2Connection(ConnectionString))
+{
+	var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"Customer\";");
+}
+```
+
+Visit the [get-started](http://repodb.net/tutorial/get-started-db2) page for the full Db2 guide.

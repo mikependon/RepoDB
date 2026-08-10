@@ -4,7 +4,7 @@
 
 # [RepoDB](http://repodb.net) — a production-ready data access platform for .NET applications.
 
-RepoDB is a high-performance, open-source data access platform for .NET applications. It combines the simplicity of a micro-ORM with the productivity of a full ORM, giving developers the freedom to use raw SQL for precise control or fluent operations for faster development—all through the same IDbConnection.
+RepoDB is a high-performance, open-source data access platform for .NET applications. It combines the simplicity of a micro-ORM with the productivity of a full ORM. Use raw SQL for precise control or fluent operations for faster development — all through the same `IDbConnection`.
 
 Write raw SQL when you need full control. Use fluent methods when you want productivity. Switch between them freely, in the same codebase.
 
@@ -30,6 +30,7 @@ Write raw SQL when you need full control. Use fluent methods when you want produ
 - [Property Handlers](http://repodb.net/feature/propertyhandlers)
 - [Repositories](http://repodb.net/feature/repositories)
 - [Targeted Operations](http://repodb.net/feature/targeted)
+- [Telemetry](http://repodb.net/feature/telemetry)
 - [Tracing](http://repodb.net/feature/tracing)
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
@@ -37,13 +38,12 @@ Write raw SQL when you need full control. Use fluent methods when you want produ
 ## Community
 
 - [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) — technical questions.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
-- [X / Twitter](https://twitter.com/search?q=%23repodb) — news and updates.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 

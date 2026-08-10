@@ -1,69 +1,60 @@
-﻿[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor&label=build%20and%20tests&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
+[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor&label=build%20and%20tests&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
 [![SqLiteHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 
-# RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
+# RepoDb.SqLite — RepoDB for SQLite (legacy)
 
-RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-## Contribution
+The original SQLite provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection.
 
 ```diff
-- This code-line will be out-of-support soon. The final version would be v1.1.4.
+This code-line is out-of-support soon. The final version is v1.1.4.
 ```
 
-To contribute, please proceed to the new solutions.
+To contribute, use one of the current SQLite providers instead:
 
-- Microsoft.Data.Sqlite - [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Sqlite.Microsoft)
-- System.Data.SQLite.Core - [RepoDb.SQLite.System](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SQLite.System)
+- [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Sqlite.Microsoft) — backed by `Microsoft.Data.Sqlite`.
+- [RepoDb.SQLite.System](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SQLite.System) — backed by `System.Data.SQLite.Core`.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
-## Community engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## Dependencies
 
-- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDB.
-- [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite (Microsoft).
-- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SqLite (SQLite).
+- [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) — one of the SQLite data providers this package can use.
+- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) — the other supported SQLite data provider.
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
-```csharp
-> Install-Package RepoDb.SqLite
+```
+Install-Package RepoDb.SqLite
 ```
 
-Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.
 
 ## Get Started
 
-First, the bootstrapper must be initialized.
+Initialize the bootstrapper once at application startup:
 
 ```csharp
 RepoDb.SqLiteBootstrap.Initialize();
 ```
 
-**Note:** The call must be done once.
-
-After the bootstrap initialization, any library operation can then be called.
-
-Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlite) page for SQLite.
+Then use any RepoDB operation directly on your `SQLiteConnection`:
 
 ### Query
 
@@ -110,3 +101,32 @@ using (var connection = new SQLiteConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
+
+### ExecuteQuery
+
+```csharp
+using (var connection = new SQLiteConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [Customer] WHERE (Id = @Id);", new { Id = 10045 }).FirstOrDefault();
+}
+```
+
+### ExecuteNonQuery
+
+```csharp
+using (var connection = new SQLiteConnection(ConnectionString))
+{
+	var affectedRows = connection.ExecuteNonQuery("UPDATE [Customer] SET FirstName = @FirstName WHERE (Id = @Id);", new { FirstName = "John", Id = 10045 });
+}
+```
+
+### ExecuteScalar
+
+```csharp
+using (var connection = new SQLiteConnection(ConnectionString))
+{
+	var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [Customer];");
+}
+```
+
+Visit the [get-started](http://repodb.net/tutorial/get-started-sqlite) page for the full SQLite guide.
