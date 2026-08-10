@@ -5,7 +5,7 @@
 
 # RepoDB — a production-ready data access platform for .NET applications.
 
-RepoDB is a high-performance, open-source data productivity platform for .NET developers. At its core is the RepoDB ORM—a fast, lightweight, and hybrid data access library that will always remain free and open source. It is the foundation upon which the entire RepoDB ecosystem is being built.
+RepoDB is a high-performance, open-source data productivity platform for .NET developers. At its core is the ORM — a fast, lightweight, and hybrid data access library. It is the foundation upon which the entire RepoDB ecosystem is being built.
 
 While the ORM continues to evolve and improve, RepoDB is expanding beyond traditional data access by introducing new capabilities that help developers build, operate, and scale enterprise applications more effectively. The goal is not to replace the ORM, but to enhance it with an ecosystem of productivity tools designed for modern software development.
 
@@ -93,14 +93,6 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for SQL Server, MySQL, PostgreSQL, and SQLite.
-
-## QueryMultiple Behavior
-
-[`QueryMultiple`/`QueryMultipleAsync`](http://repodb.net/operation/executequerymultiple) return several result sets — one per target type — from a single call.
-
-On providers that support multiple SQL statements in a single command text (SQL Server, MySQL, PostgreSQL), RepoDB combines every sub-query into one `CommandText`, executes it in a single round trip, and steps through the result sets as they come back.
-
-**Oracle does not support this.** ODP.NET rejects a command text containing more than one SQL statement (`IDbSetting.IsMultiStatementExecutable = false` for `RepoDb.Oracle`), so `QueryMultiple` automatically falls back to issuing one round trip per requested type instead of one combined command. This fallback is transparent — the same `QueryMultiple<T1, T2, ...>` call works unchanged against Oracle — but it means a call that costs 1 round trip on SQL Server/MySQL/PostgreSQL costs *N* round trips (one per type) on Oracle. Keep this in mind for latency-sensitive code paths that call `QueryMultiple` with many types against an Oracle database.
 
 ## Type Coercion
 
