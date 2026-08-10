@@ -1,4 +1,4 @@
-[![SqLiteSystemBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
+[![SqLiteSystemBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-system.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-system.yml)
 [![SqLiteSystemHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![SqLiteSystemVersion](https://img.shields.io/nuget/v/RepoDb.SQLite.System?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SQLite.System)
 

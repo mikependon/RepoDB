@@ -1,4 +1,4 @@
-[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
+[![SqlServerBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr-bulk.yml)
 [![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 
