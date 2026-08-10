@@ -5,15 +5,15 @@
 
 # RepoDB — a production-ready data access platform for .NET applications.
 
-RepoDB is a high-performance data productivity platform for .NET developers. In its core is the popular hybrid-ORM library for .NET. It is expanding beyond traditional data access by having new capabilities that help developers build, operate, and scale enterprise applications more effectively.
+RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
 
-RepoDB is best for simplifying data layer implementations, processing millions of records and integrating multiple data sources. It provides the flexibility to work the way you want—all through IDbConnection interface.
+RepoDB is best for simplifying data layer implementations, processing millions of records, and integrating multiple data sources. It provides the flexibility to work the way you want—all through the `IDbConnection` interface.
 
-Write raw SQL when you need an absolute control or use the fluent APIs for more productivity. You can switch seamlessly between both approaches without sacrificing performance or maintainability.
+Write raw SQL when you need absolute control, or use the fluent APIs for more productivity. You can switch seamlessly between both approaches without sacrificing performance or maintainability.
 
 ## Easiest to Use .NET ORM
 
-Every RepoDB operation is an extension method on `IDbConnection`. Open a connection and you're already working with your database — no repositories to scaffold, no context classes, no code generation.
+Every operation is an extension method of `IDbConnection` interface. Simply open a connection and you can start working with your database — no need for repositories to scaffold, no context classes, no code generation.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
