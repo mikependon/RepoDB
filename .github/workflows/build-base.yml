@@ -259,11 +259,12 @@ jobs:
 
       - name: Locate Db2 native driver libraries (clidriver)
         run: |
-          echo "Searching for libdb2.so under ${{ inputs.solution-dir }} ..."
-          find "${{ inputs.solution-dir }}" -type f -name "libdb2.so" -print
-          DIRS=$(find "${{ inputs.solution-dir }}" -type f -name "libdb2.so" -exec dirname {} \; | sort -u | tr '\n' ':')
+          SEARCH_ROOT="$(pwd)/${{ inputs.solution-dir }}"
+          echo "Searching for libdb2.so under $SEARCH_ROOT ..."
+          find "$SEARCH_ROOT" -type f -name "libdb2.so" -print
+          DIRS=$(find "$SEARCH_ROOT" -type f -name "libdb2.so" -exec dirname {} \; | sort -u | tr '\n' ':')
           if [ -z "$DIRS" ]; then
-            echo "::warning::No libdb2.so found under ${{ inputs.solution-dir }} - the Db2 integration tests will likely fail to load the native driver. Check that Net.IBM.Data.Db2-lnx restored correctly for the linux-x64 build."
+            echo "::warning::No libdb2.so found under $SEARCH_ROOT - the Db2 integration tests will likely fail to load the native driver. Check that Net.IBM.Data.Db2-lnx restored correctly for the linux-x64 build."
           fi
           echo "LD_LIBRARY_PATH=$DIRS" >> "$GITHUB_ENV"
           echo "Resolved LD_LIBRARY_PATH=$DIRS"
