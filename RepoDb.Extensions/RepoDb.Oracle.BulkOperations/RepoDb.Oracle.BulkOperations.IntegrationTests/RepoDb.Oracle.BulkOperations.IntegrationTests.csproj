@@ -6,13 +6,6 @@
     <IsTestProject>true</IsTestProject>
     <EnableMSTestRunner>true</EnableMSTestRunner>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-    <!--
-      net8.0/net9.0/net10.0 all point at the same live Oracle schema/tables (there is no per-TFM
-      isolation), so "dotnet test" running them as concurrent processes races: one TFM's
-      Database.Cleanup() truncate or Bulk* direct-path load interleaves with another's, producing
-      either row-count assertion failures or (for direct-path loads specifically) an intermittent
-      "ORA-26028: index ... initially in unusable state". Serializing the TFMs avoids both.
-    -->
     <TestTfmsInParallel>false</TestTfmsInParallel>
   </PropertyGroup>
   <ItemGroup>

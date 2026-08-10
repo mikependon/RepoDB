@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-namespace RepoDb.MySql.BulkOperations
+namespace RepoDb.Db2.BulkOperations
 {
     /// <summary>
     /// 
@@ -25,7 +25,6 @@ namespace RepoDb.MySql.BulkOperations
         public string GetDataTypeName(int i) => _inner.GetDataTypeName(_sourceOrdinals[i]);
         public Type GetFieldType(int i) => _inner.GetFieldType(_sourceOrdinals[i]);
         public object GetValue(int i) => _inner.GetValue(_sourceOrdinals[i]);
-
         public int GetValues(object[] values)
         {
             var count = Math.Min(_sourceOrdinals.Length, values.Length);

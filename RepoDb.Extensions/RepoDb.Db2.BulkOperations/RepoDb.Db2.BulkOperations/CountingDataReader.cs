@@ -1,11 +1,8 @@
 using System;
 using System.Data;
 
-namespace RepoDb.Oracle.BulkOperations
+namespace RepoDb.Db2.BulkOperations
 {
-    /// <summary>
-    /// 
-    /// </summary>
     internal sealed class CountingDataReader : IDataReader
     {
         private readonly IDataReader _inner;
@@ -57,6 +54,7 @@ namespace RepoDb.Oracle.BulkOperations
         public void Close() => _inner.Close();
         public DataTable GetSchemaTable() => _inner.GetSchemaTable();
         public bool NextResult() => _inner.NextResult();
+
         public void Dispose()
         {
         }
