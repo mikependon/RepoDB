@@ -716,7 +716,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAll<CompleteTable>(entities, transaction: transaction);
+                    connection.MergeAll<CompleteTable>(entities, e => new { e.SessionId }, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -739,7 +739,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAll<CompleteTable>(entities, transaction: transaction);
+                    connection.MergeAll<CompleteTable>(entities, e => new { e.SessionId }, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -766,7 +766,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<CompleteTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<CompleteTable>(entities, e => new { e.SessionId }, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -789,7 +789,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    await connection.MergeAllAsync<CompleteTable>(entities, transaction: transaction);
+                    await connection.MergeAllAsync<CompleteTable>(entities, e => new { e.SessionId }, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1438,14 +1438,6 @@ namespace RepoDb.Db2.IntegrationTests
 
         #region TransactionScope
 
-        // RISK: unlike the DbTransaction-based tests above (which use DB2Connection.BeginTransaction()
-        // directly and are known-good patterns for ODP.NET), these rely on System.Transactions ambient
-        // transaction enlistment. Db2.ManagedDataAccess.Core supports enlisting in a TransactionScope
-        // for a *single* connection/resource (no MSDTC / distributed coordinator needed in that case),
-        // but this has not been verified against the actual Docker Db2 instance used by this suite.
-        // If these fail while the DbTransaction region above passes, suspect TransactionScope enlistment
-        // support in the installed Db2.ManagedDataAccess.Core version specifically, not a RepoDb bug.
-
         #region InsertAll
 
         [TestMethod]
@@ -1507,7 +1499,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var connection = new DB2Connection(Database.ConnectionString))
                 {
                     // Act
-                    connection.MergeAll<CompleteTable>(entities);
+                    connection.MergeAll<CompleteTable>(entities, e => new { e.SessionId });
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
@@ -1529,7 +1521,7 @@ namespace RepoDb.Db2.IntegrationTests
                 using (var connection = new DB2Connection(Database.ConnectionString))
                 {
                     // Act
-                    await connection.MergeAllAsync<CompleteTable>(entities);
+                    await connection.MergeAllAsync<CompleteTable>(entities, e => new { e.SessionId });
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());

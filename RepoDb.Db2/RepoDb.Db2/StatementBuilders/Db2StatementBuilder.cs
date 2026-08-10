@@ -482,24 +482,6 @@ namespace RepoDb.StatementBuilders
 
             // Initialize the builder
             var builder = new QueryBuilder();
-
-            // Build the query. Db2 requires "MERGE INTO" (not just "MERGE") and requires the
-            // USING source subquery to have a FROM clause even when only selecting bind
-            // variables/constants. NOTE: this used to write "FROM DUAL" here - Oracle's
-            // universally-available single-row dummy table - on the (unverified, wrong)
-            // assumption that Db2 has the same thing. It doesn't: confirmed live against Db2 LUW,
-            // "FROM DUAL" fails with SQL0204N ("DB2INST1.DUAL is an undefined name"). Db2's
-            // equivalent is the catalog table SYSIBM.SYSDUMMY1 (already relied on elsewhere in
-            // this provider - see ExecuteQueryMultipleTest.cs and WrapMergeWithReturningResult
-            // below), referenced unquoted/schema-qualified like any other system catalog object.
-            // Also: unlike a SELECT's column aliases, Db2's MERGE syntax does NOT accept the "AS"
-            // keyword before a table/subquery alias - "MERGE INTO t AS T" is illegal and fails to
-            // parse (every alias in Db2's own MERGE examples is bare, e.g. "MERGE INTO bonuses D
-            // USING (...) S ON (...)"). Using ".As(...)" here previously produced "AS T"/"AS S",
-            // which Db2's parser rejected with a confusing "ORA-38107: Invalid syntax with MERGE
-            // without USING clause" pointing at the start of the statement - it aborts as soon as
-            // it hits the unexpected "AS" token, before it ever reaches the (perfectly valid)
-            // USING clause.
             builder.Clear()
                 .Merge()
                 .Into()
@@ -540,26 +522,9 @@ namespace RepoDb.StatementBuilders
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-
-            if (keyColumn == null)
-            {
-                // Deliberately no ".End()" - see the comment in CreateExists/TrimTrailingSemicolon
-                // for why a trailing " ;" breaks Db2 regardless of statement type.
-                return builder.GetString();
-            }
-
-            // Return the query, wrapped so the generated/matched key can flow back through the
-            // same ExecuteScalar()-based pipeline RepoDb.Core uses for every provider.
-            //
-            // NOTE: this used to reuse the same "SELECT ... FROM FINAL TABLE (...)" wrapper as
-            // CreateInsert, on the (unverified, wrong) assumption that Db2's data-change-table-
-            // reference works identically for MERGE as it does for INSERT. Verified against a
-            // live Db2 LUW instance: it does not - "FROM FINAL TABLE (MERGE ...)" fails with
-            // SQL0104N ("... Expected tokens may include: <insert-statement> ..."), and Db2 LUW's
-            // official MERGE statement reference has no FINAL TABLE mention at all (this appears
-            // to be a Db2 for z/OS-only extension). See WrapMergeWithReturningResult for the
-            // actual (multi-statement SELECT-based) mechanism used instead.
-            return WrapMergeWithReturningResult(builder.GetString(), tableName, keyColumn, qualifiers, identityField);
+            return (keyColumn == null) ?
+                builder.GetString() :
+                WrapMergeWithReturningResult(builder.GetString(), tableName, keyColumn, qualifiers, identityField);
         }
 
         #endregion
@@ -627,17 +592,17 @@ namespace RepoDb.StatementBuilders
 
             // TODO: A DB2 limitation. The batched MergeAll can only safely correlate each returned key back to the entity.
             // It is important to test and verify the behavior, or else, uncomment the error handler below.
-            //if (identityField != null &&
-            //    qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
-            //{
-            //    throw new NotSupportedException(
-            //        $"MergeAll cannot batch multiple rows into a single round-trip for '{tableName}' " +
-            //        $"when the identity column ('{identityField.Name}') is used as a qualifier - a " +
-            //        "freshly-inserted row's generated identity value can't be safely correlated back " +
-            //        "to a specific entity within a batch that may mix matched and unmatched rows. " +
-            //        "Pass an explicit non-identity qualifier (e.g. a natural key) to MergeAll, or call " +
-            //        "it with a batch size of 1.");
-            //}
+            if (identityField != null &&
+                qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new NotSupportedException(
+                    $"MergeAll cannot batch multiple rows into a single round-trip for '{tableName}' " +
+                    $"when the identity column ('{identityField.Name}') is used as a qualifier - a " +
+                    "freshly-inserted row's generated identity value can't be safely correlated back " +
+                    "to a specific entity within a batch that may mix matched and unmatched rows. " +
+                    "Pass an explicit non-identity qualifier (e.g. a natural key) to MergeAll, or call " +
+                    "it with a batch size of 1.");
+            }
 
             // Get the insertable and updateable fields
             var insertableFields = fields

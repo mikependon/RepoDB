@@ -1900,25 +1900,25 @@ namespace RepoDb.Db2.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        //[TestMethod]
-        //public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOneAndIdentityIsTheQualifier()
-        //{
-        //    // Setup
-        //    var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
-        //    var tableName = "Table";
-        //    var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-        //    var qualifiers = Field.From("Field1");
-        //    var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+        [TestMethod]
+        public void ThrowExceptionOnDb2StatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOneAndIdentityIsTheQualifier()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<DB2Connection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
-        //    // Act
-        //    Assert.Throws<NotSupportedException>(() =>
-        //        statementBuilder.CreateMergeAll(tableName: tableName,
-        //            fields: fields,
-        //            qualifiers: qualifiers,
-        //            batchSize: 2,
-        //            primaryField: null,
-        //            identityField: identityField));
-        //}
+            // Act
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateMergeAll(tableName: tableName,
+                    fields: fields,
+                    qualifiers: qualifiers,
+                    batchSize: 2,
+                    primaryField: null,
+                    identityField: identityField));
+        }
 
         [TestMethod]
         public void TestDb2StatementBuilderCreateMergeAllWithNoKeyColumn()

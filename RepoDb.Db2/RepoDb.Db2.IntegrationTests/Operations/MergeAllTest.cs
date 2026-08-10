@@ -186,17 +186,17 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
         }
 
-        //[TestMethod]
-        //public void ThrowExceptionOnDb2ConnectionMergeAllWhenIdentityIsQualifierAndBatchSizeIsGreaterThanOne()
-        //{
-        //    // Setup
-        //    var tables = Helper.CreateCompleteTables(10).AsList();
+        [TestMethod]
+        public void ThrowExceptionOnDb2ConnectionMergeAllWhenIdentityIsQualifierAndBatchSizeIsGreaterThanOne()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10).AsList();
 
-        //    using var connection = new DB2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
-        //    // Act/Assert
-        //    Assert.Throws<System.NotSupportedException>(() => connection.MergeAll<CompleteTable>(tables));
-        //}
+            // Act/Assert
+            Assert.Throws<System.NotSupportedException>(() => connection.MergeAll<CompleteTable>(tables));
+        }
 
         [TestMethod]
         public void TestDb2ConnectionMergeAllViaTableNameForEmptyTable()
@@ -366,18 +366,18 @@ namespace RepoDb.Db2.IntegrationTests.Operations
             tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
         }
 
-        //[TestMethod]
-        //public async Task ThrowExceptionOnDb2ConnectionMergeAllAsyncWhenIdentityIsQualifierAndBatchSizeIsGreaterThanOne()
-        //{
-        //    // Setup
-        //    var tables = Helper.CreateCompleteTables(10).AsList();
+        [TestMethod]
+        public async Task ThrowExceptionOnDb2ConnectionMergeAllAsyncWhenIdentityIsQualifierAndBatchSizeIsGreaterThanOne()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10).AsList();
 
-        //    using var connection = new DB2Connection(Database.ConnectionString);
+            using var connection = new DB2Connection(Database.ConnectionString);
 
-        //    // Act/Assert: see the sync counterpart's remarks.
-        //    await Assert.ThrowsAsync<System.NotSupportedException>(() =>
-        //        connection.MergeAllAsync<CompleteTable>(tables));
-        //}
+            // Act/Assert: see the sync counterpart's remarks.
+            await Assert.ThrowsAsync<System.NotSupportedException>(() =>
+                connection.MergeAllAsync<CompleteTable>(tables));
+        }
 
         [TestMethod]
         public async Task TestDb2ConnectionMergeAllAsyncViaTableNameForEmptyTable()
