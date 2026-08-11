@@ -23,6 +23,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
@@ -33,6 +34,7 @@ namespace RepoDb
         public static int BulkDeleteByKey<TPrimaryKey>(this SqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -43,6 +45,7 @@ namespace RepoDb
             return BulkDeleteByKeyInternalBase(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys?.Cast<object>(),
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,
@@ -62,6 +65,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
@@ -73,6 +77,7 @@ namespace RepoDb
         public static Task<int> BulkDeleteByKeyAsync<TPrimaryKey>(this SqlConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -84,6 +89,7 @@ namespace RepoDb
             return BulkDeleteByKeyAsyncInternalBase(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys?.Cast<object>(),
+                options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,

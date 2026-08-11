@@ -22,6 +22,7 @@ namespace RepoDb
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -31,6 +32,7 @@ namespace RepoDb
         public static int BulkDeleteByKey<TPrimaryKey>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
@@ -42,6 +44,7 @@ namespace RepoDb
             //// Call the method
             return bulkDbConnector.Connection.BulkDeleteByKey(tableName: tableName,
                 primaryKeys: primaryKeys,
+                options: options,
                 bulkCopyTimeout: repository.CommandTimeout,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,
@@ -61,6 +64,7 @@ namespace RepoDb
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -71,6 +75,7 @@ namespace RepoDb
         public static async Task<int> BulkDeleteByKeyAsync<TPrimaryKey>(this DbRepository<SqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
@@ -83,6 +88,7 @@ namespace RepoDb
             //// Call the method
             return await bulkDbConnector.Connection.BulkDeleteByKeyAsync(tableName: tableName,
                 primaryKeys: primaryKeys,
+                options: options,
                 bulkCopyTimeout: repository.CommandTimeout,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,

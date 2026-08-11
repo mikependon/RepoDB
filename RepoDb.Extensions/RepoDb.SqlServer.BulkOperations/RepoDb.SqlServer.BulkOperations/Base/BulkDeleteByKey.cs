@@ -34,6 +34,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             string? hints = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -45,6 +46,7 @@ namespace RepoDb
                 tableName,
                 primaryKeys?.Cast<object>(),
                 hints,
+                options,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -70,6 +72,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<object> primaryKeys,
             string? hints = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -125,7 +128,7 @@ namespace RepoDb
                 // Do the bulk insertion first
                 using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    var options = primaryOrIdentityDbField.IsIdentity == true ?
+                    options |= primaryOrIdentityDbField.IsIdentity == true ?
                         Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
                     var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
 
@@ -204,6 +207,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             string? hints = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -216,6 +220,7 @@ namespace RepoDb
                 tableName,
                 primaryKeys?.Cast<object>(),
                 hints,
+                options,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -243,6 +248,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<object> primaryKeys,
             string? hints = null,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
@@ -299,7 +305,7 @@ namespace RepoDb
                 // Do the bulk insertion first
                 using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    var options = primaryOrIdentityDbField.IsIdentity == true ?
+                    options |= primaryOrIdentityDbField.IsIdentity == true ?
                         Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")() : default;
                     var mappings = new[] { new SqlServerBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
 
