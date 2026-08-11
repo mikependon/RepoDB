@@ -7,29 +7,22 @@
 
 RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
 
-RepoDB is best for simplifying data layer implementations, processing millions of records, and integrating multiple data sources. It provides the flexibility to work the way you want—all through the `IDbConnection` interface.
+RepoDB is best for simplifying data layer implementations, processing millions of records, and integrating multiple data sources. It provides the flexibility to work the way you want—all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface.
 
 Write raw SQL when you need absolute control, or use the fluent APIs for more productivity. You can switch seamlessly between both approaches without sacrificing performance or maintainability.
 
-## Easiest to Use .NET ORM
+## Easy to Use
 
-Every operation is an extension method of `IDbConnection` interface. Simply open a connection and you can start working with your database — no need for repositories to scaffold, no context classes, no code generation.
+Every operation is an extension method of [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Simply open a connection and you can start working with your database — no need for repositories to scaffold, no context classes, no code generation.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-    // Query
-    var customer = connection.Query<Customer>(c => c.Id == 10045).FirstOrDefault();
-
-    // Insert
-    var id = connection.Insert<Customer>(new Customer { FirstName = "John", LastName = "Doe" });
-
-    // Update
-    customer.LastName = "Smith";
-    connection.Update<Customer>(customer);
-
-    // Delete
-    connection.Delete<Customer>(10045); // or connection.Delete<Customer>(customer);
+    var id = connection.Insert<Customer>(new Customer { FirstName = "John", LastName = "Doe" }); // Insert
+    var customer = connection.Query<Customer>(c => c.Id == id).FirstOrDefault(); // Query
+    customer.LastName = "Smith"; // Set
+    connection.Update<Customer>(customer); // Update
+    connection.Delete<Customer>(10045); // or connection.Delete<Customer>(customer); // Delete
 }
 ```
 

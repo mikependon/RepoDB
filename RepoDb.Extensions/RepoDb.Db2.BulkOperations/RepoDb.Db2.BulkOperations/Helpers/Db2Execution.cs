@@ -39,7 +39,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             DB2Transaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierField);
             connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
@@ -67,7 +67,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierField);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
         }
 
@@ -203,59 +203,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="identityField"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(DB2Connection connection,
-            string tableName,
-            Field identityField,
-            ITrace trace = null,
-            string traceKey = null,
-            DB2Transaction transaction = null)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
-
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
-            reader.Read();
-            return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="identityField"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(DB2Connection connection,
-            string tableName,
-            Field identityField,
-            ITrace trace = null,
-            string traceKey = null,
-            DB2Transaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
-
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-            await reader.ReadAsync(cancellationToken);
-            return (reader.GetString(0), string.Equals(reader.GetString(1), "ALWAYS", StringComparison.OrdinalIgnoreCase));
-        }
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -280,8 +228,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
@@ -324,8 +271,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
@@ -364,8 +310,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             DB2Transaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
@@ -380,7 +325,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -405,8 +350,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
@@ -510,8 +454,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
@@ -557,8 +500,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
@@ -598,8 +540,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             DB2Transaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
 
             using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
@@ -614,7 +555,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -641,8 +582,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var (sequenceName, isAlwaysGenerated) = await GetIdentitySequenceMetadataAsync(connection, tableName, identityField, trace, traceKey, transaction, cancellationToken);
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, sequenceName, isAlwaysGenerated, dbSetting);
+            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
 
             using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
