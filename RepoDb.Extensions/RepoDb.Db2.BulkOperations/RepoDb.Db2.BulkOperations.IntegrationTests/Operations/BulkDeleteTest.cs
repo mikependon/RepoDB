@@ -8,6 +8,7 @@ using System.Data;
 using RepoDb.Enumerations.Db2;
 using System.Linq;
 using IBM.Data.Db2;
+using RepoDb.Exceptions;
 
 namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
 {
@@ -852,7 +853,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -885,7 +886,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -1020,7 +1021,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -1053,7 +1054,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -2837,7 +2838,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -2870,7 +2871,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -3005,7 +3006,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -3038,7 +3039,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<DB2Exception>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));

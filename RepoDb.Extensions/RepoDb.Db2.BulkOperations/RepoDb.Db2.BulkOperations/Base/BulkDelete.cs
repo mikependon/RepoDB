@@ -512,6 +512,11 @@ namespace RepoDb
             IList<Field> qualifierFields)
             where TEntity : class
         {
+            if (entities == null)
+            {
+                throw new NullReferenceException("The entities could not be null.");
+            }
+
             var entityType = typeof(TEntity) == typeof(object)
                 ? (entities.FirstOrDefault()?.GetType() ?? typeof(TEntity))
                 : typeof(TEntity);
