@@ -25,6 +25,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -36,6 +37,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -43,7 +45,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            BulkUpdateBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdateBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Updates existing rows in the database in bulk, matched by the defined qualifiers (defaults to
@@ -55,6 +57,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -67,6 +70,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -74,7 +78,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            BulkUpdateBase(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdateBase(connection, tableName, entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/>. Uses the
@@ -86,6 +90,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -98,13 +103,14 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null) =>
-            BulkUpdate(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdate(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/>. Returns the
@@ -116,6 +122,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -129,13 +136,14 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null) =>
-            BulkUpdateBase(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdateBase(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Updates existing rows in the database in bulk by streaming a <see cref="DbDataReader"/> to a
@@ -148,6 +156,7 @@ namespace RepoDb
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -160,13 +169,14 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null) =>
-            BulkUpdateBase(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdateBase(connection, tableName, reader, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -181,6 +191,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -193,6 +204,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -201,7 +213,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkUpdateBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Updates existing rows in the database in bulk in an asynchronous way, matched by the defined
@@ -213,6 +225,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-updated.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -226,6 +239,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -234,7 +248,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkUpdateBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/> in an asynchronous
@@ -246,6 +260,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -259,6 +274,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -266,7 +282,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkUpdateAsync(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateAsync(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Updates the rows of the target table in bulk from a <see cref="DataTable"/> in an asynchronous
@@ -278,6 +294,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -292,6 +309,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -299,7 +317,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkUpdateBaseAsync(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateBaseAsync(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Updates existing rows in the database in bulk in an asynchronous way by streaming a
@@ -312,6 +330,7 @@ namespace RepoDb
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -325,6 +344,7 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -332,7 +352,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkUpdate,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkUpdateBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

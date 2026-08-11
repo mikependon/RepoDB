@@ -15,20 +15,21 @@ using RepoDb.Db2.BulkOperations;
 namespace RepoDb
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static partial class Db2ConnectionExtension
     {
         #region WriteToServerInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
@@ -38,6 +39,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             DB2Transaction transaction = null,
@@ -46,19 +48,20 @@ namespace RepoDb
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
             bulkCopy.WriteToServer(filteredReader);
             return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="excludeField"></param>
@@ -68,24 +71,26 @@ namespace RepoDb
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Field excludeField = null)
         {
             connection.EnsureOpen();
-            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
+            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
             bulkCopy.WriteToServer(rows);
             return rows != null ? rows.Length : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
@@ -95,6 +100,7 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             DB2Transaction transaction = null,
@@ -102,7 +108,7 @@ namespace RepoDb
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
             bulkCopy.WriteToServer(filteredReader);
             return countingReader.Count;
         }
@@ -112,13 +118,14 @@ namespace RepoDb
         #region WriteToServerAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -129,6 +136,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
@@ -138,19 +146,20 @@ namespace RepoDb
         {
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
             await Task.Run(async () => bulkCopy.WriteToServer(filteredReader), cancellationToken);
             return entities != null ? entities.Count() : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -161,25 +170,27 @@ namespace RepoDb
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
+            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
             await Task.Run(async () => bulkCopy.WriteToServer(rows), cancellationToken);
             return rows != null ? rows.Length : 0;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -190,6 +201,7 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
@@ -200,7 +212,7 @@ namespace RepoDb
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 var countingReader = new CountingDataReader(reader);
-                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
+                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
                 bulkCopy.WriteToServer(filteredReader);
                 return countingReader.Count;
             },
@@ -212,7 +224,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="pseudoTableType"></param>
         /// <param name="rowCount"></param>
@@ -224,7 +236,7 @@ namespace RepoDb
                     Db2BulkImportPseudoTableType.Physical;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
@@ -249,12 +261,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
@@ -263,11 +276,12 @@ namespace RepoDb
             string tableName,
             DataTable table,
             IEnumerable<Db2BulkInsertMapItem> mappings,
+            DB2BulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var bulkCopy = new DB2BulkCopy(connection)
+            var bulkCopy = new DB2BulkCopy(connection, bulkCopyOptions)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
@@ -312,7 +326,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sourceType"></param>
         /// <param name="destinationType"></param>
@@ -344,12 +358,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
@@ -359,12 +374,13 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<Db2BulkInsertMapItem> mappings,
+            DB2BulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             DB2Transaction transaction,
             Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var bulkCopy = new DB2BulkCopy(connection)
+            var bulkCopy = new DB2BulkCopy(connection, bulkCopyOptions)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
@@ -396,7 +412,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -425,7 +441,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
@@ -453,7 +469,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>

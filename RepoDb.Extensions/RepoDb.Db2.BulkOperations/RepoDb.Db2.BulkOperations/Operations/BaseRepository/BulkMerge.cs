@@ -33,6 +33,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -45,6 +46,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportIdentityBehavior identityBehavior = default,
@@ -53,7 +55,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkMerge(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            repository.DbRepository.BulkMerge(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
@@ -66,6 +68,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -79,6 +82,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportIdentityBehavior identityBehavior = default,
@@ -87,7 +91,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkMerge,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            repository.DbRepository.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -103,6 +107,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -116,6 +121,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportIdentityBehavior identityBehavior = default,
@@ -125,7 +131,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkMergeAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            repository.DbRepository.BulkMergeAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
@@ -138,6 +144,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -152,6 +159,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportIdentityBehavior identityBehavior = default,
@@ -161,7 +169,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            repository.DbRepository.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

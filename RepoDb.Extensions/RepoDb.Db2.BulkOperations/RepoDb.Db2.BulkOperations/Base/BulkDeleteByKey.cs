@@ -16,12 +16,13 @@ namespace RepoDb
         #region Sync
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="primaryKeys"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -32,6 +33,7 @@ namespace RepoDb
         private static int BulkDeleteByKeyBase<TPrimaryKey>(this DB2Connection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -45,6 +47,7 @@ namespace RepoDb
             return BulkDeleteBaseViaKeyValues(connection,
                 tableName,
                 primaryKeyList,
+                bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -58,12 +61,13 @@ namespace RepoDb
         #region Async
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TPrimaryKey"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="primaryKeys"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -75,6 +79,7 @@ namespace RepoDb
         private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this DB2Connection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -89,6 +94,7 @@ namespace RepoDb
             return await BulkDeleteBaseViaKeyValuesAsync(connection,
                 tableName,
                 primaryKeyList,
+                bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -103,11 +109,12 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="keyValues"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -118,6 +125,7 @@ namespace RepoDb
         private static int BulkDeleteBaseViaKeyValues(DB2Connection connection,
             string tableName,
             IEnumerable<object> keyValues,
+            DB2BulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize,
             Db2BulkImportPseudoTableType pseudoTableType,
@@ -145,7 +153,7 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new Db2BulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
@@ -164,11 +172,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="keyValues"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -180,6 +189,7 @@ namespace RepoDb
         private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(DB2Connection connection,
             string tableName,
             IEnumerable<object> keyValues,
+            DB2BulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize,
             Db2BulkImportPseudoTableType pseudoTableType,
@@ -208,7 +218,7 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new Db2BulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);

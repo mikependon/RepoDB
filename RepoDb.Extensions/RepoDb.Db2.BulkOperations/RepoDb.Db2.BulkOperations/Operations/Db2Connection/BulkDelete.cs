@@ -24,6 +24,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -34,6 +35,7 @@ namespace RepoDb
         public static int BulkDelete<TEntity>(this DB2Connection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -41,7 +43,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            BulkDeleteBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDeleteBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk, matched by the defined qualifiers (defaults
@@ -52,6 +54,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -63,6 +66,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -70,7 +74,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null)
             where TEntity : class =>
-            BulkDeleteBase(connection, tableName, entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDeleteBase(connection, tableName, entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Deletes rows from the target table in bulk, matched against a <see cref="DataTable"/>. Uses the
@@ -81,6 +85,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/>.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -92,13 +97,14 @@ namespace RepoDb
             DataTable table,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null) =>
-            BulkDelete(connection, table?.TableName, table, qualifiers, rowState, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDelete(connection, table?.TableName, table, qualifiers, rowState, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Deletes rows from the target table in bulk, matched against a <see cref="DataTable"/>. Returns
@@ -109,6 +115,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/>.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -121,13 +128,14 @@ namespace RepoDb
             DataTable table,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null) =>
-            BulkDeleteBase(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDeleteBase(connection, tableName, table, qualifiers, rowState, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Deletes rows from the target table in bulk by streaming a <see cref="DbDataReader"/> to a
@@ -139,6 +147,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -150,13 +159,14 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null) =>
-            BulkDeleteBase(connection, tableName, reader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDeleteBase(connection, tableName, reader, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -170,6 +180,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -181,6 +192,7 @@ namespace RepoDb
         public static Task<int> BulkDeleteAsync<TEntity>(this DB2Connection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -189,7 +201,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkDeleteBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined
@@ -200,6 +212,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -212,6 +225,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -220,7 +234,7 @@ namespace RepoDb
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkDeleteBaseAsync(connection, tableName, entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteBaseAsync(connection, tableName, entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes rows from the target table in bulk in an asynchronous way, matched against a
@@ -231,6 +245,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/>.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -243,6 +258,7 @@ namespace RepoDb
             DataTable table,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -250,7 +266,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteAsync(connection, table?.TableName, table, qualifiers, rowState, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteAsync(connection, table?.TableName, table, qualifiers, rowState, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes rows from the target table in bulk in an asynchronous way, matched against a
@@ -261,6 +277,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/>.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -274,6 +291,7 @@ namespace RepoDb
             DataTable table,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -281,7 +299,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteBaseAsync(connection, tableName, table, qualifiers, rowState, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteBaseAsync(connection, tableName, table, qualifiers, rowState, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes rows from the target table in bulk in an asynchronous way by streaming a
@@ -293,6 +311,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="DB2BulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -305,6 +324,7 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             Db2BulkImportPseudoTableType pseudoTableType = default,
@@ -312,7 +332,7 @@ namespace RepoDb
             string traceKey = Db2TraceKeys.Db2BulkDelete,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteBaseAsync(connection, tableName, reader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteBaseAsync(connection, tableName, reader, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

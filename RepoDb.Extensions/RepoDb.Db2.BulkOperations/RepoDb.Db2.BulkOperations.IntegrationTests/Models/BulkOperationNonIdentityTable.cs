@@ -3,10 +3,12 @@ using System;
 namespace RepoDb.Db2.BulkOperations.IntegrationTests.Models
 {
     /// <summary>
-    /// Same shape and columns as <see cref="BulkOperationIdentityTable"/>, except <see cref="Id"/> is a
+    /// Same shape and columns as <see cref="BulkOperationIdentityTable"/> (including the
+    /// <c>Db2GuidToByteArrayPropertyHandler</c>/<c>Db2ByteToInt16PropertyHandler</c> registrations for
+    /// <see cref="RowGuid"/>/<see cref="ColumnBit"/> in Setup/Database.cs), except <see cref="Id"/> is a
     /// plain (non-identity) primary key - the caller's value is stored as-is, rather than being
-    /// overridden by an Db2-generated identity/sequence value. Used by tests that need to know a
-    /// row's <see cref="Id"/> ahead of time (e.g. to build a separate object - anonymous, expando, etc. -
+    /// overridden by a Db2-generated identity value. Used by tests that need to know a row's
+    /// <see cref="Id"/> ahead of time (e.g. to build a separate object - anonymous, expando, etc. -
     /// that must match an already-inserted row by primary key), since an IDENTITY column's
     /// server-generated value can't be predicted or reused for that purpose.
     /// </summary>

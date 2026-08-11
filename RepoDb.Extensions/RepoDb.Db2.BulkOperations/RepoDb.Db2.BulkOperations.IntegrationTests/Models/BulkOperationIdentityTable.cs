@@ -3,11 +3,12 @@ using System;
 namespace RepoDb.Db2.BulkOperations.IntegrationTests.Models
 {
     /// <summary>
-    /// Db2 has no native BOOLEAN column usable for parameter binding (Db2DbType.Boolean is
-    /// documented as "Not Available in ODP.NET, Managed Driver"), so the SqlServer suite's BIT column
-    /// is represented here as a NUMBER(1,0)-backed <see cref="byte"/>? instead of bool?. RowGuid is
-    /// stored as RAW(16) and round-tripped via <c>Db2GuidToByteArrayPropertyHandler</c> (registered
-    /// per-property in Setup/Database.cs), the same pattern used by RepoDb.Db2.IntegrationTests.
+    /// Db2 has no native BOOLEAN column usable for parameter binding, so the SqlServer suite's BIT
+    /// column is represented here as a SMALLINT-backed <see cref="byte"/>? instead of bool? -
+    /// round-tripped via <c>Db2ByteToInt16PropertyHandler</c>. RowGuid is stored as
+    /// <c>CHAR(16) FOR BIT DATA</c> and round-tripped via <c>Db2GuidToByteArrayPropertyHandler</c>.
+    /// Both handlers are registered per-property in Setup/Database.cs, the same pattern used by
+    /// RepoDb.Db2.IntegrationTests.
     /// </summary>
     public class BulkOperationIdentityTable
     {
