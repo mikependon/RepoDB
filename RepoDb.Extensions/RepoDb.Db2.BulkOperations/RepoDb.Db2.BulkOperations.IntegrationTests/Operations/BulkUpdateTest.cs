@@ -357,7 +357,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -405,7 +405,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -454,7 +454,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -774,7 +774,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -822,7 +822,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -872,7 +872,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -907,7 +907,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -941,7 +941,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -975,7 +975,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1023,7 +1023,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1073,7 +1073,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1108,7 +1108,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1141,7 +1141,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1492,7 +1492,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1540,7 +1540,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1589,7 +1589,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1910,7 +1910,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -1958,7 +1958,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2008,7 +2008,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2043,7 +2043,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2076,7 +2076,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2110,7 +2110,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2158,7 +2158,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2208,7 +2208,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2243,7 +2243,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2277,7 +2277,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2624,7 +2624,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2672,7 +2672,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -2721,7 +2721,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3012,7 +3012,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3060,7 +3060,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3110,7 +3110,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3145,7 +3145,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3179,7 +3179,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3213,7 +3213,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3261,7 +3261,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3311,7 +3311,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3346,7 +3346,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3379,7 +3379,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3720,7 +3720,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3768,7 +3768,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -3817,7 +3817,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4109,7 +4109,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4157,7 +4157,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4207,7 +4207,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4242,7 +4242,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4275,7 +4275,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4309,7 +4309,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4357,7 +4357,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4407,7 +4407,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4442,7 +4442,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4476,7 +4476,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new DB2Connection(Database.ConnectionString))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 {
                     using (var table = new DataTable())
                     {
@@ -4508,7 +4508,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                 {
                     // Act
@@ -4530,7 +4530,7 @@ namespace RepoDb.Db2.BulkOperations.IntegrationTests.Operations
             {
                 sourceConnection.InsertAll(tables);
 
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM \"BulkOperationNonIdentityTable\""))
                 using (var destinationConnection = new DB2Connection(Database.ConnectionString))
                 {
                     // Act

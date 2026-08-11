@@ -312,9 +312,14 @@ namespace RepoDb
             }
             else
             {
+                var destinationFields = DbFieldCache.Get(connection, tableName, null);
                 foreach (DataColumn column in table.Columns)
                 {
                     if (excludeField != null && string.Equals(column.ColumnName, excludeField.Name, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    if (destinationFields?.GetByUnquotedName(column.ColumnName.AsUnquoted(true, dbSetting)) == null)
                     {
                         continue;
                     }
@@ -338,6 +343,10 @@ namespace RepoDb
             destinationType = Nullable.GetUnderlyingType(destinationType) ?? destinationType;
 
             if (sourceType == destinationType)
+            {
+                return true;
+            }
+            if (sourceType == typeof(object))
             {
                 return true;
             }

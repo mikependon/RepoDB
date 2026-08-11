@@ -1,7 +1,9 @@
 using IBM.Data.Db2;
 using RepoDb.Enumerations.Db2;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.Db2.BulkOperations;
 using RepoDb.Db2.BulkOperations.Extensions;
 using System;
@@ -55,6 +57,9 @@ namespace RepoDb
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -67,12 +72,20 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, null, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                if (qualifierFieldsForPseudoTable != null)
+                {
+                    using var qualifierTable = BuildQualifierOnlyDataTable(entityList, qualifierFieldsForPseudoTable);
+                    WriteToServerInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                }
+                else
+                {
+                    WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                }
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
@@ -124,6 +137,9 @@ namespace RepoDb
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -136,12 +152,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, null, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
@@ -191,6 +206,9 @@ namespace RepoDb
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -203,12 +221,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, null, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = Db2Execution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
@@ -267,6 +284,9 @@ namespace RepoDb
             var entityList = entities.AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -279,12 +299,20 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, null, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+
+                if (qualifierFieldsForPseudoTable != null)
+                {
+                    using var qualifierTable = BuildQualifierOnlyDataTable(entityList, qualifierFieldsForPseudoTable);
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+                }
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
@@ -338,6 +366,9 @@ namespace RepoDb
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -350,12 +381,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, null, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
@@ -407,6 +437,9 @@ namespace RepoDb
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = Db2Text.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var qualifierFieldsForPseudoTable = TryGetQualifierFieldsForPseudoTable(tableName, dbFields, qualifiers);
+            var mappings = ToPseudoTableMappings(qualifierFieldsForPseudoTable);
 
             using var command = CreateTraceCommand(connection, $"BULK DELETE FROM {tableName}", bulkCopyTimeout, transaction);
 
@@ -419,12 +452,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, null, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers).AsList();
                 result = await Db2Execution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
@@ -446,6 +478,114 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
+        private static IList<Field> TryGetQualifierFieldsForPseudoTable(string tableName,
+            DbFieldCollection dbFields,
+            IEnumerable<Field> qualifiers)
+        {
+            return GetQualifierFields(tableName, dbFields, qualifiers).AsList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="qualifierFields"></param>
+        /// <returns></returns>
+        private static IList<Db2BulkInsertMapItem> ToPseudoTableMappings(IList<Field> qualifierFields) =>
+            qualifierFields?.Select(f => new Db2BulkInsertMapItem(f.Name, f.Name)).AsList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="qualifierFields"></param>
+        /// <returns></returns>
+        private static DataTable BuildQualifierOnlyDataTable<TEntity>(IList<TEntity> entities,
+            IList<Field> qualifierFields)
+            where TEntity : class
+        {
+            var entityType = typeof(TEntity) == typeof(object)
+                ? (entities.FirstOrDefault()?.GetType() ?? typeof(TEntity))
+                : typeof(TEntity);
+            var isDictionaryStringObject = TypeCache.Get(entityType).IsDictionaryStringObject();
+
+            var columns = qualifierFields
+                .Select(f => (
+                    Field: f,
+                    Property: isDictionaryStringObject ? null : PropertyCache.Get(entityType, f, includeMappings: true)))
+                .AsList();
+
+            var rows = entities
+                .Select(entity => columns
+                    .Select(column => GetQualifierValueForWrite(entity, column.Field, column.Property, isDictionaryStringObject))
+                    .AsList())
+                .AsList();
+
+            var table = new DataTable();
+            for (var i = 0; i < columns.Count; i++)
+            {
+                var columnType = rows
+                    .Select(row => row[i])
+                    .FirstOrDefault(value => value != null && value != DBNull.Value)?
+                    .GetType() ?? typeof(object);
+                table.Columns.Add(columns[i].Field.Name, columnType);
+            }
+
+            foreach (var rowValues in rows)
+            {
+                var row = table.NewRow();
+                for (var i = 0; i < columns.Count; i++)
+                {
+                    row[i] = rowValues[i];
+                }
+                table.Rows.Add(row);
+            }
+
+            return table;
+        }
+
+        private static object GetQualifierValueForWrite(object entity,
+            Field field,
+            ClassProperty property,
+            bool isDictionaryStringObject)
+        {
+            object rawValue = null;
+            if (isDictionaryStringObject)
+            {
+                var dictionary = entity as IDictionary<string, object>;
+                if (dictionary != null && !dictionary.TryGetValue(field.Name, out rawValue))
+                {
+                    var key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, field.Name, StringComparison.OrdinalIgnoreCase));
+                    rawValue = key != null ? dictionary[key] : null;
+                }
+            }
+            else
+            {
+                rawValue = property?.PropertyInfo.GetValue(entity);
+            }
+
+            if (rawValue == null)
+            {
+                return DBNull.Value;
+            }
+
+            var handler = property?.GetPropertyHandler();
+            if (handler == null)
+            {
+                return rawValue;
+            }
+
+            var options = PropertyHandlerSetOptions.Create(null, property);
+            return ((dynamic)handler).Set((dynamic)rawValue, options) ?? (object)DBNull.Value;
+        }
 
         /// <summary>
         ///

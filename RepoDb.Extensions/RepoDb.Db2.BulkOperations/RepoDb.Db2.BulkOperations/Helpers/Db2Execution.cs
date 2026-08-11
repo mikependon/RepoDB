@@ -25,7 +25,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="pseudoTableType"></param>
-        /// <param name="qualifierField"></param>
+        /// <param name="qualifierFields"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
@@ -33,13 +33,13 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             string tableName,
             string pseudoTableName,
             Db2BulkImportPseudoTableType pseudoTableType,
-            Field qualifierField = null,
+            IEnumerable<Field> qualifierFields = null,
             ITrace trace = null,
             string traceKey = null,
             DB2Transaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierField);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields);
             connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
@@ -50,7 +50,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="pseudoTableType"></param>
-        /// <param name="qualifierField"></param>
+        /// <param name="qualifierFields"></param>
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
@@ -60,14 +60,14 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             string tableName,
             string pseudoTableName,
             Db2BulkImportPseudoTableType pseudoTableType,
-            Field qualifierField = null,
+            IEnumerable<Field> qualifierFields = null,
             ITrace trace = null,
             string traceKey = null,
             DB2Transaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierField);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
         }
 

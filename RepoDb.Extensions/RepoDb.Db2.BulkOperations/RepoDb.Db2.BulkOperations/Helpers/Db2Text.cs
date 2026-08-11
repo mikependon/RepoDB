@@ -17,26 +17,30 @@ namespace RepoDb
         #region Shared
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="qualifierField"></param>
+        /// <param name="qualifierFields"></param>
         /// <returns></returns>
         public static string GetCreatePseudoTableSql(string tableName,
             string pseudoTableName,
             IDbSetting dbSetting,
-            Field qualifierField = null)
+            IEnumerable<Field> qualifierFields = null)
         {
             var quotedTableName = tableName.AsQuoted(true, dbSetting);
             var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
             var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
-            var columnList = qualifierField != null ? qualifierField.Name.AsQuoted(true, dbSetting) : "*";
+            var qualifierFieldList = qualifierFields?.AsList();
+            var columnList = qualifierFieldList?.Count > 0
+                ? qualifierFieldList.Select(f => f.Name.AsQuoted(true, dbSetting)).Join(", ")
+                : "*";
 
             return string.Concat(
                 "CREATE TABLE ", quotedPseudoTableName, " AS (SELECT ", columnList, " FROM ", quotedTableName, ") DEFINITION ONLY; ",
-                "ALTER TABLE ", quotedPseudoTableName, " ADD COLUMN ", quotedRowOrderColumn, " BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY");
+                "ALTER TABLE ", quotedPseudoTableName, " ADD COLUMN ", quotedRowOrderColumn, " BIGINT NOT NULL WITH DEFAULT 0; ",
+                "ALTER TABLE ", quotedPseudoTableName, " ALTER COLUMN ", quotedRowOrderColumn, " DROP DEFAULT SET GENERATED ALWAYS AS IDENTITY");
         }
 
         /// <summary>
@@ -47,7 +51,7 @@ namespace RepoDb
         /// <returns></returns>
         public static string GetTruncatePseudoTableSql(string pseudoTableName,
             IDbSetting dbSetting) =>
-            $"TRUNCATE TABLE {pseudoTableName.AsQuoted(true, dbSetting)} RESTART IDENTITY IMMEDIATE";
+            $"TRUNCATE TABLE {pseudoTableName.AsQuoted(true, dbSetting)} IMMEDIATE";
 
         /// <summary>
         ///

@@ -148,7 +148,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, new[] { qualifierField }, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
@@ -213,7 +213,7 @@ namespace RepoDb
             try
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
