@@ -31,6 +31,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -41,6 +42,7 @@ namespace RepoDb
         public static int BulkDelete<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -48,7 +50,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkDelete(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            repository.DbRepository.BulkDelete(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk, matched by the defined qualifiers (defaults
@@ -59,6 +61,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -70,6 +73,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -77,7 +81,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDelete,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkDelete(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            repository.DbRepository.BulkDelete(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -91,6 +95,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -102,6 +107,7 @@ namespace RepoDb
         public static Task<int> BulkDeleteAsync<TEntity>(this BaseRepository<TEntity, OracleConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -110,7 +116,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            repository.DbRepository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Deletes existing rows from the database in bulk in an asynchronous way, matched by the defined
@@ -121,6 +127,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of entities to be bulk-deleted.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -133,6 +140,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -141,7 +149,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            repository.DbRepository.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

@@ -26,6 +26,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -38,6 +39,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -46,7 +48,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkMergeBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            BulkMergeBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Merges a list of entities into the database in bulk - inserts new rows and updates existing
@@ -59,6 +61,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -72,6 +75,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -80,7 +84,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            BulkMergeBase(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            BulkMergeBase(connection, tableName, entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Merges the rows of a <see cref="DataTable"/> into the database in bulk. Uses the
@@ -92,6 +96,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -105,6 +110,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -112,7 +118,7 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null) =>
-            BulkMerge(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            BulkMerge(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Merges the rows of a <see cref="DataTable"/> into the database in bulk. Returns the number of
@@ -124,6 +130,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -138,6 +145,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -145,7 +153,7 @@ namespace RepoDb
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null) =>
-            BulkMergeBase(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+            BulkMergeBase(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
         /// Merges a <see cref="DbDataReader"/> into the database in bulk, streaming rows to a staging table
@@ -163,6 +171,7 @@ namespace RepoDb
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -175,13 +184,14 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null) =>
-            BulkMergeBase(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkMergeBase(connection, tableName, reader, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -197,6 +207,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -210,6 +221,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -219,7 +231,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkMergeBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Merges a list of entities into the database in bulk in an asynchronous way - inserts new rows
@@ -232,6 +244,7 @@ namespace RepoDb
         /// <param name="entities">The list of entities to be bulk-merged.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -246,6 +259,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -255,7 +269,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkMergeBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, tableName, entities, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Merges the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
@@ -267,6 +281,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -281,6 +296,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -289,7 +305,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeAsync(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkMergeAsync(connection, table?.TableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Merges the rows of a <see cref="DataTable"/> into the database in bulk in an asynchronous way.
@@ -301,6 +317,7 @@ namespace RepoDb
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="rowState">The state of the rows to be included; when null, every row is included.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
@@ -316,6 +333,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -324,7 +342,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeBaseAsync(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, tableName, table, qualifiers, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <summary>
         /// Merges a <see cref="DbDataReader"/> into the database in bulk in an asynchronous way, streaming
@@ -339,6 +357,7 @@ namespace RepoDb
         /// <param name="reader">The source <see cref="DbDataReader"/> to stream from.</param>
         /// <param name="qualifiers">The fields used to match existing rows.</param>
         /// <param name="mappings">The explicit mapping of the source columns to the destination columns.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -352,6 +371,7 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -359,7 +379,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkMerge,
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkMergeBaseAsync(connection, tableName, reader, qualifiers, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
 
