@@ -14,6 +14,10 @@ We want the .NET community to understand this library's limitations before using
   - [Cache Invalidation](#cache-invalidation)
   - [Advance Query Tree Expression](#advance-query-tree-expression)
   - [Multiple Identity Columns](#multiple-identity-columns)
+- SQL Server
+  - [Identity Correlation Differs by Input Shape](#identity-correlation-differs-by-input-shape)
+  - [ReturnIdentity Silently Ignored for Anonymous Types](#returnidentity-silently-ignored-for-anonymous-types)
+  - [Reflection-Based Access to SqlBulkCopy Internals](#reflection-based-access-to-sqlbulkcopy-internals)
 - Oracle
   - [QueryMultiple Round Trips](#querymultiple-round-trips)
   - [InsertAll / MergeAll Batching](#insertall--mergeall-batching)
@@ -21,13 +25,17 @@ We want the .NET community to understand this library's limitations before using
   - [RETURNING on MERGE](#returning-on-merge)
   - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier)
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions)
-  - [Bulk Operations Staging Table](#bulk-operations-staging-table)
-  - [Verification Status](#verification-status)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-1)
+  - [Verification Status](#verification-status-1)
 - DB2
   - [QueryMultiple Round Trips](#querymultiple-round-trips-1)
   - [InsertAll / MergeAll Batching](#insertall--mergeall-batching-1)
   - [Identity/Primary Key Retrieval](#identityprimary-key-retrieval-1)
   - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-1)
+  - [Bulk Operations and Transactions](#bulk-operations-and-transactions-1)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-2)
+  - [Multi-Step BulkMerge Identity Correlation](#multi-step-bulkmerge-identity-correlation)
+  - [Verification Status](#verification-status-2)
 
 ## Core
 
@@ -391,6 +399,109 @@ There is currently no workaround other than keeping a single identity column per
 
 -----
 
+## SQL Server
+
+These limitations are specific to the [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) package, on top of the [Core](#core) limitations above.
+
+### Bulk Operations Staging Table
+
+`SqlServerBulkImportPseudoTableType` has three values: `Auto` (default), `Memory`, and `Physical`. Per its own XML doc comment, `Auto` should resolve to `Physical` once the row/entity count reaches `SqlServerConstants.RowCountThresholdForPhysicalTable` (5,000), and to `Memory` otherwise:
+
+```csharp
+/// A value that indicates that the type of the pseudo (staging) table will be automatically determined
+/// based on the number of rows/entities being processed. A <see cref="Memory"/> table will be used unless
+/// the row/entity count reaches the <see cref="SqlServerConstants.RowCountThresholdForPhysicalTable"/>
+/// threshold, in which case a <see cref="Physical"/> table will be used instead. This is the default behavior.
+Auto,
+```
+
+Every call site across `BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`, and `BulkDeleteByKey` instead does a strict equality check:
+
+```csharp
+var tempTableName = CreateBulkMergeTempTableName(tableName, pseudoTableType == SqlServerBulkImportPseudoTableType.Physical, dbSetting);
+```
+
+`Auto`'s underlying value is never equal to `Physical`, so `Auto` always behaves exactly like `Memory` — a local `#`-prefixed session-scoped temporary table — no matter how many rows are being bulk-loaded. `RowCountThresholdForPhysicalTable` is never referenced anywhere in the codebase outside its own declaration and doc comment. Unless a caller explicitly passes `SqlServerBulkImportPseudoTableType.Physical`, the documented row-count auto-switch never happens, even for million-row bulk loads.
+
+When a caller does explicitly opt into `Physical`, the resulting table name is deterministic and not scoped to the caller: `_RepoDb_Bulk{Operation}_{TableName}` (e.g. `_RepoDb_BulkMerge_Person`), with no session ID, GUID, or connection-specific suffix. Two concurrent callers bulk-merging/updating/deleting against the same target table from different connections will target the exact same physical staging table — created, populated, indexed, and dropped within each call — and can race or corrupt each other's staged rows.
+
+**Alternative Solution**
+
+Serialize bulk operations against the same table when passing `pseudoTableType: SqlServerBulkImportPseudoTableType.Physical`, or avoid `Physical` altogether and rely on the (always-in-effect) local temp table behavior.
+
+### Identity Correlation Differs by Input Shape
+
+`ReturnIdentity` support for `BulkInsert`/`BulkMerge` runs a `MERGE ... OUTPUT` against the staging table, carrying an explicit `[__RepoDb_OrderColumn]` value through the round trip so a returned identity can be matched back to its originating row:
+
+```sql
+MERGE [dbo].[Person] AS T
+USING (SELECT TOP 100 PERCENT * FROM [#_RepoDb_BulkInsert_Person] ORDER BY [__RepoDb_OrderColumn] ASC) AS S
+ON (1 = 0)
+WHEN NOT MATCHED THEN INSERT (...) VALUES (...)
+OUTPUT INSERTED.[Id] AS [Result], S.[__RepoDb_OrderColumn] AS [OrderColumn];
+```
+
+For the `IEnumerable<TEntity>`/`IDictionary<string,object>` overloads, this is read back correctly — `SetIdentityForEntities` reads both the identity value and the `OrderColumn` from the result set and indexes directly into the source list (`list[index]`), so correctness does not depend on the order rows come back in:
+
+```csharp
+var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+var index = reader.GetFieldValue<int>(1);
+var entity = list[(index < 0 ? result : index)];
+func(entity, value);
+```
+
+The `DataTable` overloads of `BulkInsert` and `BulkMerge` do not do this. Their `SetIdentityForEntities(DataTable, DbDataReader, DataColumn)` overload reads only the identity value from column 0 and assigns it positionally, ignoring the `OrderColumn` that the same SQL still selects and outputs:
+
+```csharp
+while (reader.Read())
+{
+    var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+    dataTable.Rows[result][identityColumn] = value;
+    result++;
+}
+```
+
+Correctness for the `DataTable` path therefore depends on `MERGE`'s `OUTPUT` clause returning rows in exactly the order they were inserted — something the statement only *attempts* to force via the `SELECT TOP 100 PERCENT ... ORDER BY [__RepoDb_OrderColumn]` subquery shown above. `ORDER BY` inside a derived table/subquery, even under `TOP 100 PERCENT`, is not guaranteed by SQL Server's query optimizer to determine the order of the outer statement's results — Microsoft has warned against relying on this pattern since SQL Server 2005. If the optimizer disregards it (more likely on larger batches or parallel plans), a `DataTable`-based `BulkInsert`/`BulkMerge` with `ReturnIdentity` can silently write identity values back onto the wrong rows.
+
+**Alternative Solution**
+
+Prefer the entity/dictionary-based overloads over the `DataTable` overloads when requesting `ReturnIdentity` — they correlate explicitly by `OrderColumn` and do not depend on implicit statement ordering.
+
+### ReturnIdentity Silently Ignored for Anonymous Types
+
+In `BulkMergeInternalBase<TEntity>`, when `ReturnIdentity` is requested, the choice between reading back identities and just executing the merge is:
+
+```csharp
+if (hasOrderingColumn != true || TypeCache.Get(entityType).IsAnonymousType())
+{
+    result = connection.ExecuteNonQuery(sql, ...);
+}
+else
+{
+    using var reader = (DbDataReader)connection.ExecuteReader(sql, ...);
+    ...
+    result = SetIdentityForEntities<TEntity>(entities, reader, identityField);
+}
+```
+
+For anonymous types, this silently falls back to `ExecuteNonQuery`. The merge still runs and rows are still inserted/updated, but no identity value is ever read back, and no exception or warning is raised. This is a reasonable consequence of anonymous types being immutable — there is no property setter to write the identity into — but the framework does not surface this to the caller, so a `BulkMerge` call against an anonymous type with `identityBehavior: ReturnIdentity` looks like it should populate identities and silently does not.
+
+`BulkInsert`'s entity-based `SetIdentityForEntities` has the same gap without an explicit anonymous-type check: `Compiler.GetPropertySetterFunc<TEntity>(identityField.Name)` returns `null` for any type with no matching settable property (anonymous types, or an entity that's simply missing that property), and when the setter is `null`, the method returns `0` immediately — again with no exception.
+
+### Reflection-Based Access to SqlBulkCopy Internals
+
+Every `SqlBulkCopy` interaction — including calls to fully public members like `DestinationTableName`, `BatchSize`, `BulkCopyTimeout`, `ColumnMappings`, and `WriteToServer`/`WriteToServerAsync` — goes through `Compiler`, an internal helper that builds and caches compiled `System.Linq.Expressions` trees over reflected `MethodInfo`/`PropertyInfo`, rather than calling these public members directly. The row-count fallback goes further and reaches into a *private* field:
+
+```csharp
+var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
+    Compiler.GetPropertyGetterFunc<SqlBulkCopy, int>("RowsCopied");
+result = (int)rowsCopiedFieldOrProperty?.Invoke(sqlBulkCopy);
+```
+
+`_rowsCopied` is a non-public implementation detail of `Microsoft.Data.SqlClient.SqlBulkCopy`, not part of its public contract. Because the fallback is used whenever `DataEntityDataReader.RecordsAffected`/`reader.RecordsAffected` isn't reliable, a future `Microsoft.Data.SqlClient` release that renames or removes that field would silently degrade this fallback — the getter returns `null`/default instead of throwing — rather than fail loudly at compile time or runtime.
+
+-----
+
 ## Oracle
 
 These limitations are specific to the [RepoDb.Oracle](https://www.nuget.org/packages/RepoDb.Oracle) and [RepoDb.Oracle.BulkOperations](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) packages, on top of the [Core](#core) limitations above.
@@ -461,7 +572,7 @@ Oracle's `CREATE TABLE`/`CREATE GLOBAL TEMPORARY TABLE` are DDL and cause an imp
 
 ## DB2
 
-These limitations are specific to the [RepoDb.Db2](https://www.nuget.org/packages/RepoDb.Db2) package, on top of the [Core](#core) limitations above.
+These limitations are specific to the [RepoDb.Db2](https://www.nuget.org/packages/RepoDb.Db2) and [RepoDb.Db2.BulkOperations](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) packages, on top of the [Core](#core) limitations above.
 
 ### QueryMultiple Round Trips
 
@@ -487,3 +598,41 @@ PropertyHandlerMapper.Add<YourEntity, Db2GuidToByteArrayPropertyHandler>(
 ```
 
 Register it per-property (not globally for `typeof(Guid)`) if your process also uses another RepoDb provider that handles `Guid` natively. A type-level `PropertyHandlerMapper` registration applies process-wide across all connections.
+
+### Bulk Operations and Transactions
+
+`DB2BulkCopy` — the mechanism behind every bulk load in `RepoDb.Db2.BulkOperations` — is constructed without the ambient `transaction` argument that the operation itself accepts (`new DB2BulkCopy(connection, bulkCopyOptions)`, with no `DB2Transaction` passed in). Only the surrounding staging-table DDL (create/drop) and the final `INSERT`/`MERGE`/`UPDATE`/`DELETE` against the real table are issued through `connection.ExecuteNonQuery(commandText, transaction: transaction)` and therefore honor a caller-supplied transaction. The bulk-copy load into the staging table does not.
+
+In practice:
+
+- The final statement against the real table (`INSERT ... FROM FINAL TABLE`, `MERGE`, `UPDATE`, or `DELETE`) is fully transactional, so a rollback still behaves correctly for your actual data.
+- The staging table itself is dropped in a `finally` block at the end of every call regardless of outcome, so a non-transactional load into it does not normally leak visible rows.
+- The bigger consequence is the DDL below: since a fresh staging table is created and dropped on *every* call rather than reused, and `CREATE TABLE`/`DROP TABLE` commonly force a commit boundary in Db2, any bulk operation issued inside an existing transaction can implicitly commit other work already pending in that same transaction as a side effect — every call, not just the first.
+
+### Bulk Operations Staging Table
+
+`BulkInsert` (when `ReturnIdentity` is requested), `BulkMerge`, `BulkUpdate`, `BulkDelete`, and `BulkDeleteByKey` all stage rows into a per-call pseudo table — named deterministically from `{pseudoTableType}{tableName}{operation}` (e.g., `PhysicalPersonMerge`) — before running a set-based statement against it. The `pseudoTableType` argument is meant to pick the kind of table used:
+
+- **`Physical`** — an ordinary heap table, not session-isolated.
+- **`Memory`** — intended to be a session-private staging table.
+- **`Auto`** *(default)* — intended to pick `Physical` at higher row counts, otherwise `Memory`.
+
+**`Memory` is currently not usable — every pseudo table resolves to `Physical` regardless of what you pass, and regardless of row count for `Auto`.** The internal resolution logic returns `Physical` on every branch. There is no session-private staging path implemented yet, despite `Memory` being a documented enum value.
+
+Unlike `RepoDb.Oracle.BulkOperations`, which creates a staging table once per (table, pseudo table type) and reuses it across calls, `RepoDb.Db2.BulkOperations` creates its staging table with `CREATE TABLE ... AS (...) DEFINITION ONLY` and drops it again on *every single call*. Combined with `Physical` staging always being in effect, and staging tables not being session-isolated, two concurrent callers bulk-writing against the same target table (and therefore the same deterministic staging-table name) can contend for, truncate, or drop the same physical table out from under each other. Serialize bulk operations against the same table from a single caller at a time until a proper `Memory`/session-isolated path is implemented.
+
+### Multi-Step BulkMerge Identity Correlation
+
+Db2 LUW's `MERGE` statement has no `FINAL TABLE` support (the same restriction noted for the core provider's `Merge`/`MergeAll` under [Identity/Primary Key Retrieval](#identityprimary-key-retrieval-1)). `BulkMerge` with `ReturnIdentity` works around this without a single atomic statement:
+
+1. A `LEFT JOIN` snapshot query classifies every staged row as matched or unmatched against the target table.
+2. A separate `MERGE ... WHEN MATCHED THEN UPDATE` applies the updates for matched rows.
+3. A separate `MERGE ... WHEN NOT MATCHED THEN INSERT`, wrapped in `SELECT ... FROM FINAL TABLE (...)`, inserts the unmatched rows and reads back their newly generated identities.
+
+This is three round trips instead of one, and the classification from step 1 can go stale if another connection concurrently inserts, updates, or deletes matching rows in the target table before steps 2 and 3 run — there is no snapshot isolation guarantee across the three statements beyond whatever isolation level the ambient transaction already provides.
+
+Separately, both this insert-only step and a plain `BulkInsert` with `ReturnIdentity` correlate the generated identities back to source rows by sorting the `FINAL TABLE` result by the new identity value ascending and assuming that ascending order matches the source row order (established via a row-order column on the staging table). This is the same unverified ordering assumption already called out for `InsertAll` under [Identity/Primary Key Retrieval](#identityprimary-key-retrieval-1) — verify it against your own Db2 instance before relying on it in production.
+
+### Verification Status
+
+`RepoDb.Db2.BulkOperations` has been implemented and reviewed. The entity-to-`DataTable` property-handler path has been spot-checked against a live Db2 LUW instance — routing entities through an in-memory `DataTable` rather than streaming them via a data reader turned out to be required for a `Guid`-backed `CHAR(n) FOR BIT DATA` column (see [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-1)) to bulk-load correctly. The package has not otherwise been fully exercised end-to-end. Verify the staging-table lifecycle described above, the `FINAL TABLE` identity read-back ordering, and the multi-step `BulkMerge` correlation before relying on this package in production.
