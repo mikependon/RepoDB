@@ -23,18 +23,41 @@ namespace RepoDb
         /// <param name="pseudoTableName"></param>
         /// <param name="dbSetting"></param>
         /// <param name="qualifierFields"></param>
+        /// <param name="nullableFields"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static string GetCreatePseudoTableSql(string tableName,
             string pseudoTableName,
             IDbSetting dbSetting,
-            IEnumerable<Field> qualifierFields = null)
+            IEnumerable<Field> qualifierFields = null,
+            IEnumerable<Field> nullableFields = null)
         {
             var quotedTableName = tableName.AsQuoted(true, dbSetting);
             var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
             var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
             var qualifierFieldList = qualifierFields?.AsList();
+            var nullableFieldNames = nullableFields?
+                .Select(f => f.Name)
+                .AsList();
+
+            if (nullableFieldNames?.Count > 0 && (qualifierFieldList == null || qualifierFieldList.Count == 0))
+            {
+                throw new ArgumentException(
+                    $"'{nameof(nullableFields)}' requires '{nameof(qualifierFields)}' to also be supplied (the full column list, not just the fields that need forcing).",
+                    nameof(qualifierFields));
+            }
+
+            string BuildSelectColumn(Field field)
+            {
+                var quotedName = field.Name.AsQuoted(true, dbSetting);
+                var forceNullable = nullableFieldNames?.Any(name => string.Equals(name, field.Name, StringComparison.OrdinalIgnoreCase)) == true;
+                return forceNullable ?
+                    $"CASE WHEN 1 = 0 THEN NULL ELSE {quotedName} END AS {quotedName}" :
+                    quotedName;
+            }
+
             var columnList = qualifierFieldList?.Count > 0
-                ? qualifierFieldList.Select(f => f.Name.AsQuoted(true, dbSetting)).Join(", ")
+                ? qualifierFieldList.Select(BuildSelectColumn).Join(", ")
                 : "*";
 
             return string.Concat(
@@ -79,19 +102,7 @@ namespace RepoDb
             IDbSetting dbSetting) => $"{pseudoTableType.ToString()}{tableName.AsUnquoted(dbSetting)}Insert";
 
         /// <summary>
-        ///
-        /// </summary>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="columnName"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        public static string GetAllowNullForColumnSql(string pseudoTableName,
-            string columnName,
-            IDbSetting dbSetting) =>
-            $"ALTER TABLE {pseudoTableName.AsQuoted(true, dbSetting)} ALTER COLUMN {columnName.AsQuoted(true, dbSetting)} DROP NOT NULL";
-
-        /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>

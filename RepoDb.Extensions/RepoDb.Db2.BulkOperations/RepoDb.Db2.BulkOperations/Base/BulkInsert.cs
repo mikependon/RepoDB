@@ -137,13 +137,13 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                Db2Execution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
                 result = Db2Execution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
             }
             finally
@@ -194,14 +194,17 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var entityList = entities.AsList();
+            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+            using var entityTable = BuildEntityDataTable(entityList, entityFields);
             var result = WriteToServerInternal(connection,
                 tableName,
-                entities,
+                entityTable,
+                null,
                 mappings,
                 bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
-                transaction,
                 identityField);
 
             // After Execution
@@ -332,13 +335,11 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
-                Db2Execution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
-                Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
                 result = Db2Execution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
             }
             finally
@@ -591,13 +592,14 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
-                await Db2Execution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
+
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
                 result = await Db2Execution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken);
             }
             finally
@@ -650,15 +652,18 @@ namespace RepoDb
 
             // Actual Execution
             var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var entityList = entities.AsList();
+            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+            using var entityTable = BuildEntityDataTable(entityList, entityFields);
             var result = await WriteToServerAsyncInternal(connection,
                 tableName,
-                entities,
+                entityTable,
+                null,
                 mappings,
                 bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
                 cancellationToken,
-                transaction,
                 identityField);
 
             // After Execution
@@ -792,13 +797,11 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
-                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
-                await Db2Execution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
-                await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var insertFields = GetInsertFields(tableName, dbFields, mappings);
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
                 result = await Db2Execution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken);
             }
             finally
@@ -935,16 +938,18 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         /// <exception cref="MissingFieldsException"></exception>
         private static IEnumerable<Field> GetInsertFields(string tableName,
             DbFieldCollection dbFields,
-            IEnumerable<Db2BulkInsertMapItem> mappings)
+            IEnumerable<Db2BulkInsertMapItem> mappings,
+            Field identityField)
         {
             var fields = dbFields?.GetAsFields();
 
@@ -952,6 +957,11 @@ namespace RepoDb
             {
                 fields = fields?.Where(field =>
                     mappings.Any(mapping => string.Equals(mapping.DestinationColumn, field.Name, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (identityField != null)
+            {
+                fields = fields?.Where(field => !string.Equals(field.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
             }
 
             if (fields?.Any() != true)

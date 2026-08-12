@@ -6,6 +6,7 @@ using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.Db2.BulkOperations;
 using RepoDb.Db2.BulkOperations.Extensions;
+using RepoDb.Db2.PropertyHandlers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -77,7 +78,7 @@ namespace RepoDb
 
                 if (qualifierFieldsForPseudoTable != null)
                 {
-                    using var qualifierTable = BuildQualifierOnlyDataTable(entityList, qualifierFieldsForPseudoTable);
+                    using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
                     WriteToServerInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
                 }
                 else
@@ -304,7 +305,7 @@ namespace RepoDb
 
                 if (qualifierFieldsForPseudoTable != null)
                 {
-                    using var qualifierTable = BuildQualifierOnlyDataTable(entityList, qualifierFieldsForPseudoTable);
+                    using var qualifierTable = BuildEntityDataTable(entityList, qualifierFieldsForPseudoTable);
                     await WriteToServerAsyncInternal(connection, pseudoTableName, qualifierTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
                 }
                 else
@@ -506,10 +507,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
-        /// <param name="qualifierFields"></param>
+        /// <param name="fields"></param>
         /// <returns></returns>
-        private static DataTable BuildQualifierOnlyDataTable<TEntity>(IList<TEntity> entities,
-            IList<Field> qualifierFields)
+        /// <exception cref="NullReferenceException"></exception>
+        private static DataTable BuildEntityDataTable<TEntity>(IList<TEntity> entities,
+            IList<Field> fields = null)
             where TEntity : class
         {
             if (entities == null)
@@ -521,8 +523,9 @@ namespace RepoDb
                 ? (entities.FirstOrDefault()?.GetType() ?? typeof(TEntity))
                 : typeof(TEntity);
             var isDictionaryStringObject = TypeCache.Get(entityType).IsDictionaryStringObject();
+            fields ??= GetEntityFieldsForWrite(entityType, entities, isDictionaryStringObject);
 
-            var columns = qualifierFields
+            var columns = fields
                 .Select(f => (
                     Field: f,
                     Property: isDictionaryStringObject ? null : PropertyCache.Get(entityType, f, includeMappings: true)))
@@ -557,6 +560,26 @@ namespace RepoDb
             return table;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="entities"></param>
+        /// <param name="isDictionaryStringObject"></param>
+        /// <returns></returns>
+        private static IList<Field> GetEntityFieldsForWrite(Type entityType,
+            IEnumerable<object> entities,
+            bool isDictionaryStringObject)
+        {
+            if (isDictionaryStringObject)
+            {
+                var dictionary = entities?.FirstOrDefault() as IDictionary<string, object>;
+                return dictionary?.Keys.Select(k => new Field(k)).AsList() ?? new List<Field>();
+            }
+
+            return PropertyCache.Get(entityType)?.Select(p => new Field(p.GetMappedName())).AsList() ?? new List<Field>();
+        }
+
         private static object GetQualifierValueForWrite(object entity,
             Field field,
             ClassProperty property,
@@ -583,13 +606,18 @@ namespace RepoDb
             }
 
             var handler = property?.GetPropertyHandler();
-            if (handler == null)
+            if (handler != null)
             {
-                return rawValue;
+                var options = PropertyHandlerSetOptions.Create(null, property);
+                return ((dynamic)handler).Set((dynamic)rawValue, options) ?? (object)DBNull.Value;
             }
 
-            var options = PropertyHandlerSetOptions.Create(null, property);
-            return ((dynamic)handler).Set((dynamic)rawValue, options) ?? (object)DBNull.Value;
+            return rawValue switch
+            {
+                Guid guid => new Db2GuidToByteArrayPropertyHandler().Set(guid, null),
+                byte b => new Db2ByteToInt16PropertyHandler().Set(b, null),
+                _ => rawValue
+            };
         }
 
         /// <summary>

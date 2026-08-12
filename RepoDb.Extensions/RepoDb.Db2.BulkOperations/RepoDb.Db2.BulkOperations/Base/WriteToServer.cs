@@ -331,7 +331,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="sourceType"></param>
         /// <param name="destinationType"></param>
@@ -352,6 +352,11 @@ namespace RepoDb
             }
             if ((sourceType == typeof(Guid) && destinationType == typeof(string)) ||
                 (sourceType == typeof(string) && destinationType == typeof(Guid)))
+            {
+                return true;
+            }
+            if ((sourceType == typeof(byte[]) && destinationType == typeof(string)) ||
+                (sourceType == typeof(string) && destinationType == typeof(byte[])))
             {
                 return true;
             }

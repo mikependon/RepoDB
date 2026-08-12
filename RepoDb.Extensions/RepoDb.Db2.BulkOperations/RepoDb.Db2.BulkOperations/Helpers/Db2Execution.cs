@@ -29,6 +29,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="nullableFields">See the remarks on <see cref="Db2Text.GetCreatePseudoTableSql"/>.</param>
         public static void CreatePseudoTable(DB2Connection connection,
             string tableName,
             string pseudoTableName,
@@ -36,15 +37,16 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             IEnumerable<Field> qualifierFields = null,
             ITrace trace = null,
             string traceKey = null,
-            DB2Transaction transaction = null)
+            DB2Transaction transaction = null,
+            IEnumerable<Field> nullableFields = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields, nullableFields);
             connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -55,6 +57,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <param name="nullableFields">See the remarks on <see cref="Db2Text.GetCreatePseudoTableSql"/>.</param>
         /// <returns></returns>
         public static async Task CreatePseudoTableAsync(DB2Connection connection,
             string tableName,
@@ -64,10 +67,11 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             ITrace trace = null,
             string traceKey = null,
             DB2Transaction transaction = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            IEnumerable<Field> nullableFields = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields);
+            var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields, nullableFields);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
         }
 
@@ -159,51 +163,6 @@ namespace RepoDb.Db2.BulkOperations.Extensions
 
         /// <summary>
         /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="columnName"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        public static void AllowNullForColumn(DB2Connection connection,
-            string pseudoTableName,
-            string columnName,
-            ITrace trace = null,
-            string traceKey = null,
-            DB2Transaction transaction = null)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="columnName"></param>
-        /// <param name="trace"></param>
-        /// <param name="traceKey"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task AllowNullForColumnAsync(DB2Connection connection,
-            string pseudoTableName,
-            string columnName,
-            ITrace trace = null,
-            string traceKey = null,
-            DB2Transaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
