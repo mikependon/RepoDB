@@ -413,16 +413,48 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
-
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
-
-            while (reader.Read())
+            var unmatchedRowOrders = new List<long>();
+            var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
+            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, transaction: transaction))
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                while (snapshotReader.Read())
+                {
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    if (snapshotReader.IsDBNull(1))
+                    {
+                        unmatchedRowOrders.Add(rowOrder);
+                    }
+                    else
+                    {
+                        setter?.Invoke(entities[(int)(rowOrder - 1)], Converter.DbNullToNull(snapshotReader.GetValue(1)));
+                        result++;
+                    }
+                }
+            }
+
+            // Step 2: update the matched rows.
+            if (result > 0)
+            {
+                var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                if (updateSql != null)
+                {
+                    connection.ExecuteNonQuery(updateSql, transaction: transaction);
+                }
+            }
+
+            if (unmatchedRowOrders.Count > 0)
+            {
+                var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, transaction: transaction);
+                var index = 0;
+                while (insertReader.Read())
+                {
+                    setter?.Invoke(entities[(int)(unmatchedRowOrders[index] - 1)], Converter.DbNullToNull(insertReader.GetValue(0)));
+                    index++;
+                    result++;
+                }
             }
 
             return result;
@@ -457,17 +489,49 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            var unmatchedRowOrders = new List<long>();
+            var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
+            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, transaction: transaction, cancellationToken: cancellationToken))
             {
-                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
-                result++;
+                while (await snapshotReader.ReadAsync(cancellationToken))
+                {
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    if (snapshotReader.IsDBNull(1))
+                    {
+                        unmatchedRowOrders.Add(rowOrder);
+                    }
+                    else
+                    {
+                        setter?.Invoke(entities[(int)(rowOrder - 1)], Converter.DbNullToNull(snapshotReader.GetValue(1)));
+                        result++;
+                    }
+                }
+            }
+
+            if (result > 0)
+            {
+                var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                if (updateSql != null)
+                {
+                    await connection.ExecuteNonQueryAsync(updateSql, transaction: transaction, cancellationToken: cancellationToken);
+                }
+            }
+
+            if (unmatchedRowOrders.Count > 0)
+            {
+                var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, transaction: transaction, cancellationToken: cancellationToken);
+                var index = 0;
+                while (await insertReader.ReadAsync(cancellationToken))
+                {
+                    setter?.Invoke(entities[(int)(unmatchedRowOrders[index] - 1)], Converter.DbNullToNull(insertReader.GetValue(0)));
+                    index++;
+                    result++;
+                }
             }
 
             return result;
@@ -499,22 +563,54 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             DB2Transaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
             var result = 0;
 
-            while (reader.Read())
+            var unmatchedRowOrders = new List<long>();
+            var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
+            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, transaction: transaction))
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                while (snapshotReader.Read())
+                {
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    if (snapshotReader.IsDBNull(1))
+                    {
+                        unmatchedRowOrders.Add(rowOrder);
+                    }
+                    else
+                    {
+                        rows[(int)(rowOrder - 1)][identityField.Name] = Converter.DbNullToNull(snapshotReader.GetValue(1));
+                        result++;
+                    }
+                }
+            }
+
+            if (result > 0)
+            {
+                var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                if (updateSql != null)
+                {
+                    connection.ExecuteNonQuery(updateSql, transaction: transaction);
+                }
+            }
+
+            if (unmatchedRowOrders.Count > 0)
+            {
+                var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, transaction: transaction);
+                var index = 0;
+                while (insertReader.Read())
+                {
+                    rows[(int)(unmatchedRowOrders[index] - 1)][identityField.Name] = Converter.DbNullToNull(insertReader.GetValue(0));
+                    index++;
+                    result++;
+                }
             }
 
             return result;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -541,15 +637,47 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = Db2Text.GetMergeFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
 
-            while (await reader.ReadAsync(cancellationToken))
+            var unmatchedRowOrders = new List<long>();
+            var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
+            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, transaction: transaction, cancellationToken: cancellationToken))
             {
-                rows[result][identityField.Name] = Converter.DbNullToNull(reader.GetValue(0));
-                result++;
+                while (await snapshotReader.ReadAsync(cancellationToken))
+                {
+                    var rowOrder = Convert.ToInt64(snapshotReader.GetValue(0));
+                    if (snapshotReader.IsDBNull(1))
+                    {
+                        unmatchedRowOrders.Add(rowOrder);
+                    }
+                    else
+                    {
+                        rows[(int)(rowOrder - 1)][identityField.Name] = Converter.DbNullToNull(snapshotReader.GetValue(1));
+                        result++;
+                    }
+                }
+            }
+
+            if (result > 0)
+            {
+                var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                if (updateSql != null)
+                {
+                    await connection.ExecuteNonQueryAsync(updateSql, transaction: transaction, cancellationToken: cancellationToken);
+                }
+            }
+
+            if (unmatchedRowOrders.Count > 0)
+            {
+                var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
+                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, transaction: transaction, cancellationToken: cancellationToken);
+                var index = 0;
+                while (await insertReader.ReadAsync(cancellationToken))
+                {
+                    rows[(int)(unmatchedRowOrders[index] - 1)][identityField.Name] = Converter.DbNullToNull(insertReader.GetValue(0));
+                    index++;
+                    result++;
+                }
             }
 
             return result;

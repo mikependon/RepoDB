@@ -206,7 +206,39 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="identityField"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string GetMergeMatchSnapshotSql(string tableName,
+            string pseudoTableName,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIdentityColumn = identityField.Name.AsQuoted(true, dbSetting);
+            var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
+            var rowOrderAlias = "RowOrder".AsQuoted(dbSetting);
+            var resultAlias = "Result".AsQuoted(dbSetting);
+
+            var onClause = qualifiers.AsList()
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(" AND ");
+
+            return string.Concat(
+                "SELECT S.", quotedRowOrderColumn, " AS ", rowOrderAlias, ", T.", quotedIdentityColumn, " AS ", resultAlias, " ",
+                "FROM ", quotedPseudoTableName, " S LEFT JOIN ", quotedTableName, " T ON (", onClause, ") ",
+                "ORDER BY S.", quotedRowOrderColumn);
+        }
+
+        /// <summary>
+        /// 
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
@@ -215,7 +247,52 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static string GetMergeFromPseudoTableForReturnIdentitySql(string tableName,
+        public static string GetMergeUpdateOnlySql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+
+            var qualifierList = qualifiers.AsList();
+
+            var onClause = qualifierList
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(" AND ");
+
+            var updateableFields = fields.AsList()
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase) &&
+                    qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == false)
+                .AsList();
+
+            if (updateableFields.Count == 0)
+            {
+                return null;
+            }
+
+            var updateSetClause = updateableFields
+                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
+                .Join(", ");
+
+            return string.Concat(
+                "MERGE INTO ", quotedTableName, " T USING ", quotedPseudoTableName, " S ON (", onClause, ") ",
+                "WHEN MATCHED THEN UPDATE SET ", updateSetClause);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string GetMergeInsertOnlyForReturnIdentitySql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             Field identityField,
@@ -228,41 +305,25 @@ namespace RepoDb
             var quotedRowOrderColumn = RowOrderColumnName.AsQuoted(true, dbSetting);
             var resultAlias = "Result".AsQuoted(dbSetting);
 
-            var fieldList = fields.AsList();
-            var qualifierList = qualifiers.AsList();
+            var insertableFields = fields.AsList()
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .AsList();
 
-            var onClause = qualifierList
+            var onClause = qualifiers.AsList()
                 .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
                 .Join(" AND ");
 
-            var updateableFields = fieldList
-                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase) &&
-                    qualifierList.Any(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == false)
-                .AsList();
-
-            var insertColumns = fieldList
+            var insertColumns = insertableFields
                 .Select(f => f.Name.AsQuoted(true, dbSetting))
                 .Join(", ");
 
-            var insertValues = fieldList
-                .Select(f => $"S.{f.Name.AsQuoted(true, dbSetting)}")
-                .Join(", ");
-
-            var updateSetClause = updateableFields
-                .Select(f => $"T.{f.Name.AsQuoted(true, dbSetting)} = S.{f.Name.AsQuoted(true, dbSetting)}")
-                .Join(", ");
-
-            var matchedClause = updateableFields.Count > 0
-                ? $"WHEN MATCHED THEN UPDATE SET {updateSetClause} "
-                : string.Empty;
-
             return string.Concat(
-                "MERGE INTO ", quotedTableName, " T USING ", quotedPseudoTableName, " S ON (", onClause, ") ",
-                matchedClause,
-                "WHEN NOT MATCHED THEN INSERT (", insertColumns, ") VALUES (", insertValues, "); ",
-                "SELECT T.", quotedIdentityColumn, " AS ", resultAlias, " FROM ", quotedTableName, " T ",
-                "INNER JOIN ", quotedPseudoTableName, " S ON (", onClause, ") ",
-                "ORDER BY S.", quotedRowOrderColumn);
+                "SELECT ", quotedIdentityColumn, " AS ", resultAlias, " FROM FINAL TABLE (",
+                "INSERT INTO ", quotedTableName, " (", insertColumns, ") ",
+                "SELECT ", insertColumns, " FROM ", quotedPseudoTableName, " S ",
+                "WHERE NOT EXISTS (SELECT 1 FROM ", quotedTableName, " T WHERE ", onClause, ") ",
+                "ORDER BY S.", quotedRowOrderColumn,
+                ") ORDER BY ", quotedIdentityColumn);
         }
 
         #endregion

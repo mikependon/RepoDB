@@ -143,8 +143,13 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
+                // Create pseudo table
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+                
+                // Write
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -213,7 +218,11 @@ namespace RepoDb
                 // Bulk and post process
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                // Write
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -656,8 +665,13 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
 
+                // Create pseudo table
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Write
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -728,7 +742,11 @@ namespace RepoDb
                 // Bulk and post process
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Write
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
