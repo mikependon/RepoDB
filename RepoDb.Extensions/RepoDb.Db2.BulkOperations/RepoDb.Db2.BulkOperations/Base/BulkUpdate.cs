@@ -83,7 +83,11 @@ namespace RepoDb
                 // Bulk and post process
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                // Write
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 result = Db2Execution.UpdateFromPseudoTable(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction);
@@ -328,7 +332,16 @@ namespace RepoDb
                 // Bulk and post process
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Route through a property-handler-aware DataTable rather than streaming entities directly
+                // (DataEntityDataReader) - see BuildEntityDataTable for why streaming bypasses PropertyHandlers
+                // and breaks columns like a Guid-backed "CHAR(n) FOR BIT DATA" one (confirmed live against
+                // Db2 LUW). When explicit mappings are supplied, the DataTable's columns must be named after
+                // each mapping's SourceColumn (the entity's raw property name) - see the remarks on the
+                // BulkInsert entities overload for why.
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
                 result = await Db2Execution.UpdateFromPseudoTableAsync(connection, tableName, pseudoTableName, stagingFields, qualifierFields, trace, traceKey, transaction, cancellationToken);
