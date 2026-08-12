@@ -20,7 +20,7 @@ namespace RepoDb
         /// <param name="name">The name of the field to be ordered.</param>
         /// <param name="order">The ordering direction of the field.</param>
         public OrderField(string name,
-            Order order)
+            Order order = Order.Ascending)
         {
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
@@ -58,7 +58,7 @@ namespace RepoDb
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         public static OrderField Parse<TEntity>(Expression<Func<TEntity, object>> expression,
-            Order order)
+            Order order = Order.Ascending)
             where TEntity : class
         {
             return expression.Body switch
@@ -79,7 +79,7 @@ namespace RepoDb
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(UnaryExpression expression,
-            Order order)
+            Order order = Order.Ascending)
             where TEntity : class
         {
             return expression.Operand switch
@@ -99,7 +99,7 @@ namespace RepoDb
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(MemberExpression expression,
-            Order order)
+            Order order = Order.Ascending)
             where TEntity : class =>
             new(expression.Member.GetMappedName(), order);
 
@@ -112,7 +112,7 @@ namespace RepoDb
         /// <param name="order">The order of the property.</param>
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(BinaryExpression expression,
-            Order order)
+            Order order = Order.Ascending)
             where TEntity : class =>
             new(expression.GetName(), order);
 
