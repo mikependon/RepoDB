@@ -130,15 +130,15 @@ RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different 
 
 | | RepoDB | Dapper | Entity Framework |
 |---|---|---|---|
-| **🗹 Abstraction level** | Hybrid — fluent CRUD + raw SQL | Micro-ORM — raw SQL mapping | Full ORM — LINQ, change tracking |
-| **🗹 Fluent CRUD API** | Yes (Insert, Query, Update, Delete, Merge, [more](http://repodb.net/operation)) | No — SQL per call | Yes, via LINQ/`DbSet` |
-| **🗹 Raw SQL** | Yes, mixed freely with fluent calls | Yes — its core model | Yes, via `FromSql` |
-| **🗹 Change tracking** | None | None | Yes |
-| **🗹 Migrations** | None built-in | None built-in | Yes (EF Migrations) |
-| **🗹 Bulk operations** | Built-in, cross-provider | Via extensions | Via extensions/third-party |
-| **🗹 Insights / telemetry** | Built-in ([`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md)) | None built-in — manual or third-party (e.g. MiniProfiler) | Built-in logging/interceptors; OTel via community packages |
-| **🗹 Performance** | Close to raw ADO.NET | Close to raw ADO.NET | Overhead from tracking/materialization |
-| **🗹 Best fit** | EF-like productivity without losing SQL control | Thinnest possible SQL-to-object mapper | Rich object graphs, LINQ, migrations |
+| **Abstraction level** | Hybrid — fluent CRUD + raw SQL | Micro-ORM — raw SQL mapping | Full ORM — LINQ, change tracking |
+| **Fluent CRUD API** | ✅ Yes (Insert, Query, Update, Delete, Merge, [more](http://repodb.net/operation)) | ❌ No — SQL per call | ✅ Yes, via LINQ/`DbSet` |
+| **Raw SQL** | ✅ Yes, mixed freely with fluent calls | ✅ Yes — its core model | ✅ Yes, via `FromSql` |
+| **Change tracking** | ❌ None | ❌ None | ✅ Yes |
+| **Migrations** | ❌ None built-in | ❌ None built-in | ✅ Yes (EF Migrations) |
+| **Bulk operations** | ✅ Built-in, cross-provider | ❌ Via extensions | ❌ Via extensions/third-party |
+| **Insights / telemetry** | ✅ Built-in ([`RepoDb.Telemetry.Default`](RepoDb.Telemetry.Default/README.md)) | ❌ None built-in — manual or third-party (e.g. MiniProfiler) | ✅ Built-in logging/interceptors; OTel via community packages |
+| **Performance** | ✅ Close to raw ADO.NET | ✅ Close to raw ADO.NET | ❌ Overhead from tracking/materialization |
+| **Best fit** | ✅ EF-like productivity without losing SQL control | ✅ Thinnest possible SQL-to-object mapper | ✅ Rich object graphs, LINQ, migrations |
 
 Dapper and Entity Framework are both excellent, mature tools — this reflects design tradeoffs, not a ranking.
 
