@@ -4,7 +4,7 @@
 
 # [RepoDb.Db2.BulkOperations](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations)
 
-A high-performant extension library of RepoDB that does bulk operations towards a MySQL database. It uses the native `Db2BulkCopy` class to load the data into the database.
+A high-performant extension library of RepoDB that does bulk operations towards an IBM Db2 database. It uses `IBM.Data.Db2`'s native `DB2BulkCopy` class to load the data into the database.
 
 ## Important Pages
 
