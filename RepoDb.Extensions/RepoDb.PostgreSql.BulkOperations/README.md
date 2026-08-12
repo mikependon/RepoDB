@@ -1,4 +1,4 @@
-[![PostgreSqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
+[![PostgreSqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-pgsql-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-pgsql-bulk.yml)
 [![PostgreSqlBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlBulkVersion](https://img.shields.io/nuget/v/repodb.postgresql.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations)
 

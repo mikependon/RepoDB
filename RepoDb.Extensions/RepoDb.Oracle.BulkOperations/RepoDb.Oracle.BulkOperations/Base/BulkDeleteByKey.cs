@@ -25,6 +25,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="primaryKeys">The list of primary/identity key values to be bulk-deleted.</param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -35,6 +36,7 @@ namespace RepoDb
         private static int BulkDeleteByKeyBase<TPrimaryKey>(this OracleConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -48,6 +50,7 @@ namespace RepoDb
             return BulkDeleteBaseViaKeyValues(connection,
                 tableName,
                 primaryKeyList,
+                bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -68,6 +71,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="primaryKeys"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -79,6 +83,7 @@ namespace RepoDb
         private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this OracleConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -93,6 +98,7 @@ namespace RepoDb
             return await BulkDeleteBaseViaKeyValuesAsync(connection,
                 tableName,
                 primaryKeyList,
+                bulkCopyOptions,
                 bulkCopyTimeout,
                 batchSize,
                 pseudoTableType,
@@ -123,6 +129,7 @@ namespace RepoDb
         private static int BulkDeleteBaseViaKeyValues(OracleConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
+            OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
@@ -150,7 +157,7 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 result = OracleExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
@@ -175,6 +182,7 @@ namespace RepoDb
         private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(OracleConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
+            OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
@@ -203,7 +211,7 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new OracleBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 result = await OracleExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);

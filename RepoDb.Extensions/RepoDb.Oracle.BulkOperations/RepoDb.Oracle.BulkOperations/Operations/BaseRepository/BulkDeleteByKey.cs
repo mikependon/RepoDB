@@ -29,6 +29,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -39,6 +40,7 @@ namespace RepoDb
         public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, OracleConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -46,7 +48,7 @@ namespace RepoDb
             string traceKey = OracleTraceKeys.OracleBulkDeleteByKey,
             OracleTransaction transaction = null)
             where TEntity : class =>
-            repository.DbRepository.BulkDeleteByKey(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            repository.DbRepository.BulkDeleteByKey(tableName, primaryKeys, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
 
@@ -61,6 +63,7 @@ namespace RepoDb
         /// <param name="repository">The repository object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="bulkCopyOptions">The options that control the behavior of the underlying <see cref="OracleBulkCopy"/> operation.</param>
         /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
         /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
         /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse for this operation.</param>
@@ -72,6 +75,7 @@ namespace RepoDb
         public static Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, OracleConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -80,7 +84,7 @@ namespace RepoDb
             OracleTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            repository.DbRepository.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            repository.DbRepository.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyOptions, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         #endregion
     }

@@ -1,4 +1,4 @@
-[![MySqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql-bulk.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql-bulk.yml)
+[![MySqlBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql-bulk.yml)
 [![MySqlBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![MySqlBulkVersion](https://img.shields.io/nuget/v/repodb.mysql.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations)
 

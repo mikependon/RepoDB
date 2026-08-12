@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Db2.BulkOperations</Title>
+    <AssemblyName>RepoDb.Db2.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for IBM DB2.</Description>
+    <PackageTags>orm hybrid-orm micro-orm db2 bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/db2bulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-db2</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbDb2BulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbDb2BulkOperationsVersion)' != ''">$(RepoDbDb2BulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' == 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.200" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0' AND '$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.200" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' == 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0' AND '$(OS)' != 'Windows_NT'">
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.Db2\RepoDb.Db2\RepoDb.Db2.csproj" />
+  </ItemGroup>
+</Project>

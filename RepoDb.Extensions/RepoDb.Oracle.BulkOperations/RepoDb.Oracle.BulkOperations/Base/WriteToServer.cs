@@ -14,20 +14,21 @@ using RepoDb.Oracle.BulkOperations;
 namespace RepoDb
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static partial class OracleConnectionExtension
     {
         #region WriteToServerInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
@@ -35,13 +36,14 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null)
             where TEntity : class
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(reader);
             return entities != null ? entities.Count() : 0;
         }
@@ -54,6 +56,7 @@ namespace RepoDb
         /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
@@ -62,11 +65,12 @@ namespace RepoDb
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null)
         {
             connection.EnsureOpen();
-            using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             var rows = GetDataRows(table, rowState)?.ToArray();
             bulkCopy.WriteToServer(rows);
             return rows != null ? rows.Length : 0;
@@ -86,6 +90,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
@@ -93,12 +98,13 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null)
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
-            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(countingReader);
             return countingReader.Count;
         }
@@ -108,13 +114,14 @@ namespace RepoDb
         #region WriteToServerAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -123,6 +130,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default)
@@ -132,7 +140,7 @@ namespace RepoDb
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 using var reader = new DataEntityDataReader<TEntity>(entities);
-                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize);
+                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
                 bulkCopy.WriteToServer(reader);
                 return entities != null ? entities.Count() : 0;
             },
@@ -147,6 +155,7 @@ namespace RepoDb
         /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -156,6 +165,7 @@ namespace RepoDb
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default)
@@ -163,7 +173,7 @@ namespace RepoDb
             await connection.EnsureOpenAsync(cancellationToken);
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
-                using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, batchSize);
+                using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
                 var rows = GetDataRows(table, rowState)?.ToArray();
                 bulkCopy.WriteToServer(rows);
                 return rows != null ? rows.Length : 0;
@@ -172,13 +182,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="WriteToServerInternal(OracleConnection, string, DbDataReader, IEnumerable{OracleBulkInsertMapItem}, int?, int?)"/> -
+        /// Asynchronous counterpart of <see cref="WriteToServerInternal(OracleConnection, string, DbDataReader, IEnumerable{OracleBulkInsertMapItem}, OracleBulkCopyOptions, int?, int?)"/> -
         /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="cancellationToken"></param>
@@ -187,6 +198,7 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default)
@@ -195,7 +207,7 @@ namespace RepoDb
             return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
             {
                 var countingReader = new CountingDataReader(reader);
-                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, batchSize);
+                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
                 bulkCopy.WriteToServer(countingReader);
                 return countingReader.Count;
             },
@@ -220,7 +232,7 @@ namespace RepoDb
         /// Temporary Table at all - confirmed live via <c>ORA-39826: Direct path load of view or synonym
         /// (...) could not be resolved</c>, Oracle's generic error for an unsupported direct-path destination
         /// object type. Since every pseudo table is bulk-written to via <see cref="OracleBulkCopy"/>
-        /// (see <see cref="WriteToServerInternal{TEntity}"/>/<see cref="WriteToServerInternal(OracleConnection, string, System.Data.DataTable, System.Data.DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?)"/>),
+        /// (see <see cref="WriteToServerInternal{TEntity}"/>/<see cref="WriteToServerInternal(OracleConnection, string, System.Data.DataTable, System.Data.DataRowState?, IEnumerable{OracleBulkInsertMapItem}, OracleBulkCopyOptions, int?, int?)"/>),
         /// a <c>Memory</c> (GTT) pseudo table can never actually be used as a bulk-copy destination as
         /// currently built - so <see cref="OracleBulkImportPseudoTableType.Auto"/>'s row-count threshold
         /// logic is a no-op for now too, until a working strategy for a session-isolated staging table
@@ -235,7 +247,7 @@ namespace RepoDb
                     OracleBulkImportPseudoTableType.Physical; // pseudoTableType; // TODO: ODP.NET Limitation, force to Physical for now
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
@@ -259,12 +271,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="table"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
@@ -272,11 +285,12 @@ namespace RepoDb
             string tableName,
             DataTable table,
             IEnumerable<OracleBulkInsertMapItem> mappings,
+            OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var bulkCopy = new OracleBulkCopy(connection)
+            var bulkCopy = new OracleBulkCopy(connection, bulkCopyOptions)
             {
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
@@ -306,12 +320,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
@@ -319,11 +334,12 @@ namespace RepoDb
             string tableName,
             IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings,
+            OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var bulkCopy = new OracleBulkCopy(connection)
+            var bulkCopy = new OracleBulkCopy(connection, bulkCopyOptions)
             {
                 // See the remarks in CreateBulkCopyForDataTable - same quoting requirement applies here.
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)

@@ -33,6 +33,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -46,6 +47,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -65,6 +67,7 @@ namespace RepoDb
                     entities,
                     qualifiers,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     identityBehavior,
@@ -79,6 +82,7 @@ namespace RepoDb
                     entities,
                     qualifiers,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
@@ -107,6 +111,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers">The field(s) to match an existing row on. Defaults to the primary/identity key when not provided.</param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -120,6 +125,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -150,7 +156,7 @@ namespace RepoDb
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -189,6 +195,7 @@ namespace RepoDb
         /// left out of <paramref name="mappings"/>, that column will never be populated on the staging table and
         /// every row will be treated as new (insert-only) rather than matched for update.
         /// </param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -206,6 +213,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -232,7 +240,7 @@ namespace RepoDb
                 // Bulk and post process
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -267,6 +275,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -281,6 +290,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -300,6 +310,7 @@ namespace RepoDb
                     qualifiers,
                     rowState,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     identityBehavior,
@@ -315,6 +326,7 @@ namespace RepoDb
                     qualifiers,
                     rowState,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
@@ -336,6 +348,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -350,6 +363,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -379,7 +393,7 @@ namespace RepoDb
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 OracleExecution.AllowNullForColumn(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -412,6 +426,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -425,6 +440,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -449,7 +465,7 @@ namespace RepoDb
                 // Bulk and post process
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -493,6 +509,7 @@ namespace RepoDb
         /// (plus, always, the qualifier column(s)) are staged and merged - see the same caveat documented on
         /// <see cref="BulkMergeBaseNoReturnIdentity{TEntity}"/> regarding leaving a qualifier column out of the mapping.
         /// </param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -510,6 +527,7 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -535,7 +553,7 @@ namespace RepoDb
                 // Bulk and post process
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -574,6 +592,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -588,6 +607,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -608,6 +628,7 @@ namespace RepoDb
                     entities,
                     qualifiers,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     identityBehavior,
@@ -623,6 +644,7 @@ namespace RepoDb
                     entities,
                     qualifiers,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
@@ -643,6 +665,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -657,6 +680,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -688,7 +712,7 @@ namespace RepoDb
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -718,6 +742,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -731,6 +756,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             IEnumerable<OracleBulkInsertMapItem> mappings,
+            OracleBulkCopyOptions bulkCopyOptions,
             int? bulkCopyTimeout,
             int? batchSize,
             OracleBulkImportPseudoTableType pseudoTableType,
@@ -758,7 +784,7 @@ namespace RepoDb
                 // Bulk and post process
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -793,6 +819,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -808,6 +835,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -828,6 +856,7 @@ namespace RepoDb
                     qualifiers,
                     rowState,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     identityBehavior,
@@ -844,6 +873,7 @@ namespace RepoDb
                     qualifiers,
                     rowState,
                     mappings,
+                    bulkCopyOptions,
                     bulkCopyTimeout,
                     batchSize,
                     pseudoTableType,
@@ -855,7 +885,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseForReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportIdentityBehavior, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseForReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, OracleBulkCopyOptions, int?, int?, OracleBulkImportIdentityBehavior, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -864,6 +894,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
@@ -879,6 +910,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportIdentityBehavior identityBehavior = default,
@@ -909,7 +941,7 @@ namespace RepoDb
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.AllowNullForColumnAsync(connection, pseudoTableName, identityField.Name, trace, traceKey, transaction, cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
@@ -930,7 +962,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseNoReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// Asynchronous counterpart of the <c>DataTable</c> <see cref="BulkMergeBaseNoReturnIdentity(OracleConnection, string, DataTable, IEnumerable{Field}, DataRowState?, IEnumerable{OracleBulkInsertMapItem}, OracleBulkCopyOptions, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior and caveats (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -939,6 +971,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -953,6 +986,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -978,7 +1012,7 @@ namespace RepoDb
                 // Bulk and post process
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -1005,7 +1039,7 @@ namespace RepoDb
         #region BulkMergeBaseAsync<DbDataReader>
 
         /// <summary>
-        /// Asynchronous counterpart of <see cref="BulkMergeBase(OracleConnection, string, DbDataReader, IEnumerable{Field}, IEnumerable{OracleBulkInsertMapItem}, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
+        /// Asynchronous counterpart of <see cref="BulkMergeBase(OracleConnection, string, DbDataReader, IEnumerable{Field}, IEnumerable{OracleBulkInsertMapItem}, OracleBulkCopyOptions, int?, int?, OracleBulkImportPseudoTableType, ITrace, string, OracleTransaction)"/> -
         /// see its remarks for the detailed behavior and caveats (identical here).
         /// </summary>
         /// <param name="connection"></param>
@@ -1013,6 +1047,7 @@ namespace RepoDb
         /// <param name="reader"></param>
         /// <param name="qualifiers"></param>
         /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="pseudoTableType"></param>
@@ -1026,6 +1061,7 @@ namespace RepoDb
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<OracleBulkInsertMapItem> mappings = null,
+            OracleBulkCopyOptions bulkCopyOptions = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             OracleBulkImportPseudoTableType pseudoTableType = default,
@@ -1051,7 +1087,7 @@ namespace RepoDb
                 // Bulk and post process
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);

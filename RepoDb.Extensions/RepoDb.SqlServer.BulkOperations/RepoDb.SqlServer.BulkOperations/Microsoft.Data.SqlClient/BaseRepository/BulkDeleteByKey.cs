@@ -22,6 +22,7 @@ namespace RepoDb
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -30,6 +31,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
@@ -39,6 +41,7 @@ namespace RepoDb
         {
             return repository.DbRepository.BulkDeleteByKey(tableName: ClassMappedNameCache.Get<TEntity>(),
                 primaryKeys: primaryKeys,
+                options: options,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,
                 trace: trace,
@@ -57,6 +60,7 @@ namespace RepoDb
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
         /// <param name="repository">The instance of <see cref="BaseRepository{TEntity, TDbConnection}"/> object.</param>
         /// <param name="primaryKeys">The list of the primary keys to be bulk-deleted.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -66,6 +70,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TPrimaryKey> primaryKeys,
+            SqlBulkCopyOptions options = default,
             int? batchSize = null,
             SqlServerBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
@@ -76,6 +81,7 @@ namespace RepoDb
         {
             return repository.DbRepository.BulkDeleteByKeyAsync(tableName: ClassMappedNameCache.Get<TEntity>(),
                 primaryKeys: primaryKeys,
+                options: options,
                 batchSize: batchSize,
                 pseudoTableType: pseudoTableType,
                 trace: trace,

@@ -1,4 +1,4 @@
-[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor&label=build%20and%20tests&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
+[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor&label=build&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
 [![SqLiteHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 

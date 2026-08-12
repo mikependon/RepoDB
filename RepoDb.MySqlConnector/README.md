@@ -1,4 +1,4 @@
-[![MySqlConnectorBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=build%20and%20tests&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml)
+[![MySqlConnectorBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector.yml)
 [![MySqlConnectorHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![MySqlConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
 
