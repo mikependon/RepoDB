@@ -22,7 +22,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long Count<TEntity>(object where = null,
+        public long Count<TEntity>(object where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -58,7 +58,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long Count<TEntity>(Expression<Func<TEntity, bool>> where = null,
+        public long Count<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -94,7 +94,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long Count<TEntity>(QueryField where = null,
+        public long Count<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -130,7 +130,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long Count<TEntity>(IEnumerable<QueryField> where = null,
+        public long Count<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -166,7 +166,7 @@ namespace RepoDb
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public long Count<TEntity>(QueryGroup where = null,
+        public long Count<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -207,7 +207,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAsync<TEntity>(object where = null,
+        public async Task<long> CountAsync<TEntity>(object where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -246,7 +246,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
+        public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -285,7 +285,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAsync<TEntity>(QueryField where = null,
+        public async Task<long> CountAsync<TEntity>(QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -324,7 +324,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where = null,
+        public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -363,7 +363,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        public async Task<long> CountAsync<TEntity>(QueryGroup where = null,
+        public async Task<long> CountAsync<TEntity>(QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -406,7 +406,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
-            object where = null,
+            object where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -443,7 +443,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -480,7 +480,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -517,7 +517,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
@@ -559,7 +559,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
-            object where = null,
+            object where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -599,7 +599,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -639,7 +639,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
@@ -679,7 +679,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
