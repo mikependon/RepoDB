@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
@@ -25,6 +25,26 @@ namespace RepoDb
 			IDbTransaction transaction = null)
         {
             return DbRepository.Exists<TEntity>(what: what,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table.
+        /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
+        public bool Exists<TWhat>(TWhat what,
+            string hints = null,
+            string traceKey = TraceKeys.Exists,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Exists<TEntity, TWhat>(what: what,
                 hints: hints,
                 traceKey: traceKey,
 				transaction: transaction);

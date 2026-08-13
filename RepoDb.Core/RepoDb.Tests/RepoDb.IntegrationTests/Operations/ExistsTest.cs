@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
@@ -10,6 +11,11 @@ namespace RepoDb.IntegrationTests.Operations
     [TestClass]
     public class ExistsTest
     {
+        private class IdentityTableRepository : BaseRepository<IdentityTable, SqlConnection>
+        {
+            public IdentityTableRepository(string connectionString) : base(connectionString, (int?)0) { }
+        }
+
         [TestInitialize]
         public void Initialize()
         {
@@ -509,6 +515,48 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(result);
+            }
+        }
+
+        #endregion
+
+        #region Exists<TWhat>(Repository)
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaTWhatWithExistingKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository(Database.ConnectionString))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists<long>(tables.First().Id);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaTWhatWithNonExistingKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository(Database.ConnectionString))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists<long>(-1);
+
+                // Assert
+                Assert.IsFalse(result);
             }
         }
 
