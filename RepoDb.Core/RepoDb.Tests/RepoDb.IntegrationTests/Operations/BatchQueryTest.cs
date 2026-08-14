@@ -1858,6 +1858,36 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryBatchQueryViaTableNameViaQueryGroupFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.BatchQuery<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
         public async Task TestDbRepositoryBatchQueryAsyncViaTableNameViaQueryGroupSecondBatchInDescendingOrder()
         {
             // Setup
@@ -1876,6 +1906,36 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await repository.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: queryGroup);
+
+                // Assert (15, 12)
+                Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryBatchQueryViaTableNameViaQueryGroupSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.BatchQuery<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),

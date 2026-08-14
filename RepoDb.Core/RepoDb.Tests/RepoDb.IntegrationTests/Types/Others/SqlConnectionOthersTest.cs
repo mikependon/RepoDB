@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -56,6 +56,36 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionOthersCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = "/",
+                ColumnSqlVariant = "This is variant!",
+                ColumnUniqueIdentifier = Guid.NewGuid(),
+                ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnHierarchyId.ToString(), data.ColumnHierarchyId?.ToString());
+                Assert.AreEqual(entity.ColumnSqlVariant, data.ColumnSqlVariant);
+                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
+                Assert.AreEqual(entity.ColumnXml, data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionOthersNullCrud()
         {
             // Setup
@@ -75,6 +105,36 @@ namespace RepoDb.IntegrationTests.Types.Others
 
                 // Act Query
                 var data = connection.Query<OthersClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnHierarchyId);
+                Assert.IsNull(data.ColumnSqlVariant);
+                Assert.IsNull(data.ColumnUniqueIdentifier);
+                Assert.IsNull(data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionOthersNullCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = null,
+                ColumnSqlVariant = null,
+                ColumnUniqueIdentifier = null,
+                ColumnXml = null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -116,6 +176,36 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionOthersMappedCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyIdMapped = "/",
+                ColumnSqlVariantMapped = "This is variant!",
+                ColumnUniqueIdentifierMapped = Guid.NewGuid(),
+                ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnHierarchyIdMapped.ToString(), data.ColumnHierarchyIdMapped?.ToString());
+                Assert.AreEqual(entity.ColumnSqlVariantMapped, data.ColumnSqlVariantMapped);
+                Assert.AreEqual(entity.ColumnUniqueIdentifierMapped, data.ColumnUniqueIdentifierMapped);
+                Assert.AreEqual(entity.ColumnXmlMapped, data.ColumnXmlMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionOthersMappedNullCrud()
         {
             // Setup
@@ -135,6 +225,36 @@ namespace RepoDb.IntegrationTests.Types.Others
 
                 // Act Query
                 var data = connection.Query<OthersMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnHierarchyIdMapped);
+                Assert.IsNull(data.ColumnSqlVariantMapped);
+                Assert.IsNull(data.ColumnUniqueIdentifierMapped);
+                Assert.IsNull(data.ColumnXmlMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionOthersMappedNullCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyIdMapped = null,
+                ColumnSqlVariantMapped = null,
+                ColumnUniqueIdentifierMapped = null,
+                ColumnXmlMapped = null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -308,6 +428,36 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionOthersCrudViaTableNameAsync2()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = (object)"/",
+                ColumnSqlVariant = "This is variant!",
+                ColumnUniqueIdentifier = Guid.NewGuid(),
+                ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnHierarchyId.ToString(), data.ColumnHierarchyId?.ToString());
+                Assert.AreEqual(entity.ColumnSqlVariant, data.ColumnSqlVariant);
+                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
+                Assert.AreEqual(entity.ColumnXml, data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionOthersNullCrudViaTableName()
         {
             // Setup
@@ -327,6 +477,36 @@ namespace RepoDb.IntegrationTests.Types.Others
 
                 // Act Query
                 var data = connection.Query(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnHierarchyId);
+                Assert.IsNull(data.ColumnSqlVariant);
+                Assert.IsNull(data.ColumnUniqueIdentifier);
+                Assert.IsNull(data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionOthersNullCrudViaTableNameAsync2()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = (object)null,
+                ColumnSqlVariant = (string)null,
+                ColumnUniqueIdentifier = (Guid?)null,
+                ColumnXml = (string)null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

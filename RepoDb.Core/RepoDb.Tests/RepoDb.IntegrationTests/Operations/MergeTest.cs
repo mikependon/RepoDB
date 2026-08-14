@@ -1764,6 +1764,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForNonIdentityTableWithQualifierForEmptyTable()
+        {
+            // Setup
+            var entity = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var mergeResult = await connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    (object)entity,
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+
+                // Assert
+                Assert.AreEqual(entity.Id, mergeResult);
+                Assert.AreEqual(1, await connection.CountAllAsync<NonIdentityTable>());
+
+                // Act
+                var queryResult = (await connection.QueryAsync<NonIdentityTable>((Guid)entity.Id)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult, entity);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionMergeViaTableNameForNonIdentityTableWithQualifiersForEmptyTable()
         {
             // Setup

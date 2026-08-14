@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -298,6 +298,32 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionSpatialsNullCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeography = (object)null,
+                ColumnGeometry = (object)null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<SpatialsClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnGeography);
+                Assert.IsNull(data.ColumnGeometry);
+            }
+        }
+
         //[TestMethod]
         //public async Task TestSqlConnectionSpatialsCrudViaAsyncViaTableName()
         //{
@@ -345,6 +371,33 @@ namespace RepoDb.IntegrationTests.Types.Spatials
 
                 // Act Query
                 var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnGeography);
+                Assert.IsNull(data.ColumnGeometry);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSpatialsNullCrudViaViaTableName()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeography = (object)null,
+                ColumnGeometry = (object)null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = connection.Insert(ClassMappedNameCache.Get<SpatialsClass>(), entity);
+
+                // Act Query
+                var queryResult = connection.Query(ClassMappedNameCache.Get<SpatialsClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.FirstOrDefault();
 
                 // Assert

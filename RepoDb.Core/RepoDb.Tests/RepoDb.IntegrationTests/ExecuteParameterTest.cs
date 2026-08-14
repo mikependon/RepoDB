@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
@@ -210,6 +210,19 @@ namespace RepoDb.IntegrationTests
             {
                 // Act Query
                 var data = connection.ExecuteQuery<decimal?>("select @value", new { value = (decimal?)null }).First();
+
+                // Assert
+                Assert.IsNull(data);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithParameterAsNullDecimal()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act Query
+                var data = (await connection.ExecuteQueryAsync<decimal?>("select @value", new { value = (decimal?)null })).First();
 
                 // Assert
                 Assert.IsNull(data);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
@@ -64,6 +64,26 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithDifferentGeneric()
+        {
+            // Setup
+            var tables = Helper.CreateNonMappedIdentityTable(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, await connection.CountAllAsync<IdentityTable>());
             }
         }
 
@@ -335,6 +355,26 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllWithDifferentGeneric()
+        {
+            // Setup
+            var tables = Helper.CreateNonMappedIdentityTable(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

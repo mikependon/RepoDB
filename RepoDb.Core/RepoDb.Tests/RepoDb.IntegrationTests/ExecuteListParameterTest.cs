@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
@@ -61,6 +61,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryWithListParameterAsExpandoObjectAsDynamic()
         {
             // Setup
@@ -78,6 +108,39 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -121,6 +184,39 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryWithListParameterAsDictionary()
         {
             // Setup
@@ -138,6 +234,39 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -178,6 +307,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryWithListParameterAsQueryFields()
         {
             // Setup
@@ -205,6 +364,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryWithListParameterAsQueryGroup()
         {
             // Setup
@@ -219,6 +408,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWithListParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await connection.InsertAsync(table));
+                }
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -263,6 +482,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithArrayParameterAsExpandoObjectAsDynamic()
         {
             // Setup
@@ -280,6 +526,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -323,6 +599,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithArrayParameterAsDictionary()
         {
             // Setup
@@ -340,6 +646,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -380,6 +716,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithArrayParameterAsQueryFields()
         {
             // Setup
@@ -407,6 +770,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionExecuteQueryAsyncWithArrayParameterAsQueryGroup()
         {
             // Setup
@@ -421,6 +811,33 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1597,6 +2014,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryExecuteQueryWithListParameterAsExpandoObjectAsDynamic()
         {
             // Setup
@@ -1614,6 +2061,39 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -1657,6 +2137,39 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryExecuteQueryWithListParameterAsDictionary()
         {
             // Setup
@@ -1674,6 +2187,39 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1714,6 +2260,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryExecuteQueryWithListParameterAsQueryFields()
         {
             // Setup
@@ -1741,6 +2317,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryExecuteQueryWithListParameterAsQueryGroup()
         {
             // Setup
@@ -1755,6 +2361,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDbRepositoryExecuteQueryAsyncWithListParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                foreach (var table in tables)
+                {
+                    table.Id = Convert.ToInt32(await repository.InsertAsync(table));
+                }
+
+                // Act
+                var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1799,6 +2435,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new { Values = values };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsExpandoObjectAsDynamic()
         {
             // Setup
@@ -1816,6 +2479,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    (object)param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsExpandoObjectAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = (dynamic)new ExpandoObject();
+
+            // Set the properties
+            param.Values = values;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     (object)param);
 
                 // Assert
@@ -1859,6 +2552,36 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsExpandoObjectAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Set the properties
+            param.Add("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsDictionary()
         {
             // Setup
@@ -1876,6 +2599,36 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsDictionary()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new Dictionary<string, object>
+            {
+                {"Values", values }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert
@@ -1916,6 +2669,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsQueryFields()
         {
             // Setup
@@ -1943,6 +2723,33 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryField("Values", values).AsEnumerable();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
         public async Task TestDbRepositoryExecuteQueryAsyncWithArrayParameterAsQueryGroup()
         {
             // Setup
@@ -1957,6 +2764,33 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = await repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
+                    param);
+
+                // Assert
+                Assert.AreEqual(values.Count(), result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Assert.IsTrue(values.Contains(item.ColumnInt));
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryExecuteQueryWithArrayParameterAsQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var values = new List<int?> { 1, 3, 4, 8 };
+            var param = new QueryGroup(new QueryField("Values", values));
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (ColumnInt IN (@Values));",
                     param);
 
                 // Assert

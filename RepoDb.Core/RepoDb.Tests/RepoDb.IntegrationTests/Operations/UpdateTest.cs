@@ -1503,6 +1503,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    table,
+                    table.Id);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaDynamic()
         {
             // Setup
@@ -1528,6 +1554,38 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    new { table.Id });
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<IdentityTable>(table.Id))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -1570,6 +1628,41 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var field = new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt);
+
+                // Act
+                var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var queryResult = (await connection.QueryAsync<IdentityTable>(field))?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameViaQueryFields()
         {
             // Setup
@@ -1603,6 +1696,46 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 fields.ResetAll();
                 var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                table.ColumnFloat = table.ColumnFloat * 100;
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var fields = new[]
+                {
+                    new QueryField(nameof(IdentityTable.ColumnBit), table.ColumnBit),
+                    new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt)
+                };
+
+                // Act
+                var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var queryResult = (await connection.QueryAsync<IdentityTable>(fields))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -1651,6 +1784,47 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                table.ColumnFloat = table.ColumnFloat * 100;
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var fields = new[]
+                {
+                    new QueryField(nameof(IdentityTable.ColumnBit), table.ColumnBit),
+                    new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(fields);
+
+                // Act
+                var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var queryResult = (await connection.QueryAsync<IdentityTable>(queryGroup))?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
@@ -1671,6 +1845,33 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
                     (Guid)table.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncViaTableNameForNonIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)table);
+
+                // Act
+                var updateResult = await connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    (object)table);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = (await connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    (Guid)table.Id)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, queryResult);
@@ -1744,6 +1945,19 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 Assert.Throws<KeyFieldNotFoundException>(() => connection.Update<NonKeyedTable>(data));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnSqlConnectionUpdateAsyncIfThereIsNoKeyField()
+        {
+            // Setup
+            var data = Helper.CreateNonKeyedTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<KeyFieldNotFoundException>(async () => await connection.UpdateAsync<NonKeyedTable>(data));
             }
         }
 
@@ -2037,6 +2251,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaViaTableNameViaPrimaryKey()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                table,
+                table.Id);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionUpdateViaAsyncViaTableNameViaDynamic()
         {
             // Setup
@@ -2054,6 +2294,38 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    new { table.Id });
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaViaTableNameViaDynamic()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
                     new { table.Id });
 
@@ -2088,6 +2360,41 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                field.Reset();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaViaTableNameViaQueryField()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var field = new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt);
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
                     field);
 
@@ -2144,6 +2451,46 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaViaTableNameViaQueryFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnFloat = table.ColumnFloat * 100;
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var fields = new[]
+                {
+                    new QueryField(nameof(IdentityTable.ColumnBit), table.ColumnBit),
+                    new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt)
+                };
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                fields.ResetAll();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionUpdateViaAsyncViaTableNameViaQueryGroup()
         {
             // Setup
@@ -2169,6 +2516,47 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var affectedRows = await connection.UpdateAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                queryGroup.Reset();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnFloat = table.ColumnFloat * 100;
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Setup
+                var fields = new[]
+                {
+                    new QueryField(nameof(IdentityTable.ColumnBit), table.ColumnBit),
+                    new QueryField(nameof(IdentityTable.ColumnInt), table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(fields);
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
                     queryGroup);
 

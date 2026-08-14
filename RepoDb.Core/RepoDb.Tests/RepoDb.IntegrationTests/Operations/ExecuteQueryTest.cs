@@ -778,6 +778,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreLessThanClassProperties()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT Id, ColumnBit, ColumnDateTime, ColumnInt FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.Where(t => t.Id == item.Id).First();
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryWithDictionaryParameters()
         {
             // Setup

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -623,6 +623,41 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsDynamics2()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var entity = GetIdentityTable();
+                var cacheKey = "SimpleTables";
+                var cacheItemExpiration = 60;
+
+                // Act
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity));
+
+                // Act
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    where: (IEnumerable<QueryField>)null,
+                    orderBy: null,
+                    top: 0,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: 0,
+                    transaction: null,
+                    cache: cache,
+                    trace: null,
+                    statementBuilder: null);
+                var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Assert.IsNotNull(item);
+                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryCacheViaQueryGroupAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -1224,6 +1259,41 @@ namespace RepoDb.IntegrationTests.Caches
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    where: (IEnumerable<QueryField>)null,
+                    orderBy: null,
+                    top: 0,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: 0,
+                    transaction: null,
+                    cache: cache,
+                    trace: null,
+                    statementBuilder: null);
+                var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Assert.IsNotNull(item);
+                Assert.AreEqual(cacheItemExpiration, (item.Expiration - item.CreatedDate).TotalMinutes);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionQueryAsyncAsyncCacheViaQueryFieldsAsDynamics()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var entity = GetIdentityTable();
+                var cacheKey = "SimpleTables";
+                var cacheItemExpiration = 60;
+
+                // Act
+                entity.Id = Convert.ToInt32(await connection.InsertAsync(entity));
+
+                // Act
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,

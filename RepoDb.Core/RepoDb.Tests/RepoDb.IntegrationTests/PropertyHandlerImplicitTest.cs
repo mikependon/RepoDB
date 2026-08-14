@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Interfaces;
@@ -8,6 +8,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using RepoDb.Options;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -417,6 +418,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToClassHandlerAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithPropertyToClassHandlerAtomic()
         {
             // Setup
@@ -429,6 +453,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToClassHandlerAtomicAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForClass>();
 
                 // Assert
                 models.ForEach(e =>
@@ -463,6 +513,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToClassHandlerAsNullAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithPropertyToClassHandlerAsNullAtomic()
         {
             // Setup
@@ -475,6 +548,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToClassHandlerAsNullAtomicAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForClass>();
 
                 // Assert
                 models.ForEach(e =>
@@ -513,6 +612,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsync()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAtomic()
         {
             // Setup
@@ -525,6 +647,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAtomicAsync()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
 
                 // Assert
                 models.ForEach(e =>
@@ -559,6 +707,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsNullAsync()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsNullAtomic()
         {
             // Setup
@@ -571,6 +742,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsNullAtomicAsync()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<ImmutableEntityModelForClass>();
 
                 // Assert
                 models.ForEach(e =>
@@ -609,6 +806,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithIntToStringTypeHandlerAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForIntToStringTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithIntToStringTypeHandlerAtomic()
         {
             // Setup
@@ -621,6 +841,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForIntToStringType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithIntToStringTypeHandlerAtomicAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForIntToStringTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
 
                 // Assert
                 models.ForEach(e =>
@@ -655,6 +901,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithIntToStringTypeHandlerAsNullAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForIntToStringTypes(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithIntToStringTypeHandlerAsNullAtomic()
         {
             // Setup
@@ -667,6 +936,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForIntToStringType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithIntToStringTypeHandlerAsNullAtomicAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForIntToStringTypes(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForIntToStringType>();
 
                 // Assert
                 models.ForEach(e =>
@@ -708,6 +1003,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithNumbersToLongHandlerAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithNumbersToLongHandlerAtomic()
         {
             // Setup
@@ -723,6 +1044,35 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForNumberPropertiesToLongType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithNumbersToLongHandlerAtomicAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
 
                 // Assert
                 models.ForEach(e =>
@@ -757,6 +1107,29 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithNumbersToLongHandlerAsNullAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitWithNumbersToLongHandlerAsNullAtomic()
         {
             // Setup
@@ -769,6 +1142,32 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForNumberPropertiesToLongType>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitWithNumbersToLongHandlerAsNullAtomicAsync()
+        {
+            // Setup
+            var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForNumberPropertiesToLongType>();
 
                 // Assert
                 models.ForEach(e =>
@@ -810,6 +1209,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitForDateTimeKindAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitForDateTimeKindAtomic()
         {
             // Setup
@@ -825,6 +1250,35 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitForDateTimeKindAtomicAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
 
                 // Assert
                 models.ForEach(e =>
@@ -862,6 +1316,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestPropertyHandlerImplicitForDateTimeKindAsNullAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(models);
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestPropertyHandlerImplicitForDateTimeKindAsNullAtomic()
         {
             // Setup
@@ -877,6 +1357,35 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestPropertyHandlerImplicitForDateTimeKindAsNullAtomicAsync()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                foreach (var item in models)
+                {
+                    await connection.InsertAsync(item);
+                }
+
+                // Act
+                var result = await connection.QueryAllAsync<EntityModelForDateTimeKind>();
 
                 // Assert
                 models.ForEach(e =>

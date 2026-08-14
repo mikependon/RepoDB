@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -137,6 +137,28 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionInsertAsyncForIdentityTable2()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var item = Helper.CreateIdentityTable();
+
+                // Act
+                var id = await connection.InsertAsync<IdentityTable, long>(item);
+
+                // Assert
+                Assert.IsTrue(item.Id > 0);
+
+                // Act
+                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(item, result);
@@ -329,6 +351,28 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionInsertAsyncAsyncForIdentityTable()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = await connection.InsertAsync<IdentityTable, long>(table);
+
+                // Assert
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);

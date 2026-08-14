@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
@@ -282,6 +282,31 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneAndWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
+                    1);
+
+                // Act
+                var result = (await connection.QueryAllAsync<IdentityTable>()).AsList();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var entity = result.FirstOrDefault(r => r.Id == table.Id);
+                    Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
         #endregion
 
         #region InsertAllAsync<TEntity>
@@ -525,6 +550,31 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
+                    1);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var entity = result.FirstOrDefault(r => r.Id == table.Id);
+                    Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneWithExtraFields()
+        {
+            // Setup
+            var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll<WithExtraFieldsIdentityTable>(tables,
                     1);
 
                 // Act

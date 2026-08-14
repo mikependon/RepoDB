@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -62,6 +62,32 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         }
 
         [TestMethod]
+        public async Task TestBaseRepositorySpatialsCrudAsync2()
+        {
+            // Setup
+            var entity = new SpatialsClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeography = "POLYGON ((0 0, 50 0, 50 50, 0 50, 0 0))",
+                ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
+            };
+
+            using (var repository = new SpatialsClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnGeography.ToString(), data.ColumnGeography?.ToString());
+                Assert.AreEqual(entity.ColumnGeometry.ToString(), data.ColumnGeometry?.ToString());
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositorySpatialsNullCrud()
         {
             // Setup
@@ -79,6 +105,32 @@ namespace RepoDb.IntegrationTests.Types.Spatials
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnGeography);
+                Assert.IsNull(data.ColumnGeometry);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositorySpatialsNullCrudAsync2()
+        {
+            // Setup
+            var entity = new SpatialsClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeography = null,
+                ColumnGeometry = null
+            };
+
+            using (var repository = new SpatialsClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -114,6 +166,32 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         }
 
         [TestMethod]
+        public async Task TestBaseRepositorySpatialsMappedCrudAsync2()
+        {
+            // Setup
+            var entity = new SpatialsMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeographyMapped = "POLYGON ((0 0, 50 0, 50 50, 0 50, 0 0))",
+                ColumnGeometryMapped = "LINESTRING (-122.36 47.656, -122.343 47.656)"
+            };
+
+            using (var repository = new SpatialsMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnGeographyMapped.ToString(), data.ColumnGeographyMapped?.ToString());
+                Assert.AreEqual(entity.ColumnGeometryMapped.ToString(), data.ColumnGeometryMapped?.ToString());
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositorySpatialsMappedNullCrud()
         {
             // Setup
@@ -131,6 +209,32 @@ namespace RepoDb.IntegrationTests.Types.Spatials
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnGeographyMapped);
+                Assert.IsNull(data.ColumnGeometryMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositorySpatialsMappedNullCrudAsync2()
+        {
+            // Setup
+            var entity = new SpatialsMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnGeographyMapped = null,
+                ColumnGeometryMapped = null
+            };
+
+            using (var repository = new SpatialsMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

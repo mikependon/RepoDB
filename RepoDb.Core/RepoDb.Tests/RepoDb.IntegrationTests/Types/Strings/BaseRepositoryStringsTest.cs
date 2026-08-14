@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -71,6 +71,41 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
+        public async Task TestBaseRepositoryStringsCrudAsync2()
+        {
+            // Setup
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = text,
+                ColumnNChar = text,
+                ColumnNText = text,
+                ColumnNVarChar = text,
+                ColumnText = text,
+                ColumnVarChar = text
+            };
+
+            using (var repository = new StringsClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryStringsNullCrud()
         {
             // Setup
@@ -92,6 +127,40 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnChar);
+                Assert.IsNull(data.ColumnNChar);
+                Assert.IsNull(data.ColumnNText);
+                Assert.IsNull(data.ColumnNVarChar);
+                Assert.IsNull(data.ColumnText);
+                Assert.IsNull(data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryStringsNullCrudAsync2()
+        {
+            // Setup
+            var entity = new StringsClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = null,
+                ColumnNChar = null,
+                ColumnNText = null,
+                ColumnNVarChar = null,
+                ColumnText = null,
+                ColumnVarChar = null
+            };
+
+            using (var repository = new StringsClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -140,6 +209,41 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
+        public async Task TestBaseRepositoryStringsMappedCrudAsync2()
+        {
+            // Setup
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnCharMapped = text,
+                ColumnNCharMapped = text,
+                ColumnNTextMapped = text,
+                ColumnNVarCharMapped = text,
+                ColumnTextMapped = text,
+                ColumnVarCharMapped = text
+            };
+
+            using (var repository = new StringsMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
+                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryStringsMappedNullCrud()
         {
             // Setup
@@ -161,6 +265,40 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnCharMapped);
+                Assert.IsNull(data.ColumnNCharMapped);
+                Assert.IsNull(data.ColumnNTextMapped);
+                Assert.IsNull(data.ColumnNVarCharMapped);
+                Assert.IsNull(data.ColumnTextMapped);
+                Assert.IsNull(data.ColumnVarCharMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryStringsMappedNullCrudAsync2()
+        {
+            // Setup
+            var entity = new StringsMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnCharMapped = null,
+                ColumnNCharMapped = null,
+                ColumnNTextMapped = null,
+                ColumnNVarCharMapped = null,
+                ColumnTextMapped = null,
+                ColumnVarCharMapped = null
+            };
+
+            using (var repository = new StringsMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
