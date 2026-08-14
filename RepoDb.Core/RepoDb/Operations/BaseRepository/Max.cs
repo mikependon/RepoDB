@@ -9,7 +9,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Max<TEntity, TResult>
+
+        #region Max
 
         /// <summary>
         /// Computes the max value of the target field.
@@ -232,230 +233,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Field field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Field field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Field field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                traceKey: traceKey,
-				transaction: transaction,
-                hints: hints);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Field field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                traceKey: traceKey,
-				transaction: transaction,
-                hints: hints);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Max<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        #endregion
-
-        #region MaxAsync<TEntity, TResult>
-
-        /// <summary>
         /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be maximized.</param>
@@ -698,256 +475,6 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MaxAsync<TEntity>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Field field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Field field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Field field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Field field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Max,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 traceKey: traceKey,
@@ -956,5 +483,480 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region Max<TResult>
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Field field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Field field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                traceKey: traceKey,
+				transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Field field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                traceKey: traceKey,
+				transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult Max<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Max<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Field field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Field field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Field field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Max,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.MaxAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
     }
 }

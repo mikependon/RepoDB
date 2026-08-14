@@ -9,7 +9,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Sum<TEntity, TResult>
+
+        #region Sum
 
         /// <summary>
         /// Computes the sum value of the target field.
@@ -232,230 +233,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Field field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Field field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Field field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                traceKey: traceKey,
-				transaction: transaction,
-                hints: hints);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Field field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                traceKey: traceKey,
-				transaction: transaction,
-                hints: hints);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.Sum<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        #endregion
-
-        #region SumAsync<TEntity, TResult>
-
-        /// <summary>
         /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
@@ -698,256 +475,6 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             return DbRepository.SumAsync<TEntity>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Field field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Field field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Field field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Field field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            object where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryField where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
-                where: where,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Computes the sum value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="field">The field to be summarized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The sum value of the target field.</returns>
-        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
-            QueryGroup where,
-            string hints = null,
-            string traceKey = TraceKeys.Sum,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.SumAsync<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 traceKey: traceKey,
@@ -956,5 +483,480 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region Sum<TResult>
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Field field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Field field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                traceKey: traceKey,
+				transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Field field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                traceKey: traceKey,
+				transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.Sum<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Field field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Field field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Field field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the sum value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be summarized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The sum value of the target field.</returns>
+        public Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where,
+            string hints = null,
+            string traceKey = TraceKeys.Sum,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.SumAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
     }
 }

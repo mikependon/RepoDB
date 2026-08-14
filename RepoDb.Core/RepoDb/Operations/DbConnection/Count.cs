@@ -15,6 +15,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+
         #region Count<TEntity>
 
         /// <summary>
@@ -229,10 +230,6 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace);
         }
-
-        #endregion
-
-        #region CountAsync<TEntity>
 
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
@@ -652,10 +649,6 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace);
         }
-
-        #endregion
-
-        #region CountAsync(TableName)
 
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.

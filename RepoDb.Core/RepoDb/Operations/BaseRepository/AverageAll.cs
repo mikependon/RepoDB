@@ -8,7 +8,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region AverageAll<TEntity>
+
+        #region AverageAll
 
         /// <averagemary>
         /// Computes the average value of the target field.
@@ -47,50 +48,6 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction);
         }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TResult>(Field field,
-            string hints = null,
-            string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.AverageAll<TEntity, TResult>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
-            string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.AverageAll<TEntity, TResult>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        #endregion
-
-        #region AverageAllAsync<TEntity>
 
         /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
@@ -134,6 +91,50 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction,
                 cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region AverageAll<TResult>
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TResult>(Field field,
+            string hints = null,
+            string traceKey = TraceKeys.AverageAll,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAll<TEntity, TResult>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            string traceKey = TraceKeys.AverageAll,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAll<TEntity, TResult>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <averagemary>
@@ -183,5 +184,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

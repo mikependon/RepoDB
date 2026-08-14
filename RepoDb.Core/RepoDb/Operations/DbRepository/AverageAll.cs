@@ -10,6 +10,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection, new()
     {
+
         #region AverageAll<TEntity>
 
         /// <averagemary>
@@ -85,84 +86,6 @@ namespace RepoDb
         }
 
         /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TEntity, TResult>(Field field,
-            string hints = null,
-			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.AverageAll<TEntity, TResult>(field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
-			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.AverageAll<TEntity, TResult>(field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region AverageAllAsync<TEntity>
-
-        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
         /// </averagemary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -232,6 +155,84 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region AverageAll<TEntity, TResult>
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TEntity, TResult>(Field field,
+            string hints = null,
+			string traceKey = TraceKeys.AverageAll,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.AverageAll<TEntity, TResult>(field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+			string traceKey = TraceKeys.AverageAll,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.AverageAll<TEntity, TResult>(field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -362,48 +363,6 @@ namespace RepoDb
         }
 
         /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public TResult AverageAll<TResult>(string tableName,
-            Field field,
-            string hints = null,
-			string traceKey = TraceKeys.AverageAll,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.AverageAll<TResult>(tableName: tableName,
-                    field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region AverageAllAsync(TableName)
-
-        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
         /// </averagemary>
         /// <param name="tableName">The name of the target table.</param>
@@ -435,6 +394,48 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region AverageAll<TResult>(TableName)
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TResult>(string tableName,
+            Field field,
+            string hints = null,
+			string traceKey = TraceKeys.AverageAll,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.AverageAll<TResult>(tableName: tableName,
+                    field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -485,5 +486,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

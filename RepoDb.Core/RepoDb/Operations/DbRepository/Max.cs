@@ -11,7 +11,8 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection, new()
     {
-        #region Max<TEntity, TResult>
+
+        #region Max<TEntity>
 
         /// <summary>
         /// Computes the max value of the target field.
@@ -404,21 +405,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Field field,
+        public async Task<object> MaxAsync<TEntity>(Field field,
             object where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -427,14 +429,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -444,21 +447,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Field field,
+        public async Task<object> MaxAsync<TEntity>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -467,14 +471,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -484,21 +489,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Field field,
+        public async Task<object> MaxAsync<TEntity>(Field field,
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -507,14 +513,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -524,21 +531,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Field field,
+        public async Task<object> MaxAsync<TEntity>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -547,14 +555,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -564,21 +573,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Field field,
+        public async Task<object> MaxAsync<TEntity>(Field field,
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -587,14 +597,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -604,21 +615,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -627,14 +639,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -644,21 +657,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -667,14 +681,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -684,21 +699,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -707,14 +723,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -724,21 +741,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -747,14 +765,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -764,21 +783,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -787,14 +807,15 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Max<TEntity, TResult>(field: field,
+                return await connection.MaxAsync<TEntity>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -805,25 +826,24 @@ namespace RepoDb
 
         #endregion
 
-        #region MaxAsync<TEntity, TResult>
+        #region Max<TEntity, TResult>
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Field field,
+        public TResult Max<TEntity, TResult>(Field field,
             object where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -832,15 +852,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -850,22 +869,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Field field,
+        public TResult Max<TEntity, TResult>(Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -874,15 +892,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -892,22 +909,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Field field,
+        public TResult Max<TEntity, TResult>(Field field,
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -916,15 +932,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -934,22 +949,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Field field,
+        public TResult Max<TEntity, TResult>(Field field,
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -958,15 +972,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -976,22 +989,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Field field,
+        public TResult Max<TEntity, TResult>(Field field,
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1000,15 +1012,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1018,22 +1029,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             object where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1042,15 +1052,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1060,22 +1069,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1084,15 +1092,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1102,22 +1109,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryField where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1126,15 +1132,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1144,22 +1149,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             IEnumerable<QueryField> where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1168,15 +1172,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1186,22 +1189,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
+        public TResult Max<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
             QueryGroup where,
             string hints = null,
 			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1210,15 +1212,14 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.MaxAsync<TEntity>(field: field,
+                return connection.Max<TEntity, TResult>(field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     traceKey: traceKey,
 					transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -1641,6 +1642,342 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.MaxAsync<TEntity, TResult>(field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region Max(TableName)
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public object Max(string tableName,
+            Field field,
+            object where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Max(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public object Max(string tableName,
+            Field field,
+            QueryField where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Max(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public object Max(string tableName,
+            Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Max(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public object Max(string tableName,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Max(tableName: tableName,
+                    field: field,
+                    hints: hints,
+                    where: where,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public async Task<object> MaxAsync(string tableName,
+            Field field,
+            object where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MaxAsync(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public async Task<object> MaxAsync(string tableName,
+            Field field,
+            QueryField where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MaxAsync(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public async Task<object> MaxAsync(string tableName,
+            Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MaxAsync(tableName: tableName,
+                    field: field,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The max value of the target field.</returns>
+        public async Task<object> MaxAsync(string tableName,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+			string traceKey = TraceKeys.Max,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MaxAsync(tableName: tableName,
+                    field: field,
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
@@ -1664,166 +2001,6 @@ namespace RepoDb
         /// <summary>
         /// Computes the max value of the target field.
         /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public object Max(string tableName,
-            Field field,
-            object where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Max(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public object Max(string tableName,
-            Field field,
-            QueryField where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Max(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public object Max(string tableName,
-            Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Max(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public object Max(string tableName,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Max(tableName: tableName,
-                    field: field,
-                    hints: hints,
-                    where: where,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
@@ -1977,182 +2154,6 @@ namespace RepoDb
 					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region MaxAsync<TResult>(TableName)
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync(string tableName,
-            Field field,
-            object where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.MaxAsync(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync(string tableName,
-            Field field,
-            QueryField where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.MaxAsync(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync(string tableName,
-            Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.MaxAsync(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The max value of the target field.</returns>
-        public async Task<object> MaxAsync(string tableName,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-			string traceKey = TraceKeys.Max,
-            IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.MaxAsync(tableName: tableName,
-                    field: field,
-                    where: where,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder,
-                    cancellationToken: cancellationToken);
             }
             finally
             {
@@ -2338,5 +2339,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

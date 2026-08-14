@@ -16,7 +16,8 @@ namespace RepoDb
     /// </averagemary>
     public static partial class DbConnectionExtension
     {
-        #region Average<TEntity, TResult>
+
+        #region Average<TEntity>
 
         /// <averagemary>
         /// Computes the average value of the target field.
@@ -428,432 +429,6 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace);
         }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            object where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            QueryField where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: field,
-                where: where,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Expression<Func<TEntity, TResult>> field,
-            object where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: Field.Parse<TEntity, TResult>(field).First(),
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Expression<Func<TEntity, TResult>> field,
-            Expression<Func<TEntity, bool>> where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: Field.Parse<TEntity, TResult>(field).First(),
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Expression<Func<TEntity, TResult>> field,
-            QueryField where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: Field.Parse<TEntity, TResult>(field).First(),
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Expression<Func<TEntity, TResult>> field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: Field.Parse<TEntity, TResult>(field).First(),
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
-            Expression<Func<TEntity, TResult>> field,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return AverageInternal<TEntity, TResult>(connection: connection,
-                field: Field.Parse<TEntity, TResult>(field).First(),
-                where: where,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        internal static TResult AverageInternal<TEntity, TResult>(this IDbConnection connection,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            // Variables
-            var request = new AverageRequest(typeof(TEntity),
-                connection,
-                transaction,
-                field,
-                where,
-                hints,
-                statementBuilder);
-            var param = (object)null;
-
-            // Converts to property mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
-            }
-
-            // Return the result
-            return AverageInternalBase<TResult>(connection: connection,
-                request: request,
-                param: param,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace);
-        }
-
-        #endregion
-
-        #region AverageAsync<TEntity, TResult>
 
         /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
@@ -1297,6 +872,432 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region Average<TEntity, TResult>
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return AverageInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        internal static TResult AverageInternal<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            // Variables
+            var request = new AverageRequest(typeof(TEntity),
+                connection,
+                transaction,
+                field,
+                where,
+                hints,
+                statementBuilder);
+            var param = (object)null;
+
+            // Converts to property mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
+
+            // Return the result
+            return AverageInternalBase<TResult>(connection: connection,
+                request: request,
+                param: param,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace);
         }
 
         /// <averagemary>
@@ -1756,7 +1757,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Average<TResult>(TableName)
+        #region Average(TableName)
 
         /// <averagemary>
         /// Computes the average value of the target field.
@@ -1956,214 +1957,6 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace);
         }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TResult>(this IDbConnection connection,
-            string tableName,
-            Field field,
-            object where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return AverageInternal<TResult>(connection: connection,
-                tableName: tableName,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TResult>(this IDbConnection connection,
-            string tableName,
-            Field field,
-            QueryField where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return AverageInternal<TResult>(connection: connection,
-                tableName: tableName,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TResult>(this IDbConnection connection,
-            string tableName,
-            Field field,
-            IEnumerable<QueryField> where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return AverageInternal<TResult>(connection: connection,
-                tableName: tableName,
-                field: field,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        public static TResult Average<TResult>(this IDbConnection connection,
-            string tableName,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return AverageInternal<TResult>(connection: connection,
-                tableName: tableName,
-                field: field,
-                where: where,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field.
-        /// </averagemary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The average value of the target field.</returns>
-        internal static TResult AverageInternal<TResult>(this IDbConnection connection,
-            string tableName,
-            Field field,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            string traceKey = TraceKeys.Average,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Variables
-            var request = new AverageRequest(tableName,
-                connection,
-                transaction,
-                field,
-                where,
-                hints,
-                statementBuilder);
-            var param = (object)null;
-
-            // Converts to property mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
-            }
-
-            // Return the result
-            return AverageInternalBase<TResult>(connection: connection,
-                request: request,
-                param: param,
-                commandTimeout: commandTimeout,
-                traceKey: traceKey,
-                transaction: transaction,
-                trace: trace);
-        }
-
-        #endregion
-
-        #region AverageAsync<TResult>(TableName)
 
         /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
@@ -2377,6 +2170,214 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region Average<TResult>(TableName)
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return AverageInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return AverageInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return AverageInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public static TResult Average<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return AverageInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        internal static TResult AverageInternal<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Variables
+            var request = new AverageRequest(tableName,
+                connection,
+                transaction,
+                field,
+                where,
+                hints,
+                statementBuilder);
+            var param = (object)null;
+
+            // Converts to property mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
+            }
+
+            // Return the result
+            return AverageInternalBase<TResult>(connection: connection,
+                request: request,
+                param: param,
+                commandTimeout: commandTimeout,
+                traceKey: traceKey,
+                transaction: transaction,
+                trace: trace);
         }
 
         /// <averagemary>
