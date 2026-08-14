@@ -172,7 +172,8 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Max<IdentityTable, double>(e => e.ColumnInt, (object)null);
+                var result = connection.Max<IdentityTable, double>(new Field("ColumnInt"),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual((double)tables.Last().ColumnInt, result);

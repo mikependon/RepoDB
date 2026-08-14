@@ -173,7 +173,8 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Average<IdentityTable, decimal>(e => e.ColumnInt, (object)null);
+                var result = connection.Average<IdentityTable, decimal>(new Field("ColumnInt"),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual((decimal)tables.Average(t => t.ColumnInt), result);

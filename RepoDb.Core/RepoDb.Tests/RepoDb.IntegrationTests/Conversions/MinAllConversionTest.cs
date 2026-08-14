@@ -172,7 +172,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.MinAll<IdentityTable, double>(e => e.ColumnInt);
+                var result = connection.MinAll<IdentityTable, double>(new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual((double)tables.First().ColumnInt, result);
