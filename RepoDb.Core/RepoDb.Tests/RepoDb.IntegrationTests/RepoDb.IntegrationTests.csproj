@@ -28,10 +28,7 @@
     <None Remove="Types\Strings\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="ClassMappingTest.cs" />
-    <Compile Remove="Operations\BaseRepositoryOperationsTest.cs" />
-    <Compile Remove="Operations\DbRepositoryOperationsTest.cs" />
-    <Compile Remove="Operations\SqlConnectionOperationsTest.cs" />
+    <Compile Remove="ConversionTypeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Types" Version="170.1000.7" />
