@@ -9,7 +9,7 @@ using System.Linq;
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class MinAll
+    public class MinAllConversionTest
     {
         [TestInitialize]
         public void Initialize()

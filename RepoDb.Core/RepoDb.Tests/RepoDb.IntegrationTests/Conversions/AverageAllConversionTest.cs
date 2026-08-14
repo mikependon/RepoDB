@@ -10,7 +10,7 @@ using System.Linq;
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class AverageAll
+    public class AverageAllConversionTest
     {
         [TestInitialize]
         public void Initialize()

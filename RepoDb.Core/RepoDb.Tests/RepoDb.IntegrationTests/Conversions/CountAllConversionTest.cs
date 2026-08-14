@@ -8,7 +8,7 @@ using System.IO;
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class CountAll
+    public class CountAllConversionTest
     {
         [TestInitialize]
         public void Initialize()

@@ -9,7 +9,7 @@ using System.Linq;
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class MaxAll
+    public class MaxAllConversionTest
     {
         [TestInitialize]
         public void Initialize()

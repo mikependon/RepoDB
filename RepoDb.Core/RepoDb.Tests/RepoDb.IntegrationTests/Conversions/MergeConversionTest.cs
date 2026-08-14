@@ -1,14 +1,15 @@
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.IO;
 
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class CountConversionTest
+    public class MergeConversionTest
     {
         [TestInitialize]
         public void Initialize()
@@ -23,27 +24,25 @@ namespace RepoDb.IntegrationTests.Conversions
             Database.Cleanup();
         }
 
-        #region Count<TEntity>
+        #region Merge<TEntity, TResult>
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversion()
+        public void TestSqlConnectionMergeViaTEntityAutomaticConversion()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var table = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                connection.InsertAll(tables);
-
                 // Setup
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count<IdentityTable>((object)null);
+                var result = connection.Merge<IdentityTable, long>(table);
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -51,43 +50,23 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversionOnNoRows()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Setup
-                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
-
-                // Act
-                var result = connection.Count<IdentityTable>((object)null);
-
-                // Assert
-                Assert.AreEqual(default(long), result);
-
-                // Reset
-                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversionOnDifferentReturnType()
+        public void TestSqlConnectionMergeViaTEntityAutomaticConversionUsingTableName()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var table = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                connection.InsertAll(tables);
-
                 // Setup
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Count<IdentityTable>((object)null);
+                var result = connection.Merge<IdentityTable, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
-                Assert.AreEqual((double)tables.Count, result);
+                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -95,43 +74,63 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionCountViaTEntityWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMergeViaTEntityAutomaticConversionOnDifferentReturnType()
         {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Count<IdentityTable>((object)null);
+                // Setup
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
+                // Act
+                var result = connection.Merge<IdentityTable, double>(table);
+
+                // Assert
+                Assert.AreEqual((double)table.Id, result);
+
+                // Reset
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlConnectionMergeViaTEntityWithStrictConversionOnIncompatibleReturnType()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
                 // Assert
                 Assert.Throws<InvalidDataException>(() =>
-                    connection.Count<IdentityTable>((object)null));
+                    connection.Merge<IdentityTable, Guid>(table));
             }
         }
 
         #endregion
 
-        #region Count (TableName)
+        #region Merge (TableName)<TResult>
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversion()
+        public void TestSqlConnectionMergeViaTableNameAutomaticConversion()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var table = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                connection.InsertAll(tables);
-
                 // Setup
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                var result = connection.Merge(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -139,45 +138,22 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversionOnNoRows()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Setup
-                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
-
-                // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
-
-                // Assert
-                Assert.AreEqual(default(long), result);
-
-                // Reset
-                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversionOnDifferentReturnType()
+        public void TestSqlConnectionMergeViaTableNameTypedResultAutomaticConversion()
         {
             // Setup
-            var tables = Helper.CreateIdentityTables(10);
+            var table = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                connection.InsertAll(tables);
-
                 // Setup
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                var result = connection.Merge<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
-                Assert.AreEqual((double)tables.Count, result);
+                Assert.AreEqual(table.Id, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -185,18 +161,40 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionCountViaTableNameWithStrictConversionOnNoRows()
+        public void TestSqlConnectionMergeViaTableNameAutomaticConversionOnDifferentReturnType()
         {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                // Setup
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
+                // Act
+                var result = connection.Merge<double>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual((double)table.Id, result);
+
+                // Reset
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnSqlConnectionMergeViaTableNameWithStrictConversionOnIncompatibleReturnType()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
                 // Assert
                 Assert.Throws<InvalidDataException>(() =>
-                    connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                        (object)null));
+                    connection.Merge<Guid>(ClassMappedNameCache.Get<IdentityTable>(),
+                        table));
             }
         }
 

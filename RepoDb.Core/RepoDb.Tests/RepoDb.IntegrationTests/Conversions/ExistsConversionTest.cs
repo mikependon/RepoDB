@@ -3,12 +3,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.IO;
 
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class CountConversionTest
+    public class ExistsConversionTest
     {
         [TestInitialize]
         public void Initialize()
@@ -23,10 +24,10 @@ namespace RepoDb.IntegrationTests.Conversions
             Database.Cleanup();
         }
 
-        #region Count<TEntity>
+        #region Exists<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversion()
+        public void TestSqlConnectionExistsViaTEntityAutomaticConversion()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -40,10 +41,10 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count<IdentityTable>((object)null);
+                var result = connection.Exists<IdentityTable>((object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -51,7 +52,7 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversionOnNoRows()
+        public void TestSqlConnectionExistsViaTEntityAutomaticConversionOnNoRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -59,10 +60,10 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count<IdentityTable>((object)null);
+                var result = connection.Exists<IdentityTable>((object)null);
 
                 // Assert
-                Assert.AreEqual(default(long), result);
+                Assert.IsFalse(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -70,7 +71,7 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTEntityAutomaticConversionOnDifferentReturnType()
+        public void TestSqlConnectionExistsViaTEntityAutomaticConversionOnDifferentReturnType()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -84,10 +85,10 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Count<IdentityTable>((object)null);
+                var result = Convert.ToInt32(connection.Exists<IdentityTable>((object)null));
 
                 // Assert
-                Assert.AreEqual((double)tables.Count, result);
+                Assert.AreEqual(1, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -95,25 +96,25 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionCountViaTEntityWithStrictConversionOnNoRows()
+        public void ThrowExceptionOnSqlConnectionExistsViaTEntityWithStrictConversionOnNoRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count<IdentityTable>((object)null);
+                var result = connection.Exists<IdentityTable>((object)null);
 
                 // Assert
                 Assert.Throws<InvalidDataException>(() =>
-                    connection.Count<IdentityTable>((object)null));
+                    connection.Exists<IdentityTable>((object)null));
             }
         }
 
         #endregion
 
-        #region Count (TableName)
+        #region Exists (TableName)
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversion()
+        public void TestSqlConnectionExistsViaTableNameAutomaticConversion()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -127,11 +128,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -139,7 +140,7 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversionOnNoRows()
+        public void TestSqlConnectionExistsViaTableNameAutomaticConversionOnNoRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -147,11 +148,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(default(long), result);
+                Assert.IsFalse(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -159,7 +160,7 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAutomaticConversionOnDifferentReturnType()
+        public void TestSqlConnectionExistsViaTableNameAutomaticConversionOnDifferentReturnType()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -173,11 +174,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
+                var result = Convert.ToInt32(connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null));
 
                 // Assert
-                Assert.AreEqual((double)tables.Count, result);
+                Assert.AreEqual(1, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -185,17 +186,17 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void ThrowExceptionOnSqlConnectionCountViaTableNameWithStrictConversionOnNoRows()
+        public void ThrowExceptionOnSqlConnectionExistsViaTableNameWithStrictConversionOnNoRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null);
 
                 // Assert
                 Assert.Throws<InvalidDataException>(() =>
-                    connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
                         (object)null));
             }
         }

@@ -9,7 +9,7 @@ using System.IO;
 namespace RepoDb.IntegrationTests.Conversions
 {
     [TestClass]
-    public class Insert
+    public class InsertConversionTest
     {
         [TestInitialize]
         public void Initialize()
