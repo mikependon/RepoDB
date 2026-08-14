@@ -126,7 +126,7 @@ namespace RepoDb.IntegrationTests.Conversions
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Merge<IdentityTable, Guid>(table));
             }
         }
@@ -214,7 +214,7 @@ namespace RepoDb.IntegrationTests.Conversions
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Merge<Guid>(ClassMappedNameCache.Get<IdentityTable>(),
                         table));
             }

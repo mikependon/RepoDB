@@ -100,11 +100,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Exists<IdentityTable>((object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Exists<IdentityTable>((object)null));
             }
         }
@@ -190,12 +187,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
                         (object)null));
             }

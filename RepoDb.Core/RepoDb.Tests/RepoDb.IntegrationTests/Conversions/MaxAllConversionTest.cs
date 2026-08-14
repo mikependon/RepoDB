@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -100,11 +101,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.MaxAll<IdentityTable>(e => e.ColumnInt);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.MaxAll<IdentityTable>(e => e.ColumnInt));
             }
         }
@@ -187,11 +185,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.MaxAll<IdentityTable, int?>(e => e.ColumnInt);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.MaxAll<IdentityTable, int?>(e => e.ColumnInt));
             }
         }
@@ -277,12 +272,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt")));
             }
@@ -369,12 +360,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.MaxAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"));
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.MaxAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt")));
             }

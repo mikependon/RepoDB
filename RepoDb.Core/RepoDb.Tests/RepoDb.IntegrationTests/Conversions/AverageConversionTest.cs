@@ -101,11 +101,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Average<IdentityTable>(e => e.ColumnInt, (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Average<IdentityTable>(e => e.ColumnInt, (object)null));
             }
         }
@@ -189,11 +186,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Average<IdentityTable, double?>(e => e.ColumnInt, (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Average<IdentityTable, double?>(e => e.ColumnInt, (object)null));
             }
         }
@@ -282,13 +276,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Average(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"),
-                    (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Average(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));
@@ -379,13 +368,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"),
-                    (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));

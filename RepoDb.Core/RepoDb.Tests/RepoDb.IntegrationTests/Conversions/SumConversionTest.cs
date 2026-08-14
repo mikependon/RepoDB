@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -100,11 +101,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Sum<IdentityTable>(e => e.ColumnInt, (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Sum<IdentityTable>(e => e.ColumnInt, (object)null));
             }
         }
@@ -188,11 +186,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Sum<IdentityTable, int?>(e => e.ColumnInt, (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Sum<IdentityTable, int?>(e => e.ColumnInt, (object)null));
             }
         }
@@ -281,13 +276,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"),
-                    (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Sum(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));
@@ -378,13 +368,8 @@ namespace RepoDb.IntegrationTests.Conversions
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                // Act
-                var result = connection.Sum<int?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt"),
-                    (object)null);
-
                 // Assert
-                Assert.Throws<InvalidDataException>(() =>
+                Assert.Throws<InvalidCastException>(() =>
                     connection.Sum<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));

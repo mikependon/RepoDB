@@ -54,17 +54,24 @@ namespace RepoDb
         /// <returns>The converted value.</returns>
         public static T ToType<T>(object value)
         {
-            if (value is T t)
+            if (value != null && value != DBNull.Value && value is T t)
             {
                 return t;
+            }
+            if ((value == null || value == DBNull.Value) &&
+                GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
+            {
+                return default;
             }
             if (typeof(T).Equals(StaticType.Guid) && value is string)
             {
                 return (T)StringToGuidAsObject(value);
             }
-            return value == null || DbNullToNull(value) == null ?
-                default :
-                    (T)Convert.ChangeType(value, typeof(T));
+            if (value == DBNull.Value && !typeof(T).IsByRef)
+            {
+                throw new InvalidCastException("Null database value cannot be converted to value type. Consider enabling 'GlobalConfiguration.Options.ConversionType' to 'Automatic'.");
+            }
+            return (T)Convert.ChangeType(value, typeof(T));
         }
 
         /// <summary>
