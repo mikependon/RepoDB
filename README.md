@@ -6,45 +6,43 @@
 </div>
 
 -----
-<br/>
 
-[![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
-[![MsTeams](https://img.shields.io/badge/chat-microsoft%20teams-6264A7?&logo=microsoftteams&logoColor=white&style=for-the-badge)](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
+RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET. It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
 
-RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
+## Why RepoDB?
 
-RepoDB is best for simplifying data layer implementations, processing millions of records, and integrating multiple data sources. It provides the flexibility to work the way you want—all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface.
+RepoDB solves a very complex problem in data access space. It is best for processing millions of records and moving them around from different DB providers. Imagine moving the data from legacy database towards cloud DB databases such as Azure Data Warehouse, ClickHouse, SnowFlake and etc.
+
+It is also best for simplifying data layer implementations. It provides the flexibility to work the way you want—all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface.
 
 Write raw SQL when you need absolute control, or use the fluent APIs for more productivity. You can switch seamlessly between both approaches without sacrificing performance or maintainability.
 
-## Easy to Use
+## As Hybrid-ORM
 
-Every operation is an extension method of [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Simply open a connection and you can start working with your database — no need for repositories to scaffold, no context classes, no code generation.
+RepoDB solves a common tension in data access: the raw performance and control of manual ADO.NET versus the productivity of a full-featured ORM. It gives you both, then adds the platform capabilities needed to move and manage data at scale — including across legacy systems and cloud warehouses like Azure Synapse, ClickHouse, and Snowflake.
 
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var id = connection.Insert<Customer>(new Customer { FirstName = "John", LastName = "Doe" }); // Insert
-    var customer = connection.Query<Customer>(c => c.Id == id).FirstOrDefault(); // Query
-    customer.LastName = "Smith"; // Set
-    connection.Update<Customer>(customer); // Update
-    connection.Delete<Customer>(10045); // or connection.Delete<Customer>(customer); // Delete
-}
-```
+As a hybrid ORM, it stays close to the metal while remaining easy to use:
 
-Moving million of rows at once? Add the `.BulkOperations` package for your provider (e.g. [RepoDb.SqlServer.BulkOperations](RepoDb.Extensions/RepoDb.SqlServer.BulkOperations)) and use the same connection:
+| Feature | Description |
+|---|---|
+| **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
+| **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
+| **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
+| **🔀 Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
+| **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
+| **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
 
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var customers = GetCustomers(); // thousands or millions of rows
-    connection.BulkInsert<Customer>(customers);
-    connection.BulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
-}
-```
+## As Productivity Tool
 
-You can do this in all supported DB providers.
+It goes beyond the ORM with enterprise-grade capabilities for building, operating, and scaling with confidence:
+
+| Feature | Description |
+|---|---|
+| **🏢 Bulk Operations** | High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads. |
+| **🔄 Data Replication & Integration** *(Planned)* | Scalable data movement and synchronization across multiple database platforms. |
+| **📊 Built-in Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
+| **📚 Multi-Database Support** | A growing range of relational database providers with a consistent development experience. |
+| **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation. |
 
 ## Packages and Build Status
 
@@ -66,30 +64,6 @@ You can do this in all supported DB providers.
 | [SQLite](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft) | [![](https://img.shields.io/nuget/v/RepoDb.Sqlite.Microsoft?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft) | [![](https://img.shields.io/nuget/dt/RepoDb.Sqlite.Microsoft?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Sqlite.Microsoft) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlite-microsoft.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlite-microsoft.yml) |
 | [Telemetry (Core)](https://www.nuget.org/packages/RepoDb.Telemetry.Core) 🆕 | [![](https://img.shields.io/nuget/v/RepoDb.Telemetry.Core?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Telemetry.Core) | [![](https://img.shields.io/nuget/dt/RepoDb.Telemetry.Core?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Telemetry.Core) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-telemetry-core.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-telemetry-core.yml) |
 | [Telemetry (Default)](https://www.nuget.org/packages/RepoDb.Telemetry.Default) 🆕 | [![](https://img.shields.io/nuget/v/RepoDb.Telemetry.Default?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Telemetry.Default) | [![](https://img.shields.io/nuget/dt/RepoDb.Telemetry.Default?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Telemetry.Default) | [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-telemetry-default.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-telemetry-default.yml) |
-
-## Why RepoDB?
-
-As a hybrid ORM, RepoDB gives you the raw performance and control of manual data access with the convenience of a full-featured library.
-
-| Feature | Description |
-|---|---|
-| **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
-| **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
-| **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
-| **🔀 Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
-| **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
-| **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
-
-As a productivity platform, RepoDB goes beyond the ORM with enterprise-grade capabilities that help developers build, operate, and scale with confidence.
-
-| Feature | Description |
-|---|---|
-| **🏢 Enterprise-Grade Bulk Operations** | Perform high-performance bulk inserts, updates, merges, and deletes designed for demanding production workloads. |
-| **🔄 Data Replication & Integration** *(Planned)* | Build scalable data movement and synchronization solutions across multiple database platforms. |
-| **📊 Default Telemetry with Insights** | Gain immediate visibility into database operations, execution times, failures, and application behavior with minimal configuration. |
-| **📚 Multi-Database Ecosystem** | Support a growing range of relational database providers with a consistent development experience. |
-| **🏢 Enterprise Ready** | Designed for performance, scalability, observability, and long-term maintainability. |
-| **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation capabilities. |
 
 ## Get Started
 
@@ -153,7 +127,7 @@ Dapper and Entity Framework are both excellent, mature tools — this reflects d
 
 RepoDB includes opt-in, drop-in telemetry via [RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/repodb-insights-default-telemetry-banner.png" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/repodb-insights-default-telemetry-banner.png" style="max-width:768px;" />
 
 It comes with great and simple dashboards visualization.
 
