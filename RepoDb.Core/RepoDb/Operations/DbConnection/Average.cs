@@ -33,7 +33,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -69,7 +69,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -141,7 +141,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -177,7 +177,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -213,7 +213,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -285,7 +285,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
@@ -321,7 +321,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -357,7 +357,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average<TEntity>(this IDbConnection connection,
+        public static double Average<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
@@ -393,7 +393,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static object AverageInternal<TEntity>(this IDbConnection connection,
+        internal static double AverageInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -421,7 +421,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return AverageInternalBase<object>(connection: connection,
+            return AverageInternalBase<double>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -445,7 +445,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             object where,
             string hints = null,
@@ -484,7 +484,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -523,7 +523,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where,
             string hints = null,
@@ -562,7 +562,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -601,7 +601,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             string hints = null,
@@ -640,7 +640,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where,
             string hints = null,
@@ -679,7 +679,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -718,7 +718,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where,
             string hints = null,
@@ -757,7 +757,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -796,7 +796,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where,
             string hints = null,
@@ -835,7 +835,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static Task<object> AverageAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static Task<double> AverageAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where,
             int? commandTimeout = null,
@@ -864,7 +864,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return AverageAsyncInternalBase<object>(connection: connection,
+            return AverageAsyncInternalBase<double>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -1773,7 +1773,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average(this IDbConnection connection,
+        public static double Average(this IDbConnection connection,
             string tableName,
             Field field,
             object where,
@@ -1810,7 +1810,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average(this IDbConnection connection,
+        public static double Average(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where,
@@ -1847,7 +1847,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average(this IDbConnection connection,
+        public static double Average(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where,
@@ -1884,7 +1884,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object Average(this IDbConnection connection,
+        public static double Average(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where,
@@ -1921,7 +1921,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static object AverageInternal(this IDbConnection connection,
+        internal static double AverageInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where,
@@ -1949,7 +1949,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return AverageInternalBase<object>(connection: connection,
+            return AverageInternalBase<double>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -1973,7 +1973,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync(this IDbConnection connection,
+        public static Task<double> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
             object where,
@@ -2013,7 +2013,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync(this IDbConnection connection,
+        public static Task<double> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where,
@@ -2053,7 +2053,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync(this IDbConnection connection,
+        public static Task<double> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where,
@@ -2093,7 +2093,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAsync(this IDbConnection connection,
+        public static Task<double> AverageAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where,
@@ -2133,7 +2133,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        internal static Task<object> AverageAsyncInternal(this IDbConnection connection,
+        internal static Task<double> AverageAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where,
@@ -2162,7 +2162,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return AverageAsyncInternalBase<object>(connection: connection,
+            return AverageAsyncInternalBase<double>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2640,7 +2640,8 @@ namespace RepoDb
 				trace: trace,
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;
@@ -2690,7 +2691,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;

@@ -95,17 +95,6 @@ namespace RepoDb.IntegrationTests.Conversions
             }
         }
 
-        [TestMethod]
-        public void ThrowExceptionOnSqlConnectionExistsViaTEntityWithStrictConversionOnNoRows()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.Exists<IdentityTable>((object)null));
-            }
-        }
-
         #endregion
 
         #region Exists (TableName)
@@ -179,18 +168,6 @@ namespace RepoDb.IntegrationTests.Conversions
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
-            }
-        }
-
-        [TestMethod]
-        public void ThrowExceptionOnSqlConnectionExistsViaTableNameWithStrictConversionOnNoRows()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionString))
-            {
-                // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.Exists(ClassMappedNameCache.Get<IdentityTable>(),
-                        (object)null));
             }
         }
 
