@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace RepoDb.UnitTests.Caches
+namespace RepoDb.UnitTests.Cachers
 {
     [TestClass]
     public partial class PropertyMappedNameCacheTest

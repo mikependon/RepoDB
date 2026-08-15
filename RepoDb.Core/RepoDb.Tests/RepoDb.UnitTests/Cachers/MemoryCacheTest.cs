@@ -3,7 +3,7 @@ using RepoDb.Exceptions;
 using System;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Caches
+namespace RepoDb.UnitTests.Cachers
 {
     [TestClass]
     public class MemoryCacheTest

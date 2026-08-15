@@ -2,7 +2,7 @@
 using RepoDb.Attributes;
 using System;
 
-namespace RepoDb.UnitTests.Caches
+namespace RepoDb.UnitTests.Cachers
 {
     [TestClass]
     public partial class ClassMappedNameCacheTest

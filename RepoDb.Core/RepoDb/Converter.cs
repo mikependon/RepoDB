@@ -76,7 +76,7 @@ namespace RepoDb
                 {
                     return default;
                 }
-                else if (!typeof(T).IsByRef && typeof(T) != StaticType.Object)
+                else if (typeof(T).IsValueType)
                 {
                     throw new InvalidCastException($"Failed to convert '{(value == DBNull.Value ? "DBNull" : "Null")}' to '{typeof(T).GetUnderlyingType().FullName}'. " +
                         $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}'.");

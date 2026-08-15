@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -230,7 +230,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -301,7 +301,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -337,7 +337,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
