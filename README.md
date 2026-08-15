@@ -7,13 +7,16 @@
 
 -----
 
-RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET. It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
+RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
+
+
+It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
 
 ## Why RepoDB?
 
-RepoDB solves a very complex problem in the data access space. It is best for moving millions of records between different DB providers. Imagine moving data from legacy databases towards cloud-native databases.
+RepoDB solves a complex problem in the data access space: making bulk operations simple. It is designed to efficiently move millions of records across different database providers. Imagine migrating massive datasets from legacy databases to modern, cloud-native platforms — efficiently, reliably, and with high performance.
 
-It also solves a common tension in data access: the raw performance and control of manual ADO.NET versus the productivity of a full-featured ORM — without forcing a trade-off.
+It also addresses a common tension in data access: choosing between the raw performance and control of manual ADO.NET and the productivity of a full-featured ORM. RepoDB brings both together — without forcing a trade-off.
 
 ### As a Hybrid-ORM
 
