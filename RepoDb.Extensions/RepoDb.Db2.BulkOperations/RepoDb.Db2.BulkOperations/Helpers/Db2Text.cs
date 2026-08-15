@@ -86,6 +86,26 @@ namespace RepoDb
             IDbSetting dbSetting) =>
             $"DROP TABLE {pseudoTableName.AsQuoted(true, dbSetting)}";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string GetCreatePseudoTableIndexSql(string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIndexName = $"IX_{pseudoTableName}".AsQuoted(true, dbSetting);
+            var columnList = qualifiers
+                .Select(f => f.Name.AsQuoted(true, dbSetting))
+                .Join(", ");
+
+            return $"CREATE INDEX {quotedIndexName} ON {quotedPseudoTableName} ({columnList}) CLUSTER";
+        }
+
         #endregion
 
         #region Insert

@@ -74,6 +74,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 if (qualifierFieldsForPseudoTable != null)
@@ -154,6 +155,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
@@ -223,6 +225,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
@@ -301,6 +304,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 if (qualifierFieldsForPseudoTable != null)
@@ -383,6 +387,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
@@ -454,6 +459,7 @@ namespace RepoDb
             {
                 // Bulk and post process
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFieldsForPseudoTable, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 

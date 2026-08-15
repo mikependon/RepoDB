@@ -142,9 +142,11 @@ namespace RepoDb
                 // Bulk and post process
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
 
                 // Create pseudo table
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 
                 // Write
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
@@ -152,7 +154,6 @@ namespace RepoDb
                 WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 result = Db2Execution.MergeFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction);
             }
@@ -216,7 +217,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 // Write
@@ -225,8 +230,6 @@ namespace RepoDb
                 WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
@@ -368,12 +371,13 @@ namespace RepoDb
                 // Bulk and post process
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
 
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 result = Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction);
             }
@@ -436,13 +440,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
@@ -508,13 +514,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
+                Db2Execution.CreatePseudoTableIndex(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction);
                 Db2Execution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
                 WriteToServerInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = Db2Execution.MergeFromPseudoTable(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction);
@@ -664,9 +672,11 @@ namespace RepoDb
                 // Bulk and post process
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
 
                 // Create pseudo table
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
 
                 // Write
                 var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
@@ -674,7 +684,6 @@ namespace RepoDb
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 result = await Db2Execution.MergeFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, entityList, trace, traceKey, transaction, cancellationToken);
             }
@@ -740,7 +749,11 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 // Write
@@ -749,8 +762,6 @@ namespace RepoDb
                 await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
@@ -898,12 +909,13 @@ namespace RepoDb
                 // Bulk and post process
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var identityField = dbFields.GetIdentity().AsField();
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
 
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 result = await Db2Execution.MergeFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, mergeFields, identityField, qualifierFields, rows, trace, traceKey, transaction, cancellationToken);
             }
@@ -968,13 +980,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);
@@ -1042,13 +1056,15 @@ namespace RepoDb
             try
             {
                 // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
+
                 await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+                await Db2Execution.CreatePseudoTableIndexAsync(connection, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
                 await Db2Execution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
                 await WriteToServerAsyncInternal(connection, pseudoTableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
 
                 // Execute and return
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var qualifierFields = GetQualifierFields(tableName, dbFields, qualifiers);
                 var mergeFields = GetMergeFields(tableName, dbFields, mappings, qualifierFields);
                 var identityField = dbFields.GetIdentity()?.AsField();
                 result = await Db2Execution.MergeFromPseudoTableAsync(connection, tableName, pseudoTableName, mergeFields, qualifierFields, identityField, trace, traceKey, transaction, cancellationToken);

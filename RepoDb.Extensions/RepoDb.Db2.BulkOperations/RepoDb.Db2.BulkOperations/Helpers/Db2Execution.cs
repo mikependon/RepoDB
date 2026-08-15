@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IBM.Data.Db2;
@@ -42,7 +43,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields, nullableFields);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -72,11 +73,66 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetCreatePseudoTableSql(tableName, pseudoTableName, dbSetting, qualifierFields, nullableFields);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        public static void CreatePseudoTableIndex(DB2Connection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
+            DB2Transaction transaction = null)
+        {
+            if (qualifiers?.Any() != true)
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = Db2Text.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task CreatePseudoTableIndexAsync(DB2Connection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (qualifiers?.Any() != true)
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = Db2Text.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>
@@ -91,7 +147,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -113,7 +169,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -132,7 +188,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -154,7 +210,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -190,7 +246,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
             var result = 0;
 
             while (reader.Read())
@@ -233,7 +289,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -271,7 +327,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
             var result = 0;
 
             while (reader.Read())
@@ -311,7 +367,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, dbSetting);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -352,7 +408,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -382,7 +438,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -417,7 +473,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
             var result = 0;
             var unmatchedRowOrders = new List<long>();
             var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
-            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, transaction: transaction))
+            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, trace: trace, traceKey: traceKey, transaction: transaction))
             {
                 while (snapshotReader.Read())
                 {
@@ -440,14 +496,14 @@ namespace RepoDb.Db2.BulkOperations.Extensions
                 var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
                 if (updateSql != null)
                 {
-                    connection.ExecuteNonQuery(updateSql, transaction: transaction);
+                    connection.ExecuteNonQuery(updateSql, trace: trace, traceKey: traceKey, transaction: transaction);
                 }
             }
 
             if (unmatchedRowOrders.Count > 0)
             {
                 var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, transaction: transaction);
+                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, trace: trace, traceKey: traceKey, transaction: transaction);
                 var index = 0;
                 while (insertReader.Read())
                 {
@@ -495,7 +551,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
 
             var unmatchedRowOrders = new List<long>();
             var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
-            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, transaction: transaction, cancellationToken: cancellationToken))
+            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken))
             {
                 while (await snapshotReader.ReadAsync(cancellationToken))
                 {
@@ -517,14 +573,14 @@ namespace RepoDb.Db2.BulkOperations.Extensions
                 var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
                 if (updateSql != null)
                 {
-                    await connection.ExecuteNonQueryAsync(updateSql, transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.ExecuteNonQueryAsync(updateSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 }
             }
 
             if (unmatchedRowOrders.Count > 0)
             {
                 var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, transaction: transaction, cancellationToken: cancellationToken);
+                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 var index = 0;
                 while (await insertReader.ReadAsync(cancellationToken))
                 {
@@ -567,7 +623,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
 
             var unmatchedRowOrders = new List<long>();
             var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
-            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, transaction: transaction))
+            using (var snapshotReader = (DbDataReader)connection.ExecuteReader(snapshotSql, trace: trace, traceKey: traceKey, transaction: transaction))
             {
                 while (snapshotReader.Read())
                 {
@@ -589,14 +645,14 @@ namespace RepoDb.Db2.BulkOperations.Extensions
                 var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
                 if (updateSql != null)
                 {
-                    connection.ExecuteNonQuery(updateSql, transaction: transaction);
+                    connection.ExecuteNonQuery(updateSql, trace: trace, traceKey: traceKey, transaction: transaction);
                 }
             }
 
             if (unmatchedRowOrders.Count > 0)
             {
                 var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, transaction: transaction);
+                using var insertReader = (DbDataReader)connection.ExecuteReader(insertSql, trace: trace, traceKey: traceKey, transaction: transaction);
                 var index = 0;
                 while (insertReader.Read())
                 {
@@ -641,7 +697,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
 
             var unmatchedRowOrders = new List<long>();
             var snapshotSql = Db2Text.GetMergeMatchSnapshotSql(tableName, pseudoTableName, identityField, qualifiers, dbSetting);
-            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, transaction: transaction, cancellationToken: cancellationToken))
+            using (var snapshotReader = (DbDataReader)await connection.ExecuteReaderAsync(snapshotSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken))
             {
                 while (await snapshotReader.ReadAsync(cancellationToken))
                 {
@@ -663,14 +719,14 @@ namespace RepoDb.Db2.BulkOperations.Extensions
                 var updateSql = Db2Text.GetMergeUpdateOnlySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
                 if (updateSql != null)
                 {
-                    await connection.ExecuteNonQueryAsync(updateSql, transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.ExecuteNonQueryAsync(updateSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 }
             }
 
             if (unmatchedRowOrders.Count > 0)
             {
                 var insertSql = Db2Text.GetMergeInsertOnlyForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, qualifiers, dbSetting);
-                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, transaction: transaction, cancellationToken: cancellationToken);
+                using var insertReader = (DbDataReader)await connection.ExecuteReaderAsync(insertSql, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 var index = 0;
                 while (await insertReader.ReadAsync(cancellationToken))
                 {
@@ -710,7 +766,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -738,7 +794,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -766,7 +822,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return connection.ExecuteNonQuery(commandText, transaction: transaction);
+            return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
         /// <summary>
@@ -792,7 +848,7 @@ namespace RepoDb.Db2.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = Db2Text.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         #endregion
