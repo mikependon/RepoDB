@@ -11,17 +11,13 @@ RepoDB is a high-performance data productivity platform for .NET developers. At 
 
 ## Why RepoDB?
 
-RepoDB solves a very complex problem in data access space. It is best for processing millions of records and moving them around from different DB providers. Imagine moving the data from legacy database towards cloud DB databases such as Azure Data Warehouse, ClickHouse, SnowFlake and etc.
+RepoDB solves a very complex problem in data access space. It is best for moving millions of records between different DB providers. Imagine moving the data from legacy databases towards cloud-native DB databases such as Azure Data Warehouse, ClickHouse, SnowFlake and etc.
 
-It is also best for simplifying data layer implementations. It provides the flexibility to work the way you want—all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface.
+It also solves a common tension in data access: the raw performance and control of manual ADO.NET versus the productivity of a full-featured ORM — without forcing a trade-off.
 
-Write raw SQL when you need absolute control, or use the fluent APIs for more productivity. You can switch seamlessly between both approaches without sacrificing performance or maintainability.
+### As a Hybrid-ORM
 
-## As Hybrid-ORM
-
-RepoDB solves a common tension in data access: the raw performance and control of manual ADO.NET versus the productivity of a full-featured ORM. It gives you both, then adds the platform capabilities needed to move and manage data at scale — including across legacy systems and cloud warehouses like Azure Synapse, ClickHouse, and Snowflake.
-
-As a hybrid ORM, it stays close to the metal while remaining easy to use:
+It stays close to the metal while remaining easy to use:
 
 | Feature | Description |
 |---|---|
@@ -32,16 +28,16 @@ As a hybrid ORM, it stays close to the metal while remaining easy to use:
 | **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
 | **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
 
-## As Productivity Tool
+### As a Productivity Platform
 
 It goes beyond the ORM with enterprise-grade capabilities for building, operating, and scaling with confidence:
 
 | Feature | Description |
 |---|---|
-| **🏢 Bulk Operations** | High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads. |
+| **📦 Bulk Operations** | High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads. |
 | **🔄 Data Replication & Integration** *(Planned)* | Scalable data movement and synchronization across multiple database platforms. |
 | **📊 Built-in Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
-| **📚 Multi-Database Support** | A growing range of relational database providers with a consistent development experience. |
+| **🗄️ Multi-Database Support** | A growing range of relational database providers with a consistent development experience. |
 | **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation. |
 
 ## Packages and Build Status
