@@ -153,6 +153,7 @@ namespace RepoDb
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
                 OracleExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                OracleExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
                 OracleExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
@@ -207,6 +208,7 @@ namespace RepoDb
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
                 await OracleExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken);
+                await OracleExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
                 await OracleExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);

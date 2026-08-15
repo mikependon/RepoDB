@@ -855,7 +855,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -888,7 +888,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -1023,7 +1023,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -1056,7 +1056,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -2840,7 +2840,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -2873,7 +2873,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -3008,7 +3008,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -3041,7 +3041,7 @@ namespace RepoDb.Oracle.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new OracleConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<OracleException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
