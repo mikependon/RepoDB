@@ -190,7 +190,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Sum<IdentityTable, int?>(e => e.ColumnInt, (object)null));
+                    connection.Sum<IdentityTable, int>(new Field("ColumnInt"), (object)null));
             }
         }
 
@@ -372,7 +372,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Sum<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    connection.Sum<int>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));
             }

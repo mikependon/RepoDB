@@ -188,7 +188,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Max<IdentityTable, int?>(e => e.ColumnInt, (object)null));
+                    connection.Max<IdentityTable, int>(new Field("ColumnInt"), (object)null));
             }
         }
 
@@ -370,7 +370,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Max<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    connection.Max<int>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));
             }

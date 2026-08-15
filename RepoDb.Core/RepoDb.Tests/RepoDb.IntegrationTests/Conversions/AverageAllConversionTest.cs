@@ -187,7 +187,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.AverageAll<IdentityTable, double?>(e => e.ColumnInt));
+                    connection.AverageAll<IdentityTable, double>(new Field("ColumnInt")));
             }
         }
 
@@ -362,7 +362,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.AverageAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    connection.AverageAll<double>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt")));
             }
         }

@@ -193,7 +193,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Min<IdentityTable, int?>(e => e.ColumnInt, (object)null));
+                    connection.Min<IdentityTable, int>(new Field("ColumnInt"), (object)null));
             }
         }
 
@@ -375,7 +375,7 @@ namespace RepoDb.IntegrationTests.Conversions
             {
                 // Assert
                 Assert.Throws<InvalidCastException>(() =>
-                    connection.Min<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    connection.Min<int>(ClassMappedNameCache.Get<IdentityTable>(),
                         new Field("ColumnInt"),
                         (object)null));
             }

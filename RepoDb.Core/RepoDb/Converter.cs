@@ -72,14 +72,15 @@ namespace RepoDb
             }
             if (value == null || value == DBNull.Value)
             {
-                if (forceAutomatic || GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
+                if (forceAutomatic || GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
+                    Nullable.GetUnderlyingType(typeof(T)) != null)
                 {
                     return default;
                 }
                 else if (typeof(T).IsValueType)
                 {
                     throw new InvalidCastException($"Failed to convert '{(value == DBNull.Value ? "DBNull" : "Null")}' to '{typeof(T).GetUnderlyingType().FullName}'. " +
-                        $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}'.");
+                        $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}' or make the type '{typeof(T).FullName}' nullable.");
                 }
             }
             try
