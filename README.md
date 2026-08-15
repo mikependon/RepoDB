@@ -1,6 +1,6 @@
 
 <div align="center">
-    <image src="logo.png" style="width:300px;" />
+    <image src="logo.png" style="width:256px;" />
     <br/>
     <span style="font-size:16px;font-weight:bold;">A production-ready data access platform for .NET applications.</span>
 </div>
