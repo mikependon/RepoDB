@@ -298,7 +298,7 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public async Task ThrowExceptionExecuteQueryMultipleAsyncCancelledOperation()
+        public async Task ThrowExceptionOnExecuteQueryMultipleAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -661,7 +661,7 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnInsertAllAsyncMultipleEntitiesCancelledOperation()
+        public async Task ThrowExceptionOnInsertAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
