@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
@@ -72,7 +73,68 @@ namespace RepoDb.MySql.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Creates an index on <paramref name="pseudoTableName"/>'s qualifier columns. Must be called after
+        /// <see cref="CreatePseudoTable"/> and before the pseudo table is bulk-loaded, so the index exists
+        /// before any data is staged into it rather than being built (or rebuilt) against a populated table.
+        /// No-ops when <paramref name="qualifiers"/> is empty (e.g. a plain insert has no qualifier to index).
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        public static void CreatePseudoTableIndex(MySqlConnection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
+            MySqlTransaction transaction = null)
+        {
+            if (qualifiers?.Any() != true)
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = MySqlText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
+            connection.ExecuteNonQuery(commandText, transaction: transaction);
+        }
+
+        /// <summary>
+        /// Creates an index on <paramref name="pseudoTableName"/>'s qualifier columns. Must be called after
+        /// <see cref="CreatePseudoTableAsync"/> and before the pseudo table is bulk-loaded, so the index exists
+        /// before any data is staged into it rather than being built (or rebuilt) against a populated table.
+        /// No-ops when <paramref name="qualifiers"/> is empty (e.g. a plain insert has no qualifier to index).
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task CreatePseudoTableIndexAsync(MySqlConnection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            ITrace trace = null,
+            string traceKey = null,
+            MySqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (qualifiers?.Any() != true)
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = MySqlText.GetCreatePseudoTableIndexSql(pseudoTableName, qualifiers, dbSetting);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pseudoTableName"></param>

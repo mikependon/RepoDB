@@ -45,6 +45,15 @@ namespace RepoDb
         /// </summary>
         private const string RowOrderColumnName = "__RepoDbBulkRowOrder__";
 
+        /// <summary>
+        /// Name of the index created on every pseudo table's qualifier columns (see
+        /// <see cref="GetCreatePseudoTableIndexSql"/>). The pseudo table is always freshly dropped and
+        /// re-created (see <see cref="GetCreatePseudoTableSql"/>) before this index is built, and a MySQL
+        /// index name only needs to be unique within its own table, so a fixed literal name is safe here -
+        /// no risk of colliding with a real index a caller might have on <c>tableName</c> itself.
+        /// </summary>
+        private const string QualifierIndexName = "__RepoDbBulkQualifierIndex__";
+
         #region Shared
 
         /// <summary>
@@ -104,6 +113,32 @@ namespace RepoDb
                 $"CREATE {temporaryKeyword}TABLE {quotedPseudoTableName} " +
                 $"({quotedRowOrderColumn} BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY) " +
                 $"AS SELECT {columnList} FROM {quotedTableName} WHERE (1 = 0)";
+        }
+
+        /// <summary>
+        /// Builds the DDL that indexes a pseudo table's qualifier columns - the columns
+        /// <c>UpdateFromPseudoTable</c>/<c>MergeFromPseudoTable</c>/<c>DeleteFromPseudoTable</c> join or filter
+        /// on against the real table. <c>CREATE TABLE ... AS SELECT</c> (see <see cref="GetCreatePseudoTableSql"/>)
+        /// never carries over a source column's own key/index definitions, so without this the pseudo table's
+        /// qualifier columns would otherwise be entirely unindexed - forcing a full table scan on the pseudo
+        /// side of every merge/update/delete join. Must run before the pseudo table is bulk-loaded, so the
+        /// index is built once up front rather than incrementally maintained row-by-row during the load.
+        /// </summary>
+        /// <param name="pseudoTableName">The pseudo table to index.</param>
+        /// <param name="qualifiers">The qualifier column(s) to index.</param>
+        /// <param name="dbSetting">The current <see cref="IDbSetting"/>.</param>
+        /// <returns>The <c>CREATE INDEX</c> SQL text.</returns>
+        public static string GetCreatePseudoTableIndexSql(string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIndexName = QualifierIndexName.AsQuoted(true, dbSetting);
+            var columnList = qualifiers
+                .Select(f => f.Name.AsQuoted(true, dbSetting))
+                .Join(", ");
+
+            return $"CREATE INDEX {quotedIndexName} ON {quotedPseudoTableName} ({columnList})";
         }
 
         /// <summary>

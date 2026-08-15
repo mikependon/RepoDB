@@ -141,6 +141,7 @@ namespace RepoDb
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
                 MySqlExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction);
+                MySqlExecution.CreatePseudoTableIndex(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
                 MySqlExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
@@ -204,6 +205,7 @@ namespace RepoDb
             {
                 // Bulk and post process - the pseudo table only ever needs the one qualifier column
                 await MySqlExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, qualifierField, trace, traceKey, transaction, cancellationToken);
+                await MySqlExecution.CreatePseudoTableIndexAsync(connection, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
                 await MySqlExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);

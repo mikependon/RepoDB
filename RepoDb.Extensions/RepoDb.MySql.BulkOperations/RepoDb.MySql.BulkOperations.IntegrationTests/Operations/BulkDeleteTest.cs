@@ -1,13 +1,14 @@
-using MySql.Data.MySqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Extensions;
-using RepoDb.IntegrationTests.Setup;
-using RepoDb.MySql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using RepoDb.Enumerations.MySql;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+using RepoDb.Enumerations.MySql;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.IntegrationTests.Setup;
+using RepoDb.MySql.BulkOperations.IntegrationTests.Models;
 
 namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
 {
@@ -852,7 +853,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -885,7 +886,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -1020,7 +1021,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -1053,7 +1054,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -2837,7 +2838,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -2870,7 +2871,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
@@ -3005,7 +3006,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("InvalidTable", table));
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
                     }
                 }
@@ -3038,7 +3039,7 @@ namespace RepoDb.MySql.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            Assert.Throws<MySqlException>(() => destinationConnection.BulkDelete("MissingTable",
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
                                 null,
                                 DataRowState.Unchanged));
