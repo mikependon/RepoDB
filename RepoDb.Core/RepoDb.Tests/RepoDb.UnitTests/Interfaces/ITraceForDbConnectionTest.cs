@@ -1,12 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.UnitTests.CustomObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -16,9 +17,16 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add<TraceDbConnection>(new CustomStatementBuilder(), true);
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Default;
         }
 
         #region SubClasses
@@ -68,7 +76,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -104,7 +112,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -143,7 +151,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -181,7 +189,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -222,7 +230,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -256,7 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<double>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -293,7 +301,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
@@ -329,7 +337,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<double>>(),
                     It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 

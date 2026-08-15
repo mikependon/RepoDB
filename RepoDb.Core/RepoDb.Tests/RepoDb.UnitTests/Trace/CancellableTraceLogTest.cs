@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -15,9 +16,16 @@ namespace RepoDb.UnitTests.Trace
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add<TraceDbConnection>(new CustomStatementBuilder(), true);
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Default;
         }
 
         #region SubClasses
@@ -290,7 +298,7 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public async Task ThrowExceptionExecuteQueryMultipleAsyncCancelledOperation()
+        public async Task ThrowExceptionOnExecuteQueryMultipleAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -653,7 +661,7 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnInsertAllAsyncMultipleEntitiesCancelledOperation()
+        public async Task ThrowExceptionOnInsertAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();

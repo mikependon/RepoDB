@@ -28,9 +28,6 @@
     <None Remove="Types\Strings\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="ConversionTypeTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Types" Version="170.1000.7" />
     <PackageReference Include="MSTest" Version="4.2.3" />
   </ItemGroup>

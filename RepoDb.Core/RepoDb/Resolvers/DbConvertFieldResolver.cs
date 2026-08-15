@@ -51,7 +51,11 @@ namespace RepoDb.Resolvers
                 if (dbType != null)
                 {
                     var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
-                    return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", dbTypeName.AsQuoted(dbSetting), ")");
+                    var parenIndex = dbTypeName.IndexOf('(');
+                    var quotedDbTypeName = parenIndex >= 0
+                        ? string.Concat(dbTypeName.Substring(0, parenIndex).AsQuoted(dbSetting), dbTypeName.Substring(parenIndex))
+                        : dbTypeName.AsQuoted(dbSetting);
+                    return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", quotedDbTypeName, ")");
                 }
             }
             return field?.Name?.AsQuoted(true, true, dbSetting);

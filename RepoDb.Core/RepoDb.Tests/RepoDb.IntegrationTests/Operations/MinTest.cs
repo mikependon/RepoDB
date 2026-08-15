@@ -291,6 +291,270 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    item => item.ColumnDateTime > Helper.EpocDate.AddDays(5) && item.ColumnDateTime <= Helper.EpocDate.AddDays(8));
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDateTimeViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<IdentityTable, double?>(e => e.ColumnFloat,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region MinAsync<TEntity>
@@ -559,6 +823,270 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    item => item.ColumnDateTime > Helper.EpocDate.AddDays(5) && item.ColumnDateTime <= Helper.EpocDate.AddDays(8));
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region Min(TableName)
@@ -797,6 +1325,240 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDateTimeWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDateTimeViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDateTimeViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDateTimeViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDateTimeViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinViaTableNameTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Min<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region MinAsync(TableName)
@@ -1032,6 +1794,240 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Min(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    new { ColumnDateTime = Helper.EpocDate.AddDays(1) });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime == Helper.EpocDate.AddDays(1)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5));
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDateTimeViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.GreaterThan, Helper.EpocDate.AddDays(5)),
+                new QueryField(nameof(IdentityTable.ColumnDateTime), Operation.LessThanOrEqual, Helper.EpocDate.AddDays(8))
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDateTime > Helper.EpocDate.AddDays(5) && t.ColumnDateTime <= Helper.EpocDate.AddDays(8)).Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAsyncTypedResultDoubleViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Min(t => t.ColumnFloat), result);
             }
         }
 

@@ -5,7 +5,7 @@ using RepoDb.Options;
 using System;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Caches
+namespace RepoDb.UnitTests.Cachers
 {
     [TestClass]
     public partial class PropertyHandlerCacheTest

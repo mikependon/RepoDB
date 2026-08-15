@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object AverageAll<TEntity>(this IDbConnection connection,
+        public static double AverageAll<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -40,7 +40,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return AverageAllInternal<TEntity, object>(connection: connection,
+            return AverageAllInternal<TEntity, double>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -63,7 +63,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object AverageAll<TEntity>(this IDbConnection connection,
+        public static double AverageAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -73,7 +73,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return AverageAllInternal<TEntity, object>(connection: connection,
+            return AverageAllInternal<TEntity, double>(connection: connection,
                 field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -97,7 +97,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAllAsync<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -108,7 +108,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return AverageAllAsyncInternal<TEntity, object>(connection: connection,
+            return AverageAllAsyncInternal<TEntity, double>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -133,7 +133,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<double> AverageAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -144,7 +144,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return AverageAllAsyncInternal<TEntity, object>(connection: connection,
+            return AverageAllAsyncInternal<TEntity, double>(connection: connection,
                 field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -407,7 +407,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public static object AverageAll(this IDbConnection connection,
+        public static double AverageAll(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -417,7 +417,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return AverageAllInternal<object>(connection: connection,
+            return AverageAllInternal<double>(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -442,7 +442,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The average value of the target field.</returns>
-        public static Task<object> AverageAllAsync(this IDbConnection connection,
+        public static Task<double> AverageAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -453,7 +453,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
-            return AverageAllAsyncInternal<object>(connection: connection,
+            return AverageAllAsyncInternal<double>(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -671,7 +671,8 @@ namespace RepoDb
 				trace: trace,
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;
@@ -722,7 +723,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;
