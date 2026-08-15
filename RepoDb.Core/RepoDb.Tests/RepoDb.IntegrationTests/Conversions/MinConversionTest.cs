@@ -62,11 +62,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Min<IdentityTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityTable, int>(new Field("ColumnInt"),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -88,7 +88,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Min<IdentityTable>(e => e.ColumnInt,
+                var result = connection.Min<IdentityTable, double>(new Field("ColumnInt"),
                     (object)null);
 
                 // Assert
@@ -237,12 +237,12 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Min<int>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -264,7 +264,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Min(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Min< double>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
                     (object)null);
 

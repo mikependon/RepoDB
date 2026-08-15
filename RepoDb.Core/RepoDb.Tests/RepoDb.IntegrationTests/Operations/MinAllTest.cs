@@ -104,6 +104,84 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDateTime()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<IdentityTable, DateTime?>(e => e.ColumnDateTime);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllWithHintsTypedResultDateTime()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region MinAllAsync<TEntity>
@@ -183,6 +261,84 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllAsyncTypedResultDateTime()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllAsyncWithHintsTypedResultDateTime()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<IdentityTable, DateTime?>(e => e.ColumnDateTime,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllAsyncTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllAsyncWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
             }
         }
 
@@ -272,6 +428,88 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDateTimeViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"));
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDateTimeViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDoubleViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMinAllTypedResultDoubleViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MinAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region MinAllAsync(TableName)
@@ -355,6 +593,88 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Min(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllTypedResultDateTimeAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"));
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllTypedResultDateTimeAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<DateTime?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDateTime"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnDateTime), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllTypedResultDoubleAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionMinAllTypedResultDoubleAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.MinAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(t => t.ColumnFloat), result);
             }
         }
 

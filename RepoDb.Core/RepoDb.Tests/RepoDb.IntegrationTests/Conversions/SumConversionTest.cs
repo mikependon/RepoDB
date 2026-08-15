@@ -61,10 +61,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Sum<IdentityTable>(e => e.ColumnInt, (object)null);
+                var result = connection.Sum<IdentityTable, int>(new Field("ColumnInt"),
+                    (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -86,7 +87,8 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Sum<IdentityTable>(e => e.ColumnInt, (object)null);
+                var result = connection.Sum<IdentityTable, double>(new Field("ColumnInt"),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual((double)tables.Sum(t => t.ColumnInt), result);
@@ -232,12 +234,12 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Sum<int>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -259,7 +261,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Sum(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Sum<double>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
                     (object)null);
 

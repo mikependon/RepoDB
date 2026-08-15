@@ -64,7 +64,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 var result = connection.Max<IdentityTable>(e => e.ColumnInt, (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.IsNull(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Max<IdentityTable>(e => e.ColumnInt, (object)null);
+                var result = connection.Max<IdentityTable, double>(new Field("ColumnInt"), (object)null);
 
                 // Assert
                 Assert.AreEqual((double)tables.Last().ColumnInt, result);
@@ -237,7 +237,7 @@ namespace RepoDb.IntegrationTests.Conversions
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.IsNull(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -259,7 +259,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.Max(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.Max<double>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
                     (object)null);
 

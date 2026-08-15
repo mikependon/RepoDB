@@ -15,8 +15,15 @@ namespace RepoDb.UnitTests.Interfaces
         [TestInitialize]
         public void Initialize()
         {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             DbSettingMapper.Add<StatementBuilderDbConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<StatementBuilderDbConnection>(new CustomDbHelper(), true);
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Default;
         }
 
         #region SubClasses

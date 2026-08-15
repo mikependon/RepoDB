@@ -1,12 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.UnitTests.CustomObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -16,9 +17,16 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
             DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add<TraceDbConnection>(new CustomStatementBuilder(), true);
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            GlobalConfiguration.Options.ConversionType = ConversionType.Default;
         }
 
         #region SubClasses

@@ -61,10 +61,10 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.SumAll<IdentityTable>(e => e.ColumnInt);
+                var result = connection.SumAll<IdentityTable, int>(new Field("ColumnInt"));
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.SumAll<IdentityTable>(e => e.ColumnInt);
+                var result = connection.SumAll<IdentityTable, double>(new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual((double)tables.Sum(t => t.ColumnInt), result);
@@ -230,11 +230,11 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.SumAll<int>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"));
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.SumAll(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.SumAll<double>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"));
 
                 // Assert

@@ -92,9 +92,9 @@ namespace RepoDb
                 }
                 return (T)value;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidCastException($"Value '{(value == DBNull.Value ? "DBNull" : "Null")}' cannot be converted to type '{typeof(T).GetUnderlyingType().FullName}'. " +
+                throw new InvalidCastException($"{ex.Message} " +
                     $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}'.");
             }
         }

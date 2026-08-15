@@ -64,7 +64,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 var result = connection.MaxAll<IdentityTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.IsNull(result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.MaxAll<IdentityTable>(e => e.ColumnInt);
+                var result = connection.MaxAll<IdentityTable, double>(new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual((double)tables.Last().ColumnInt, result);
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 var result = connection.MaxAll<IdentityTable, int?>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(default(int?), result);
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -222,7 +222,7 @@ namespace RepoDb.IntegrationTests.Conversions
         }
 
         [TestMethod]
-        public void TestSqlConnectionMaxAllViaTableNameAutomaticConversionOnNoRows()
+        public void TestSqlConnectionMaxAllForObjectViaTableNameWithAutomaticConversionOnNoRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -234,7 +234,27 @@ namespace RepoDb.IntegrationTests.Conversions
                     new Field("ColumnInt"));
 
                 // Assert
-                Assert.AreEqual(default(int), result);
+                Assert.AreEqual(default, result);
+
+                // Reset
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllForTEntityViaTableNameWithAutomaticConversionOnNoRows()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+
+                // Act
+                var result = connection.MaxAll<int>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
@@ -256,7 +276,7 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = (double)connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.MaxAll<double>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"));
 
                 // Assert
@@ -318,11 +338,31 @@ namespace RepoDb.IntegrationTests.Conversions
                 GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
 
                 // Act
-                var result = connection.MaxAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = connection.MaxAll(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"));
 
                 // Assert
-                Assert.AreEqual(default(int?), result);
+                Assert.AreEqual(default, result);
+
+                // Reset
+                GlobalConfiguration.Options.ConversionType = ConversionType.Default;
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllForTEntityViaTableNameTypedResultWithAutomaticConversionOnNoRows()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                GlobalConfiguration.Options.ConversionType = ConversionType.Automatic;
+
+                // Act
+                var result = connection.MaxAll<int>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(default, result);
 
                 // Reset
                 GlobalConfiguration.Options.ConversionType = ConversionType.Default;
