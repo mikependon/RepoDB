@@ -24,7 +24,7 @@ It stays close to the metal while remaining easy to use:
 | **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
 | **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
 | **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
-| **🔀 Hybrid by Design** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
+| **🔀 Hybrid** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
 | **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
 | **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
 
@@ -35,10 +35,9 @@ It goes beyond the ORM with enterprise-grade capabilities for building, operatin
 | Feature | Description |
 |---|---|
 | **📦 Bulk Operations** | High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads. |
-| **🔄 Data Replication & Integration** *(Planned)* | Scalable data movement and synchronization across multiple database platforms. |
-| **📊 Built-in Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
-| **🗄️ Multi-Database Support** | A growing range of relational database providers with a consistent development experience. |
-| **🤖 AI-Ready Architecture** | Built to integrate naturally with AI-assisted development, intelligent analytics, and future automation. |
+| **🔄 Data Replication** | Scalable data movement and synchronization across multiple database platforms. |
+| **📊 Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
+| **🗄️ Multi-DB Support** | A growing range of relational database providers with a consistent development experience. |
 
 ## Packages and Build Status
 
