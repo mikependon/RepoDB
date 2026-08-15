@@ -109,9 +109,6 @@ namespace RepoDb
                         transaction);
                 }
 
-                // Import
-                var result = binaryImport?.Invoke(pseudoTableName ?? tableName);
-
                 // Create Index
                 if (isBulkInsert == false && withPseudoTable)
                 {
@@ -127,6 +124,9 @@ namespace RepoDb
                         traceKey,
                         transaction);
                 }
+
+                // Import
+                var result = binaryImport?.Invoke(pseudoTableName ?? tableName);
 
                 // Merge/Update/Delete
                 if (withPseudoTable)
@@ -256,9 +256,6 @@ namespace RepoDb
                         cancellationToken);
                 }
 
-                // Import
-                var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
-
                 // Create Index
                 if (isBulkInsert == false && withPseudoTable)
                 {
@@ -275,6 +272,9 @@ namespace RepoDb
                         transaction,
                         cancellationToken);
                 }
+
+                // Import
+                var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
 
                 // Insert (INTO)
                 if (withPseudoTable)
