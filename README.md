@@ -1,9 +1,16 @@
 
+<div align="center">
+    <image src="logo.png" style="width:300px;" />
+    <br/>
+    <span style="font-size:16px;font-weight:bold;">A production-ready data access platform for .NET applications.</span>
+</div>
+
+-----
+<br/>
+
 [![Build](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![MsTeams](https://img.shields.io/badge/chat-microsoft%20teams-6264A7?&logo=microsoftteams&logoColor=white&style=for-the-badge)](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ)
-
-# RepoDB — a production-ready data access platform for .NET applications.
 
 RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
 
