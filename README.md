@@ -121,7 +121,7 @@ RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different 
 
 Dapper and Entity Framework are both excellent, mature tools — this reflects design tradeoffs, not a ranking.
 
-## Telemetry 🆕
+## Telemetry
 
 RepoDB includes opt-in, drop-in telemetry via [RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
 

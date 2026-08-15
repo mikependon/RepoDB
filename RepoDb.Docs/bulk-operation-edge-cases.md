@@ -9,7 +9,7 @@ This is pertained to the simplicity of the invocations when calling the bulk ope
 #### Via DataReader
 
 ```csharp
-using (var sourceConnection = new OracleConnection("OracleConnectionString"))
+using (var sourceConnection = new SqlConnection("SqlConnectionString"))
 {
 	using (var reader = sourceConnection.ExecuteReader("SELECT * FROM Person"))
 	{
@@ -53,7 +53,7 @@ Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](h
 
 We believe that it is a very common and is an important use-case to you (and/or most developers). Imagine bulk inserting the huge datasets and have all the identities referenced back to your application for building relationships.
 
-To enable this, simply set the `isReturnIdentity` argument to `true` when calling the operations.
+To enable this, simply set the `identityBehavior` argument to `ReturnIdentity` when calling the operations.
 
 #### BulkInsert
 
@@ -63,7 +63,7 @@ people.Add(..);
 
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
 {
-	var rowsInserted = connection.BulkInsert(people, isReturnIdentity: true);
+	var rowsInserted = connection.BulkInsert(people, identityBehavior: SqlServerBulkImportIdentityBehavior.ReturnIdentity);
 }
 ```
 
