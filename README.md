@@ -11,7 +11,7 @@ RepoDB is a high-performance data productivity platform for .NET developers. At 
 
 ## Why RepoDB?
 
-RepoDB solves a very complex problem in data access space. It is best for moving millions of records between different DB providers. Imagine moving the data from legacy databases towards cloud-native DB databases such as Azure Data Warehouse, ClickHouse, SnowFlake and etc.
+RepoDB solves a very complex problem in the data access space. It is best for moving millions of records between different DB providers. Imagine moving data from legacy databases towards cloud-native databases such as Azure Synapse, 🔜 ClickHouse, 🔜 Snowflake, etc.
 
 It also solves a common tension in data access: the raw performance and control of manual ADO.NET versus the productivity of a full-featured ORM — without forcing a trade-off.
 
