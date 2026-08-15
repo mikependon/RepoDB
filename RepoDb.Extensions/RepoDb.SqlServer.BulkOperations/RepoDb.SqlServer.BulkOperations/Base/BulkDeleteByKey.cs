@@ -116,14 +116,9 @@ namespace RepoDb
                     throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                 }
 
-                // Create a temporary table
+                // Create the temporary table and its qualifier index (index must exist before the data load)
                 var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    dbSetting,
-                    false);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
+                CreateTemporaryTableWithIndex(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace);
 
                 // Do the bulk insertion first
                 using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
@@ -145,14 +140,8 @@ namespace RepoDb
                        transaction);
                 }
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
                 // Delete the actual delete
-                sql = GetBulkDeleteSqlText(tableName,
+                var sql = GetBulkDeleteSqlText(tableName,
                     tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
@@ -293,14 +282,9 @@ namespace RepoDb
                     throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                 }
 
-                // Create a temporary table
+                // Create the temporary table and its qualifier index (index must exist before the data load)
                 var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    dbSetting,
-                    false);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, primaryOrIdentityField.AsEnumerable(), primaryOrIdentityField.AsEnumerable(), dbSetting, false, transaction, trace, cancellationToken);
 
                 // Do the bulk insertion first
                 using (var table = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
@@ -323,14 +307,8 @@ namespace RepoDb
                        cancellationToken);
                 }
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    primaryOrIdentityField.AsEnumerable(),
-                    dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
                 // Delete the actual delete
-                sql = GetBulkDeleteSqlText(tableName,
+                var sql = GetBulkDeleteSqlText(tableName,
                     tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
                     hints,

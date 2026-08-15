@@ -174,22 +174,8 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                // Create a temporary table
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    fields,
-                    dbSetting,
-                    false);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
-                //// Set the options to KeepIdentity if needed
-                //if (options == SqlBulkCopyOptions.Default &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                // Create the temporary table and its qualifier index (index must exist before the data load)
+                CreateTemporaryTableWithIndex(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace);
 
                 // WriteToServer
                 WriteToServerInternal(connection,
@@ -201,14 +187,8 @@ namespace RepoDb
                     batchSize,
                     transaction);
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    qualifiers,
-                    dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName,
+                var sql = GetBulkUpdateSqlText(tableName,
                     tempTableName,
                     fields,
                     qualifiers,
@@ -350,22 +330,8 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                // Create a temporary table
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    fields,
-                    dbSetting,
-                    false);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
-                //// Set the options to KeepIdentity if needed
-                //if (options == SqlBulkCopyOptions.Default &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                // Create the temporary table and its qualifier index (index must exist before the data load)
+                CreateTemporaryTableWithIndex(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace);
 
                 // WriteToServer
                 WriteToServerInternal(connection,
@@ -379,14 +345,8 @@ namespace RepoDb
                     false,
                     transaction);
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    qualifiers,
-                    dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
-
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName,
+                var sql = GetBulkUpdateSqlText(tableName,
                     tempTableName,
                     fields,
                     qualifiers,
@@ -585,22 +545,8 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                // Create a temporary table
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    fields,
-                    dbSetting,
-                    false);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
-                //// Set the options to KeepIdentity if needed
-                //if (options == SqlBulkCopyOptions.Default &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                // Create the temporary table and its qualifier index (index must exist before the data load)
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -613,14 +559,8 @@ namespace RepoDb
                     transaction,
                     cancellationToken);
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    qualifiers,
-                    dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName,
+                var sql = GetBulkUpdateSqlText(tableName,
                     tempTableName,
                     fields,
                     qualifiers,
@@ -764,22 +704,8 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                // Create a temporary table
-                var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName,
-                    fields,
-                    dbSetting,
-                    false);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
-                //// Set the options to KeepIdentity if needed
-                //if (options == SqlBulkCopyOptions.Default &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                // Create the temporary table and its qualifier index (index must exist before the data load)
+                await CreateTemporaryTableWithIndexAsync(connection, tableName, tempTableName, fields, qualifiers, dbSetting, false, transaction, trace, cancellationToken);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -794,14 +720,8 @@ namespace RepoDb
                     transaction,
                     cancellationToken);
 
-                // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    qualifiers,
-                    dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
-
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName,
+                var sql = GetBulkUpdateSqlText(tableName,
                     tempTableName,
                     fields,
                     qualifiers,

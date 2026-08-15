@@ -512,7 +512,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                Assert.Throws<InvalidOperationException>(() => connection.BulkMerge(tables, mappings: mappings));
+                Assert.Throws<SqlException>(() => connection.BulkMerge(tables, mappings: mappings));
             }
         }
 
