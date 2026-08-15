@@ -45,6 +45,15 @@ namespace RepoDb
         /// </summary>
         private const string RowOrderColumnName = "__RepoDbBulkRowOrder__";
 
+        /// <summary>
+        /// Name of the index created on every pseudo table's qualifier columns (see
+        /// <see cref="GetCreatePseudoTableIndexSql"/>). The pseudo table is always freshly dropped and
+        /// re-created (see <see cref="GetCreatePseudoTableSql"/>) before this index is built, and a MySQL
+        /// index name only needs to be unique within its own table, so a fixed literal name is safe here -
+        /// no risk of colliding with a real index a caller might have on <c>tableName</c> itself.
+        /// </summary>
+        private const string QualifierIndexName = "__RepoDbBulkQualifierIndex__";
+
         #region Shared
 
         /// <summary>
@@ -107,10 +116,33 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds the DDL that empties a pseudo table before it's bulk-loaded - also resets
-        /// <see cref="RowOrderColumnName"/>'s <c>AUTO_INCREMENT</c> counter back to 1. <see cref="GetCreatePseudoTableSql"/>
-        /// already hands back a freshly dropped-and-recreated (therefore already-empty) table, so this is
-        /// purely defensive belt-and-suspenders at the call sites that run both back to back.
+        /// Builds the DDL that creates an index on a pseudo table's qualifier columns. Must run right after
+        /// <see cref="GetCreatePseudoTableSql"/> and before the client bulk-loads data into the pseudo table -
+        /// <c>CREATE TABLE ... AS SELECT</c> never copies a source column's indexes/keys, so without this the
+        /// staging table would otherwise be scanned with no index at all when the final <c>MERGE</c>/
+        /// <c>UPDATE</c>/<c>DELETE</c> joins against it on <paramref name="qualifiers"/>. Building the index
+        /// before the load also lets MySQL maintain it incrementally as rows are inserted, instead of doing a
+        /// full-table index build afterward.
+        /// </summary>
+        /// <param name="pseudoTableName">The pseudo table to index.</param>
+        /// <param name="qualifiers">The columns the final <c>MERGE</c>/<c>UPDATE</c>/<c>DELETE</c> will join against.</param>
+        /// <param name="dbSetting">The current <see cref="IDbSetting"/>.</param>
+        /// <returns>The <c>CREATE INDEX</c> SQL text.</returns>
+        public static string GetCreatePseudoTableIndexSql(string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var quotedIndexName = QualifierIndexName.AsQuoted(true, dbSetting);
+            var columnList = qualifiers
+                .Select(f => f.Name.AsQuoted(true, dbSetting))
+                .Join(", ");
+
+            return $"CREATE INDEX {quotedIndexName} ON {quotedPseudoTableName} ({columnList})";
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="pseudoTableName">The pseudo table to truncate.</param>
         /// <param name="dbSetting">The current <see cref="IDbSetting"/>.</param>
