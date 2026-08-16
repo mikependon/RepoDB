@@ -57,6 +57,8 @@
     <InternalsVisibleTo Include="RepoDb.PostgreSql.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.MySql.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.MySqlConnector.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.MariaDb.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.MariaDbConnector.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.Db2" />
     <InternalsVisibleTo Include="RepoDb.Db2.BulkOperations" />
   </ItemGroup>

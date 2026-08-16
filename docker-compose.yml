@@ -35,6 +35,17 @@ services:
       MYSQL_ROOT_PASSWORD: RepoDB2026
     command: --local-infile=1
 
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    ports:
+      - 127.0.0.1:3307:3306
+    networks:
+      - repodb
+    environment:
+      MARIADB_ROOT_PASSWORD: RepoDB2026
+    command: --local-infile=1
+
   oracle:
     container_name: oracle
     image: container-registry.oracle.com/database/free:latest

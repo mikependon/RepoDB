@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>RepoDb.MariaDb.UnitTests</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="MySql.Data" Version="9.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RepoDb.MariaDb\RepoDb.MariaDb.csproj" />
+  </ItemGroup>
+</Project>
