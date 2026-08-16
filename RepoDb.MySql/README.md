@@ -120,3 +120,11 @@ using (var connection = new MySqlConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-mysql) page for the full MySQL guide.
+
+## License
+
+[Apache License 2.0](https://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon) 
+
+This project depends on Oracle's MySQL Connector/NET (`MySql.Data`),
+which is separately licensed under GPL-2.0 with the Universal FOSS
+Exception, Version 1.0.
