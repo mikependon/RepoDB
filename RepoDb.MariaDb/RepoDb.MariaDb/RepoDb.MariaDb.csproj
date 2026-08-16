@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.MariaDb</Title>
+    <AssemblyName>RepoDb.MariaDb</AssemblyName>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>A hybrid .NET ORM library for MariaDB (using MySql.Data).</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm mysql mariadb</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MariaDb</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>http://repodb.net/release/mariadb</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package (e.g. RepoDb.MariaDb.BulkOperations), independently of the consuming package's own
+      -p:Version. Pass -p:RepoDbMariaDbVersion=<version> to set it. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbMariaDbVersion)' != ''">$(RepoDbMariaDbVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Attributes\MariaDbTypeMapAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageReference Include="MySql.Data" Version="9.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+</Project>
