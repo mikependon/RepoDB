@@ -210,3 +210,11 @@ using (var connection = new MySqlConnection(ConnectionString))
     var deletedRows = connection.BulkDeleteByKey("Customer", primaryKeys);
 }
 ```
+
+## License
+
+[Apache License 2.0](https://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon) 
+
+This project depends on Oracle's MySQL Connector/NET (`MySql.Data`),
+which is separately licensed under GPL-2.0 with the Universal FOSS
+Exception, Version 1.0.
