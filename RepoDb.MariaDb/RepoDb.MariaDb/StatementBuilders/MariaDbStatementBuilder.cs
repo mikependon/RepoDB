@@ -36,6 +36,34 @@ namespace RepoDb.StatementBuilders
                   averageableClientTypeResolver)
         { }
 
+        #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static string GetIntegerCastType(Type type)
+        {
+            var underlyingType = type == null ? null : (Nullable.GetUnderlyingType(type) ?? type);
+
+            if (underlyingType == typeof(byte) || underlyingType == typeof(ushort) ||
+                underlyingType == typeof(uint) || underlyingType == typeof(ulong))
+            {
+                return "UNSIGNED";
+            }
+
+            if (underlyingType == typeof(sbyte) || underlyingType == typeof(short) ||
+                underlyingType == typeof(int) || underlyingType == typeof(long))
+            {
+                return "SIGNED";
+            }
+
+            return null;
+        }
+
+        #endregion
+
         #region CreateBatchQuery
 
         /// <summary>
@@ -222,16 +250,36 @@ namespace RepoDb.StatementBuilders
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var returnValue = keyColumn != null ?
-                keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
-                    keyColumn.Name.AsParameter(DbSetting) : "NULL";
 
-            // Set the return value
-            builder
-                .Select()
-                .WriteText(returnValue)
-                .As("Result".AsQuoted(DbSetting))
-                .End();
+            if (keyColumn?.IsIdentity == true)
+            {
+                // Set the return value
+                builder
+                    .Select()
+                    .WriteText("LAST_INSERT_ID()")
+                    .As("Result".AsQuoted(DbSetting))
+                    .End();
+            }
+            else if (keyColumn != null)
+            {
+                builder
+                    .Select()
+                    .WriteText(keyColumn.Name.AsField(DbSetting))
+                    .As("Result".AsQuoted(DbSetting))
+                    .From()
+                    .TableNameFrom(tableName, DbSetting)
+                    .WhereFrom(new[] { new Field(keyColumn.Name) }, 0, DbSetting)
+                    .End();
+            }
+            else
+            {
+                // Set the return value
+                builder
+                    .Select()
+                    .WriteText("NULL")
+                    .As("Result".AsQuoted(DbSetting))
+                    .End();
+            }
 
             // Return the query
             return builder.GetString();
@@ -314,7 +362,6 @@ namespace RepoDb.StatementBuilders
             for (var index = 0; index < batchSize; index++)
             {
                 builder
-                    .WriteText("ROW")
                     .OpenParen()
                     .ParametersFrom(insertableFields, index, DbSetting)
                     .CloseParen();
@@ -343,7 +390,6 @@ namespace RepoDb.StatementBuilders
                         builder.WriteText(",");
 
                     builder
-                        .WriteText("ROW")
                         .OpenParen()
                         .WriteText("LAST_INSERT_ID() +")
                         .WriteText($"{index}")
@@ -362,15 +408,29 @@ namespace RepoDb.StatementBuilders
                 var commandTexts = new List<string>();
                 var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-
-                // Iterate the indexes
                 for (var index = 0; index < splitted.Length; index++)
                 {
-                    var returnValue = keyColumn != null ?
-                        keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
-                            keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
                     var line = splitted[index].Trim();
-                    commandTexts.Add(string.Concat(line, " ; SELECT ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ";"));
+
+                    if (keyColumn != null)
+                    {
+                        var selectBuilder = new QueryBuilder();
+
+                        selectBuilder
+                            .Select()
+                            .WriteText(keyColumn.Name.AsField(DbSetting))
+                            .As("Result".AsQuoted(DbSetting))
+                            .From()
+                            .TableNameFrom(tableName, DbSetting)
+                            .WhereFrom(new[] { new Field(keyColumn.Name) }, index, DbSetting)
+                            .End();
+
+                        commandTexts.Add(string.Concat(line, " ; ", selectBuilder.GetString()));
+                    }
+                    else
+                    {
+                        commandTexts.Add(string.Concat(line, " ; SELECT NULL AS ", "Result".AsQuoted(DbSetting), ";"));
+                    }
                 }
 
                 // Set the command text
@@ -492,11 +552,14 @@ namespace RepoDb.StatementBuilders
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
             var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(DbSetting) : "NULL";
+            var coalesceExpression = $"COALESCE({returnValue}, LAST_INSERT_ID())";
+            var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
+            var resultExpression = castType != null ? $"CAST({coalesceExpression} AS {castType})" : coalesceExpression;
 
             // Set the return value
             builder
                 .Select()
-                .WriteText($"COALESCE({returnValue}, LAST_INSERT_ID())")
+                .WriteText(resultExpression)
                 .As("Result".AsQuoted(DbSetting))
                 .End();
 
@@ -571,10 +634,13 @@ namespace RepoDb.StatementBuilders
 
                 // Set the return value
                 var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                var coalesceExpression = $"COALESCE({returnValue}, LAST_INSERT_ID())";
+                var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
+                var resultExpression = castType != null ? $"CAST({coalesceExpression} AS {castType})" : coalesceExpression;
                 builder
                     .Select()
                         .WriteText(
-                            string.Concat($"COALESCE({returnValue}, LAST_INSERT_ID())", " AS ", "Result".AsQuoted(DbSetting), ","))
+                            string.Concat(resultExpression, " AS ", "Result".AsQuoted(DbSetting), ","))
                         .WriteText(
                             string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
 

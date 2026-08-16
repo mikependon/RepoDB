@@ -263,7 +263,7 @@ namespace RepoDb.MariaDb.UnitTests
                 Field.From("Id", "Name", "Address"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; SELECT @Id AS `Result` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; SELECT `Id` AS `Result` FROM `Table` WHERE (`Id` = @Id) ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -317,8 +317,8 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 null,
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ROW ( @Id, @Name, @Address ) ," +
-                " ROW ( @Id_1, @Name_1, @Address_1 ) , ROW ( @Id_2, @Name_2, @Address_2 ) ; SELECT NULL AS `Result`;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ," +
+                " ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 ) ; SELECT NULL AS `Result`;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -336,8 +336,8 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ROW ( @Id, @Name, @Address ) , ROW ( @Id_1, @Name_1, @Address_1 ) ," +
-                " ROW ( @Id_2, @Name_2, @Address_2 ) ; SELECT @Id AS `Result`;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) ," +
+                " ( @Id_2, @Name_2, @Address_2 ) ; SELECT `Id` AS `Result` FROM `Table` WHERE (`Id` = @Id) ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -355,9 +355,9 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
-            var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ROW ( @Name, @Address ) , " +
-                "ROW ( @Name_1, @Address_1 ) , ROW ( @Name_2, @Address_2 ) ; VALUES ROW ( LAST_INSERT_ID() + 0 ) " +
-                ", ROW ( LAST_INSERT_ID() + 1 ) , ROW ( LAST_INSERT_ID() + 2 ) ;";
+            var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name, @Address ) , " +
+                "( @Name_1, @Address_1 ) , ( @Name_2, @Address_2 ) ; VALUES ( LAST_INSERT_ID() + 0 ) " +
+                ", ( LAST_INSERT_ID() + 1 ) , ( LAST_INSERT_ID() + 2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -566,7 +566,7 @@ namespace RepoDb.MariaDb.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -585,7 +585,7 @@ namespace RepoDb.MariaDb.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -604,7 +604,7 @@ namespace RepoDb.MariaDb.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -673,9 +673,9 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT CAST(COALESCE(@Id_1, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT CAST(COALESCE(@Id_2, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -694,9 +694,9 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT CAST(COALESCE(@Id_1, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT CAST(COALESCE(@Id_2, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -715,9 +715,9 @@ namespace RepoDb.MariaDb.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT CAST(COALESCE(@Id, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT CAST(COALESCE(@Id_1, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT CAST(COALESCE(@Id_2, LAST_INSERT_ID()) AS SIGNED) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
