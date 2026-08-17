@@ -1,4 +1,3 @@
-
 <div align="center">
     <image src="logo.png" style="width:256px;" />
     <br/>
@@ -8,7 +7,6 @@
 -----
 
 RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
-
 
 It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
 
