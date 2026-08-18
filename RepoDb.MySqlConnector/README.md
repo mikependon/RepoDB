@@ -120,3 +120,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-mysql) page for the full MySQL guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)

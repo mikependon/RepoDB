@@ -126,3 +126,7 @@ using (var connection = new OracleConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-oracle) page for the full Oracle guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon)

@@ -179,3 +179,7 @@ The Grafana-based dashboard used to browse and chart the telemetry your app has 
 ### Volumes and networks
 
 Two named volumes persist state across restarts: `pgdata` (the Postgres data directory) and `telemetry_data` (the shared directory `filedatasinker` writes to and `query` reads from). All services share a single bridge network, `repodb`, so they can reach each other by service name (e.g. `pgsql`, `collector`).
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)

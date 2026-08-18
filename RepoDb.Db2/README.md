@@ -160,3 +160,7 @@ using (var connection = new DB2Connection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-db2) page for the full Db2 guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)

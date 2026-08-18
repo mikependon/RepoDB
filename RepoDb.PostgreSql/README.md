@@ -41,7 +41,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.PostgreSqlBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UsePostgreSql();
 ```
 
 Then use any RepoDB operation directly on your `NpgsqlConnection`:
@@ -120,3 +122,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-postgresql) page for the full PostgreSQL guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)

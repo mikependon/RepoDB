@@ -41,7 +41,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.SqlServerBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseSqlServer();
 ```
 
 Then use any RepoDB operation directly on your `SqlConnection`:
@@ -120,3 +122,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ```
 
 Visit the [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for the full SQL Server guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)
