@@ -3,7 +3,7 @@
     <Title>RepoDb.MariaDb</Title>
     <AssemblyName>RepoDb.MariaDb</AssemblyName>
     <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
-    <Description>A hybrid .NET ORM library for MariaDB (using MySql.Data).</Description>
+    <Description>A hybrid .NET ORM library for MariaDB (using RepoDb.Connector.MariaDb).</Description>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
     <PackageTags>orm hybrid-orm micro-orm mysql mariadb</PackageTags>
@@ -24,8 +24,7 @@
     <Compile Remove="Attributes\MariaDbTypeMapAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="MySql.Data" Version="9.7.0" />
+    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />

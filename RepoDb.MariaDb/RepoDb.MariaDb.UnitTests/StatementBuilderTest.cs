@@ -1,6 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 
@@ -23,7 +23,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateBatchQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateBatchQuery("Table",
@@ -41,7 +41,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateBatchQueryWithPage()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateBatchQuery("Table",
@@ -59,7 +59,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateBatchQueryIfThereAreNoFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -74,7 +74,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<EmptyException>(() =>
@@ -89,7 +89,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateBatchQueryIfThePageValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -104,7 +104,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateBatchQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -119,7 +119,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateBatchQueryIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -140,7 +140,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateCount()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateCount("Table",
@@ -156,7 +156,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateCountWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateCount("Table",
@@ -172,7 +172,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateCountIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -189,7 +189,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateCountAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateCountAll("Table",
@@ -204,7 +204,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateCountAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -220,7 +220,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateExists()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateExists("Table",
@@ -239,7 +239,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsert()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsert("Table",
@@ -256,7 +256,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsert("Table",
@@ -273,7 +273,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsert("Table",
@@ -290,7 +290,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateInsertIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -309,7 +309,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsertAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsertAll("Table",
@@ -328,7 +328,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsertAllWithPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsertAll("Table",
@@ -347,7 +347,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateInsertAll("Table",
@@ -367,7 +367,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateInsertAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -387,7 +387,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMax()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMax("Table",
@@ -404,7 +404,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMaxWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMax("Table",
@@ -421,7 +421,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMaxIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -439,7 +439,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMaxAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMaxAll("Table",
@@ -455,7 +455,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMaxAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -472,7 +472,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMin()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMin("Table",
@@ -489,7 +489,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMinWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMin("Table",
@@ -506,7 +506,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMinIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -524,7 +524,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMinAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMinAll("Table",
@@ -540,7 +540,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMinAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -557,7 +557,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMerge()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMerge("Table",
@@ -576,7 +576,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMergeWithPrimaryAsQualifier()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMerge("Table",
@@ -595,7 +595,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMergeWithIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMerge("Table",
@@ -614,7 +614,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeIfThereIsNoPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -629,7 +629,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -644,7 +644,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -664,7 +664,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMergeAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMergeAll("Table",
@@ -685,7 +685,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMergeAll("Table",
@@ -706,7 +706,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateMergeAllWithIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateMergeAll("Table",
@@ -727,7 +727,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeAllIfThereIsNoPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -743,7 +743,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -759,7 +759,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateMergeAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -780,7 +780,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -799,7 +799,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -818,7 +818,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryWithTop()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -837,7 +837,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryOrderBy()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -856,7 +856,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryOrderByFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -875,7 +875,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryOrderByDescending()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -894,7 +894,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryOrderByFieldsDescending()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -913,7 +913,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateQueryOrderByFieldsMultiDirection()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -932,7 +932,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateQueryIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -952,7 +952,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateSkipQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateSkipQuery("Table",
@@ -970,7 +970,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateSkipQueryWithSkip()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateSkipQuery("Table",
@@ -988,7 +988,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSkipQueryIfThereAreNoFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -1003,7 +1003,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<EmptyException>(() =>
@@ -1018,7 +1018,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSkipQueryIfTheSkipValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -1033,7 +1033,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSkipQueryIfTheTakeValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -1048,7 +1048,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSkipQueryIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -1069,7 +1069,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateSum()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateSum("Table",
@@ -1086,7 +1086,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateSumWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateSum("Table",
@@ -1103,7 +1103,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSumIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -1121,7 +1121,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderCreateSumAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             var query = builder.CreateSumAll("Table",
@@ -1137,7 +1137,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void ThrowExceptionOnMariaDbStatementBuilderCreateSumAllIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>

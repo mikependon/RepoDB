@@ -1,9 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="MySqlConnection"/> data provider.
+    /// A setting class used for <see cref="MariaDbConnection"/> data provider.
     /// </summary>
     public sealed class MariaDbDbSetting : BaseDbSetting
     {

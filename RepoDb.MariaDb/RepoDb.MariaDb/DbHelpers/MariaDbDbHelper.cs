@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -16,7 +16,7 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class MariaDbDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<MySqlConnection>();
+        private IDbSetting m_dbSetting = DbSettingMapper.Get<MariaDbConnection>();
 
         /// <summary>
         /// Creates a new instance of <see cref="MariaDbDbHelper"/> class.
@@ -283,7 +283,7 @@ namespace RepoDb.DbHelpers
         {
             if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
             {
-                HandleDbParameterPostCreation((MySqlParameter)(object)instance);
+                HandleDbParameterPostCreation((MariaDbParameter)(object)instance);
             }
         }
 
@@ -293,7 +293,7 @@ namespace RepoDb.DbHelpers
         /// 
         /// </summary>
         /// <param name="parameter"></param>
-        private void HandleDbParameterPostCreation(MySqlParameter parameter)
+        private void HandleDbParameterPostCreation(MariaDbParameter parameter)
         {
             // Do nothing for now
         }

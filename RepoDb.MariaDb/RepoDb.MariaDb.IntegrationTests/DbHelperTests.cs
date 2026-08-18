@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 
@@ -31,7 +31,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -69,7 +69,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -87,7 +87,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -109,7 +109,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -147,7 +147,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -165,7 +165,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -191,7 +191,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -219,7 +219,7 @@ namespace RepoDb.MariaDb.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();

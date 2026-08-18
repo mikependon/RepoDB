@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using RepoDb.Connector.MariaDb;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
@@ -7,7 +7,7 @@ using System;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
+    /// A class used to initialize necessary objects that is connected to <see cref="MariaDbConnection"/> object.
     /// </summary>
     public static class MariaDbBootstrap
     {
@@ -40,13 +40,13 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<MySqlConnection>(new MariaDbDbSetting(), true);
+            DbSettingMapper.Add<MariaDbConnection>(new MariaDbDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add<MySqlConnection>(new MariaDbDbHelper(), true);
+            DbHelperMapper.Add<MariaDbConnection>(new MariaDbDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add<MySqlConnection>(new MariaDbStatementBuilder(), true);
+            StatementBuilderMapper.Add<MariaDbConnection>(new MariaDbStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

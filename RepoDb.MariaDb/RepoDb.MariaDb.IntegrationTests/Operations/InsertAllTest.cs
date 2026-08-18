@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 using System.Linq;
@@ -28,12 +28,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllForIdentity()
+        public void TestMariaDbConnectionInsertAllForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll<CompleteTable>(tables);
@@ -52,12 +52,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllForNonIdentity()
+        public void TestMariaDbConnectionInsertAllForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll<NonIdentityCompleteTable>(tables);
@@ -79,12 +79,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncForIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync<CompleteTable>(tables);
@@ -103,12 +103,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncForNonIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync<NonIdentityCompleteTable>(tables);
@@ -134,12 +134,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameForIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -158,12 +158,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameAsDynamicsForIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -182,12 +182,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameAsExpandoObjectsForIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameAsExpandoObjectsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -207,12 +207,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameForNonIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -231,12 +231,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -255,12 +255,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionInsertAllViaTableNameAsExpandoObjectsForNonIdentity()
+        public void TestMariaDbConnectionInsertAllViaTableNameAsExpandoObjectsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -283,12 +283,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllViaTableNameAsyncForIdentity()
+        public async Task TestMariaDbConnectionInsertAllViaTableNameAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -307,12 +307,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -331,12 +331,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -356,12 +356,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllViaTableNameAsyncForNonIdentity()
+        public async Task TestMariaDbConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -380,12 +380,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -404,12 +404,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForNonIdentity()
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),

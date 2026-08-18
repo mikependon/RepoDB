@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Exceptions;
 using RepoDb.MariaDb.IntegrationTests.Models;
 
@@ -49,7 +49,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MariaDbConnection(ConnectionString))
             {
                 try
                 {
@@ -69,7 +69,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MariaDbConnection(ConnectionString))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);
@@ -83,7 +83,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MariaDbConnection(ConnectionString))
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
@@ -97,7 +97,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForSystem))
+            using (var connection = new MariaDbConnection(ConnectionStringForSystem))
             {
                 connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDb`;");
                 connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDb.* to 'root'@'%';");
@@ -116,7 +116,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         private static void CreateCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MariaDbConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `CompleteTable`
                     (
@@ -169,7 +169,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
 
         private static void CreateNonIdentityCompleteTable()
         {
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MariaDbConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `NonIdentityCompleteTable`
                     (

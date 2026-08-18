@@ -1,9 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using RepoDb.Connector.MariaDb;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings for the <see cref="MySqlConnection"/> object.
+    /// A class that is being used to initialize the necessary settings for the <see cref="MariaDbConnection"/> object.
     /// </summary>
     public static partial class MariaDbGlobalConfiguration
     {
