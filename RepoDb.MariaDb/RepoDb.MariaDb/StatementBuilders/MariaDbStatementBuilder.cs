@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -17,7 +17,7 @@ namespace RepoDb.StatementBuilders
         /// Creates a new instance of <see cref="MariaDbStatementBuilder"/> object.
         /// </summary>
         public MariaDbStatementBuilder()
-            : this(DbSettingMapper.Get<MySqlConnection>(),
+            : this(DbSettingMapper.Get<MariaDbConnection>(),
                   null,
                   null)
         { }

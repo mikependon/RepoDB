@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 using System.Linq;
@@ -28,12 +28,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAll()
+        public void TestMariaDbConnectionDeleteAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>();
@@ -44,13 +44,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllViaPrimaryKeys()
+        public void TestMariaDbConnectionDeleteAllViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>(primaryKeys);
@@ -61,13 +61,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllViaPrimaryKeysBeyondLimits()
+        public void TestMariaDbConnectionDeleteAllViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll<CompleteTable>(primaryKeys);
@@ -82,12 +82,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsync()
+        public async Task TestMariaDbConnectionDeleteAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>();
@@ -98,13 +98,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsyncViaPrimaryKeys()
+        public async Task TestMariaDbConnectionDeleteAllAsyncViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
@@ -115,13 +115,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
+        public async Task TestMariaDbConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
@@ -140,12 +140,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllViaTableName()
+        public void TestMariaDbConnectionDeleteAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>());
@@ -156,13 +156,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllViaTableNameViaPrimaryKeys()
+        public void TestMariaDbConnectionDeleteAllViaTableNameViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -173,13 +173,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllViaTableNameViaPrimaryKeysBeyondLimits()
+        public void TestMariaDbConnectionDeleteAllViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -194,12 +194,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsyncViaTableName()
+        public async Task TestMariaDbConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
@@ -210,13 +210,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
+        public async Task TestMariaDbConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
@@ -227,13 +227,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
+        public async Task TestMariaDbConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            using (var connection = new MariaDbConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
                 var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);

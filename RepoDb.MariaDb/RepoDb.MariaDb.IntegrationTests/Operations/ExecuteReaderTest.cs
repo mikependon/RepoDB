@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Reflection;
 using RepoDb.MariaDb.IntegrationTests.Models;
@@ -29,12 +29,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReader()
+        public void TestMariaDbConnectionExecuteReader()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -57,12 +57,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderWithMultipleStatements()
+        public void TestMariaDbConnectionExecuteReaderWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -88,12 +88,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsExtractedEntity()
+        public void TestMariaDbConnectionExecuteReaderAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
@@ -108,12 +108,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsExtractedDynamic()
+        public void TestMariaDbConnectionExecuteReaderAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
@@ -132,12 +132,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteReaderAsync()
+        public async Task TestMariaDbConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -160,12 +160,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestMariaDbConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
@@ -191,12 +191,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestMariaDbConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
@@ -211,12 +211,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestMariaDbConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))

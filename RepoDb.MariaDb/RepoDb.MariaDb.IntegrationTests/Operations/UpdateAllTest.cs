@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAll()
+        public void TestMariaDbConnectionUpdateAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -60,12 +60,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionUpdateAllAsync()
+        public async Task TestMariaDbConnectionUpdateAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -94,12 +94,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAllViaTableName()
+        public void TestMariaDbConnectionUpdateAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -120,12 +120,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAllViaTableNameAsExpandoObjects()
+        public void TestMariaDbConnectionUpdateAllViaTableNameAsExpandoObjects()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -152,12 +152,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionUpdateAllAsyncViaTableName()
+        public async Task TestMariaDbConnectionUpdateAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -178,12 +178,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
+        public async Task TestMariaDbConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();

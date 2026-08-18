@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 using System;
@@ -29,12 +29,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionSumAll()
+        public void TestMariaDbConnectionSumAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
@@ -45,12 +45,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionSumAllWithHints()
+        public void ThrowExceptionOnMariaDbConnectionSumAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -64,12 +64,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionSumAllAsync()
+        public async Task TestMariaDbConnectionSumAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt);
@@ -80,12 +80,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionSumAllAsyncWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionSumAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -103,12 +103,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionSumAllViaTableName()
+        public void TestMariaDbConnectionSumAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -120,12 +120,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionSumAllViaTableNameWithHints()
+        public void ThrowExceptionOnMariaDbConnectionSumAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -140,12 +140,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionSumAllAsyncViaTableName()
+        public async Task TestMariaDbConnectionSumAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -157,12 +157,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionSumAllAsyncViaTableNameWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 
 namespace RepoDb.MariaDb.UnitTests
@@ -21,7 +21,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForQuotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " Field ".AsQuoted(true, setting);
@@ -34,7 +34,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForQuotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " Field ".AsQuoted(setting);
@@ -47,7 +47,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForQuotedForPreQuoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = "`Field`".AsQuoted(setting);
@@ -60,7 +60,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForQuotedForPreQuotedWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = "` Field `".AsQuoted(setting);
@@ -73,7 +73,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " ` Field ` ".AsQuoted(true, setting);
@@ -90,7 +90,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForUnquotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " ` Field ` ".AsUnquoted(true, setting);
@@ -103,7 +103,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForUnquotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = "` Field `".AsUnquoted(setting);
@@ -116,7 +116,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForUnquotedForPlain()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = "Field".AsUnquoted(setting);
@@ -129,7 +129,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForUnquotedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(setting);
@@ -142,7 +142,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbQuotationForUnquotedAndTrimmedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(true, setting);

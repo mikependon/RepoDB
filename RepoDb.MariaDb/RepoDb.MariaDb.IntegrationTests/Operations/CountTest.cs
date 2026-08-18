@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionCountWithoutExpression()
+        public void TestMariaDbConnectionCountWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>((object)null);
@@ -46,13 +46,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaExpression()
+        public void TestMariaDbConnectionCountViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(e => ids.Contains(e.Id));
@@ -63,12 +63,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaDynamic()
+        public void TestMariaDbConnectionCountViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(new { tables.First().Id });
@@ -79,12 +79,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaQueryField()
+        public void TestMariaDbConnectionCountViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -95,7 +95,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaQueryFields()
+        public void TestMariaDbConnectionCountViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -105,7 +105,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(queryFields);
@@ -116,7 +116,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaQueryGroup()
+        public void TestMariaDbConnectionCountViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -127,7 +127,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count<CompleteTable>(queryGroup);
@@ -138,12 +138,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionCountWithHints()
+        public void ThrowExceptionOnMariaDbConnectionCountWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -157,12 +157,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncWithoutExpression()
+        public async Task TestMariaDbConnectionCountAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>((object)null);
@@ -173,13 +173,13 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaExpression()
+        public async Task TestMariaDbConnectionCountAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
@@ -190,12 +190,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaDynamic()
+        public async Task TestMariaDbConnectionCountAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
@@ -206,12 +206,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaQueryField()
+        public async Task TestMariaDbConnectionCountAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
@@ -222,7 +222,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaQueryFields()
+        public async Task TestMariaDbConnectionCountAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -232,7 +232,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(queryFields);
@@ -243,7 +243,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaQueryGroup()
+        public async Task TestMariaDbConnectionCountAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -254,7 +254,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync<CompleteTable>(queryGroup);
@@ -265,12 +265,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionCountAsyncWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionCountAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -288,12 +288,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaTableNameWithoutExpression()
+        public void TestMariaDbConnectionCountViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -305,12 +305,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaTableNameViaDynamic()
+        public void TestMariaDbConnectionCountViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -322,12 +322,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaTableNameViaQueryField()
+        public void TestMariaDbConnectionCountViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -339,7 +339,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaTableNameViaQueryFields()
+        public void TestMariaDbConnectionCountViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -349,7 +349,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -361,7 +361,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountViaTableNameViaQueryGroup()
+        public void TestMariaDbConnectionCountViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -372,7 +372,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
@@ -384,12 +384,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionCountViaTableNameWithHints()
+        public void ThrowExceptionOnMariaDbConnectionCountViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -404,12 +404,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaTableNameWithoutExpression()
+        public async Task TestMariaDbConnectionCountAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -421,12 +421,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaTableNameViaDynamic()
+        public async Task TestMariaDbConnectionCountAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -438,12 +438,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryField()
+        public async Task TestMariaDbConnectionCountAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -455,7 +455,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryFields()
+        public async Task TestMariaDbConnectionCountAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -465,7 +465,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -477,7 +477,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryGroup()
+        public async Task TestMariaDbConnectionCountAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -488,7 +488,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -500,12 +500,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionCountAsyncViaTableNameWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionCountAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

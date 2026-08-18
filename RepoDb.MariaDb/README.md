@@ -2,9 +2,9 @@
 [![MariaDbHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
 [![MariaDbVersion](https://img.shields.io/nuget/v/RepoDb.MariaDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MariaDb)
 
-# [RepoDb.MariaDb](https://repodb.net/tutorial/get-started-mysql) — RepoDB for MariaDB (MySql.Data)
+# [RepoDb.MariaDb](https://repodb.net/tutorial/get-started-mysql) — RepoDB for MariaDB (RepoDb.Connector.MariaDb)
 
-The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [MySql.Data](https://www.nuget.org/packages/MySql.Data).
+The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb), the dedicated MariaDB ADO.NET provider for RepoDB.
 
 > **Disclaimer:** RepoDb.MariaDb is a direct copy of [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql) as MariaDB is largely wire- and SQL-compatible with MySQL. It is published as its own, de-facto dedicated package rather than folded into RepoDb.MySql so that MariaDB support can be versioned, tuned, and evolved independently.
 
@@ -21,7 +21,7 @@ The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that 
 
 ## Dependencies
 
-- [MySql.Data](https://www.nuget.org/packages/MySql.Data/) — the MySQL data provider RepoDb.MariaDb connects through. There is no official standalone MariaDB ADO.NET driver on NuGet, and MySql.Data speaks MariaDB's wire protocol without issue, so it is the underlying client library for this package. This is why types like `MySqlConnection` still appear in the examples below even though the package itself is MariaDB-specific.
+- [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/) — the dedicated MariaDB ADO.NET provider RepoDb.MariaDb connects through, exposing `MariaDbConnection` and its related objects.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
@@ -46,12 +46,12 @@ Initialize the bootstrapper once at application startup:
 RepoDb.MariaDbBootstrap.Initialize();
 ```
 
-Then use any RepoDB operation directly on your `MySqlConnection`, pointed at your MariaDB server:
+Then use any RepoDB operation directly on your `MariaDbConnection`, pointed at your MariaDB server:
 
 ### Query
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -66,7 +66,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -75,7 +75,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -87,7 +87,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);
@@ -97,7 +97,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ### ExecuteQuery
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM `Customer` WHERE (Id = @Id);", new { Id = 10045 }).FirstOrDefault();
 }
@@ -106,7 +106,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ### ExecuteNonQuery
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var affectedRows = connection.ExecuteNonQuery("UPDATE `Customer` SET FirstName = @FirstName WHERE (Id = @Id);", new { FirstName = "John", Id = 10045 });
 }
@@ -115,7 +115,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 ### ExecuteScalar
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
 	var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM `Customer`;");
 }

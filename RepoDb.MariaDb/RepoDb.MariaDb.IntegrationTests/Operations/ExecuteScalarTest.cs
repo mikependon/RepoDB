@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
@@ -26,12 +26,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteScalar()
+        public void TestMariaDbConnectionExecuteScalar()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.ExecuteScalar("SELECT COUNT(*) FROM `CompleteTable`;");
@@ -42,12 +42,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteScalarWithReturnType()
+        public void TestMariaDbConnectionExecuteScalarWithReturnType()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM `CompleteTable`;");
@@ -62,12 +62,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteScalarAsync()
+        public async Task TestMariaDbConnectionExecuteScalarAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM `CompleteTable`;");
@@ -78,12 +78,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionExecuteScalarAsyncWithReturnType()
+        public async Task TestMariaDbConnectionExecuteScalarAsyncWithReturnType()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM `CompleteTable`;");

@@ -1,40 +1,40 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes.Parameter.MariaDb;
+using RepoDb.Connector.MariaDb;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
 namespace RepoDb.MariaDb.UnitTests.Attributes.Parameter.MariaDb
 {
     [TestClass]
-    public class MySqlDbTypeAttributeTest
+    public class MariaDbTypeAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<MySqlConnection>(new MariaDbDbSetting(), true);
+            DbSettingMapper.Add<MariaDbConnection>(new MariaDbDbSetting(), true);
         }
 
         #region Classes
 
-        private class MySqlDbTypeAttributeTestClass
+        private class MariaDbTypeAttributeTestClass
         {
-            [MySqlDbType(MySqlDbType.Geometry)]
+            [MariaDbType(MariaDbType.Geometry)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestMySqlDbTypeAttributeViaEntityViaCreateParameters()
+        public void TestMariaDbTypeAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new MySqlConnection())
+            using (var connection = new MariaDbConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
                     DbCommandExtension
-                        .CreateParameters(command, new MySqlDbTypeAttributeTestClass
+                        .CreateParameters(command, new MariaDbTypeAttributeTestClass
                         {
                             ColumnName = "Test"
                         });
@@ -43,17 +43,17 @@ namespace RepoDb.MariaDb.UnitTests.Attributes.Parameter.MariaDb
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual(MySqlDbType.Geometry, parameter.MySqlDbType);
+                    var parameter = (MariaDbParameter)command.Parameters["@ColumnName"];
+                    Assert.AreEqual(MariaDbType.Geometry, parameter.MariaDbType);
                 }
             }
         }
 
         [TestMethod]
-        public void TestMySqlDbTypeAttributeViaAnonymousViaCreateParameters()
+        public void TestMariaDbTypeAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new MySqlConnection())
+            using (var connection = new MariaDbConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -62,14 +62,14 @@ namespace RepoDb.MariaDb.UnitTests.Attributes.Parameter.MariaDb
                         {
                             ColumnName = "Test"
                         },
-                        typeof(MySqlDbTypeAttributeTestClass));
+                        typeof(MariaDbTypeAttributeTestClass));
 
                     // Assert
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual(MySqlDbType.Geometry, parameter.MySqlDbType);
+                    var parameter = (MariaDbParameter)command.Parameters["@ColumnName"];
+                    Assert.AreEqual(MariaDbType.Geometry, parameter.MariaDbType);
                 }
             }
         }

@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryFirstBatchAscending()
+        public void TestMariaDbConnectionBatchQueryFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
@@ -50,12 +50,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryFirstBatchDescending()
+        public void TestMariaDbConnectionBatchQueryFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
@@ -70,12 +70,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryThirdBatchAscending()
+        public void TestMariaDbConnectionBatchQueryThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
@@ -90,12 +90,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryThirdBatchDescending()
+        public void TestMariaDbConnectionBatchQueryThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
@@ -110,12 +110,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBatchQueryWithHints()
+        public void ThrowExceptionOnMariaDbConnectionBatchQueryWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -132,12 +132,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryAsyncFirstBatchAscending()
+        public async Task TestMariaDbConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
@@ -152,12 +152,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryAsyncFirstBatchDescending()
+        public async Task TestMariaDbConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(0,
@@ -172,12 +172,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryAsyncThirdBatchAscending()
+        public async Task TestMariaDbConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
@@ -192,12 +192,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryAsyncThirdBatchDescending()
+        public async Task TestMariaDbConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync<CompleteTable>(2,
@@ -212,12 +212,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionBatchQueryAsyncWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionBatchQueryAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -238,12 +238,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryViaTableNameFirstBatchAscending()
+        public void TestMariaDbConnectionBatchQueryViaTableNameFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -259,12 +259,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryViaTableNameFirstBatchDescending()
+        public void TestMariaDbConnectionBatchQueryViaTableNameFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -280,12 +280,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryViaTableNameThirdBatchAscending()
+        public void TestMariaDbConnectionBatchQueryViaTableNameThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -301,12 +301,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBatchQueryViaTableNameThirdBatchDescending()
+        public void TestMariaDbConnectionBatchQueryViaTableNameThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
@@ -322,12 +322,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBatchQueryViaTableNameWithHints()
+        public void ThrowExceptionOnMariaDbConnectionBatchQueryViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -345,12 +345,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public async Task TestMariaDbConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -366,12 +366,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public async Task TestMariaDbConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -387,12 +387,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public async Task TestMariaDbConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -408,12 +408,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public async Task TestMariaDbConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -429,12 +429,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task ThrowExceptionOnMySqlConnectionBatchQueryAsyncViaTableNameWithHints()
+        public async Task ThrowExceptionOnMariaDbConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

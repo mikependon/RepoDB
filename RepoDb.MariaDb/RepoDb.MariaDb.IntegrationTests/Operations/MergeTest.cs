@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
 using System;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionMergeForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
@@ -48,12 +48,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -74,7 +74,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -83,7 +83,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -111,12 +111,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table);
@@ -129,12 +129,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -155,7 +155,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -164,7 +164,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -196,12 +196,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionMergeViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -215,12 +215,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -235,12 +235,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -262,12 +262,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -291,7 +291,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -300,7 +300,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -325,12 +325,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -349,12 +349,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -376,7 +376,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -385,7 +385,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -412,12 +412,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -431,12 +431,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -451,12 +451,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -478,12 +478,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -507,7 +507,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -516,7 +516,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -539,12 +539,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -563,12 +563,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -590,7 +590,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -599,7 +599,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);

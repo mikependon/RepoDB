@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.MariaDb;
 using RepoDb.Extensions;
@@ -35,16 +35,16 @@ namespace RepoDb.MariaDb.IntegrationTests
         {
             public int Id { get; set; }
 
-            [MySqlDbType(MySqlDbType.Blob)]
+            [MariaDbType(MariaDbType.Blob)]
             public byte[] ColumnBlob { get; set; }
 
-            [MySqlDbType(MySqlDbType.Int64)]
+            [MariaDbType(MariaDbType.BigInt)]
             public long ColumnBigInt { get; set; }
 
-            [MySqlDbType(MySqlDbType.DateTime)]
+            [MariaDbType(MariaDbType.DateTime)]
             public DateTime ColumnDateTime2 { get; set; }
 
-            [MySqlDbType(MySqlDbType.VarChar)]
+            [MariaDbType(MariaDbType.VarChar)]
             public string ColumnVarChar { get; set; }
         }
 
@@ -73,12 +73,12 @@ namespace RepoDb.MariaDb.IntegrationTests
         #region Methods
 
         [TestMethod]
-        public void TestMySqlConnectionForInsertForMariaDbMapAttribute()
+        public void TestMariaDbConnectionForInsertForMariaDbMapAttribute()
         {
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<AttributeTable>(table);
@@ -95,12 +95,12 @@ namespace RepoDb.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestMySqlConnectionForInsertAllForMariaDbMapAttribute()
+        public void TestMariaDbConnectionForInsertAllForMariaDbMapAttribute()
         {
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);
@@ -117,12 +117,12 @@ namespace RepoDb.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestMySqlConnectionForQueryForMariaDbMapAttribute()
+        public void TestMariaDbConnectionForQueryForMariaDbMapAttribute()
         {
             // Setup
             var table = CreateAttributeTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<AttributeTable>(table);
@@ -136,12 +136,12 @@ namespace RepoDb.MariaDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestMySqlConnectionForQueryAllForMariaDbMapAttribute()
+        public void TestMariaDbConnectionForQueryAllForMariaDbMapAttribute()
         {
             // Setup
             var tables = CreateAttributeTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<AttributeTable>(tables);

@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using RepoDb.MariaDb.IntegrationTests.Setup;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAll()
+        public void TestMariaDbConnectionQueryAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
@@ -52,7 +52,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -65,12 +65,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAllAsync()
+        public void TestMariaDbConnectionQueryAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
@@ -87,7 +87,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>
@@ -104,12 +104,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAllViaTableName()
+        public void TestMariaDbConnectionQueryAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var queryResult = connection.QueryAll(ClassMappedNameCache.Get<CompleteTable>());
@@ -126,7 +126,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -141,12 +141,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionQueryAllAsyncViaTableName()
+        public async Task TestMariaDbConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
@@ -163,7 +163,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

@@ -2,7 +2,7 @@
 using RepoDb.Extensions;
 using System.Linq;
 using RepoDb.MariaDb.IntegrationTests.Setup;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.IntegrationTests.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,12 +30,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll<CompleteTable>(tables);
@@ -54,12 +54,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -81,7 +81,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -90,7 +90,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -113,12 +113,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForNonIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll<NonIdentityCompleteTable>(tables);
@@ -137,12 +137,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForNonIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -163,7 +163,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -172,7 +172,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -198,12 +198,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync<CompleteTable>(tables);
@@ -222,12 +222,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -249,7 +249,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -258,7 +258,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -281,12 +281,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForNonIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
@@ -305,12 +305,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -331,7 +331,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -340,7 +340,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -370,12 +370,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -395,12 +395,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -421,12 +421,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -448,12 +448,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -477,7 +477,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -486,7 +486,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -509,12 +509,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
@@ -533,12 +533,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -560,7 +560,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -569,7 +569,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -592,12 +592,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForNonIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -617,12 +617,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -644,7 +644,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -653,7 +653,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -676,12 +676,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -703,12 +703,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -730,7 +730,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestMariaDbConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -739,7 +739,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -766,12 +766,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -790,12 +790,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -816,12 +816,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -843,12 +843,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -872,7 +872,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -881,7 +881,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -904,12 +904,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -928,12 +928,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -955,7 +955,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -964,7 +964,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -987,12 +987,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -1011,12 +1011,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1038,7 +1038,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1047,7 +1047,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1070,12 +1070,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -1094,12 +1094,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
@@ -1121,7 +1121,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMariaDbConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1130,7 +1130,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));

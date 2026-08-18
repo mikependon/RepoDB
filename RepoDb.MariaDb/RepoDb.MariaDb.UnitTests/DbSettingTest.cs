@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.MariaDb.UnitTests
 {
@@ -18,7 +18,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingAreTableHintsSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsFalse(setting.AreTableHintsSupported);
@@ -28,7 +28,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingClosingQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.AreEqual("`", setting.ClosingQuote);
@@ -38,7 +38,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingAverageableTypeProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.AreEqual(typeof(double), setting.AverageableType);
@@ -48,7 +48,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingDefaultSchemaProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsNull(setting.DefaultSchema);
@@ -58,7 +58,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingIsDirectionSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsDirectionSupported);
@@ -68,7 +68,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsExecuteReaderDisposable);
@@ -78,7 +78,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsTrue(setting.IsMultiStatementExecutable);
@@ -88,7 +88,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingIsUseUpsertProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsUseUpsert);
@@ -98,7 +98,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingOpeningQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.AreEqual("`", setting.OpeningQuote);
@@ -108,7 +108,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingParameterPrefixProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);

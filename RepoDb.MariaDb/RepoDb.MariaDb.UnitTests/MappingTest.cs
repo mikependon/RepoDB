@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.MariaDb.UnitTests
 {
@@ -18,7 +18,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbStatementBuilderMapper()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+            var builder = StatementBuilderMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsNotNull(builder);
@@ -28,7 +28,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbHelperMapper()
         {
             // Setup
-            var helper = DbHelperMapper.Get<MySqlConnection>();
+            var helper = DbHelperMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsNotNull(helper);
@@ -38,7 +38,7 @@ namespace RepoDb.MariaDb.UnitTests
         public void TestMariaDbDbSettingMapper()
         {
             // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
 
             // Assert
             Assert.IsNotNull(setting);
