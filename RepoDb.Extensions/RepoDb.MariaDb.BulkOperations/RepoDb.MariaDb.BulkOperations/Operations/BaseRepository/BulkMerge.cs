@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Interfaces;
 using RepoDb.MariaDb.BulkOperations;
@@ -14,10 +14,10 @@ namespace RepoDb
     /// Entity-typed <see cref="BaseRepository{TEntity, TDbConnection}"/> wrappers for the MariaDb bulk-merge
     /// operation. Each method is a thin pass-through onto <see cref="DbRepository{TDbConnection}"/>'s own
     /// wrapper (see <c>Operations/DbRepository/BulkMerge.cs</c>), which in turn calls the
-    /// <see cref="MySqlConnection"/> extension methods - matching the three-tier pattern used throughout
+    /// <see cref="MariaDbConnection"/> extension methods - matching the three-tier pattern used throughout
     /// the rest of RepoDB. DataTable and <c>DbDataReader</c>-based overloads are deliberately not duplicated
     /// at this tier or the <see cref="DbRepository{TDbConnection}"/> tier - they aren't tied to a single
-    /// entity type, so those calls read more naturally straight off <see cref="MySqlConnection"/>.
+    /// entity type, so those calls read more naturally straight off <see cref="MariaDbConnection"/>.
     /// </summary>
     public static partial class BaseRepositoryExtension
     {
@@ -41,7 +41,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, MariaDbConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -51,7 +51,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkMerge,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkMerge(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
@@ -74,7 +74,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows.</returns>
-        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static int BulkMerge<TEntity>(this BaseRepository<TEntity, MariaDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -85,7 +85,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkMerge,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
@@ -112,7 +112,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, MariaDbConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -122,7 +122,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkMerge,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             repository.DbRepository.BulkMergeAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
@@ -147,7 +147,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of affected rows.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, MariaDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -158,7 +158,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkMerge,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             repository.DbRepository.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);

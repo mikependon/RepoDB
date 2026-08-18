@@ -6,22 +6,23 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
+using RepoDb.Connector.MariaDb.Bulk;
 
 namespace RepoDb.MariaDb.BulkOperations
 {
     /// <summary>
-    /// An official Bulk loader class used by RepoDB for its bulk operations. It is built on top of <c>MySql.Data</c>'s <see cref="MySqlBulkLoader"/>.
+    /// An official Bulk loader class used by RepoDB for its bulk operations. It is built on top of <c>RepoDb.Connector.MariaDb</c>'s <see cref="MariaDbBulkLoader"/>.
     /// </summary>
     internal sealed class MariaDbBulkCopy
     {
-        private readonly MySqlConnection connection;
+        private readonly MariaDbConnection connection;
 
         /// <summary>
         /// Creates a new instance of <see cref="MariaDbBulkCopy"/> bound to <paramref name="connection"/>.
         /// </summary>
-        /// <param name="connection">The connection <see cref="MySqlBulkLoader"/> will load through.</param>
-        public MariaDbBulkCopy(MySqlConnection connection)
+        /// <param name="connection">The connection <see cref="MariaDbBulkLoader"/> will load through.</param>
+        public MariaDbBulkCopy(MariaDbConnection connection)
         {
             this.connection = connection;
         }
@@ -29,18 +30,18 @@ namespace RepoDb.MariaDb.BulkOperations
         /// <summary>
         /// Gets or sets the destination table name. Expected to already be correctly quoted by the caller
         /// (every call site in <c>WriteToServer.cs</c> sets this from <c>tableName.AsQuoted(true, dbSetting)</c>)
-        /// - passed straight through to <see cref="MySqlBulkLoader.TableName"/> unmodified.
+        /// - passed straight through to <see cref="MariaDbBulkLoader.TableName"/> unmodified.
         /// </summary>
         public string DestinationTableName { get; set; }
 
         /// <summary>
-        /// Gets or sets the bulk-load timeout, in seconds. Mapped directly to <see cref="MySqlBulkLoader.Timeout"/>.
+        /// Gets or sets the bulk-load timeout, in seconds. Mapped directly to <see cref="MariaDbBulkLoader.Timeout"/>.
         /// </summary>
         public int BulkCopyTimeout { get; set; } = 30;
 
         /// <summary>
         /// Gets the source-ordinal-to-destination-column mappings that determine both which columns get
-        /// written and the column order of the temp file built for <see cref="MySqlBulkLoader"/>.
+        /// written and the column order of the temp file built for <see cref="MariaDbBulkLoader"/>.
         /// </summary>
         public List<MariaDbBulkCopyColumnMapping> ColumnMappings { get; } = new();
 
@@ -66,7 +67,7 @@ namespace RepoDb.MariaDb.BulkOperations
         /// The source reader. Read positionally via each mapping's <see cref="MariaDbBulkCopyColumnMapping.SourceOrdinal"/> -
         /// see the remarks on <see cref="MariaDbBulkCopy"/> for why no other ordinal of this reader is ever touched.
         /// </param>
-        /// <returns>The number of rows <see cref="MySqlBulkLoader"/> reports having loaded.</returns>
+        /// <returns>The number of rows <see cref="MariaDbBulkLoader"/> reports having loaded.</returns>
         public int WriteToServer(IDataReader reader) =>
             WriteToServerAsync(reader, CancellationToken.None).GetAwaiter().GetResult();
 
@@ -100,7 +101,7 @@ namespace RepoDb.MariaDb.BulkOperations
         /// </summary>
         /// <param name="rows">The source rows, read positionally via each mapping's <see cref="MariaDbBulkCopyColumnMapping.SourceOrdinal"/> - i.e. the real <see cref="DataTable"/> column index, not the mapping's position in <see cref="ColumnMappings"/> (those can legitimately diverge - see <c>WriteToServer.cs</c>'s remarks on why the ordinal must come from <c>DataTable.Columns.IndexOf</c>).</param>
         /// <param name="columnCount">Unused beyond a defensive bounds check - <see cref="ColumnMappings"/> alone already determines exactly which columns get written.</param>
-        /// <returns>The number of rows <see cref="MySqlBulkLoader"/> reports having loaded.</returns>
+        /// <returns>The number of rows <see cref="MariaDbBulkLoader"/> reports having loaded.</returns>
         public int WriteToServer(DataRow[] rows,
             int columnCount) =>
             WriteToServerAsync(rows, columnCount, CancellationToken.None).GetAwaiter().GetResult();
@@ -215,13 +216,13 @@ namespace RepoDb.MariaDb.BulkOperations
         }
 
         /// <summary>
-        /// Runs the configured <see cref="MySqlBulkLoader"/> against the temp file built by <see cref="WriteRow"/>, back-tick-quoting each mapped destination column along the way - the
+        /// Runs the configured <see cref="MariaDbBulkLoader"/> against the temp file built by <see cref="WriteRow"/>, back-tick-quoting each mapped destination column along the way - the
         /// counterpart to <see cref="DestinationTableName"/> already arriving pre-quoted (see its remarks).
         /// </summary>
         private async Task<int> LoadAsync(string filePath,
             CancellationToken cancellationToken)
         {
-            var bulkLoader = new MySqlBulkLoader(connection)
+            var bulkLoader = new MariaDbBulkLoader(connection)
             {
                 TableName = DestinationTableName,
                 FileName = filePath,

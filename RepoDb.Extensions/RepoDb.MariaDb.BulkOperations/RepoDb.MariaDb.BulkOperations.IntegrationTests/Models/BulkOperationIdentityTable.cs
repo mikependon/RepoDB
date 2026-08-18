@@ -3,8 +3,8 @@ using System;
 namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Models
 {
     /// <summary>
-    /// MariaDb has no native BOOLEAN column usable for parameter binding (MySqlDbType.Boolean is
-    /// documented as "Not Available in ODP.NET, Managed Driver"), so the SqlServer suite's BIT column
+    /// MariaDb has no native BOOLEAN column usable for parameter binding (MariaDbType has no Boolean
+    /// member either), so the SqlServer suite's BIT column
     /// is represented here as a NUMBER(1,0)-backed <see cref="byte"/>? instead of bool?. RowGuid is
     /// stored as RAW(16) and round-tripped via <c>MariaDbGuidToByteArrayPropertyHandler</c> (registered
     /// per-property in Setup/Database.cs), the same pattern used by RepoDb.MariaDb.IntegrationTests.

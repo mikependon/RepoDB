@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.MariaDb.BulkOperations.IntegrationTests.Models;
@@ -17,7 +17,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests
     {
         static Helper()
         {
-            StatementBuilder = StatementBuilderMapper.Get<MySqlConnection>();
+            StatementBuilder = StatementBuilderMapper.Get<MariaDbConnection>();
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
 

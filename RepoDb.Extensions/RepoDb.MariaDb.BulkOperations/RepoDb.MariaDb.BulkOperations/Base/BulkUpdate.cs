@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -38,7 +38,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkUpdateBase<TEntity>(this MySqlConnection connection,
+        private static int BulkUpdateBase<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -48,7 +48,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class
         {
             // Identify the columns
@@ -118,7 +118,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkUpdateBase(this MySqlConnection connection,
+        private static int BulkUpdateBase(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<Field> qualifiers = null,
@@ -129,7 +129,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             // Identify the columns
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
@@ -196,7 +196,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkUpdateBase(this MySqlConnection connection,
+        private static int BulkUpdateBase(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -206,7 +206,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             // Identify the columns
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -279,7 +279,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this MySqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -289,7 +289,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -361,7 +361,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkUpdateBaseAsync(this MySqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<Field> qualifiers = null,
@@ -372,7 +372,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Identify the columns
@@ -441,7 +441,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkUpdateBaseAsync(this MySqlConnection connection,
+        private static async Task<int> BulkUpdateBaseAsync(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -451,7 +451,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkUpdate,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Identify the columns

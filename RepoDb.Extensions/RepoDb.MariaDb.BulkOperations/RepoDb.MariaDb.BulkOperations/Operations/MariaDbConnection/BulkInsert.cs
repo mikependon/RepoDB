@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Interfaces;
 using RepoDb.MariaDb.BulkOperations;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// Contains the official bulk operations of RepoDB for MariaDb, exposed as <see cref="MySqlConnection"/>
+    /// Contains the official bulk operations of RepoDB for MariaDb, exposed as <see cref="MariaDbConnection"/>
     /// extension methods (i.e. <c>BulkInsert</c>, <c>BulkDelete</c>, <c>BulkMerge</c> and <c>BulkUpdate</c>).
     /// </summary>
     public static partial class MariaDbConnectionExtension
@@ -33,7 +33,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert<TEntity>(this MySqlConnection connection,
+        public static int BulkInsert<TEntity>(this MariaDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -42,7 +42,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             BulkInsertBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
@@ -62,7 +62,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert<TEntity>(this MySqlConnection connection,
+        public static int BulkInsert<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -72,7 +72,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             BulkInsertBase(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
@@ -92,7 +92,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert(this MySqlConnection connection,
+        public static int BulkInsert(this MariaDbConnection connection,
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -102,7 +102,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null) =>
+            MariaDbTransaction transaction = null) =>
             BulkInsert(connection, table?.TableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert(this MySqlConnection connection,
+        public static int BulkInsert(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -132,7 +132,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null) =>
+            MariaDbTransaction transaction = null) =>
             BulkInsertBase(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static int BulkInsert(this MySqlConnection connection,
+        public static int BulkInsert(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -165,7 +165,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null) =>
+            MariaDbTransaction transaction = null) =>
             BulkInsertBase(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
@@ -189,7 +189,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this MySqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this MariaDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
@@ -198,7 +198,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkInsertBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
@@ -221,7 +221,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this MySqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -231,7 +231,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkInsertBaseAsync(connection, tableName, entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
@@ -254,7 +254,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync(this MySqlConnection connection,
+        public static Task<int> BulkInsertAsync(this MariaDbConnection connection,
             DataTable table,
             DataRowState? rowState = null,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -264,7 +264,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsync(connection, table?.TableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
@@ -286,7 +286,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync(this MySqlConnection connection,
+        public static Task<int> BulkInsertAsync(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -297,7 +297,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertBaseAsync(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
@@ -321,7 +321,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of inserted rows.</returns>
-        public static Task<int> BulkInsertAsync(this MySqlConnection connection,
+        public static Task<int> BulkInsertAsync(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
@@ -330,7 +330,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkInsert,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertBaseAsync(connection, tableName, reader, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 

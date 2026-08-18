@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Interfaces;
 using RepoDb.MariaDb.BulkOperations;
@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDeleteByKey<TPrimaryKey>(this MySqlConnection connection,
+        public static int BulkDeleteByKey<TPrimaryKey>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -35,7 +35,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null) =>
+            MariaDbTransaction transaction = null) =>
             BulkDeleteByKeyBase(connection, tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         #endregion
@@ -58,7 +58,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteByKeyAsync<TPrimaryKey>(this MySqlConnection connection,
+        public static Task<int> BulkDeleteByKeyAsync<TPrimaryKey>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -66,7 +66,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkDeleteByKeyBaseAsync(connection, tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
