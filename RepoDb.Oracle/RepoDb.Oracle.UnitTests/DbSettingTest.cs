@@ -25,16 +25,6 @@ namespace RepoDb.Oracle.UnitTests
         }
 
         [TestMethod]
-        public void TestOracleDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<OracleConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestOracleDbSettingClosingQuoteProperty()
         {
             // Setup

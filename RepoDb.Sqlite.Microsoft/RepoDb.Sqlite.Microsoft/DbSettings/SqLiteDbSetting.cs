@@ -18,7 +18,6 @@
         public SqLiteDbSetting(bool isExecuteReaderDisposable)
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = null;
             IsDirectionSupported = false;

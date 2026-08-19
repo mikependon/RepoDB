@@ -35,16 +35,6 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestMySqlDbSettingDefaultSchemaProperty()
         {
             // Setup

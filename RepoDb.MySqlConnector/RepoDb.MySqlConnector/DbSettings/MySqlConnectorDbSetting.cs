@@ -13,7 +13,6 @@ namespace RepoDb.DbSettings
         public MySqlConnectorDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "`";
             DefaultSchema = null;
             IsDirectionSupported = false;

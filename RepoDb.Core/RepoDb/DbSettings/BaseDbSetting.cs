@@ -53,6 +53,7 @@ namespace RepoDb.DbSettings
         /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
         /// </summary>
+        [Obsolete("This will be removed in the future releases.")]
         public Type AverageableType { get; protected set; }
 
         /// <summary>
@@ -131,12 +132,6 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrWhiteSpace(ClosingQuote))
             {
                 hashCode = HashCode.Combine(hashCode, ClosingQuote);
-            }
-
-            // DefaultAverageableType
-            if (AverageableType != null)
-            {
-                hashCode = HashCode.Combine(hashCode, AverageableType);
             }
 
             // DefaultSchema

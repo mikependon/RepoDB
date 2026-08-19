@@ -27,16 +27,6 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         }
 
         [TestMethod]
-        public void TestMdsSqLiteDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<SqliteConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestMdsSqLiteDbSettingClosingQuoteProperty()
         {
             // Setup

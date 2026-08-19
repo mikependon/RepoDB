@@ -35,16 +35,6 @@ namespace RepoDb.PostgreSql.UnitTests
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<NpgsqlConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestPostgreSqlDbSettingDefaultSchemaProperty()
         {
             // Setup

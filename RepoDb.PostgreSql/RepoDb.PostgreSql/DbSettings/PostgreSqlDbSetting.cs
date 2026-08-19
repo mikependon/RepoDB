@@ -13,7 +13,6 @@ namespace RepoDb.DbSettings
         public PostgreSqlDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "\"";
             DefaultSchema = "public";
             IsDirectionSupported = true;
