@@ -21,7 +21,7 @@
     <PackageVersion Condition="'$(RepoDbMariaDbBulkOperationsVersion)' != ''">$(RepoDbMariaDbBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha1" />
+    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

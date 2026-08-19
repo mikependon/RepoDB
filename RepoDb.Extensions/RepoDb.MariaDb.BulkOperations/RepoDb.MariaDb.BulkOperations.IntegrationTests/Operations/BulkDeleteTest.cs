@@ -1364,12 +1364,6 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        
-
-        
-
-        
-
         [TestMethod]
         public void TestMariaDbConnectionBulkDeleteAsyncForEntitiesDataTable()
         {

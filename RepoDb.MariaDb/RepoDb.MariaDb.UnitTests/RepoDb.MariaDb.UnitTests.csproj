@@ -9,7 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MSTest" Version="4.2.3" />
-    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha1" />
+    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RepoDb.MariaDb\RepoDb.MariaDb.csproj" />
