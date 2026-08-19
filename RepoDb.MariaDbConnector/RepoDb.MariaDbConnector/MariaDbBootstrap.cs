@@ -23,12 +23,6 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Initializes all necessary settings for MariaDb.
-        /// </summary>
-        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UseMariaDb()' method instead.")]
-        public static void Initialize() => InitializeInternal();
-
-        /// <summary>
         /// 
         /// </summary>
         internal static void InitializeInternal()

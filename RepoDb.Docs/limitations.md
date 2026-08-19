@@ -26,7 +26,7 @@ We want the .NET community to understand this library's limitations before using
   - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier)
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-1)
-  - [Verification Status](#verification-status-1)
+  - [Verification Status](#verification-status)
 - DB2
   - [QueryMultiple Round Trips](#querymultiple-round-trips-1)
   - [InsertAll / MergeAll Batching](#insertall--mergeall-batching-1)
@@ -35,6 +35,13 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Operations and Transactions](#bulk-operations-and-transactions-1)
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-2)
   - [Multi-Step BulkMerge Identity Correlation](#multi-step-bulkmerge-identity-correlation)
+  - [Verification Status](#verification-status-1)
+- MariaDB
+  - [Installing Both MariaDb and MariaDbConnector Together](#installing-both-mariadb-and-mariadbconnector-together)
+  - [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-2)
+  - [Bulk Operations and Transactions in RepoDb.MariaDb.BulkOperations](#bulk-operations-and-transactions-in-repodbmariadbbulkoperations)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-3)
+  - [BulkMerge ReturnIdentity Correlation](#bulkmerge-returnidentity-correlation)
   - [Verification Status](#verification-status-2)
 
 ## Core
@@ -636,3 +643,109 @@ Separately, both this insert-only step and a plain `BulkInsert` with `ReturnIden
 ### Verification Status
 
 `RepoDb.Db2.BulkOperations` has been implemented and reviewed. The entity-to-`DataTable` property-handler path has been spot-checked against a live Db2 LUW instance — routing entities through an in-memory `DataTable` rather than streaming them via a data reader turned out to be required for a `Guid`-backed `CHAR(n) FOR BIT DATA` column (see [GUID/UNIQUEIDENTIFIER](#guiduniqueidentifier-1)) to bulk-load correctly. The package has not otherwise been fully exercised end-to-end. Verify the staging-table lifecycle described above, the `FINAL TABLE` identity read-back ordering, and the multi-step `BulkMerge` correlation before relying on this package in production.
+
+-----
+
+## MariaDB
+
+These limitations are specific to the [RepoDb.MariaDb](https://www.nuget.org/packages/RepoDb.MariaDb), [RepoDb.MariaDbConnector](https://www.nuget.org/packages/RepoDb.MariaDbConnector), [RepoDb.MariaDb.BulkOperations](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations), and [RepoDb.MariaDbConnector.BulkOperations](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) packages, on top of the [Core](#core) limitations above.
+
+### Installing Both MariaDb and MariaDbConnector Together
+
+MariaDB support ships as two separate packages that deliberately expose the identical `MariaDb`-prefixed API surface: `RepoDb.MariaDb` (built on `RepoDb.Connector.MariaDb`, a wrapper over `MySql.Data`) and `RepoDb.MariaDbConnector` (built on `RepoDb.Connector.MariaDbConnector`, a wrapper over `MySqlConnector`). Both packages declare their bootstrapping and infrastructure types under the exact same namespace and class name — the two source files differ only in which underlying connector namespace they import, not in their own declared namespace or type name:
+
+```csharp
+// RepoDb.MariaDb/MariaDbBootstrap.cs
+using RepoDb.Connector.MariaDb;
+namespace RepoDb
+{
+    public static class MariaDbBootstrap { ... }
+}
+
+// RepoDb.MariaDbConnector/MariaDbBootstrap.cs
+using RepoDb.Connector.MariaDbConnector;
+namespace RepoDb
+{
+    public static class MariaDbBootstrap { ... }
+}
+```
+
+The same is true of `RepoDb.MariaDbGlobalConfiguration` (and its `UseMariaDb()` extension method), `RepoDb.DbHelpers.MariaDbDbHelper`, `RepoDb.DbSettings.MariaDbDbSetting`, `RepoDb.StatementBuilders.MariaDbStatementBuilder`, and `RepoDb.Attributes.Parameter.MariaDb.MariaDbTypeAttribute`.
+
+If a project references both `RepoDb.MariaDb` and `RepoDb.MariaDbConnector` — directly, or transitively through a package that depends on one of them — any code that touches one of these shared type names, including the call every consumer needs to make (`GlobalConfiguration.Setup().UseMariaDb()`), fails to compile with `CS0433` ("The type '...' exists in both '...'"). The C# compiler cannot resolve an unqualified reference to a type that two different referenced assemblies both define under the identical full name. This is a hard, immediate compile-time failure, not a silent runtime mapping overwrite.
+
+**Alternative Solution**
+
+Reference only one of `RepoDb.MariaDb` or `RepoDb.MariaDbConnector` per project — whichever underlying driver (`MySql.Data` or `MySqlConnector`) best fits. If a single application genuinely needs both drivers, isolate them into separate projects/assemblies rather than referencing both packages from the same compilation unit.
+
+### GUID/UNIQUEIDENTIFIER
+
+Like MySQL, MariaDB has no native GUID/`UNIQUEIDENTIFIER` type, and neither `RepoDb.MariaDb` nor `RepoDb.MariaDbConnector` ships a built-in property handler for one — unlike `RepoDb.Oracle`'s `GuidToByteArrayPropertyHandler` or `RepoDb.Db2`'s `Db2GuidToByteArrayPropertyHandler`, neither MariaDb project has a `PropertyHandlers` folder at all. Map a `Guid` property as `string` or `byte[]`, or write and register your own `IPropertyHandler` for the specific property:
+
+```csharp
+PropertyHandlerMapper.Add<YourEntity, YourGuidToStringPropertyHandler>(
+    e => e.YourGuidProperty, new YourGuidToStringPropertyHandler(), true);
+```
+
+### Bulk Operations and Transactions in RepoDb.MariaDb.BulkOperations
+
+`MariaDbBulkCopy` in `RepoDb.MariaDb.BulkOperations` (the `MySql.Data`-based package) is a hand-rolled class built on `RepoDb.Connector.MariaDb`'s `MariaDbBulkLoader`, since the underlying `MySql.Data` driver has no reader-streaming bulk-copy API of its own. It serializes rows to a temporary tab-delimited file and loads them via `LOAD DATA LOCAL INFILE`, issued directly against a bare `MariaDbConnection` that never receives the caller's `MariaDbTransaction`:
+
+```csharp
+private static (MariaDbBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MariaDbConnection connection,
+    string tableName, IDataReader reader, IEnumerable<MariaDbBulkInsertMapItem> mappings,
+    int? bulkCopyTimeout, MariaDbTransaction transaction, Field excludeField = null)
+{
+    var bulkCopy = new MariaDbBulkCopy(connection) { DestinationTableName = ... }; // transaction unused
+    ...
+}
+```
+
+The surrounding staging-table DDL and the final cascading `INSERT`/`UPDATE`/`DELETE` against the real table do participate in the caller-supplied transaction (they run through `connection.ExecuteNonQuery(commandText, transaction: transaction)`), but whether a rolled-back transaction leaves already-`LOAD DATA`-loaded rows behind has not been verified against a live server. `RepoDb.MariaDbConnector.BulkOperations` (the `MySqlConnector`-based package) instead uses `RepoDb.Connector.MariaDbConnector`'s own `MariaDbBulkCopy` type directly, the same way `RepoDb.MySqlConnector.BulkOperations` uses `MySqlConnector`'s own `MySqlBulkCopy` — this specific caveat is not expected to apply there, but that has likewise not been independently verified.
+
+**Alternative Solution**
+
+If all-or-nothing transactional behavior matters for a plain `BulkInsert` against `RepoDb.MariaDb.BulkOperations`, request `identityBehavior: ReturnIdentity` — that path routes through a staging table, and its cascading `INSERT` does honor the caller's transaction.
+
+### Bulk Operations Staging Table
+
+`RepoDb.MariaDb.BulkOperations` and `RepoDb.MariaDbConnector.BulkOperations` share the same `MariaDbBulkImportPseudoTableType` enum and staging-table SQL generator (`MariaDbText`) — byte-for-byte identical between the two packages apart from their `using` imports. It offers three values:
+
+- **`Physical`** — an ordinary heap table, not session-isolated.
+- **`Memory`** — intended to be a `TEMPORARY` table, private to each session.
+- **`Auto`** *(default)* — intended to pick `Physical` at 5,000+ rows (`MariaDbConstants.RowCountThresholdForPhysicalTable`), otherwise `Memory`.
+
+**`Memory` is currently not usable in either package — every pseudo table resolves to `Physical` regardless of what you pass, and regardless of row count for `Auto`:**
+
+```csharp
+private static MariaDbBulkImportPseudoTableType ResolvePseudoTableType(MariaDbBulkImportPseudoTableType pseudoTableType, int? rowCount) =>
+    pseudoTableType == MariaDbBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= MariaDbConstants.RowCountThresholdForPhysicalTable ?
+        MariaDbBulkImportPseudoTableType.Physical :
+            MariaDbBulkImportPseudoTableType.Physical;
+```
+
+Both branches of the conditional return `Physical`. The `TEMPORARY TABLE` DDL branch exists in `MariaDbText.GetCreatePseudoTableSql` and is written correctly, but the resolution step never reaches it. Because a physical pseudo-table has no per-session isolation, and every `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey` call targets a deterministic name derived only from the real table name, the operation, and the pseudo table type (e.g. `PhysicalPersonMerge`), two concurrent callers bulk-writing against the same target table from different connections can race or corrupt each other's staged rows.
+
+Every call also (re)creates its own staging table from scratch — an unconditional `DROP TABLE IF EXISTS` followed by `CREATE TABLE ... AS SELECT ... WHERE (1 = 0)` — and drops it again once the call completes, rather than creating one per (table, pseudo table type) and reusing it the way `RepoDb.Oracle.BulkOperations` does. Since `CREATE TABLE`/`DROP TABLE` are DDL, and DDL causes an implicit commit in MariaDB, this happens on *every* `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey`/`BulkInsert`-with-`ReturnIdentity` call, not just the first — each one implicitly commits any other uncommitted work already pending on that connection.
+
+**Alternative Solution**
+
+Serialize bulk operations against the same table until session-isolated `Memory` staging is wired up. If you're bulk-writing inside a larger transaction alongside other statements, keep in mind that the pseudo-table DDL will implicitly commit that work.
+
+### BulkMerge ReturnIdentity Correlation
+
+MariaDB's `AUTO_INCREMENT` has no equivalent to Oracle's per-row `SEQUENCE.NEXTVAL`, and relying on `LAST_INSERT_ID()` plus positional arithmetic after a multi-row `INSERT`/`MERGE` is not safe under MariaDB's default interleaved `innodb_autoinc_lock_mode`, which does not guarantee gap-free identity allocation for that statement shape under concurrent writers. So when `identityBehavior: ReturnIdentity` is requested, both bulk packages instead pre-assign identity values into the pseudo table using a session user variable, seeded from a value read live as `MAX(identityColumn) + 1` directly off the target table's own row data — deliberately not from `information_schema.TABLES.AUTO_INCREMENT`, which MariaDB can cache for up to `information_schema_stats_expiry` seconds (24 hours by default, refreshed only via `ANALYZE TABLE` or expiry). An earlier revision of this seed query read that cached `information_schema` value instead, and a return-identity bulk insert issued immediately after other rows had already been inserted into the same table collided on a duplicate primary key as a result.
+
+For `BulkInsert`, this is a single pre-assignment step. For `BulkMerge` with `ReturnIdentity`, it takes five separate statements against the database, not one round trip:
+
+1. Matched rows keep their existing identity value — copied from the real table onto the staged row via `UPDATE ... INNER JOIN`.
+2. Unmatched rows get a freshly pre-assigned value via the session-variable technique above.
+3. Matched rows in the real table are updated (`UPDATE ... INNER JOIN`).
+4. Unmatched rows are inserted into the real table (`INSERT ... SELECT`, anti-joined against the real table).
+5. A final `SELECT ... ORDER BY __RepoDbBulkRowOrder__` reads every row's resulting identity value back, in original bulk-load order.
+
+The seed lookup and the pre-assignment statement are also two separate round trips, leaving a small race window against a concurrent writer to the same table — no table-level locking is used to close it, since `LOCK TABLES` would silently commit any transaction already open on the connection. Requesting `ReturnIdentity` — and, separately, the pseudo table's identity-column nullability toggle, which is rebuilt dynamically via `PREPARE`/`EXECUTE`/`DEALLOCATE PREPARE` since MariaDB's `MODIFY COLUMN` has no "nullability only" form — both require `AllowUserVariables=True` on the connection string.
+
+### Verification Status
+
+Neither `RepoDb.MariaDb.BulkOperations` nor `RepoDb.MariaDbConnector.BulkOperations` has been exercised against a live MariaDB instance yet. Verify the following end-to-end before relying on either package in production: the bulk-load path (`LOAD DATA LOCAL INFILE` for `RepoDb.MariaDb.BulkOperations`, the connector's own `MariaDbBulkCopy` for `RepoDb.MariaDbConnector.BulkOperations`), the identity pre-assignment/read-back described above, and the staging-table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey`.

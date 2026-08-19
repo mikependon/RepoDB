@@ -12,7 +12,7 @@ namespace RepoDb.MariaDb.UnitTests.Resolvers
         {
             GlobalConfiguration
                 .Setup()
-                .UseMariaDb();
+                .UseMariaDbConnector();
         }
 
         [TestMethod]
