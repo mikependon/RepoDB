@@ -12,7 +12,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
         /// <returns>The used global configuration instance itself.</returns>
-        public static GlobalConfiguration UseMariaDb(this GlobalConfiguration globalConfiguration)
+        public static GlobalConfiguration UseMariaDbConnector(
+            this GlobalConfiguration globalConfiguration)
         {
             MariaDbBootstrap.InitializeInternal();
             return globalConfiguration;

@@ -12,7 +12,7 @@ namespace RepoDb.MariaDb.UnitTests
         {
             GlobalConfiguration
                 .Setup()
-                .UseMariaDb();
+                .UseMariaDbConnector();
         }
 
         #region AsQuoted

@@ -38,7 +38,7 @@ namespace RepoDb.MariaDb.IntegrationTests.Setup
             // Initialize MariaDb
             GlobalConfiguration
                 .Setup()
-                .UseMariaDb();
+                .UseMariaDbConnector();
 
             // Create databases
             CreateDatabase();
