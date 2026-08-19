@@ -119,6 +119,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDb", "RepoDb.Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.IntegrationTests\RepoDb.MariaDbConnector.BulkOperations.IntegrationTests.csproj", "{F431FFBA-59FB-4941-9B69-710C38E6BF91}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.ClickHouse", "RepoDb.ClickHouse", "{BBD74C3A-7D4A-603E-C526-73CDC138C8C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
