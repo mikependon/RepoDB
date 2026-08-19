@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.ClickHouse.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.ClickHouse/**'
+      - 'RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-clickhouse-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations
+      solution-file: RepoDb.ClickHouse.BulkOperations.sln
+      artifact-name: release-clickhouse-bulk
+      db-engine: clickhouse

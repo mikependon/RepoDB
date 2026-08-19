@@ -70,6 +70,17 @@ services:
       DB2INST1_PASSWORD: RepoDB2026
       DBNAME: repodb
 
+  clickhouse:
+    container_name: clickhouse
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - 127.0.0.1:8123:8123
+      - 127.0.0.1:9000:9000
+    networks:
+      - repodb
+    environment:
+      CLICKHOUSE_PASSWORD: RepoDB2026
+
 networks:
   repodb:
     driver: bridge

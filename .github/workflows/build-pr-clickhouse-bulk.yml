@@ -1,0 +1,20 @@
+name: PR - Build & Run Tests - RepoDb.ClickHouse.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.ClickHouse/**'
+      - 'RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-clickhouse-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations
+      solution-file: RepoDb.ClickHouse.BulkOperations.sln
+      artifact-name: release-pr
+      db-engine: clickhouse
