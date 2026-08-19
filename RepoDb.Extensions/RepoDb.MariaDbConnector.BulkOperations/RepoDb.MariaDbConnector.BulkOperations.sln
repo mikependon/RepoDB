@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11911.148 stable
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MariaDbConnector.BulkOperations", "RepoDb.MariaDbConnector.BulkOperations\RepoDb.MariaDbConnector.BulkOperations.csproj", "{C4728613-DE20-4A54-AAA7-D43D90729B92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MariaDbConnector", "..\..\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj", "{1D26995B-6767-4BA9-9356-3038A9971EE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MariaDbConnector.BulkOperations.Base", "RepoDb.MariaDbConnector.BulkOperations.Base", "{DBB16DA5-1483-4634-AB9E-3CD360BBD57A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MariaDbConnector.BulkOperations.IntegrationTests", "RepoDb.MariaDbConnector.BulkOperations.IntegrationTests\RepoDb.MariaDbConnector.BulkOperations.IntegrationTests.csproj", "{2E1A4A2C-6C3C-4C7B-9C7E-6C2C7B8C9D01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4728613-DE20-4A54-AAA7-D43D90729B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4728613-DE20-4A54-AAA7-D43D90729B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4728613-DE20-4A54-AAA7-D43D90729B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4728613-DE20-4A54-AAA7-D43D90729B92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25DD8B5D-7F89-4997-B37B-B9C3FE42B4CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D26995B-6767-4BA9-9356-3038A9971EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D26995B-6767-4BA9-9356-3038A9971EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D26995B-6767-4BA9-9356-3038A9971EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D26995B-6767-4BA9-9356-3038A9971EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E1A4A2C-6C3C-4C7B-9C7E-6C2C7B8C9D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E1A4A2C-6C3C-4C7B-9C7E-6C2C7B8C9D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E1A4A2C-6C3C-4C7B-9C7E-6C2C7B8C9D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E1A4A2C-6C3C-4C7B-9C7E-6C2C7B8C9D01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A2E6E2A-8C7E-4E1B-9C0B-1F2E3D4C5B6A}
+	EndGlobalSection
+EndGlobal

@@ -26,7 +26,7 @@ The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that 
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2019 [Michael Camara Pendon](https://x.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2026 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
