@@ -11,7 +11,6 @@ namespace RepoDb.DbSettings
         public Db2DbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "\"";
             DefaultSchema = null;
             IsDirectionSupported = true;

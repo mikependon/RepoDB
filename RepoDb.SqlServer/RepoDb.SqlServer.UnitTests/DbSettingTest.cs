@@ -25,16 +25,6 @@ namespace RepoDb.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<SqlConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestSqlServerDbSettingClosingQuoteProperty()
         {
             // Setup

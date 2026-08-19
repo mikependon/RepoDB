@@ -11,7 +11,6 @@
         public SqlServerDbSetting()
         {
             AreTableHintsSupported = true;
-            AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = "dbo";
             IsDirectionSupported = true;

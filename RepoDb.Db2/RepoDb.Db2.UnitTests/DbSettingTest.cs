@@ -26,16 +26,6 @@ namespace RepoDb.Db2.UnitTests
         }
 
         [TestMethod]
-        public void TestDb2DbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<DB2Connection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestDb2DbSettingClosingQuoteProperty()
         {
             // Setup

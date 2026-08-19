@@ -11,7 +11,6 @@ namespace RepoDb.DbSettings
         public OracleDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "\"";
             DefaultSchema = null;
             IsDirectionSupported = true;

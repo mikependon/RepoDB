@@ -35,16 +35,6 @@ namespace RepoDb.MariaDb.UnitTests
         }
 
         [TestMethod]
-        public void TestMariaDbDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<MariaDbConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestMariaDbDbSettingDefaultSchemaProperty()
         {
             // Setup

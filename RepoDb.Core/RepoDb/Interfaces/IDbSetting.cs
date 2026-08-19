@@ -16,6 +16,7 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
         /// </summary>
+        [Obsolete("This will be removed in the future releases.")]
         Type AverageableType { get; }
 
         /// <summary>
