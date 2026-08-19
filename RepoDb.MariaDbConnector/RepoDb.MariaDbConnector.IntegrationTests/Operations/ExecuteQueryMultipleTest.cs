@@ -1,0 +1,212 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Extensions;
+using RepoDb.MariaDb.IntegrationTests.Models;
+using RepoDb.MariaDb.IntegrationTests.Setup;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.MariaDb.IntegrationTests.Operations
+{
+    [TestClass]
+    public class ExecuteQueryMultipleTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMariaDbConnectionExecuteQueryMultiple()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable`;
+                    SELECT * FROM `CompleteTable`;"))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        Assert.AreEqual(tables.Count(), item.Count());
+                        tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, item.First(e => e.Id == table.Id)));
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionExecuteQueryMultipleWithParameters()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
+                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                    new
+                    {
+                        Id1 = tables.First().Id,
+                        Id2 = tables.Last().Id
+                    }))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        item.AsList().ForEach(current => Helper.AssertPropertiesEquality(current, tables.First(e => e.Id == current.Id)));
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionExecuteQueryMultipleWithSharedParameters()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
+                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                    new { Id = tables.Last().Id }))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        item.AsList().ForEach(current => Helper.AssertPropertiesEquality(current, tables.First(e => e.Id == current.Id)));
+                    });
+                }
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionExecuteQueryMultipleAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
+                    SELECT * FROM `CompleteTable`;"))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        Assert.AreEqual(tables.Count(), item.Count());
+                        tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, item.First(e => e.Id == table.Id)));
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionExecuteQueryMultipleAsyncWithParameters()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
+                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                    new
+                    {
+                        Id1 = tables.First().Id,
+                        Id2 = tables.Last().Id
+                    }))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        item.AsList().ForEach(current => Helper.AssertPropertiesEquality(current, tables.First(e => e.Id == current.Id)));
+                    });
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionExecuteQueryMultipleAsyncWithSharedParameters()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
+                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                    new { Id = tables.Last().Id }))
+                {
+                    var list = new List<IEnumerable<CompleteTable>>();
+
+                    // Act
+                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<CompleteTable>());
+
+                    // Assert
+                    list.ForEach(item =>
+                    {
+                        item.AsList().ForEach(current => Helper.AssertPropertiesEquality(current, tables.First(e => e.Id == current.Id)));
+                    });
+                }
+            }
+        }
+
+        #endregion
+    }
+}
