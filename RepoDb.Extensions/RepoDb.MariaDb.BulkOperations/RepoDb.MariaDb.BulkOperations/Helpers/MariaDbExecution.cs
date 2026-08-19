@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -30,14 +30,14 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void CreatePseudoTable(MySqlConnection connection,
+        public static void CreatePseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             MariaDbBulkImportPseudoTableType pseudoTableType,
             Field qualifierField = null,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField);
@@ -57,14 +57,14 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task CreatePseudoTableAsync(MySqlConnection connection,
+        public static async Task CreatePseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             MariaDbBulkImportPseudoTableType pseudoTableType,
             Field qualifierField = null,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -84,12 +84,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void CreatePseudoTableIndex(MySqlConnection connection,
+        public static void CreatePseudoTableIndex(MariaDbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             if (qualifiers?.Any() != true)
             {
@@ -115,12 +115,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task CreatePseudoTableIndexAsync(MySqlConnection connection,
+        public static async Task CreatePseudoTableIndexAsync(MariaDbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             if (qualifiers?.Any() != true)
@@ -141,11 +141,11 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void TruncatePseudoTable(MySqlConnection connection,
+        public static void TruncatePseudoTable(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
@@ -162,11 +162,11 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task TruncatePseudoTableAsync(MySqlConnection connection,
+        public static async Task TruncatePseudoTableAsync(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -182,11 +182,11 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void DropPseudoTable(MySqlConnection connection,
+        public static void DropPseudoTable(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
@@ -203,11 +203,11 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task DropPseudoTableAsync(MySqlConnection connection,
+        public static async Task DropPseudoTableAsync(MariaDbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -228,12 +228,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void AllowNullForColumn(MySqlConnection connection,
+        public static void AllowNullForColumn(MariaDbConnection connection,
             string pseudoTableName,
             string columnName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetAllowNullForColumnSql(pseudoTableName, columnName, dbSetting);
@@ -251,12 +251,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task AllowNullForColumnAsync(MySqlConnection connection,
+        public static async Task AllowNullForColumnAsync(MariaDbConnection connection,
             string pseudoTableName,
             string columnName,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -274,12 +274,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(MySqlConnection connection,
+        private static (string SequenceName, bool IsAlwaysGenerated) GetIdentitySequenceMetadata(MariaDbConnection connection,
             string tableName,
             Field identityField,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetIdentitySequenceMetadataSql(tableName, identityField, dbSetting);
@@ -300,12 +300,12 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(MySqlConnection connection,
+        private static async Task<(string SequenceName, bool IsAlwaysGenerated)> GetIdentitySequenceMetadataAsync(MariaDbConnection connection,
             string tableName,
             Field identityField,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -330,7 +330,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(MySqlConnection connection,
+        public static int InsertFromPseudoTableForReturnIdentity<TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -338,7 +338,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<TEntity> entities,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
@@ -373,7 +373,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(MySqlConnection connection,
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -381,7 +381,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<TEntity> entities,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -415,7 +415,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int InsertFromPseudoTableForReturnIdentityForDataTable(MySqlConnection connection,
+        public static int InsertFromPseudoTableForReturnIdentityForDataTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -423,7 +423,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<DataRow> rows,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
@@ -455,7 +455,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(MySqlConnection connection,
+        public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -463,7 +463,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<DataRow> rows,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -499,7 +499,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTable(MySqlConnection connection,
+        public static int MergeFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -507,7 +507,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             Field identityField,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, dbSetting);
@@ -528,7 +528,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableAsync(MySqlConnection connection,
+        public static async Task<int> MergeFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -536,7 +536,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             Field identityField,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -559,7 +559,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(MySqlConnection connection,
+        public static int MergeFromPseudoTableForReturnIdentity<TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -568,7 +568,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<TEntity> entities,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
@@ -604,7 +604,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(MySqlConnection connection,
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -613,7 +613,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<TEntity> entities,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -648,7 +648,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int MergeFromPseudoTableForReturnIdentityForDataTable(MySqlConnection connection,
+        public static int MergeFromPseudoTableForReturnIdentityForDataTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -657,7 +657,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<DataRow> rows,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var (sequenceName, isAlwaysGenerated) = GetIdentitySequenceMetadata(connection, tableName, identityField, trace, traceKey, transaction);
@@ -690,7 +690,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(MySqlConnection connection,
+        public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -699,7 +699,7 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
             IList<DataRow> rows,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -734,14 +734,14 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int UpdateFromPseudoTable(MySqlConnection connection,
+        public static int UpdateFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
@@ -761,14 +761,14 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> UpdateFromPseudoTableAsync(MySqlConnection connection,
+        public static async Task<int> UpdateFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
@@ -791,13 +791,13 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static int DeleteFromPseudoTable(MySqlConnection connection,
+        public static int DeleteFromPseudoTable(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = MariaDbText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
@@ -816,13 +816,13 @@ namespace RepoDb.MariaDb.BulkOperations.Extensions
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<int> DeleteFromPseudoTableAsync(MySqlConnection connection,
+        public static async Task<int> DeleteFromPseudoTableAsync(MariaDbConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             ITrace trace = null,
             string traceKey = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();

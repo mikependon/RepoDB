@@ -5,7 +5,7 @@
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <Nullable>annotations</Nullable>
-    <Description>An extension library that contains the official Bulk Operations of RepoDB for MariaDB (using MySql.Data).</Description>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for MariaDB (using RepoDb.Connector.MariaDb).</Description>
     <PackageTags>orm hybrid-orm micro-orm mariadb bulkoperations</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/mariadbbulk</PackageReleaseNotes>
@@ -21,8 +21,7 @@
     <PackageVersion Condition="'$(RepoDbMariaDbBulkOperationsVersion)' != ''">$(RepoDbMariaDbBulkOperationsVersion)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="MySql.Data" Version="9.7.0" />
+    <PackageReference Include="RepoDb.Connector.MariaDb" Version="0.0.1-alpha2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

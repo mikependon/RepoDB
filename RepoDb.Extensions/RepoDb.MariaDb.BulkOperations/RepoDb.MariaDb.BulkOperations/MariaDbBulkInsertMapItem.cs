@@ -1,5 +1,5 @@
 using System;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.MariaDb.BulkOperations
 {
@@ -25,17 +25,17 @@ namespace RepoDb.MariaDb.BulkOperations
         /// </summary>
         /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
         /// <param name="destinationColumn">The name of the destination column in the database.</param>
-        /// <param name="mySqlDbType">
-        /// The explicit <see cref="MariaDb.MySqlDbType"/> value to bind with for this column. When not
-        /// provided, the type is inferred from the entity property's <c>[MySqlDbType]</c>/<c>[MySqlDbTypeEx]</c> attribute
+        /// <param name="mariaDbType">
+        /// The explicit <see cref="RepoDb.Connector.MariaDb.MariaDbType"/> value to bind with for this column. When not
+        /// provided, the type is inferred from the entity property's <c>[MariaDbType]</c> attribute
         /// (if present) or, failing that, from the .NET CLR value itself.
         /// </param>
         public MariaDbBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
-            MySqlDbType? mySqlDbType) :
+            MariaDbType? mariaDbType) :
             base(sourceColumn, destinationColumn)
         {
-            MySqlDbType = mySqlDbType;
+            MariaDbType = mariaDbType;
         }
 
         #endregion
@@ -43,9 +43,9 @@ namespace RepoDb.MariaDb.BulkOperations
         #region Properties
 
         /// <summary>
-        /// Gets the explicit <see cref="MariaDb.ManagedDataAccess.Client.MySqlDbType"/> value to be used when writing.
+        /// Gets the explicit <see cref="RepoDb.Connector.MariaDb.MariaDbType"/> value to be used when writing.
         /// </summary>
-        public MySqlDbType? MySqlDbType { get; }
+        public MariaDbType? MariaDbType { get; }
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace RepoDb.MariaDb.BulkOperations
         /// </summary>
         /// <returns>The string representation of the current object.</returns>
         public override string ToString() =>
-            $"{base.ToString()} ({MySqlDbType})";
+            $"{base.ToString()} ({MariaDbType})";
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace RepoDb.MariaDb.BulkOperations
             }
 
             var hashCode = base.GetHashCode();
-            hashCode = HashCode.Combine(hashCode, MySqlDbType);
+            hashCode = HashCode.Combine(hashCode, MariaDbType);
 
             return (this.hashCode = hashCode).Value;
         }

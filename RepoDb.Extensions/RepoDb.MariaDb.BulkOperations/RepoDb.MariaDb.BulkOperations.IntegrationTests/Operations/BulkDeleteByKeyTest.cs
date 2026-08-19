@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.IntegrationTests.Setup;
@@ -8,7 +8,7 @@ using System.Linq;
 namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class MySqlConnectionBulkDeleteByKeyOperationsTest
+    public class MariaDbConnectionBulkDeleteByKeyOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -26,12 +26,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKey()
+        public void TestMariaDbConnectionBulkDeleteByKey()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -55,12 +55,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKeyWithBatchSize()
+        public void TestMariaDbConnectionBulkDeleteByKeyWithBatchSize()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -85,12 +85,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKeyViaPhysicalTable()
+        public void TestMariaDbConnectionBulkDeleteByKeyViaPhysicalTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -119,12 +119,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKeyAsync()
+        public void TestMariaDbConnectionBulkDeleteByKeyAsync()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -148,12 +148,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKeyAsyncWithBatchSize()
+        public void TestMariaDbConnectionBulkDeleteByKeyAsyncWithBatchSize()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -178,12 +178,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkDeleteByKeyAsyncViaPhysicalTable()
+        public void TestMariaDbConnectionBulkDeleteByKeyAsyncViaPhysicalTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);

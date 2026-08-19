@@ -4,7 +4,7 @@
 
 # [RepoDb.MariaDb.BulkOperations](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations)
 
-A high-performant extension library of RepoDB that does bulk operations towards a MariaDB database. It uses its own internal class `MariaDbBulkCopy` to load the data towards the database. It uses the `LOAD DATA LOCAL INFILE`-based implementation on top of `MySql.Data`'s `MySqlBulkLoader`.
+A high-performant extension library of RepoDB that does bulk operations towards a MariaDB database. It uses its own internal class `MariaDbBulkCopy` to load the data towards the database. It uses the `LOAD DATA LOCAL INFILE`-based implementation on top of `RepoDb.Connector.MariaDb`'s `MariaDbBulkLoader`.
 
 ## Important Pages
 
@@ -55,7 +55,7 @@ Every synchronous operation has a corresponding `Async` overload.
 Inserts a list of entities into the database in bulk. Returns the number of inserted rows.
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var insertedRows = connection.BulkInsert<Customer>(customers);
@@ -65,7 +65,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via table-name:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var insertedRows = connection.BulkInsert("Customer", customers);
@@ -75,7 +75,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via a `DataTable`:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var table = GetCustomersAsDataTable();
     var insertedRows = connection.BulkInsert("Customer", table);
@@ -85,7 +85,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Returning generated identities:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers(); // Id not set
     connection.BulkInsert<Customer>(customers, identityBehavior: MariaDbBulkImportIdentityBehavior.ReturnIdentity);
@@ -98,7 +98,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Upserts a list of entities in bulk — inserts new rows and updates existing ones based on the defined qualifiers. Returns the number of affected rows.
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var mergedRows = connection.BulkMerge<Customer>(customers);
@@ -108,7 +108,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or with qualifiers:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var mergedRows = connection.BulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
@@ -118,7 +118,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via table-name with qualifiers:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var mergedRows = connection.BulkMerge("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
@@ -128,7 +128,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via a `DataTable`:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var table = GetCustomersAsDataTable();
     var mergedRows = connection.BulkMerge("Customer", table);
@@ -140,7 +140,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Updates existing rows in the database in bulk, matched by the defined qualifiers. Returns the number of updated rows.
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var rows = connection.BulkUpdate<Customer>(customers);
@@ -150,7 +150,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or with qualifiers:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var rows = connection.BulkUpdate<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
@@ -160,7 +160,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via a `DataTable`:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var table = GetCustomersAsDataTable();
     var rows = connection.BulkUpdate("Customer", table);
@@ -172,7 +172,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Deletes existing rows from the database in bulk, matched by the defined qualifiers. Returns the number of deleted rows.
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var deletedRows = connection.BulkDelete<Customer>(customers);
@@ -182,7 +182,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or with qualifiers:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var customers = GetCustomers();
     var deletedRows = connection.BulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
@@ -192,7 +192,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Or via a `DataTable`:
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var table = GetCustomersAsDataTable();
     var deletedRows = connection.BulkDelete("Customer", table);
@@ -204,7 +204,7 @@ using (var connection = new MySqlConnection(ConnectionString))
 Deletes existing rows from the database in bulk, matched by their primary (or identity) key value alone — no entities or `DataTable` involved, just the list of key values to remove. Returns the number of deleted rows.
 
 ```csharp
-using (var connection = new MySqlConnection(ConnectionString))
+using (var connection = new MariaDbConnection(ConnectionString))
 {
     var primaryKeys = new [] { 10045, 10046, 10047 };
     var deletedRows = connection.BulkDeleteByKey("Customer", primaryKeys);

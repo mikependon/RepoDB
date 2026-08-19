@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.MariaDb.BulkOperations.IntegrationTests.Models;
 using System;
 
@@ -59,7 +59,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            using var connection = new MySqlConnection(ConnectionStringForSystem);
+            using var connection = new MariaDbConnection(ConnectionStringForSystem);
             connection.ExecuteNonQuery("CREATE DATABASE IF NOT EXISTS `RepoDb`;");
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void EnableServerLocalInfile()
         {
-            using var connection = new MySqlConnection(ConnectionStringForSystem);
+            using var connection = new MariaDbConnection(ConnectionStringForSystem);
             connection.ExecuteNonQuery("SET GLOBAL local_infile = 1;");
         }
 
@@ -82,7 +82,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using var connection = new MySqlConnection(ConnectionString);
+            using var connection = new MariaDbConnection(ConnectionString);
             connection.Truncate<BulkOperationIdentityTable>();
             connection.Truncate<BulkOperationNonIdentityTable>();
         }
@@ -123,7 +123,7 @@ namespace RepoDb.IntegrationTests.Setup
                     `ColumnNVarChar` NVARCHAR(2000) NULL,
                     PRIMARY KEY (`Id`)
                 ) ENGINE=InnoDB;";
-            using var connection = new MySqlConnection(ConnectionString);
+            using var connection = new MariaDbConnection(ConnectionString);
             connection.ExecuteNonQuery(commandText);
         }
 
@@ -151,7 +151,7 @@ namespace RepoDb.IntegrationTests.Setup
                     `ColumnNVarChar` NVARCHAR(2000) NULL,
                     PRIMARY KEY (`Id`)
                 ) ENGINE=InnoDB;";
-            using var connection = new MySqlConnection(ConnectionString);
+            using var connection = new MariaDbConnection(ConnectionString);
             connection.ExecuteNonQuery(commandText);
         }
 

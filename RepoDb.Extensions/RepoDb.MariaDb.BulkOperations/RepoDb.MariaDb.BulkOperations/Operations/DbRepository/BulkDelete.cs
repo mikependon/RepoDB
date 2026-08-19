@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Interfaces;
@@ -14,7 +14,7 @@ namespace RepoDb
     /// <summary>
     /// <see cref="DbRepository{TDbConnection}"/> wrappers for the MariaDb bulk-delete operation. Each method
     /// resolves a connection (reusing the transaction's connection when one is supplied, otherwise creating
-    /// one via the repository), delegates to the matching <see cref="MySqlConnection"/> extension method,
+    /// one via the repository), delegates to the matching <see cref="MariaDbConnection"/> extension method,
     /// and disposes the connection afterwards only when the repository owns a per-call connection and no
     /// external transaction was supplied - the same lifecycle every other RepoDB provider's DbRepository
     /// bulk wrapper already follows.
@@ -38,7 +38,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this DbRepository<MySqlConnection> repository,
+        public static int BulkDelete<TEntity>(this DbRepository<MariaDbConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -46,7 +46,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             repository.BulkDelete(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
@@ -66,7 +66,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDelete<TEntity>(this DbRepository<MySqlConnection> repository,
+        public static int BulkDelete<TEntity>(this DbRepository<MariaDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -75,10 +75,10 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class
         {
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            var connection = (MariaDbConnection)transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -110,7 +110,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<MySqlConnection> repository,
+        public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<MariaDbConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
@@ -118,7 +118,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             await repository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
@@ -140,7 +140,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<MySqlConnection> repository,
+        public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<MariaDbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -149,11 +149,11 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            var connection = (MariaDbConnection)transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -169,9 +169,9 @@ namespace RepoDb
 
         #region Helpers
 
-        private static void DisposeIfOwned(DbRepository<MySqlConnection> repository,
-            MySqlTransaction transaction,
-            MySqlConnection connection)
+        private static void DisposeIfOwned(DbRepository<MariaDbConnection> repository,
+            MariaDbTransaction transaction,
+            MariaDbConnection connection)
         {
             if (repository.ConnectionPersistency == ConnectionPersistency.PerCall && transaction == null)
             {

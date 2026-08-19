@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteByKeyBase<TPrimaryKey>(this MySqlConnection connection,
+        private static int BulkDeleteByKeyBase<TPrimaryKey>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -37,7 +37,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             var primaryKeyList = primaryKeys?.Select(primaryKey => (object)primaryKey).AsList();
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, primaryKeyList?.Count);
@@ -72,7 +72,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this MySqlConnection connection,
+        private static async Task<int> BulkDeleteByKeyBaseAsync<TPrimaryKey>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -80,7 +80,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             var primaryKeyList = primaryKeys?.Select(primaryKey => (object)primaryKey).AsList();
@@ -115,7 +115,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBaseViaKeyValues(MySqlConnection connection,
+        private static int BulkDeleteBaseViaKeyValues(MariaDbConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
             int? bulkCopyTimeout,
@@ -123,7 +123,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType,
             ITrace trace,
             string traceKey,
-            MySqlTransaction transaction)
+            MariaDbTransaction transaction)
         {
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -178,7 +178,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(MySqlConnection connection,
+        private static async Task<int> BulkDeleteBaseViaKeyValuesAsync(MariaDbConnection connection,
             string tableName,
             IEnumerable<object> keyValues,
             int? bulkCopyTimeout,
@@ -186,7 +186,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType,
             ITrace trace,
             string traceKey,
-            MySqlTransaction transaction,
+            MariaDbTransaction transaction,
             CancellationToken cancellationToken)
         {
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDeleteByKey(tableName, pseudoTableType, connection.GetDbSetting());

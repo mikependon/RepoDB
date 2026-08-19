@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Exceptions;
@@ -34,13 +34,13 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal<TEntity>(MySqlConnection connection,
+        internal static int WriteToServerInternal<TEntity>(MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             Field excludeField = null)
             where TEntity : class
         {
@@ -63,7 +63,7 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal(MySqlConnection connection,
+        internal static int WriteToServerInternal(MariaDbConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -91,13 +91,13 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static int WriteToServerInternal(MySqlConnection connection,
+        internal static int WriteToServerInternal(MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             Field excludeField = null)
         {
             connection.EnsureOpen();
@@ -125,14 +125,14 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(MySqlConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal<TEntity>(MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             Field excludeField = null)
             where TEntity : class
         {
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <param name="cancellationToken"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal(MariaDbConnection connection,
             string tableName,
             DataTable table,
             DataRowState? rowState = null,
@@ -186,14 +186,14 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        internal static async Task<int> WriteToServerAsyncInternal(MySqlConnection connection,
+        internal static async Task<int> WriteToServerAsyncInternal(MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MariaDbBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             CancellationToken cancellationToken = default,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="excludeField"></param>
         /// <returns></returns>
         /// <exception cref="InvalidTypeException"></exception>
-        private static MariaDbBulkCopy CreateBulkCopyForDataTable(MySqlConnection connection,
+        private static MariaDbBulkCopy CreateBulkCopyForDataTable(MariaDbConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<MariaDbBulkInsertMapItem> mappings,
@@ -355,12 +355,12 @@ namespace RepoDb
         /// <param name="excludeField"></param>
         /// <returns></returns>
         /// <exception cref="InvalidTypeException"></exception>
-        private static (MariaDbBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MySqlConnection connection,
+        private static (MariaDbBulkCopy BulkCopy, IDataReader Reader) CreateBulkCopyForDataReader(MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<MariaDbBulkInsertMapItem> mappings,
             int? bulkCopyTimeout,
-            MySqlTransaction transaction,
+            MariaDbTransaction transaction,
             Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
@@ -404,10 +404,10 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="excludeField"></param>
         /// <returns></returns>
-        private static IEnumerable<MariaDbBulkInsertMapItem> GetDefaultMappingsForDataReader(MySqlConnection connection,
+        private static IEnumerable<MariaDbBulkInsertMapItem> GetDefaultMappingsForDataReader(MariaDbConnection connection,
             string tableName,
             IDataReader reader,
-            MySqlTransaction transaction,
+            MariaDbTransaction transaction,
             Field excludeField = null)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -460,10 +460,10 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static DbCommand CreateTraceCommand(MySqlConnection connection,
+        private static DbCommand CreateTraceCommand(MariaDbConnection connection,
             string commandText,
             int? commandTimeout = null,
-            MySqlTransaction transaction = null) =>
+            MariaDbTransaction transaction = null) =>
             (DbCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
 
         #endregion

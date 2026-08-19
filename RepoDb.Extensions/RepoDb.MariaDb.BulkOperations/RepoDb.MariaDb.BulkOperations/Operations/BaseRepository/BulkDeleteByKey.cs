@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Interfaces;
 using RepoDb.MariaDb.BulkOperations;
@@ -13,7 +13,7 @@ namespace RepoDb
     /// bulk-delete-by-key operation. This method is a thin pass-through onto
     /// <see cref="DbRepository{TDbConnection}"/>'s own wrapper (see
     /// <c>Operations/DbRepository/BulkDeleteByKey.cs</c>), which in turn calls the
-    /// <see cref="MySqlConnection"/> extension method - matching the three-tier pattern used throughout
+    /// <see cref="MariaDbConnection"/> extension method - matching the three-tier pattern used throughout
     /// the rest of RepoDB.
     /// </summary>
     public static partial class BaseRepositoryExtension
@@ -36,7 +36,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static int BulkDeleteByKey<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MariaDbConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -44,7 +44,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class =>
             repository.DbRepository.BulkDeleteByKey(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
@@ -69,7 +69,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
         /// <returns>The number of deleted rows.</returns>
-        public static Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MySqlConnection> repository,
+        public static Task<int> BulkDeleteByKeyAsync<TEntity, TPrimaryKey>(this BaseRepository<TEntity, MariaDbConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
             int? bulkCopyTimeout = null,
@@ -77,7 +77,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDeleteByKey,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             repository.DbRepository.BulkDeleteByKeyAsync(tableName, primaryKeys, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);

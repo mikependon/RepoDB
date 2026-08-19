@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using RepoDb.Enumerations.MariaDb;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -36,7 +36,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBase<TEntity>(this MySqlConnection connection,
+        private static int BulkDeleteBase<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -45,7 +45,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
             where TEntity : class
         {
             var entityList = entities.AsList();
@@ -106,7 +106,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBase(this MySqlConnection connection,
+        private static int BulkDeleteBase(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<Field> qualifiers = null,
@@ -116,7 +116,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -174,7 +174,7 @@ namespace RepoDb
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkDeleteBase(this MySqlConnection connection,
+        private static int BulkDeleteBase(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -183,7 +183,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null)
+            MariaDbTransaction transaction = null)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);
             var pseudoTableName = MariaDbText.GetPseudoTableNameForDelete(tableName, pseudoTableType, connection.GetDbSetting());
@@ -247,7 +247,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this MySqlConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync<TEntity>(this MariaDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
@@ -256,7 +256,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -319,7 +319,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseAsync(this MySqlConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync(this MariaDbConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<Field> qualifiers = null,
@@ -329,7 +329,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
@@ -389,7 +389,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkDeleteBaseAsync(this MySqlConnection connection,
+        private static async Task<int> BulkDeleteBaseAsync(this MariaDbConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -398,7 +398,7 @@ namespace RepoDb
             MariaDbBulkImportPseudoTableType pseudoTableType = default,
             ITrace trace = null,
             string traceKey = MariaDbTraceKeys.MariaDbBulkDelete,
-            MySqlTransaction transaction = null,
+            MariaDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             pseudoTableType = ResolvePseudoTableType(pseudoTableType, null);

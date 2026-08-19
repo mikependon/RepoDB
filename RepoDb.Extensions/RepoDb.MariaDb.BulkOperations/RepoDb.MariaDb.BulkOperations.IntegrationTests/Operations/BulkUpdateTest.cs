@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+using RepoDb.Connector.MariaDb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -15,7 +15,7 @@ using System.Linq;
 namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class MySqlConnectionBulkUpdateOperationsTest
+    public class MariaDbConnectionBulkUpdateOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -33,12 +33,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdate<TEntity>
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntities()
+        public void TestMariaDbConnectionBulkUpdateForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -65,12 +65,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -98,12 +98,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -131,7 +131,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -148,7 +148,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -175,12 +175,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForMappedEntities()
+        public void TestMariaDbConnectionBulkUpdateForMappedEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -207,12 +207,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForMappedEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForMappedEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -240,12 +240,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -273,7 +273,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForMappedEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
@@ -290,7 +290,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -317,7 +317,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -334,7 +334,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<InvalidTypeException>(() => connection.BulkUpdate(tables, mappings: mappings));
@@ -342,19 +342,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesDataTable()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -364,7 +364,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
@@ -378,7 +378,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -396,13 +396,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -412,7 +412,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
@@ -427,7 +427,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -445,13 +445,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -461,7 +461,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
@@ -473,18 +473,18 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNullEntities()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNullEntities()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
 
         //[TestMethod, ExpectedException(typeof(EmptyException))]
-        //public void ThrowExceptionOnMySqlConnectionBulkUpdateForEmptyEntities()
+        //public void ThrowExceptionOnMariaDbConnectionBulkUpdateForEmptyEntities()
         //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
+        //    using (var connection = new MariaDbConnection(Database.ConnectionString))
         //    {
         //        connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>());
         //    }
@@ -493,9 +493,9 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNullDataTable()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNullDataTable()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
@@ -507,12 +507,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdate<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesWithExtraFields()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -539,7 +539,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForEntitiesWithExtraFieldsWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -554,7 +554,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -585,12 +585,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdate(TableName)
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameExpandoObjects()
+        public void TestMariaDbConnectionBulkUpdateForTableNameExpandoObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -617,12 +617,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameAnonymousObjects()
+        public void TestMariaDbConnectionBulkUpdateForTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -649,12 +649,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDataEntities()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -681,12 +681,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDataEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -715,12 +715,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -759,19 +759,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDbDataTable()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -781,7 +781,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
@@ -795,7 +795,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDbDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -813,13 +813,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -829,7 +829,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -845,7 +845,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -863,13 +863,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -879,7 +879,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -892,19 +892,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -914,7 +914,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable",
@@ -926,19 +926,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -948,7 +948,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
@@ -960,19 +960,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDataTable()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -982,7 +982,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
@@ -996,7 +996,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForTableNameDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1014,13 +1014,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1030,7 +1030,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1046,7 +1046,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1064,13 +1064,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1080,7 +1080,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1093,19 +1093,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1115,7 +1115,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable", table));
@@ -1126,19 +1126,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1148,7 +1148,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
@@ -1164,12 +1164,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdateAsync<TEntity>
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1196,12 +1196,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1229,12 +1229,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1262,7 +1262,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1279,7 +1279,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1303,12 +1303,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForMappedEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForMappedEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1335,12 +1335,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForMappedEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForMappedEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1368,12 +1368,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1401,7 +1401,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForMappedEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
@@ -1418,7 +1418,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1445,7 +1445,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1462,7 +1462,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(tables,
@@ -1477,19 +1477,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1499,7 +1499,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
@@ -1513,7 +1513,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1531,13 +1531,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1547,7 +1547,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
@@ -1562,7 +1562,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1580,13 +1580,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1596,7 +1596,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table,
@@ -1608,18 +1608,18 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNullEntities()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNullEntities()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
             }
         }
 
         //[TestMethod, ExpectedException(typeof(AggregateException))]
-        //public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForEmptyEntities()
+        //public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForEmptyEntities()
         //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
+        //    using (var connection = new MariaDbConnection(Database.ConnectionString))
         //    {
         //        Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();)
         //    }
@@ -1628,9 +1628,9 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNullDataTable()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNullDataTable()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null).Wait());
@@ -1642,12 +1642,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdateAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesWithExtraFields()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1674,7 +1674,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -1690,7 +1690,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1721,12 +1721,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdateAsync(TableName)
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameExpandoObjects()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameExpandoObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1753,12 +1753,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameAnonymousObjects()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10, true);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1785,12 +1785,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDataEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1817,12 +1817,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1851,12 +1851,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1895,19 +1895,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1917,7 +1917,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
@@ -1931,7 +1931,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1949,13 +1949,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -1965,7 +1965,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1981,7 +1981,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1999,13 +1999,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2015,7 +2015,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -2028,19 +2028,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2050,7 +2050,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable", table).Result);
@@ -2061,19 +2061,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2083,7 +2083,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable",
@@ -2095,19 +2095,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDbDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2117,7 +2117,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
@@ -2131,7 +2131,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForTableNameDbDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2149,13 +2149,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2165,7 +2165,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -2181,7 +2181,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2199,13 +2199,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2215,7 +2215,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -2228,19 +2228,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2250,7 +2250,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable",
@@ -2262,19 +2262,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
@@ -2284,7 +2284,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable",
@@ -2300,12 +2300,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region NonIdentityTable Mirrors
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntities()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2332,12 +2332,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2365,12 +2365,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2398,7 +2398,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -2415,7 +2415,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2442,12 +2442,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityMappedEntities()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityMappedEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2474,12 +2474,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityMappedEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityMappedEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2507,12 +2507,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2540,7 +2540,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityMappedEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
@@ -2557,7 +2557,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2584,7 +2584,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -2601,7 +2601,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<InvalidTypeException>(() => connection.BulkUpdate(tables, mappings: mappings));
@@ -2609,19 +2609,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesDataTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -2631,7 +2631,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
@@ -2645,7 +2645,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -2663,13 +2663,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -2679,7 +2679,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
@@ -2694,7 +2694,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -2712,13 +2712,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -2728,7 +2728,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
@@ -2740,18 +2740,18 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityNullEntities()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityNullEntities()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityNullDataTable()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityNullDataTable()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<NullReferenceException>(() => connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
@@ -2759,12 +2759,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesWithExtraFields()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -2791,7 +2791,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityEntitiesWithExtraFieldsWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationNonIdentityTables(10);
@@ -2806,7 +2806,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -2833,12 +2833,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameExpandoObjects()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameExpandoObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2865,12 +2865,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameAnonymousObjects()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2897,12 +2897,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDataEntities()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2929,12 +2929,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDataEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2963,12 +2963,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2997,19 +2997,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDbDataTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3019,7 +3019,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
@@ -3033,7 +3033,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDbDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3051,13 +3051,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3067,7 +3067,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -3083,7 +3083,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3101,13 +3101,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3117,7 +3117,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -3130,19 +3130,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3152,7 +3152,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable",
@@ -3164,19 +3164,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3186,7 +3186,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
@@ -3198,19 +3198,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDataTable()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3220,7 +3220,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
@@ -3234,7 +3234,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForNonIdentityTableNameDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateForNonIdentityTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3252,13 +3252,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3268,7 +3268,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -3284,7 +3284,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3302,13 +3302,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3318,7 +3318,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -3331,19 +3331,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3353,7 +3353,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("InvalidTable", table));
@@ -3364,19 +3364,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateForNonIdentityTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3386,7 +3386,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkUpdate("MissingTable",
@@ -3398,12 +3398,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3430,12 +3430,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3463,12 +3463,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3496,7 +3496,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3513,7 +3513,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3537,12 +3537,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityMappedEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityMappedEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3569,12 +3569,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3602,12 +3602,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3635,7 +3635,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
@@ -3652,7 +3652,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3679,7 +3679,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3696,7 +3696,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(tables,
@@ -3705,19 +3705,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3727,7 +3727,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
@@ -3741,7 +3741,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3759,13 +3759,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3775,7 +3775,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
@@ -3790,7 +3790,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3808,13 +3808,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -3824,7 +3824,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table,
@@ -3836,18 +3836,18 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityNullEntities()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityNullEntities()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync((IEnumerable<BulkOperationNonIdentityTable>)null).Wait());
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityNullDataTable()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityNullDataTable()
         {
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 Assert.Throws<AggregateException>(() => connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null).Wait());
@@ -3855,12 +3855,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesWithExtraFields()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3887,7 +3887,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityEntitiesWithExtraFieldsWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationNonIdentityTables(10);
@@ -3903,7 +3903,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnInt), nameof(BulkOperationNonIdentityTable.ColumnInt)));
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3930,12 +3930,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameExpandoObjects()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameExpandoObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3962,12 +3962,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameAnonymousObjects()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -3994,12 +3994,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntities()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -4026,12 +4026,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntitiesWithQualifiers()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -4060,12 +4060,12 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -4094,19 +4094,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4116,7 +4116,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
@@ -4130,7 +4130,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -4148,13 +4148,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4164,7 +4164,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -4180,7 +4180,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -4198,13 +4198,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4214,7 +4214,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -4227,19 +4227,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4249,7 +4249,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable", table).Result);
@@ -4260,19 +4260,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4282,7 +4282,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable",
@@ -4294,19 +4294,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTable()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4316,7 +4316,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
@@ -4330,7 +4330,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableWithMappings()
+        public void TestMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -4348,13 +4348,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4364,7 +4364,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -4380,7 +4380,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -4398,13 +4398,13 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
             mappings.Add(new MariaDbBulkInsertMapItem(nameof(BulkOperationNonIdentityTable.ColumnNVarChar), nameof(BulkOperationNonIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4414,7 +4414,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
@@ -4427,19 +4427,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4449,7 +4449,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("InvalidTable",
@@ -4461,19 +4461,19 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnMySqlConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMariaDbConnectionBulkUpdateAsyncForNonIdentityTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new MySqlConnection(Database.ConnectionString))
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
@@ -4483,7 +4483,7 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                        using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                         {
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkUpdateAsync("MissingTable",
@@ -4499,17 +4499,17 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         #region BulkUpdate(DbDataReader)
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateForDbDataReader()
+        public void TestMariaDbConnectionBulkUpdateForDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                 {
                     // Act
                     var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader);
@@ -4521,17 +4521,17 @@ namespace RepoDb.MariaDb.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionBulkUpdateAsyncForDbDataReader()
+        public void TestMariaDbConnectionBulkUpdateAsyncForDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
 
-            using (var sourceConnection = new MySqlConnection(Database.ConnectionString))
+            using (var sourceConnection = new MariaDbConnection(Database.ConnectionString))
             {
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                using (var destinationConnection = new MySqlConnection(Database.ConnectionString))
+                using (var destinationConnection = new MariaDbConnection(Database.ConnectionString))
                 {
                     // Act
                     var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader).Result;
