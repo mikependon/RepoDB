@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>RepoDb.MariaDbConnector.IntegrationTests</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.2.3" />
+    <PackageReference Include="RepoDb.Connector.MariaDbConnector" Version="0.0.1-alpha2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj" />
+  </ItemGroup>
+</Project>

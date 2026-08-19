@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.MariaDbConnector (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MariaDbConnector/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-mariadbconnector.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.MariaDbConnector
+      solution-file: RepoDb.MariaDbConnector.sln
+      artifact-name: release-mariadbconnector
+      db-engine: mariadb

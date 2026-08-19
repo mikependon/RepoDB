@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.MariaDbConnector.BulkOperations</Title>
+    <AssemblyName>RepoDb.MariaDbConnector.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for MariaDB (using RepoDb.Connector.MariaDbConnector).</Description>
+    <PackageTags>orm hybrid-orm micro-orm mariadb mariadbconnector bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MariaDbConnector.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/mariadbconnectorbulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbMariaDbConnectorBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbMariaDbConnectorBulkOperationsVersion)' != ''">$(RepoDbMariaDbConnectorBulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RepoDb.Connector.MariaDbConnector" Version="0.0.1-alpha2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector\RepoDb.MariaDbConnector.csproj" />
+  </ItemGroup>
+</Project>

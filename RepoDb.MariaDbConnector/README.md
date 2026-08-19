@@ -1,12 +1,12 @@
-[![MariaDbBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadb.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadb.yml)
-[![MariaDbHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![MariaDbVersion](https://img.shields.io/nuget/v/RepoDb.MariaDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MariaDb)
+[![MariaDbConnectorBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadbconnector.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadbconnector.yml)
+[![MariaDbConnectorHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
+[![MariaDbConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MariaDbConnector?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MariaDbConnector)
 
-# [RepoDb.MariaDb](https://repodb.net/tutorial/get-started-mysql) — RepoDB for MariaDB (RepoDb.Connector.MariaDb)
+# [RepoDb.MariaDbConnector](https://repodb.net/tutorial/get-started-mysql) — RepoDB for MariaDB (RepoDb.Connector.MariaDbConnector)
 
-The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb), the dedicated MariaDB ADO.NET provider for RepoDB.
+The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector), the dedicated MariaDB ADO.NET provider for RepoDB.
 
-> **Disclaimer:** RepoDb.MariaDb is a direct copy of [RepoDb.MySql](https://www.nuget.org/packages/RepoDb.MySql) as MariaDB is largely wire- and SQL-compatible with MySQL. It is published as its own, de-facto dedicated package rather than folded into RepoDb.MySql so that MariaDB support can be versioned, tuned, and evolved independently.
+> **Disclaimer:** RepoDb.MariaDbConnector is a direct copy of [RepoDb.MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) as MariaDB is largely wire- and SQL-compatible with MySQL. It is published as its own, de-facto dedicated package rather than folded into RepoDb.MySqlConnector so that MariaDB support can be versioned, tuned, and evolved independently.
 
 ## Important Pages
 
@@ -21,7 +21,7 @@ The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that 
 
 ## Dependencies
 
-- [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/) — the dedicated MariaDB ADO.NET provider RepoDb.MariaDb connects through, exposing `MariaDbConnection` and its related objects.
+- [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector/) — the dedicated MariaDB ADO.NET provider RepoDb.MariaDbConnector connects through, exposing `MariaDbConnection` and its related objects.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
@@ -33,7 +33,7 @@ The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that 
 ## Installation
 
 ```
-Install-Package RepoDb.MariaDb
+Install-Package RepoDb.MariaDbConnector
 ```
 
 Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.

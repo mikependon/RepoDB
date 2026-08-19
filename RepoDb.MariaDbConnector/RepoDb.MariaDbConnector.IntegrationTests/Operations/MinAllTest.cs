@@ -1,0 +1,179 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.MariaDbConnector;
+using RepoDb.MariaDb.IntegrationTests.Models;
+using RepoDb.MariaDb.IntegrationTests.Setup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.MariaDb.IntegrationTests.Operations
+{
+    [TestClass]
+    public class MinAllTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region DataEntity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMariaDbConnectionMinAll()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMariaDbConnectionMinAllWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionMinAllAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnMariaDbConnectionMinAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMariaDbConnectionMinAllViaTableName()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnMariaDbConnectionMinAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionMinAllAsyncViaTableName()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnMariaDbConnectionMinAllAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}
