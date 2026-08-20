@@ -78,7 +78,7 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? typeof(double)); // DbSetting.AverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? typeof(double));
             }
 
             // Initialize the builder
@@ -127,7 +127,7 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? typeof(double)); // DbSetting.AverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? typeof(double));
             }
 
             // Initialize the builder
