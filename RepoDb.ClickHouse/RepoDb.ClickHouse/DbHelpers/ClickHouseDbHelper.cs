@@ -17,7 +17,7 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class ClickHouseDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+        private IDbSetting m_dbSetting = DbSettingMapper.Get<ClickHouseConnection>();
 
         /// <summary>
         /// Creates a new instance of <see cref="ClickHouseDbHelper"/> class.

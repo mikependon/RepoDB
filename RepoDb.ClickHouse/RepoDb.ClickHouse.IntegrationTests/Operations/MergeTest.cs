@@ -43,7 +43,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
@@ -66,7 +66,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -90,7 +90,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -115,7 +115,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync<CompleteTable>(table);
@@ -138,7 +138,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -162,7 +162,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -191,7 +191,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -215,7 +215,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -239,7 +239,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -260,7 +260,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -286,7 +286,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -308,7 +308,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -332,7 +332,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -357,7 +357,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -383,7 +383,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -407,7 +407,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -431,7 +431,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -452,7 +452,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -478,7 +478,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -500,7 +500,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -524,7 +524,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Database.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
@@ -549,7 +549,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
                 new Field("Id", typeof(long))
             };
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);

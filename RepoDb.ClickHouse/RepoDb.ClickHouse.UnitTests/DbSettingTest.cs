@@ -18,7 +18,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingAreTableHintsSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsFalse(setting.AreTableHintsSupported);
@@ -28,27 +28,17 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingClosingQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.AreEqual("`", setting.ClosingQuote);
         }
 
         [TestMethod]
-        public void TestClickHouseDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestClickHouseDbSettingDefaultSchemaProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsNull(setting.DefaultSchema);
@@ -58,7 +48,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingIsDirectionSupportedProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsDirectionSupported);
@@ -68,7 +58,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsExecuteReaderDisposable);
@@ -78,7 +68,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsMultiStatementExecutable);
@@ -88,7 +78,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingIsUseUpsertProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsFalse(setting.IsUseUpsert);
@@ -98,7 +88,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingOpeningQuoteProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.AreEqual("`", setting.OpeningQuote);
@@ -108,7 +98,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingParameterPrefixProperty()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);

@@ -35,7 +35,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -66,7 +66,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -101,7 +101,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -128,7 +128,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
@@ -161,7 +161,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
@@ -188,7 +188,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();

@@ -14,7 +14,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<RepoDbClickHouseConnection>(new ClickHouseDbSetting(), true);
+            DbSettingMapper.Add<ClickHouseConnection>(new ClickHouseDbSetting(), true);
         }
 
         #region Classes
@@ -31,7 +31,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes
         public void TestClickHouseTypeMapAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new RepoDbClickHouseConnection())
+            using (var connection = new ClickHouseConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -55,7 +55,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes
         public void TestClickHouseTypeMapAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new RepoDbClickHouseConnection())
+            using (var connection = new ClickHouseConnection())
             {
                 using (var command = connection.CreateCommand())
                 {

@@ -49,7 +49,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         public static void Cleanup()
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionString))
+            using (var connection = new ClickHouseConnection(ConnectionString))
             {
                 try
                 {
@@ -69,7 +69,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionString))
+            using (var connection = new ClickHouseConnection(ConnectionString))
             {
                 var tables = Helper.CreateCompleteTables(count);
                 connection.InsertAll(tables);
@@ -83,7 +83,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionString))
+            using (var connection = new ClickHouseConnection(ConnectionString))
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
@@ -97,7 +97,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionStringForSystem))
+            using (var connection = new ClickHouseConnection(ConnectionStringForSystem))
             {
                 connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS RepoDb;");
             }
@@ -115,7 +115,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         private static void CreateCompleteTable()
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionString))
+            using (var connection = new ClickHouseConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS CompleteTable
                     (
@@ -169,7 +169,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Setup
 
         private static void CreateNonIdentityCompleteTable()
         {
-            using (var connection = new RepoDbClickHouseConnection(ConnectionString))
+            using (var connection = new ClickHouseConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS NonIdentityCompleteTable
                     (

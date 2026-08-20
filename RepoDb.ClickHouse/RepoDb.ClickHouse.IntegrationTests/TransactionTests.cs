@@ -7,7 +7,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
 {
     /// <summary>
     /// ClickHouse has no client-side transactions: no multi-statement atomicity, isolation, or rollback.
-    /// <see cref="RepoDbClickHouseConnection"/> returns a no-op <see cref="NoOpClickHouseTransaction"/> from
+    /// <see cref="ClickHouseConnection"/> returns a no-op <see cref="NoOpClickHouseTransaction"/> from
     /// BeginTransaction() rather than throwing, because RepoDb.Core's batch operations (InsertAll,
     /// UpdateAll, MergeAll, DeleteAll, ...) always open an implicit transaction internally for their own
     /// bookkeeping when the caller does not supply one - a hard-throwing BeginTransaction() would break
@@ -34,7 +34,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void TestClickHouseConnectionBeginTransactionCommitDoesNotThrow()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -49,7 +49,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void TestClickHouseConnectionRollbackDoesNotUndoAlreadyExecutedStatements()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {

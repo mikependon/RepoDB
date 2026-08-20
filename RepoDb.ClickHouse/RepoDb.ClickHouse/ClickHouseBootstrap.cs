@@ -7,7 +7,7 @@ using System;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="RepoDbClickHouseConnection"/> object.
+    /// A class used to initialize necessary objects that is connected to <see cref="ClickHouseConnection"/> object.
     /// </summary>
     public static class ClickHouseBootstrap
     {
@@ -34,13 +34,13 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<RepoDbClickHouseConnection>(new ClickHouseDbSetting(), true);
+            DbSettingMapper.Add<ClickHouseConnection>(new ClickHouseDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add<RepoDbClickHouseConnection>(new ClickHouseDbHelper(), true);
+            DbHelperMapper.Add<ClickHouseConnection>(new ClickHouseDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add<RepoDbClickHouseConnection>(new ClickHouseStatementBuilder(), true);
+            StatementBuilderMapper.Add<ClickHouseConnection>(new ClickHouseStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

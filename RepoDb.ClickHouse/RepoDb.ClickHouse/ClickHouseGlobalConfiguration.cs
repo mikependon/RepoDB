@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to initialize the necessary settings for the <see cref="RepoDbClickHouseConnection"/> object.
+    /// A class that is being used to initialize the necessary settings for the <see cref="ClickHouseConnection"/> object.
     /// </summary>
     public static partial class ClickHouseGlobalConfiguration
     {

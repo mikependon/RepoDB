@@ -23,7 +23,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateBatchQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateBatchQuery("Table",
@@ -41,7 +41,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateBatchQueryWithPage()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateBatchQuery("Table",
@@ -59,7 +59,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateBatchQueryIfThereAreNoFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NullReferenceException>(() =>
@@ -74,7 +74,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<EmptyException>(() =>
@@ -89,7 +89,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateBatchQueryIfThePageValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -104,7 +104,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateBatchQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -119,7 +119,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateBatchQueryIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -140,7 +140,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateCount()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateCount("Table",
@@ -156,7 +156,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateCountWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateCount("Table",
@@ -172,7 +172,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateCountIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -189,7 +189,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateExists()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateExists("Table",
@@ -208,7 +208,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateInsert()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateInsert("Table",
@@ -225,7 +225,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateInsert("Table",
@@ -242,7 +242,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateInsertIfThereIsAnIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act - ClickHouse has no identity/auto-increment mechanism
             Assert.Throws<NotSupportedException>(() =>
@@ -256,7 +256,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateInsertIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -275,7 +275,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateInsertAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateInsertAll("Table",
@@ -293,7 +293,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateInsertAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act - ClickHouse.Driver executes a single statement per command/request
             Assert.Throws<NotSupportedException>(() =>
@@ -308,7 +308,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateInsertAllIfThereIsAnIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -327,7 +327,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateMax()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateMax("Table",
@@ -348,7 +348,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateMin()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateMin("Table",
@@ -369,7 +369,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateMerge()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateMerge("Table",
@@ -387,7 +387,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateMergeIfThereIsNoPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -402,7 +402,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateMergeIfThereIsAnIdentity()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -421,7 +421,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateMergeAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateMergeAll("Table",
@@ -440,7 +440,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateMergeAllIfThereIsNoPrimary()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<PrimaryFieldNotFoundException>(() =>
@@ -456,7 +456,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateMergeAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -476,7 +476,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -495,7 +495,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateQueryWithExpression()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -514,7 +514,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateQueryWithTop()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -533,7 +533,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateQueryOrderBy()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateQuery("Table",
@@ -552,7 +552,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateQueryIfThereAreHints()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>
@@ -572,7 +572,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateSkipQuery()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateSkipQuery("Table",
@@ -590,7 +590,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateSkipQueryWithSkip()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateSkipQuery("Table",
@@ -612,7 +612,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateSum()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateSum("Table",
@@ -633,7 +633,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateUpdate()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateUpdate("Table",
@@ -655,7 +655,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderCreateUpdateAll()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             var query = builder.CreateUpdateAll("Table",
@@ -674,7 +674,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void ThrowExceptionOnClickHouseStatementBuilderCreateUpdateAllIfBatchSizeIsGreaterThanOne()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Act
             Assert.Throws<NotSupportedException>(() =>

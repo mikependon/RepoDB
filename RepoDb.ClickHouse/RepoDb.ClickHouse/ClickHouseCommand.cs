@@ -1,5 +1,4 @@
-﻿using ClickHouse.Driver.ADO;
-using ClickHouse.Driver.ADO.Parameters;
+﻿using ClickHouse.Driver.ADO.Parameters;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
@@ -10,10 +9,10 @@ namespace RepoDb
     /// <summary>
     /// 
     /// </summary>
-    internal sealed class NormalizingClickHouseCommand : ClickHouseCommand
+    internal sealed class ClickHouseCommand : ClickHouse.Driver.ADO.ClickHouseCommand
     {
-        public NormalizingClickHouseCommand(
-            ClickHouseConnection connection)
+        public ClickHouseCommand(
+            ClickHouse.Driver.ADO.ClickHouseConnection connection)
             : base(connection)
         { }
 

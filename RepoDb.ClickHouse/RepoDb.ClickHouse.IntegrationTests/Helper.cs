@@ -155,7 +155,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="timeout">The maximum time to wait. Defaults to 30 seconds.</param>
-        public static void WaitForMutations(RepoDbClickHouseConnection connection,
+        public static void WaitForMutations(ClickHouseConnection connection,
             string tableName,
             TimeSpan? timeout = null)
         {

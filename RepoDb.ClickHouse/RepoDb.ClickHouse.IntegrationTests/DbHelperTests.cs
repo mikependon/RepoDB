@@ -30,7 +30,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -72,7 +72,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -90,7 +90,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsHasNoIdentity()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -110,7 +110,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -148,7 +148,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -166,7 +166,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public async Task TestDbHelperGetFieldsAsyncHasNoIdentity()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -190,7 +190,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public void ThrowExceptionOnDbHelperGetScopeIdentity()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -208,7 +208,7 @@ namespace RepoDb.ClickHouse.IntegrationTests
         [TestMethod]
         public async Task ThrowExceptionOnDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();

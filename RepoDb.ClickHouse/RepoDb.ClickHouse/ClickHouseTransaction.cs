@@ -6,13 +6,13 @@ namespace RepoDb
     /// <summary>
     /// 
     /// </summary>
-    internal sealed class NoOpClickHouseTransaction : DbTransaction
+    internal sealed class ClickHouseTransaction : DbTransaction
     {
-        private readonly RepoDbClickHouseConnection connection;
+        private readonly ClickHouseConnection connection;
 
-        public NoOpClickHouseTransaction(
-            RepoDbClickHouseConnection connection,
-             IsolationLevel isolationLevel)
+        public ClickHouseTransaction(
+            ClickHouseConnection connection,
+            IsolationLevel isolationLevel)
         {
             this.connection = connection;
             IsolationLevel = isolationLevel;

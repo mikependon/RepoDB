@@ -3,7 +3,7 @@
 namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="RepoDbClickHouseConnection"/> data provider.
+    /// A setting class used for <see cref="ClickHouseConnection"/> data provider.
     /// </summary>
     public sealed class ClickHouseDbSetting : BaseDbSetting
     {

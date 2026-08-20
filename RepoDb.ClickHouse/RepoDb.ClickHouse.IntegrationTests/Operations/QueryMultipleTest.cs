@@ -35,7 +35,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -57,7 +57,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -79,7 +79,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -105,7 +105,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -131,7 +131,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -161,7 +161,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -191,7 +191,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -225,7 +225,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -259,7 +259,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -297,7 +297,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -335,7 +335,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -377,7 +377,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -419,7 +419,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 Assert.Throws<NotSupportedException>(() =>
@@ -442,7 +442,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -464,7 +464,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -486,7 +486,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -512,7 +512,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -538,7 +538,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -568,7 +568,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -598,7 +598,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -632,7 +632,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -666,7 +666,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -704,7 +704,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -742,7 +742,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
@@ -784,7 +784,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id == tables[0].Id,
@@ -826,7 +826,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var tables = Database.CreateCompleteTables(10);
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 await Assert.ThrowsAsync<NotSupportedException>(async () =>

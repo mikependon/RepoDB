@@ -1,5 +1,4 @@
-﻿using ClickHouse.Driver.ADO;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 
 namespace RepoDb
@@ -7,40 +6,40 @@ namespace RepoDb
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RepoDbClickHouseConnection : ClickHouseConnection
+    public sealed class ClickHouseConnection : ClickHouse.Driver.ADO.ClickHouseConnection
     {
         /// <summary>
-        /// Creates a new instance of <see cref="RepoDbClickHouseConnection"/> class.
+        /// Creates a new instance of <see cref="ClickHouseConnection"/> class.
         /// </summary>
-        public RepoDbClickHouseConnection()
+        public ClickHouseConnection()
             : base()
         { }
 
         /// <summary>
-        /// Creates a new instance of <see cref="RepoDbClickHouseConnection"/> class.
+        /// Creates a new instance of <see cref="ClickHouseConnection"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string to be used.</param>
-        public RepoDbClickHouseConnection(string connectionString)
+        public ClickHouseConnection(string connectionString)
             : base(connectionString)
         { }
 
         /// <summary>
-        /// Creates a new instance of <see cref="RepoDbClickHouseConnection"/> class.
+        /// Creates a new instance of <see cref="ClickHouseConnection"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string to be used.</param>
         /// <param name="skipServerCertificateValidation">Whether to skip TLS server certificate validation.</param>
-        public RepoDbClickHouseConnection(
+        public ClickHouseConnection(
             string connectionString,
             bool skipServerCertificateValidation)
             : base(connectionString, skipServerCertificateValidation)
         { }
 
         /// <inheritdoc/>
-        protected override DbCommand CreateDbCommand() => new NormalizingClickHouseCommand(this);
+        protected override DbCommand CreateDbCommand() => new ClickHouseCommand(this);
 
         /// <inheritdoc/>
         protected override DbTransaction BeginDbTransaction(
             IsolationLevel isolationLevel) =>
-            new NoOpClickHouseTransaction(this, isolationLevel);
+            new ClickHouseTransaction(this, isolationLevel);
     }
 }

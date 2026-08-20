@@ -18,7 +18,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseStatementBuilderMapper()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<RepoDbClickHouseConnection>();
+            var builder = StatementBuilderMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsNotNull(builder);
@@ -28,7 +28,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbHelperMapper()
         {
             // Setup
-            var helper = DbHelperMapper.Get<RepoDbClickHouseConnection>();
+            var helper = DbHelperMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsNotNull(helper);
@@ -38,7 +38,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseDbSettingMapper()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
             Assert.IsNotNull(setting);

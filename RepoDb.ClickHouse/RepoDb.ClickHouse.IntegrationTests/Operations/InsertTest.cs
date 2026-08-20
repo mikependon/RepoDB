@@ -42,7 +42,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert<CompleteTable>(table);
@@ -67,7 +67,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert<NonIdentityCompleteTable>(table);
@@ -95,7 +95,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync<CompleteTable>(table);
@@ -120,7 +120,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync<NonIdentityCompleteTable>(table);
@@ -152,7 +152,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(),
@@ -177,7 +177,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(),
@@ -202,7 +202,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(),
@@ -227,7 +227,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -252,7 +252,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -277,7 +277,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.Insert(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -306,7 +306,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -331,7 +331,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -356,7 +356,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
@@ -381,7 +381,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -406,7 +406,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsDynamics(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
@@ -431,7 +431,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(1).First();
 
-            using (var connection = new RepoDbClickHouseConnection(Database.ConnectionString))
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),

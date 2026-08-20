@@ -17,7 +17,7 @@ namespace RepoDb.StatementBuilders
         /// Creates a new instance of <see cref="ClickHouseStatementBuilder"/> object.
         /// </summary>
         public ClickHouseStatementBuilder()
-            : this(DbSettingMapper.Get<RepoDbClickHouseConnection>(),
+            : this(DbSettingMapper.Get<ClickHouseConnection>(),
                   null,
                   null)
         { }

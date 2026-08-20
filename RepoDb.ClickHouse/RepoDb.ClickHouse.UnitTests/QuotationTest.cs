@@ -21,7 +21,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForQuotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " Field ".AsQuoted(true, setting);
@@ -34,7 +34,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForQuotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " Field ".AsQuoted(setting);
@@ -47,7 +47,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForQuotedForPreQuoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = "`Field`".AsQuoted(setting);
@@ -60,7 +60,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForQuotedForPreQuotedWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = "` Field `".AsQuoted(setting);
@@ -73,7 +73,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " ` Field ` ".AsQuoted(true, setting);
@@ -90,7 +90,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForUnquotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " ` Field ` ".AsUnquoted(true, setting);
@@ -103,7 +103,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForUnquotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = "` Field `".AsUnquoted(setting);
@@ -116,7 +116,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForUnquotedForPlain()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = "Field".AsUnquoted(setting);
@@ -129,7 +129,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForUnquotedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(setting);
@@ -142,7 +142,7 @@ namespace RepoDb.ClickHouse.UnitTests
         public void TestClickHouseQuotationForUnquotedAndTrimmedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<RepoDbClickHouseConnection>();
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(true, setting);
