@@ -19,14 +19,6 @@ namespace RepoDb.Oracle.UnitTests
 
         #region CreateAverage
 
-        // NOTE: BaseStatementBuilder.CreateAverage/CreateAverageAll always assign
-        // field.Type = AverageableClientTypeResolver.Resolve(field.Type ?? DbSetting.AverageableType)
-        // before building the SQL - even when the caller never set a Field.Type. Since
-        // OracleDbSetting.AverageableType is typeof(double), an untyped field ends up with
-        // Type = typeof(double), which is non-null, so OracleConvertFieldResolver then wraps it in a
-        // CAST(... AS BINARY_DOUBLE). This CAST only happens for Average/AverageAll - Count/Max/Min/Sum
-        // never touch field.Type, so they never get cast (see the other regions in this file).
-
         [TestMethod]
         public void TestOracleStatementBuilderCreateAverage()
         {
