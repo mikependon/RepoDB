@@ -42,7 +42,7 @@ namespace RepoDb.IntegrationTests.Setup
             // Initialize MariaDb
             GlobalConfiguration
                 .Setup()
-                .UseMariaDb();
+                .UseMariaDbConnector();
 
             // Enable server side local in file for bulk
             EnableServerLocalInfile();
