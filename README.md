@@ -6,23 +6,19 @@
 
 -----
 
-RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET.
+RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET with clean and easy APIs.
 
 It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
 
 ## Why RepoDB?
 
-RepoDB solves a complex problem in the data access space: making bulk operations simple. It is designed to efficiently move millions of records across different database providers. Imagine migrating massive datasets from legacy databases to modern, cloud-native platforms — efficiently, reliably, and with high performance.
+RepoDB solves a complex problem in the .NET data access space: making bulk operations simple. It is designed to efficiently move millions of records across different database providers. Imagine migrating massive datasets from legacy databases to modern, cloud-native platforms — efficiently, reliably, and with high performance.
 
-It also addresses a common tension in data access: choosing between the raw performance and control of manual ADO.NET and the productivity of a full-featured ORM. RepoDB brings both together — without forcing a trade-off.
-
-## Evolution of Architecture
+### Evolution of Architecture
 
 RepoDB began evolving into not just another ORM in .NET, but also a productivity platform that enables developers to work with data seamlessly.
 
-With the vision of fully enabling Data Engineering in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
-
-_(A transformation capability is still under consideration)_
+With the vision of fully enabling Data Engineering capabilities in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
 
 The mission is to make it a developer-friendly platform — one that's fun to work with, where you can feel a sense of accomplishment with a minimal amount of code!
 
@@ -44,7 +40,7 @@ It goes beyond the ORM with enterprise-grade capabilities for building, operatin
 
 It stays close to the metal while remaining easy to use:
 
-- **👌 Easy to Use** — All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go.
+- **👌 Easy to Use** — All operations are extension methods on [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection). Open a connection and you're ready to go.
 - **🚀 High Performance** — Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time.
 - **🧠 Memory Efficient** — Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application.
 - **🔀 Hybrid** — Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection.
@@ -53,9 +49,9 @@ It stays close to the metal while remaining easy to use:
 
 ### As a Low-Level Connector
 
-It bridges disparate database systems with a single, unified connectivity layer:
+It bridges different database systems with a single, unified connectivity layer:
 
-- **🔌 Universal Connectivity** — Works with any provider that implements `IDbConnection`, from SQL Server and PostgreSQL to ClickHouse, DB2, Oracle, and more.
+- **🔌 Universal Connectivity** — Works with any provider that implements [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection), from SQL Server and PostgreSQL to ClickHouse, DB2, Oracle, and more.
 - **🧩 Consistent API Surface** — The same fluent methods and conventions work identically regardless of the underlying provider.
 - **⚙️ Provider-Native Optimizations** — Each connector is tuned to exploit the bulk and native capabilities of its target database.
 
