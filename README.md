@@ -16,43 +16,48 @@ RepoDB solves a complex problem in the data access space: making bulk operations
 
 It also addresses a common tension in data access: choosing between the raw performance and control of manual ADO.NET and the productivity of a full-featured ORM. RepoDB brings both together — without forcing a trade-off.
 
-### As a Hybrid-ORM
+## Evolution of Architecture
 
-It stays close to the metal while remaining easy to use:
+RepoDB began evolving into not just another ORM in .NET, but also a productivity platform that enables developers to work with data seamlessly.
 
-| Feature | Description |
-|---|---|
-| **👌 Easy to Use** | All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go. |
-| **🚀 High Performance** | Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time. |
-| **🧠 Memory Efficient** | Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application. |
-| **🔀 Hybrid** | Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection. |
-| **🏆 Battle-Tested** | Backed by thousands of unit and integration tests, and used in production systems worldwide. |
-| **🆓 Always Free** | Apache 2.0 licensed, forever open source. |
+With the vision of fully enabling Data Engineering in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
+
+_(A transformation capability is still under consideration)_
+
+The mission is to make it a developer-friendly platform — one that's fun to work with, where you can feel a sense of accomplishment with a minimal amount of code!
+
+This vision has driven the architecture to evolve accordingly.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
 ### As a Productivity Platform
 
 It goes beyond the ORM with enterprise-grade capabilities for building, operating, and scaling with confidence:
 
-| Feature | Description |
-|---|---|
-| **📦 Bulk Operations** | High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads. |
-| **🔄 Data Replication** | Scalable data movement and synchronization across multiple database platforms. |
-| **📊 Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
-| **🗄️ Multi-DB Support** | A growing range of relational database providers with a consistent development experience. |
+- **📦 Bulk Operations** — High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads.
+- **🔄 Data Replication** — Scalable data movement and synchronization across multiple database platforms.
+- **🌉 Cross-Provider Data Movement** — Move data between different database engines without writing hand-rolled conversion logic.
+- **📊 Telemetry** — Immediate visibility into execution times, failures, and application behavior, with minimal configuration.
+- **🗄️ Multi-DB Support** — A growing range of relational database providers with a consistent development experience.
 
-### Evolution of Architecture
+### As a Hybrid-ORM
 
-In mid 2026, the author decided to position RepoDB as not just another ORM in .NET, but also as a productivity platform that enables developers to work with data seamlessly.
+It stays close to the metal while remaining easy to use:
 
-With the vision of fully enabling Data Engineering in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
+- **👌 Easy to Use** — All operations are extension methods on `IDbConnection`. Open a connection and you're ready to go.
+- **🚀 High Performance** — Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time.
+- **🧠 Memory Efficient** — Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application.
+- **🔀 Hybrid** — Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection.
+- **🏆 Battle-Tested** — Backed by thousands of unit and integration tests, and used in production systems worldwide.
+- **🆓 Always Free** — Apache 2.0 licensed, forever open source.
 
-_(We are still deciding whether a transformation capability will be included)_
+### As a Low-Level Connector
 
-The mission is to make it a developer-friendly platform — one that's fun to work with, where you can feel a sense of accomplishment with a minimal amount of code!
+It bridges disparate database systems with a single, unified connectivity layer:
 
-With this vision, we have to evolve the architecture.
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
+- **🔌 Universal Connectivity** — Works with any provider that implements `IDbConnection`, from SQL Server and PostgreSQL to ClickHouse, DB2, Oracle, and more.
+- **🧩 Consistent API Surface** — The same fluent methods and conventions work identically regardless of the underlying provider.
+- **⚙️ Provider-Native Optimizations** — Each connector is tuned to exploit the bulk and native capabilities of its target database.
 
 ## Packages and Build Status
 

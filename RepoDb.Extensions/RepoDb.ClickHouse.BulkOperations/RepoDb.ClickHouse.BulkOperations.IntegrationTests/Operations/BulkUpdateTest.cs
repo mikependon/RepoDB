@@ -1,4 +1,3 @@
-using System.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -7,9 +6,7 @@ using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using RepoDb.Enumerations.ClickHouse;
-using RepoDb.ClickHouse.BulkOperations;
 using System.Linq;
 using ClickHouse.Driver.ADO;
 
