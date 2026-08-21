@@ -1,4 +1,4 @@
-﻿using ClickHouse.Driver.ADO;
+using ClickHouse.Driver.ADO;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
@@ -9,6 +9,10 @@ namespace RepoDb
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="ClickHouseConnection"/> object.
     /// </summary>
+    /// <remarks>
+    /// RepoDb no longer owns a <c>ClickHouseConnection</c> subclass: every mapping registered here is anchored
+    /// directly on <see cref="ClickHouseConnection"/> from <c>ClickHouse.Driver.ADO</c> itself.
+    /// </remarks>
     public static class ClickHouseBootstrap
     {
         #region Properties

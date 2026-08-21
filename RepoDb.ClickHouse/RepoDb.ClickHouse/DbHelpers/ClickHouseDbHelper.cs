@@ -248,33 +248,20 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// A backdoor access from the core library used to handle an instance of an object to whatever purpose within the extended library.
         /// </summary>
+        /// <remarks>
+        /// Previously used to strip a leading "@" from every newly-created <see cref="ClickHouseDbParameter.ParameterName"/>
+        /// (via the "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]" event), because RepoDb Core always baked an
+        /// "@" into every parameter name unconditionally. That is no longer necessary: <see cref="RepoDb.DbSettings.ClickHouseDbSetting"/>
+        /// now sets <see cref="RepoDb.Interfaces.IDbSetting.ParameterPrefix"/> to <see cref="string.Empty"/> directly, so
+        /// parameters are created with the correct bare name from the start. This method is kept as a no-op implementation
+        /// since it fulfills a required <see cref="IDbHelper"/> interface member.
+        /// </remarks>
         /// <typeparam name="TEventInstance">The type of the event instance to handle.</typeparam>
         /// <param name="instance">The instance of the event object to handle.</param>
         /// <param name="key">The key of the event to handle.</param>
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
-        {
-            if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
-            {
-                HandleDbParameterPostCreation((ClickHouseDbParameter)(object)instance);
-            }
-        }
-
-        #region Handlers
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void HandleDbParameterPostCreation(ClickHouseDbParameter parameter)
-        {
-            if (parameter?.ParameterName?.StartsWith("@") == true)
-            {
-                parameter.ParameterName = parameter.ParameterName.Substring(1);
-            }
-        }
-
-        #endregion
+        { }
 
         #endregion
 

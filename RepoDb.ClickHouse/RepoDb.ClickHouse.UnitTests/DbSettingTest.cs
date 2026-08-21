@@ -101,7 +101,20 @@ namespace RepoDb.ClickHouse.UnitTests
             var setting = DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.AreEqual("@", setting.ParameterPrefix);
+            // Unlike most providers, ClickHouse.Driver binds a real DbParameter.ParameterName without any
+            // prefix, so ParameterPrefix is string.Empty here - the "@" prefix is still used for the SQL text
+            // placeholder token, via SqlTextParameterPrefix (see the test below).
+            Assert.AreEqual(string.Empty, setting.ParameterPrefix);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
         }
     }
 }

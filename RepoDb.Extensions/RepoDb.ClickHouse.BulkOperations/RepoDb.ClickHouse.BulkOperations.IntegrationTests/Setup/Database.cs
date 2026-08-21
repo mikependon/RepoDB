@@ -1,6 +1,7 @@
 using System.Data.Common;
 using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using System;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.IntegrationTests.Setup
 {

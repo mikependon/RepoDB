@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DriverBulkCopy = ClickHouse.Driver.Copy.ClickHouseBulkCopy;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations
 {

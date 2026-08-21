@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RepoDb.Enumerations.ClickHouse;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations.Extensions
 {

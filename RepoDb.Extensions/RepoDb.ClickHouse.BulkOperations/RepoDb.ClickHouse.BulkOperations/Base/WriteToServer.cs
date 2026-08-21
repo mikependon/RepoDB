@@ -10,6 +10,7 @@ using RepoDb.Enumerations.ClickHouse;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.ClickHouse.BulkOperations;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb
 {

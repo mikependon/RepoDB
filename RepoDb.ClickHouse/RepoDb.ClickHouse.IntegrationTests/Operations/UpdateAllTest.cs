@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClickHouse.Driver.ADO;
 using RepoDb.Extensions;
 using RepoDb.ClickHouse.IntegrationTests.Models;

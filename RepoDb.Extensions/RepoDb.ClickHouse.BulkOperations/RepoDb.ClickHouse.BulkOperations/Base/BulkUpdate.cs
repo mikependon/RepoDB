@@ -10,6 +10,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.ClickHouse.BulkOperations;
 using RepoDb.ClickHouse.BulkOperations.Extensions;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb
 {

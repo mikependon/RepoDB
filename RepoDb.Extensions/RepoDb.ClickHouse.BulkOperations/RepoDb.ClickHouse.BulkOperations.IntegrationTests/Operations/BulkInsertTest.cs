@@ -9,6 +9,7 @@ using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 {

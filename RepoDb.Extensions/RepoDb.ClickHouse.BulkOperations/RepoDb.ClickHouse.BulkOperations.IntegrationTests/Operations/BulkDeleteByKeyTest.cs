@@ -4,6 +4,7 @@ using RepoDb.Enumerations.ClickHouse;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using System.Linq;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 {

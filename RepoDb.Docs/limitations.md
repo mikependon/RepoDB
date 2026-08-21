@@ -43,6 +43,19 @@ We want the .NET community to understand this library's limitations before using
   - [Bulk Operations Staging Table](#bulk-operations-staging-table-3)
   - [BulkMerge ReturnIdentity Correlation](#bulkmerge-returnidentity-correlation)
   - [Verification Status](#verification-status-2)
+- ClickHouse
+  - [No Real Transactions](#no-real-transactions)
+  - [No Identity/Auto-Increment Mechanism](#no-identityauto-increment-mechanism)
+  - [Merge Emits a Plain INSERT](#merge-emits-a-plain-insert)
+  - [Update Is an Asynchronous Mutation](#update-is-an-asynchronous-mutation)
+  - [Delete Uses Lightweight Delete, Inconsistently With Update](#delete-uses-lightweight-delete-inconsistently-with-update)
+  - [Composite ORDER BY / PRIMARY KEY](#composite-order-by--primary-key)
+  - [QueryMultiple / InsertAll / MergeAll / UpdateAll Batching](#querymultiple--insertall--mergeall--updateall-batching)
+  - [Bulk Operations: No ReturnIdentity](#bulk-operations-no-returnidentity)
+  - [Bulk Operations Staging Table](#bulk-operations-staging-table-4)
+  - [Bulk Update/Delete/Merge Row Counts Are Staged Counts, Not Affected Counts](#bulk-updatedeletemerge-row-counts-are-staged-counts-not-affected-counts)
+  - [Bulk Operations and Transactions](#bulk-operations-and-transactions-2)
+  - [Verification Status](#verification-status-3)
 
 ## Core
 
@@ -749,3 +762,219 @@ The seed lookup and the pre-assignment statement are also two separate round tri
 ### Verification Status
 
 Neither `RepoDb.MariaDb.BulkOperations` nor `RepoDb.MariaDbConnector.BulkOperations` has been exercised against a live MariaDB instance yet. Verify the following end-to-end before relying on either package in production: the bulk-load path (`LOAD DATA LOCAL INFILE` for `RepoDb.MariaDb.BulkOperations`, the connector's own `MariaDbBulkCopy` for `RepoDb.MariaDbConnector.BulkOperations`), the identity pre-assignment/read-back described above, and the staging-table strategy used by `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey`.
+
+-----
+
+## ClickHouse
+
+These limitations are specific to the [RepoDb.ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse) and `RepoDb.ClickHouse.BulkOperations` packages, on top of the [Core](#core) limitations above. ClickHouse is a column-oriented analytical database, not a traditional transactional RDBMS — several of the caveats below exist because RepoDB's operation model (Insert/Update/Delete/Merge as immediate, transactional, row-level statements) does not map cleanly onto ClickHouse's actual execution model (append-mostly writes, asynchronous background mutations, no cross-statement transactions). Many of these are called out directly in the provider's own XML doc comments, quoted below.
+
+### No Real Transactions
+
+`ClickHouseConnection.BeginDbTransaction` always returns a `ClickHouseTransaction` whose `Commit()`/`Rollback()` are true no-ops:
+
+```csharp
+// ClickHouseTransaction.cs
+public override void Commit() { }
+public override void Rollback() { }
+```
+
+This is deliberate — ClickHouse, especially over the HTTP protocol, offers no cross-statement transactional atomicity the way most RDBMS providers do. Code that wraps RepoDB calls in the familiar `connection.BeginTransaction()` / `transaction.Rollback()` pattern will not get an exception; it will just silently do nothing on rollback. Every statement already issued has already taken effect independently.
+
+**Alternative Solution**
+
+Design ClickHouse write paths to be idempotent and re-runnable (e.g. a `ReplacingMergeTree`/`CollapsingMergeTree` engine with a version or sign column) rather than relying on rollback for correctness. There is no workaround inside the provider itself.
+
+### No Identity/Auto-Increment Mechanism
+
+Unlike SQL Server, MySQL, Oracle (sequence-based), or MariaDB (`AUTO_INCREMENT`), ClickHouse has no identity/auto-increment/sequence concept, and this provider does not attempt to fake one.
+
+The metadata query behind `ClickHouseDbHelper` hardcodes every column's identity flag to `0`, so no column is ever auto-detected as an identity:
+
+```sql
+SELECT name AS ColumnName, is_in_primary_key AS IsPrimary, 0 AS IsIdentity, type AS ColumnType ...
+```
+
+`GetScopeIdentity<T>`/`GetScopeIdentityAsync<T>` throw unconditionally:
+
+```csharp
+public T GetScopeIdentity<T>(IDbConnection connection, IDbTransaction transaction = null) =>
+    throw new NotSupportedException("ClickHouse has no session-wide scope identity, sequence, or auto-increment mechanism.");
+```
+
+And every insert/merge path in `ClickHouseStatementBuilder` guards against a caller manually forcing an `[Identity]` mapping:
+
+```csharp
+private static void GuardNoIdentity(DbField identityField)
+{
+    if (identityField != null)
+    {
+        throw new NotSupportedException("ClickHouse does not support identity/auto-increment columns.");
+    }
+}
+```
+
+`CreateInsert` also does not chain a trailing `SELECT` after the `INSERT` to confirm the row, since ClickHouse cannot chain a `SELECT` after an `INSERT` in one request — this is consistent with the no-multi-statement limitation below, not a separate bug.
+
+**Alternative Solution**
+
+Assign primary-key values client-side before inserting (e.g. `Guid.NewGuid()`, a snowflake-style generator, or an application-owned sequence table). Never map a ClickHouse entity property with `[Identity]`.
+
+### Merge Emits a Plain INSERT
+
+ClickHouse has no `ON DUPLICATE KEY UPDATE`/`MERGE` statement and no reliable synchronous `UPDATE`. `CreateMerge`/`CreateMergeAll` in `ClickHouseStatementBuilder` therefore emit the exact same plain `INSERT` as `CreateInsert`/`CreateInsertAll` — there is no deduplication or upsert behavior at the statement level:
+
+```csharp
+/// ClickHouse has no ON DUPLICATE KEY UPDATE / MERGE statement and no reliable synchronous UPDATE, so
+/// this emits the same plain INSERT as CreateInsert. True de-duplication is deferred to the table engine
+/// (e.g. ReplacingMergeTree) and its background merges - the idiomatic ClickHouse upsert pattern - rather
+/// than hard-failing the Merge/MergeAll operations.
+public override string CreateMerge(...) => BuildInsertValues(...);
+```
+
+Calling `connection.Merge<T>(entity)` against a plain `MergeTree` table does not update an existing row — it inserts a duplicate. Correctness depends entirely on the target table using a deduplicating engine (`ReplacingMergeTree`, `CollapsingMergeTree`, etc.), and even then, that engine's background merge/deduplication is not immediate — a `Query` issued right after a `Merge` can still see duplicate rows until the engine catches up (or until you query with `FINAL`/`argMax`).
+
+**Alternative Solution**
+
+Use a deduplicating table engine (typically `ReplacingMergeTree`) for any table you call `Merge`/`MergeAll` against, and read it back with `FINAL` or an `argMax`-based query rather than expecting `Merge` itself to have applied an update by the time it returns.
+
+### Update Is an Asynchronous Mutation
+
+ClickHouse has no plain `UPDATE ... SET ... WHERE ...` statement — only `ALTER TABLE table UPDATE col = expr [, ...] WHERE filter`, ClickHouse's "mutation" syntax. `CreateUpdate`/`CreateUpdateAll` build exactly this:
+
+```csharp
+/// ClickHouse has no plain UPDATE ... SET ... WHERE ... statement - only
+/// ALTER TABLE table UPDATE col = expr [, ...] WHERE filter, an asynchronous mutation applied
+/// by background merges rather than immediately.
+```
+
+A mutation is *registered* synchronously but *applied* by a background merge afterward — potentially milliseconds later, potentially much longer, depending on table/part size and server load. `connection.Update<T>(entity)` returns as soon as the mutation is queued, not once it has taken effect. A `Query` issued immediately afterward can still return the pre-update value.
+
+**Alternative Solution**
+
+Treat `Update`/`UpdateAll` as "submit an asynchronous mutation," not "the row is now changed." If your workflow needs to know when the mutation has actually applied, poll ClickHouse's own `system.mutations` table (filtering by table, checking `is_done`) — RepoDB does not do this for you.
+
+### Delete Uses Lightweight Delete, Inconsistently With Update
+
+`ClickHouseStatementBuilder` does not override `CreateDelete`/`CreateDeleteAll` at all. Both fall through to the core `BaseStatementBuilder` implementation, which emits a plain `DELETE FROM table WHERE ...` — not the `ALTER TABLE table DELETE WHERE ...` mutation syntax that `CreateUpdate` was explicitly special-cased for in the same file.
+
+This relies on ClickHouse's "lightweight delete" feature (a plain `DELETE FROM ... WHERE ...` that marks rows via an internal row-exists mask rather than an `ALTER TABLE` mutation). Lightweight delete has historically required server-side settings (e.g. `allow_experimental_lightweight_delete`, naming has changed across ClickHouse versions) and only works on `MergeTree`-family engines with those settings enabled — it is not guaranteed to work unconditionally across every target ClickHouse version/engine the way `ALTER TABLE ... DELETE` mutations are.
+
+**Alternative Solution**
+
+Verify lightweight delete is enabled and supported on your target ClickHouse server version before relying on `Delete`/`DeleteAll`. If it isn't available, issue an explicit `ExecuteNonQuery("ALTER TABLE ... DELETE WHERE ...")` instead, keeping in mind that path is also an asynchronous mutation (see [Update Is an Asynchronous Mutation](#update-is-an-asynchronous-mutation)).
+
+### Composite ORDER BY / PRIMARY KEY
+
+A composite sort/primary key (`ORDER BY (col1, col2, ...)`) is the idiomatic default table design for `MergeTree`-family engines, making this a more common trap for ClickHouse than the general [Composite Keys](#composite-keys) limitation is for other providers.
+
+`ClickHouseDbHelper`'s metadata query correctly flags every column that participates in the primary key (`is_in_primary_key`), but RepoDB's core `DbFieldCollection.GetPrimary()` only ever picks the *first* one it finds and silently drops the rest. That single field is what the default qualifier fallback uses — including in `ClickHouseStatementBuilder`'s Merge/UpdateAll guards and in the bulk-operations package's `GetQualifierFields` helper:
+
+```csharp
+var primaryOrIdentity = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
+...
+return new[] { primaryOrIdentity.AsField() };
+```
+
+For a table with `ORDER BY (UserId, EventDate)`, a `Merge`/`Update`/`BulkMerge`/`BulkUpdate`/`BulkDelete` call that omits `qualifiers` matches on `UserId` alone — silently affecting every row sharing that `UserId` regardless of `EventDate`, rather than throwing or requiring the full composite key.
+
+**Alternative Solution**
+
+Always pass `qualifiers` explicitly (e.g. `qualifiers: e => new { e.UserId, e.EventDate }`) for any ClickHouse table with a composite `ORDER BY`/`PRIMARY KEY`. Never rely on the single-column default.
+
+### QueryMultiple / InsertAll / MergeAll / UpdateAll Batching
+
+`IsMultiStatementExecutable` is `false` for this provider, so [QueryMultiple](http://repodb.net/operation/executequerymultiple) falls back to one round trip per requested type, same as Oracle and Db2. `CreateUpdateAll`/`CreateMergeAll` call `ValidateMultipleStatementExecution(batchSize)` and throw when `batchSize > 1`, so `UpdateAll`/`MergeAll` execute one row per round trip.
+
+`InsertAll` is the exception: `CreateInsertAll` still builds a single multi-row `INSERT INTO ... VALUES (row0), (row1), ...` statement — the multi-statement restriction is about chaining *separate* statements together in one request, not about a multi-row `VALUES` list, so `InsertAll` does not pay a per-row round-trip cost.
+
+**Alternative Solution**
+
+No workaround needed for `InsertAll`. For `UpdateAll`/`MergeAll` with more than one row, either issue calls one row at a time or use the `RepoDb.ClickHouse.BulkOperations` package instead.
+
+### Bulk Operations: No ReturnIdentity
+
+Consistent with the core provider having no identity mechanism at all (see [No Identity/Auto-Increment Mechanism](#no-identityauto-increment-mechanism)), `RepoDb.ClickHouse.BulkOperations` does not fake one either. `ClickHouseBulkImportIdentityBehavior.KeepIdentity` (the default) is the only supported value; passing `ReturnIdentity` throws immediately:
+
+```csharp
+private static void GuardReturnIdentity(ClickHouseBulkImportIdentityBehavior identityBehavior)
+{
+    if (identityBehavior == ClickHouseBulkImportIdentityBehavior.ReturnIdentity)
+    {
+        throw new NotSupportedException(
+            "ClickHouse has no session-wide scope identity, sequence, or auto-increment mechanism, " +
+            "so 'ClickHouseBulkImportIdentityBehavior.ReturnIdentity' is not supported. Use 'KeepIdentity' instead.");
+    }
+}
+```
+
+Unlike MySQL/MariaDB (`AUTO_INCREMENT` pre-assignment) or Oracle (sequence-based generation), there is no fallback mechanism here — this is a hard, immediate `NotSupportedException`, not a silent no-op.
+
+**Alternative Solution**
+
+Generate primary-key values client-side (GUID, snowflake-style ID, or an application-owned counter table) before calling any Bulk* method. Never request `ReturnIdentity`.
+
+### Bulk Operations Staging Table
+
+`BulkUpdate`, `BulkDelete`, `BulkMerge`, and `BulkDeleteByKey` stage rows into a per-call pseudo table before running a mutation/insert against it. `ClickHouseBulkImportPseudoTableType` offers the same three values seen in the other bulk-operations packages:
+
+- **`Physical`** — an ordinary `MergeTree` heap table, globally visible.
+- **`Memory`** — intended to be a session-private staging table.
+- **`Auto`** *(default)* — intended to pick `Physical` at 5,000+ rows, otherwise `Memory`.
+
+**`Auto` always resolves to `Physical`, regardless of row count** — the same bug pattern seen in `RepoDb.Db2.BulkOperations` and `RepoDb.MariaDb.BulkOperations`:
+
+```csharp
+private static ClickHouseBulkImportPseudoTableType ResolvePseudoTableType(ClickHouseBulkImportPseudoTableType pseudoTableType,
+    int? rowCount) =>
+    pseudoTableType == ClickHouseBulkImportPseudoTableType.Auto && rowCount.GetValueOrDefault() >= ClickHouseConstants.RowCountThresholdForPhysicalTable ?
+        ClickHouseBulkImportPseudoTableType.Physical :
+            ClickHouseBulkImportPseudoTableType.Physical;
+```
+
+Both branches of the ternary return `Physical`. Unlike Db2/MariaDb, passing `Memory` *explicitly* does bypass this bug and reach the `Memory`-engine DDL branch — but that branch is itself weaker than its own doc comment claims. `Memory`'s XML doc says rows are *"session-private, making the execution isolated to any concurrent executions from different connections,"* but the actual DDL is a plain `CREATE TABLE ... ENGINE = Memory` — an ordinary, globally-visible, named table that merely stores its data in RAM instead of on disk. It is not ClickHouse's genuinely session-scoped `CREATE TEMPORARY TABLE` construct, which this package does not use. Combined with deterministic, non-unique staging-table names (`{pseudoTableType}{tableName}{Operation}`, e.g. `MemoryPersonUpdate`, with no session ID or GUID suffix), two concurrent callers against the same target table — even both explicitly requesting `Memory` — target the same staging table and can race or corrupt each other's staged rows, just like `Physical`.
+
+Every call also drops and recreates its staging table from scratch (`DROP TABLE IF EXISTS` followed by `CREATE TABLE ... AS SELECT ...`) rather than creating one per (table, pseudo table type) and reusing it — ClickHouse's DDL has no `CREATE TABLE IF NOT EXISTS ... AS SELECT` "replace" form. This means the full DDL cost is paid on every single `BulkUpdate`/`BulkDelete`/`BulkMerge`/`BulkDeleteByKey` call, not just the first.
+
+**Alternative Solution**
+
+Serialize bulk `Update`/`Delete`/`Merge`/`DeleteByKey` operations against the same target table across connections — there is currently no genuinely isolated staging strategy in this package, regardless of which `pseudoTableType` is requested.
+
+### Bulk Update/Delete/Merge Row Counts Are Staged Counts, Not Affected Counts
+
+Because `ALTER TABLE ... UPDATE`/`DELETE` mutations are asynchronous, and ClickHouse.Driver's `ExecuteNonQuery` has no reliable "rows affected" figure for either a mutation or a plain `INSERT`, the internal execution methods that fire these statements are `void`/non-generic `Task` — they issue the statement and return nothing:
+
+```csharp
+/// Unlike the MySQL provider's MySqlExecution, none of the merge/update/delete methods here return a
+/// meaningful affected-row count: ClickHouse's ALTER TABLE ... UPDATE/DELETE mutations are asynchronous
+/// (registered immediately, applied by a background merge afterward), and ClickHouse.Driver's
+/// ExecuteNonQuery has no reliable "rows affected" figure for either a mutation or a plain INSERT.
+```
+
+Every `BulkUpdate`/`BulkDelete`/`BulkMerge` call site instead returns the row count from the earlier bulk-copy-into-staging-table step — a number that was already known synchronously — rather than any count derived from the mutation itself. In practice this means the `int` returned by these methods is **"how many rows were staged for the mutation,"** not **"how many rows were actually changed."** The method can return successfully with that count before the underlying `ALTER TABLE` mutation has applied against the real table at all.
+
+`BulkUpdate`'s (and matched-rows-of-`BulkMerge`'s) `SET` clause is also built as a correlated scalar subquery rather than a join, since a mutation's `SET` clause has no join-alias for a second table:
+
+```csharp
+$"{quotedField} = (SELECT S.{quotedField} FROM {quotedPseudoTableName} S WHERE {correlation} LIMIT 1)"
+```
+
+ClickHouse's support for per-row-correlated mutation subqueries has evolved across server versions — verify this pattern against your target ClickHouse version before relying on it in production.
+
+**Alternative Solution**
+
+Treat the returned `int` as "rows submitted for mutation," not "rows changed." If you need to know when a mutation has actually applied, poll `system.mutations` (filtering by table, checking `is_done`) after the call returns — RepoDB does not do this for you.
+
+### Bulk Operations and Transactions
+
+`ClickHouseBulkCopy` (the package's own wrapper) is constructed from a connection only — it has no transaction parameter, and the underlying `ClickHouse.Driver` bulk-copy call is never scoped to a caller-supplied transaction. Given that `ClickHouseTransaction.Commit()`/`Rollback()` are already no-ops at the core provider level (see [No Real Transactions](#no-real-transactions)), this has limited *additional* practical impact — but it does mean this package inherits none of the partial transactional guarantees that Oracle/Db2/MariaDb's bulk-operations packages provide for their surrounding staging-table DDL and final statements. A caller-supplied transaction is still threaded through the plain SQL calls in this package (staging table DDL, the final mutation/insert), but since the underlying `ClickHouseTransaction` does nothing on commit/rollback, none of it is actually undoable.
+
+**Alternative Solution**
+
+Do not rely on transactional rollback for any ClickHouse bulk operation. If partial-failure cleanup matters, design for idempotent re-runs (e.g. `ReplacingMergeTree` plus a version/timestamp column) instead.
+
+### Verification Status
+
+`RepoDb.ClickHouse` has unit test coverage (`DbSettingTest.cs`, `StatementBuilderTest.cs`) exercising the statement-builder guards described above, plus an integration test project and a CI workflow that runs both against a real `clickhouse/clickhouse-server` container. `RepoDb.ClickHouse.BulkOperations` similarly has an integration test project with a `Setup/Database.cs` that provisions real `ReplacingMergeTree` tables against a live server.
+
+One gap worth calling out: the existing bulk-operations integration tests (e.g. for `BulkUpdate`) call the operation and immediately `QueryAll` to assert the result, with no wait/retry/poll for the asynchronous `ALTER TABLE ... UPDATE` mutation described under [Bulk Update/Delete/Merge Row Counts Are Staged Counts, Not Affected Counts](#bulk-updatedeletemerge-row-counts-are-staged-counts-not-affected-counts) to actually apply. These tests only pass reliably because the mutation happens to complete near-instantly against small, freshly-created tables in CI — they do not validate mutation-visibility timing under real-world table sizes or server load. Verify this behavior against your own ClickHouse deployment, and against your target server version specifically for the correlated-subquery `UPDATE` pattern and lightweight-delete support noted above, before relying on either package in production.

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb
 {

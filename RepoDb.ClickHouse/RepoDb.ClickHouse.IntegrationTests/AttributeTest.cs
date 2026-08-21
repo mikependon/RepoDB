@@ -38,13 +38,13 @@ namespace RepoDb.ClickHouse.IntegrationTests
             public string ColumnBlob { get; set; }
 
             [ClickHouseType("Int64")]
-            public long ColumnBigInt { get; set; }
+            public long ColumnBigint { get; set; }
 
             [ClickHouseType("DateTime64(5)")]
             public DateTime ColumnDateTime2 { get; set; }
 
             [ClickHouseType("String")]
-            public string ColumnVarChar { get; set; }
+            public string ColumnVarchar { get; set; }
         }
 
         #endregion
@@ -59,10 +59,10 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 yield return new AttributeTable
                 {
                     Id = i,
-                    ColumnBigInt = Convert.ToInt64(random.Next(int.MaxValue)),
+                    ColumnBigint = Convert.ToInt64(random.Next(int.MaxValue)),
                     ColumnBlob = Guid.NewGuid().ToString(),
                     ColumnDateTime2 = DateTime.UtcNow.Date.AddDays(-random.Next(100)),
-                    ColumnVarChar = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
+                    ColumnVarchar = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
                 };
             }
         }

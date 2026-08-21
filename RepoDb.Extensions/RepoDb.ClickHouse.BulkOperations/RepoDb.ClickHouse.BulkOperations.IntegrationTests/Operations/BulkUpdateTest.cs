@@ -11,6 +11,7 @@ using System.Data.Common;
 using RepoDb.Enumerations.ClickHouse;
 using RepoDb.ClickHouse.BulkOperations;
 using System.Linq;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 {

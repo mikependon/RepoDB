@@ -1,4 +1,4 @@
-﻿using ClickHouse.Driver.ADO;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb.DbSettings
 {
@@ -19,10 +19,12 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = false;
             IsPreparable = false;
+            IsTransactionSupported = false; // ClickHouse.Driver.ADO.ClickHouseConnection.BeginDbTransaction always throws NotSupportedException
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
-            ParameterPrefix = "@";
+            ParameterPrefix = string.Empty;
+            SqlTextParameterPrefix = "@";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes.Parameter.ClickHouse;
 using ClickHouse.Driver.ADO;
 using ClickHouse.Driver.ADO.Parameters;
@@ -43,8 +43,9 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes.Parameter.ClickHouse
                     // Assert
                     Assert.AreEqual(1, command.Parameters.Count);
 
-                    // Assert
-                    var parameter = (ClickHouseDbParameter)command.Parameters["@ColumnName"];
+                    // Assert - bare "ColumnName", not "@ColumnName": ClickHouseDbSetting.ParameterPrefix is
+                    // string.Empty, so the real DbParameter.ParameterName carries no prefix.
+                    var parameter = (ClickHouseDbParameter)command.Parameters["ColumnName"];
                     Assert.AreEqual("UUID", parameter.ClickHouseType);
                 }
             }
@@ -69,7 +70,7 @@ namespace RepoDb.ClickHouse.UnitTests.Attributes.Parameter.ClickHouse
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = (ClickHouseDbParameter)command.Parameters["@ColumnName"];
+                    var parameter = (ClickHouseDbParameter)command.Parameters["ColumnName"];
                     Assert.AreEqual("UUID", parameter.ClickHouseType);
                 }
             }

@@ -1,10 +1,14 @@
-﻿using ClickHouse.Driver.ADO;
+using ClickHouse.Driver.ADO;
 
 namespace RepoDb
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings for the <see cref="ClickHouseConnection"/> object.
     /// </summary>
+    /// <remarks>
+    /// <see cref="ClickHouseConnection"/> here is <c>ClickHouse.Driver.ADO.ClickHouseConnection</c> - RepoDb no
+    /// longer owns a subclass of its own.
+    /// </remarks>
     public static partial class ClickHouseGlobalConfiguration
     {
         /// <summary>
