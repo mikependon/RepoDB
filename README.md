@@ -14,27 +14,13 @@ It provides the flexibility to work the way you want — all through the [IDbCon
 
 RepoDB solves a complex problem in the .NET data access space: making bulk operations simple. It is designed to efficiently move millions of records across different database providers. Imagine migrating massive datasets from legacy databases to modern, cloud-native platforms — efficiently, reliably, and with high performance.
 
-### Evolution of Architecture
-
-RepoDB began evolving into not just another ORM in .NET, but also a productivity platform that enables developers to work with data seamlessly.
-
-With the vision of fully enabling Data Engineering capabilities in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
-
-The mission is to make it a developer-friendly platform — one that's fun to work with, where you can feel a sense of accomplishment with a minimal amount of code!
-
-This vision has driven the architecture to evolve accordingly.
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
-
 ### As a Productivity Platform
 
 It goes beyond the ORM with enterprise-grade capabilities for building, operating, and scaling with confidence:
 
 - **📦 Bulk Operations** — High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads.
 - **🔄 Data Replication** — Scalable data movement and synchronization across multiple database platforms.
-- **🌉 Cross-Provider Data Movement** — Move data between different database engines without writing hand-rolled conversion logic.
 - **📊 Telemetry** — Immediate visibility into execution times, failures, and application behavior, with minimal configuration.
-- **🗄️ Multi-DB Support** — A growing range of relational database providers with a consistent development experience.
 
 ### As a Hybrid-ORM
 
@@ -47,13 +33,20 @@ It stays close to the metal while remaining easy to use:
 - **🏆 Battle-Tested** — Backed by thousands of unit and integration tests, and used in production systems worldwide.
 - **🆓 Always Free** — Apache 2.0 licensed, forever open source.
 
-### As a Low-Level Connector
+### As a Universal Connector
 
 It bridges different database systems with a single, unified connectivity layer:
 
 - **🔌 Universal Connectivity** — Works with any provider that implements [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection), from SQL Server and PostgreSQL to ClickHouse, DB2, Oracle, and more.
+- **🌉 Cross-Provider Data Movement** — Move data between different database engines without writing hand-rolled conversion logic.
 - **🧩 Consistent API Surface** — The same fluent methods and conventions work identically regardless of the underlying provider.
 - **⚙️ Provider-Native Optimizations** — Each connector is tuned to exploit the bulk and native capabilities of its target database.
+
+### Roadmap
+
+RepoDB is evolving from an ORM into a broader data productivity platform, with Data Engineering capabilities — moving data between providers, on-premise or cloud-native — on the roadmap.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
 ## Packages and Build Status
 
