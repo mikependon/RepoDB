@@ -40,6 +40,20 @@ It goes beyond the ORM with enterprise-grade capabilities for building, operatin
 | **📊 Telemetry** | Immediate visibility into execution times, failures, and application behavior, with minimal configuration. |
 | **🗄️ Multi-DB Support** | A growing range of relational database providers with a consistent development experience. |
 
+### Evolution of Architecture
+
+In mid 2026, the author decided to position RepoDB as not just another ORM in .NET, but also as a productivity platform that enables developers to work with data seamlessly.
+
+With the vision of fully enabling Data Engineering in the near future, RepoDB will be one of the .NET tools capable of moving data from one DB provider to another, whether on-premise or cloud-native.
+
+_(We are still deciding whether a transformation capability will be included)_
+
+The mission is to make it a developer-friendly platform — one that's fun to work with, where you can feel a sense of accomplishment with a minimal amount of code!
+
+With this vision, we have to evolve the architecture.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
+
 ## Packages and Build Status
 
 | Project | Nuget | Downloads | Status |
