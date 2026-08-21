@@ -69,8 +69,6 @@ Choose your database and follow the quick-start guide:
 
 Explore individual features in the [documentation](http://repodb.net/docs).
 
-Want visibility into what your operations are doing in production? See [Telemetry](#telemetry) 🆕 below to enable opt-in insights with a couple lines of code.
-
 ## Supported Databases
 
 Raw SQL execution methods work with **any** ADO.NET-compatible provider:
@@ -81,7 +79,7 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteReader](http://repodb.net/operation/executereader)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
-Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for SQL Server, Oracle, MySQL, PostgreSQL, IBM DB2 and SQLite.
+Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
 
 ## Type Coercion
 
