@@ -1,6 +1,6 @@
-[![ClickHouseBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-clickhouse.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-clickhouse.yml)
-[![ClickHouseHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![ClickHouseVersion](https://img.shields.io/nuget/v/RepoDb.ClickHouse?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.ClickHouse)
+[![ClickHouseBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-clickhouse.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-clickhouse.yml)
+[![ClickHouseHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![ClickHouseVersion](https://img.shields.io/nuget/v/RepoDb.ClickHouse?&logo=nuget)](https://www.nuget.org/packages/RepoDb.ClickHouse)
 
 # [RepoDb.ClickHouse](https://repodb.net/tutorial/get-started-clickhouse) — RepoDB for ClickHouse
 

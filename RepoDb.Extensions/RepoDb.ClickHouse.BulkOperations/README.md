@@ -1,6 +1,6 @@
-[![ClickHouseBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-clickhouse-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-clickhouse-bulk.yml)
-[![ClickHouseBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![ClickHouseBulkVersion](https://img.shields.io/nuget/v/repodb.clickhouse.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations)
+[![ClickHouseBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-clickhouse-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-clickhouse-bulk.yml)
+[![ClickHouseBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![ClickHouseBulkVersion](https://img.shields.io/nuget/v/repodb.clickhouse.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations)
 
 # [RepoDb.ClickHouse.BulkOperations](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations)
 

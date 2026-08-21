@@ -1,12 +1,14 @@
-[![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
+[![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)
 
 # [RepoDB](http://repodb.net) — a production-ready data access platform for .NET applications.
 
-RepoDB is a high-performance, open-source data access platform for .NET applications. It combines the simplicity of a micro-ORM with the productivity of a full ORM. Use raw SQL for precise control or fluent operations for faster development — all through the same `IDbConnection`.
+RepoDb is the core package of RepoDB — the thin execution engine that runs directly against `IDbConnection`. It compiles, caches, and executes raw SQL and fluent CRUD operations with minimal overhead, without imposing a provider-specific dialect or data layer on top.
 
 Write raw SQL when you need full control. Use fluent methods when you want productivity. Switch between them freely, in the same codebase.
+
+Provider packages (SQL Server, PostgreSQL, MySQL, and [more](https://github.com/mikependon/RepoDb)) build on top of this core to add provider-native behavior, such as bulk operations.
 
 ## Important Pages
 

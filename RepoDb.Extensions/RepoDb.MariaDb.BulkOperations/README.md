@@ -1,6 +1,6 @@
-[![MariaDbBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadb-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadb-bulk.yml)
-[![MariaDbBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![MariaDbBulkVersion](https://img.shields.io/nuget/v/repodb.mariadb.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations)
+[![MariaDbBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mariadb-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mariadb-bulk.yml)
+[![MariaDbBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![MariaDbBulkVersion](https://img.shields.io/nuget/v/repodb.mariadb.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations)
 
 # [RepoDb.MariaDb.BulkOperations](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations)
 
