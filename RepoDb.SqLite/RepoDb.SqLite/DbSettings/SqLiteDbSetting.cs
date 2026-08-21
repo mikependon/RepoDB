@@ -28,6 +28,7 @@
             IsUseUpsert = true;
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

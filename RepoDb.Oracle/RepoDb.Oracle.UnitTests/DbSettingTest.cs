@@ -113,5 +113,15 @@ namespace RepoDb.Oracle.UnitTests
             // Assert
             Assert.AreEqual(":", setting.ParameterPrefix);
         }
+
+        [TestMethod]
+        public void TestOracleDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<OracleConnection>();
+
+            // Assert
+            Assert.AreEqual(":", setting.SqlTextParameterPrefix);
+        }
     }
 }

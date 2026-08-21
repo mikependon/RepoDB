@@ -103,5 +103,15 @@ namespace RepoDb.MySqlConnector.UnitTests
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
+
+        [TestMethod]
+        public void TestMySqlDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+        }
     }
 }

@@ -21,6 +21,7 @@
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

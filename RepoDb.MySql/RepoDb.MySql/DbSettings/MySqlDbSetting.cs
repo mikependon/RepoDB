@@ -23,6 +23,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

@@ -22,6 +22,7 @@ namespace RepoDb.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

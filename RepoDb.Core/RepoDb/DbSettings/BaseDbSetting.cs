@@ -33,6 +33,7 @@ namespace RepoDb.DbSettings
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
 
         #endregion
@@ -101,6 +102,12 @@ namespace RepoDb.DbSettings
         public string ParameterPrefix { get; protected set; }
 
         /// <summary>
+        /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
+        /// generated SQL command text. See <see cref="RepoDb.Interfaces.IDbSetting.SqlTextParameterPrefix"/> for details.
+        /// </summary>
+        public string SqlTextParameterPrefix { get; protected set; }
+
+        /// <summary>
         /// Gets the character (or string) used for separating the schema.
         /// </summary>
         [Obsolete("This will be removed in the future releases. The schema separator will be defaulted to a 'period' character.")]
@@ -164,6 +171,12 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
                 hashCode = HashCode.Combine(hashCode, ParameterPrefix);
+            }
+
+            // SqlTextParameterPrefix
+            if (!string.IsNullOrWhiteSpace(SqlTextParameterPrefix))
+            {
+                hashCode = HashCode.Combine(hashCode, SqlTextParameterPrefix);
             }
 
             // MultiStatementSeparator

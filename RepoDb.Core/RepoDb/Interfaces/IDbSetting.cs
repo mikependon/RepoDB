@@ -60,9 +60,16 @@ namespace RepoDb.Interfaces
         string OpeningQuote { get; }
 
         /// <summary>
-        /// Gets the character used for the database command parameter prefixing.
+        /// Gets the character (or string) used to prefix an actual <see cref="System.Data.Common.DbParameter.ParameterName"/>
+        /// value when a parameter object is created.
         /// </summary>
         string ParameterPrefix { get; }
+
+        /// <summary>
+        /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
+        /// generated SQL command text (e.g. the "@Name" in <c>INSERT INTO Table (Name) VALUES (@Name)</c>).
+        /// </summary>
+        string SqlTextParameterPrefix { get; }
 
         /// <summary>
         /// Gets the string used to join the individual per-type command texts generated for a <c>QueryMultiple</c>/<c>QueryMultipleAsync</c> call into one combined command text.

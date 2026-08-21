@@ -103,5 +103,15 @@ namespace RepoDb.MariaDb.UnitTests
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
+
+        [TestMethod]
+        public void TestMariaDbDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MariaDbConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+        }
     }
 }

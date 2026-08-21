@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Data;
 using System.Reflection;
@@ -110,9 +111,39 @@ namespace RepoDb.Attributes.Parameter
         }
 
         /// <summary>
+        /// Sets the value of the <see cref="PropertyInfo"/> defined by this attribute towards the given
+        /// <see cref="IDbDataParameter"/> object, using a provider-aware <see cref="GetValue(IDbSetting)"/> overload.
+        /// This overload exists specifically so that a <see cref="IDbSetting"/>-dependent override (e.g. one that
+        /// needs to be aware of <see cref="IDbSetting.ParameterPrefix"/>) can be provided a value at the point where
+        /// the target provider is actually known.
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="dbSetting"></param>
+        internal void SetValue(IDbDataParameter parameter,
+            IDbSetting dbSetting)
+        {
+            ObjectExtension.ThrowIfNull(parameter, "Parameter");
+
+            if (ParameterType.IsAssignableFrom(parameter.GetType()))
+            {
+                PropertyInfo.SetValue(parameter, GetValue(dbSetting));
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         internal virtual object GetValue() => Value;
+
+        /// <summary>
+        /// Provider-aware variant of <see cref="GetValue()"/>. The default implementation simply delegates to
+        /// <see cref="GetValue()"/>, so existing derived classes are unaffected; override this instead of
+        /// <see cref="GetValue()"/> only when the produced value must depend on the current <see cref="IDbSetting"/>
+        /// (e.g. <see cref="RepoDb.Attributes.Parameter.NameAttribute"/>, whose value is a parameter name and must
+        /// therefore honor <see cref="IDbSetting.ParameterPrefix"/>).
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        internal virtual object GetValue(IDbSetting dbSetting) => GetValue();
 
         #endregion
 

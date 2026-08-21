@@ -106,6 +106,16 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
 
+        [TestMethod]
+        public void TestMdsSqLiteDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqliteConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+        }
+
         #endregion
     }
 }
