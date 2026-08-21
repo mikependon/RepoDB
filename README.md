@@ -154,7 +154,6 @@ Simply `docker compose up -d` the [docker-compose.yml](https://raw.githubusercon
 
 ```csharp
 GlobalConfiguration
-    GlobalConfiguration
     .Setup(new GlobalConfigurationOptions { UseRegisteredGlobalTraces = true })
     .UseDefaultTelemetry(new DefaultTelemetryOption("<YOUR_APPLICATION_NAME>")
     {
@@ -182,7 +181,7 @@ We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A and community chat.
 - [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
-Read our [contibuting](CONTRIBUTING.md) page for more.
+Read our [contributing](CONTRIBUTING.md) page for more.
 
 ### Resources
 
