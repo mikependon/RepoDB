@@ -1,4 +1,4 @@
-﻿namespace RepoDb.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for SQLite data provider.
@@ -24,6 +24,7 @@
             IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = true;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";

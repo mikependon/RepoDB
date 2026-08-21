@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 
 namespace RepoDb.DbSettings
 {
@@ -19,6 +19,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";

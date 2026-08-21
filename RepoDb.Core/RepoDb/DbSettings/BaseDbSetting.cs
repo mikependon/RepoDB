@@ -1,4 +1,4 @@
-﻿using RepoDb.Interfaces;
+using RepoDb.Interfaces;
 using System;
 using System.Data.Common;
 
@@ -29,6 +29,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
@@ -80,6 +81,12 @@ namespace RepoDb.DbSettings
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         public bool IsPreparable { get; protected set; }
+
+        /// <summary>
+        /// Gets the value that indicates whether the current DB Provider's transaction support (e.g. <c>BeginTransaction()</c>)
+        /// is supported.
+        /// </summary>
+        public bool IsTransactionSupported { get; protected set; }
 
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
@@ -157,6 +164,9 @@ namespace RepoDb.DbSettings
 
             // IsPreparable
             hashCode = HashCode.Combine(hashCode, IsPreparable);
+
+            // IsTransactionSupported
+            hashCode = HashCode.Combine(hashCode, IsTransactionSupported);
 
             // IsUseUpsert
             hashCode = HashCode.Combine(hashCode, IsUseUpsert);

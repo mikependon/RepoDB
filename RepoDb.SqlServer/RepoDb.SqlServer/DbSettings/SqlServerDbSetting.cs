@@ -1,4 +1,4 @@
-﻿namespace RepoDb.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for SQL Server data provider.
@@ -17,6 +17,7 @@
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";

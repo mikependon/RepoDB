@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Common;
 
 namespace RepoDb.Interfaces
@@ -48,6 +48,12 @@ namespace RepoDb.Interfaces
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         bool IsPreparable { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider's <see cref="System.Data.IDbConnection.BeginTransaction()"/>
+        /// (or its <see cref="DbConnection.BeginDbTransaction(System.Data.IsolationLevel)"/> equivalent) is supported.
+        /// </summary>
+        bool IsTransactionSupported { get; }
 
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.

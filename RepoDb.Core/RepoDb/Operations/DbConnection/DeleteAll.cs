@@ -1,4 +1,4 @@
-﻿using RepoDb.Enumerations;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -753,6 +753,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
             var deletedRows = 0;
@@ -760,7 +761,7 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount)
+                if (transaction == null && count > ParameterBatchCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
@@ -950,6 +951,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
+            var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
             var deletedRows = 0;
@@ -957,7 +959,7 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount)
+                if (transaction == null && count > ParameterBatchCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = (await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
                     hasImplicitTransaction = true;

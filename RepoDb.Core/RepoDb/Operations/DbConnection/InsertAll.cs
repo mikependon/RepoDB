@@ -1,4 +1,4 @@
-﻿using RepoDb.Contexts.Providers;
+using RepoDb.Contexts.Providers;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
@@ -469,7 +469,7 @@ namespace RepoDb
                 // Ensure the connection is open
                 connection.EnsureOpen();
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -616,7 +616,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -624,7 +624,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -633,7 +633,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();
@@ -710,7 +710,7 @@ namespace RepoDb
                 // Ensure the connection is open
                 await connection.EnsureOpenAsync(cancellationToken);
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -858,7 +858,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -866,7 +866,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -875,7 +875,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();

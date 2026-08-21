@@ -1,4 +1,4 @@
-﻿using RepoDb.Connector.MariaDb;
+using RepoDb.Connector.MariaDb;
 
 namespace RepoDb.DbSettings
 {
@@ -19,6 +19,7 @@ namespace RepoDb.DbSettings
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = true;
             IsPreparable = false;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
