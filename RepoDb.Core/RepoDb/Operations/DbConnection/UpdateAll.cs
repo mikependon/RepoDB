@@ -415,7 +415,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                    traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);
@@ -430,7 +430,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                    traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);

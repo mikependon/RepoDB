@@ -87,7 +87,7 @@ Choose your database and follow the quick-start guide:
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [Db2](http://repodb.net/tutorial/get-started-db2)
-- [MariaDB](http://repodb.net/tutorial/get-started-mariadb) — covers both [RepoDb.MariaDb](RepoDb.MariaDb/README.md) and [RepoDb.MariaDbConnector](RepoDb.MariaDbConnector/README.md)
+- [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
 - [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [Oracle](http://repodb.net/tutorial/get-started-oracle)
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)

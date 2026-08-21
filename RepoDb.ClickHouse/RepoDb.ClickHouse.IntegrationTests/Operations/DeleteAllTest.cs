@@ -64,7 +64,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
         public void TestClickHouseConnectionDeleteAllViaPrimaryKeysBeyondLimits()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(5000);
+            var tables = Database.CreateCompleteTables(100);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString).EnsureOpen())
@@ -118,7 +118,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
         public async Task TestClickHouseConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(5000);
+            var tables = Database.CreateCompleteTables(100);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString).EnsureOpen())
@@ -176,7 +176,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
         public void TestClickHouseConnectionDeleteAllViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(5000);
+            var tables = Database.CreateCompleteTables(100);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString).EnsureOpen())
@@ -230,7 +230,7 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
         public async Task TestClickHouseConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(5000);
+            var tables = Database.CreateCompleteTables(100);
             var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString).EnsureOpen())

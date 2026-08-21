@@ -25,6 +25,7 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
@@ -61,6 +62,12 @@ namespace RepoDb.DbSettings
         /// Gets the default schema of the database.
         /// </summary>
         public string DefaultSchema { get; protected set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider's <see cref="DbCommand.ExecuteNonQuery()"/>
+        /// reliably reports the number of rows affected by a DML statement.
+        /// </summary>
+        public bool IsAffectedRowsSupported { get; protected set; }
 
         /// <summary>
         /// Gets a value that indicates whether setting of the value of <see cref="DbParameter.Direction"/> object is supported.
@@ -152,6 +159,9 @@ namespace RepoDb.DbSettings
             {
                 hashCode = HashCode.Combine(hashCode, DefaultSchema);
             }
+
+            // IsAffectedRowsSupported
+            hashCode = HashCode.Combine(hashCode, IsAffectedRowsSupported);
 
             // IsDirectionSupported
             hashCode = HashCode.Combine(hashCode, IsDirectionSupported);

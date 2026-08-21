@@ -186,6 +186,94 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateDelete
+
+        /// <summary>
+        /// Creates a SQL Statement for delete operation. See <see cref="CreateDeleteAll"/> for the WHERE-clause
+        /// rationale: when no filter is supplied (e.g. <c>Delete&lt;TEntity&gt;((object)null)</c>), this emits
+        /// <c>WHERE 1 = 1</c> instead of an unconditional <c>DELETE FROM table;</c>, which ClickHouse's
+        /// lightweight DELETE rejects as a syntax error.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for delete operation.</returns>
+        public override string CreateDelete(string tableName,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            GuardHints(hints);
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints);
+
+            if (where != null)
+            {
+                builder.WhereFrom(where, DbSetting);
+            }
+            else
+            {
+                builder.Where().WriteText("1 = 1");
+            }
+
+            builder.End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
+        #region CreateDeleteAll
+
+        /// <summary>
+        /// Creates a SQL Statement for delete-all operation. ClickHouse's lightweight <c>DELETE FROM
+        /// table WHERE ...</c> mandates a WHERE clause - unlike most RDBMS, an unconditional "delete
+        /// every row" cannot be expressed without one. This emits <c>WHERE 1 = 1</c> so the statement
+        /// stays valid while still deleting every row of the table.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for delete-all operation.</returns>
+        public override string CreateDeleteAll(string tableName,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            GuardHints(hints);
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .Where()
+                .WriteText("1 = 1")
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
+
         #region CreateExists
 
         /// <summary>

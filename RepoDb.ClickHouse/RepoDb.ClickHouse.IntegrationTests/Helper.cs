@@ -67,12 +67,47 @@ namespace RepoDb.ClickHouse.IntegrationTests
                             $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                     }
                 }
+                else if (value1 is DateTime d1 && value2 is DateTime d2)
+                {
+                    AssertDateTimeEqualityWithTolerance(d1, d2, propertyOfType1.Name);
+                }
                 else
                 {
                     Assert.AreEqual(value1, value2,
                         $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
             });
+        }
+
+        /// <summary>
+        /// Asserts that two <see cref="DateTime"/> values are equal to within a small tolerance, instead of
+        /// bit-for-bit (tick) equality.
+        /// </summary>
+        /// <remarks>
+        /// ClickHouse.Driver's HTTP parameter formatter always renders a <c>DateTime64(N)</c> parameter's
+        /// fractional-seconds text at a fixed 7-digit (100ns-tick) precision, regardless of the target column's
+        /// actual declared scale (see <c>HttpParameterFormatter.Format</c>'s <c>"yyyy-MM-dd HH:mm:ss.fffffff"</c>
+        /// DateTime64Type branch) - it does not truncate to the column's own scale before sending. ClickHouse's
+        /// own server-side parsing of that over-precise literal against a coarser <c>DateTime64(N)</c> column can
+        /// then introduce a sub-millisecond rounding artifact - most visible on <c>ALTER TABLE ... UPDATE</c>
+        /// mutations, which additionally re-<c>CAST</c> the value through the column's declared type on top of the
+        /// parameter's own declared type (two independent roundings instead of one). None of the values these
+        /// test fixtures generate carry meaningful precision below a millisecond (see Helper.CreateCompleteTables
+        /// et al., which explicitly truncate "now" to <c>.fff</c> before use), so a few milliseconds of slack here
+        /// absorbs that known, external rounding quirk without masking a genuine mismatch (wrong day/hour/etc.
+        /// would still fail by many orders of magnitude more than this tolerance).
+        /// </remarks>
+        /// <param name="expected">The expected <see cref="DateTime"/> value.</param>
+        /// <param name="actual">The actual <see cref="DateTime"/> value.</param>
+        /// <param name="propertyName">The name of the property being compared, for the failure message.</param>
+        private static void AssertDateTimeEqualityWithTolerance(DateTime expected,
+            DateTime actual,
+            string propertyName)
+        {
+            var differenceInMilliseconds = Math.Abs((expected - actual).TotalMilliseconds);
+            Assert.IsTrue(differenceInMilliseconds < 5,
+                $"Assert failed for '{propertyName}'. The values are '{expected:O}' and '{actual:O}' " +
+                $"(differ by {differenceInMilliseconds}ms).");
         }
 
         /// <summary>
@@ -139,8 +174,16 @@ namespace RepoDb.ClickHouse.IntegrationTests
                         {
                             value2 = dateTime.TimeOfDay;
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
-                            $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+
+                        if (propertyType == typeof(DateTime) && value1 is DateTime dv1 && value2 is DateTime dv2)
+                        {
+                            AssertDateTimeEqualityWithTolerance(dv1, dv2, property.Name);
+                        }
+                        else
+                        {
+                            Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                                $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                        }
                     }
                 }
             });
@@ -176,6 +219,44 @@ namespace RepoDb.ClickHouse.IntegrationTests
             }
 
             Assert.Fail($"Timed out waiting for pending mutations on table '{tableName}' to complete.");
+        }
+
+        /// <summary>
+        /// Pauses ClickHouse's background merge scheduler for the given table. <c>ReplacingMergeTree</c>
+        /// (used by CompleteTable/NonIdentityCompleteTable - see Setup.Database's DDL) only de-duplicates
+        /// rows that share the same sort key when the server gets around to merging their parts together;
+        /// that happens on its own schedule, asynchronously, and is not guaranteed to happen - or not to
+        /// happen - within any particular window. Tests that assert an exact physical row count right
+        /// after inserting duplicate-key rows (e.g. Merge/MergeAll "...AddsRow(s)InsteadOfDeduping") are
+        /// otherwise racing the background merge scheduler: a merge that happens to run between the insert
+        /// and the count collapses some or all of the duplicates first, so the observed count is whatever
+        /// portion of the duplicates got merged away by the time the query runs (this driver's own
+        /// `system.parts`-backed row count reflects only currently-active, i.e. already-merged, parts, so
+        /// it is subject to the identical race and does not help here). Call this before creating any
+        /// duplicate-key rows and call <see cref="StartMerges"/> once done asserting, so the row count is
+        /// pinned at "every insert is still a separate, un-merged part" for the whole test.
+        /// </summary>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        public static void StopMerges(ClickHouseConnection connection,
+            string tableName)
+        {
+            connection.ExecuteNonQuery($"SYSTEM STOP MERGES `{tableName}`;");
+        }
+
+        /// <summary>
+        /// Resumes the background merge scheduler for the given table after <see cref="StopMerges"/>.
+        /// Always call this (e.g. from <c>[TestCleanup]</c>) even if the test failed, so a stopped
+        /// scheduler doesn't stick around and stall unrelated tests - including mutation-based ones,
+        /// since ClickHouse applies <c>ALTER ... UPDATE/DELETE</c> mutations (see <see cref="WaitForMutations"/>)
+        /// through the same background merge mechanism this pauses.
+        /// </summary>
+        /// <param name="connection">The instance of the connection object.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        public static void StartMerges(ClickHouseConnection connection,
+            string tableName)
+        {
+            connection.ExecuteNonQuery($"SYSTEM START MERGES `{tableName}`;");
         }
 
         #endregion

@@ -15,11 +15,12 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = false;
             ClosingQuote = "`";
             DefaultSchema = null;
+            IsAffectedRowsSupported = false;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = false;
             IsPreparable = false;
-            IsTransactionSupported = false; // ClickHouse.Driver.ADO.ClickHouseConnection.BeginDbTransaction always throws NotSupportedException
+            IsTransactionSupported = false;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";

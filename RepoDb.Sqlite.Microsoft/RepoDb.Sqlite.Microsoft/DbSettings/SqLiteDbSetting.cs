@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = false;
             ClosingQuote = "]";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;

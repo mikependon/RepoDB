@@ -15,6 +15,7 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = "public";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;

@@ -13,6 +13,7 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;

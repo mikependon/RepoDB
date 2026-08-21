@@ -1097,6 +1097,17 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteText(request);
+            var dbSetting = connection.GetDbSetting();
+            int? affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+                (int)connection.CountInternal(tableName: request.Name,
+                    where: request.Where,
+                    hints: request.Hints,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: request.StatementBuilder) :
+                null;
 
             // Actual Execution
             var result = ExecuteNonQueryInternal(connection: connection,
@@ -1112,7 +1123,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // Result
-            return result;
+            return affectedRowsFallback ?? result;
         }
 
         #endregion
@@ -1143,6 +1154,18 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteText(request);
+            var dbSetting = connection.GetDbSetting();
+            int? affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+                (int)await connection.CountAsyncInternal(tableName: request.Name,
+                    where: request.Where,
+                    hints: request.Hints,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: request.StatementBuilder,
+                    cancellationToken: cancellationToken) :
+                null;
 
             // Actual Execution
             var result = await ExecuteNonQueryAsyncInternal(connection: connection,
@@ -1159,7 +1182,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // Result
-            return result;
+            return affectedRowsFallback ?? result;
         }
 
         #endregion

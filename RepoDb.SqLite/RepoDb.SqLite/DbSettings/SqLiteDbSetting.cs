@@ -21,6 +21,7 @@ namespace RepoDb.DbSettings
             AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;

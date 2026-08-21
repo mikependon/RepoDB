@@ -30,6 +30,15 @@ namespace RepoDb.Interfaces
         string DefaultSchema { get; }
 
         /// <summary>
+        /// Gets a value that indicates whether the current DB Provider's <see cref="DbCommand.ExecuteNonQuery()"/>
+        /// (or its <see cref="DbCommand.ExecuteNonQueryAsync()"/> equivalent) reliably reports the number of rows
+        /// affected by a DML statement (e.g. <c>DELETE</c>, <c>UPDATE</c>). When <see langword="false"/>, operations
+        /// that need a precise affected-row count (e.g. <c>DeleteAll</c>) fall back to a separate <c>COUNT</c> query
+        /// instead of trusting the driver's return value. Defaults to <see langword="true"/>.
+        /// </summary>
+        bool IsAffectedRowsSupported { get; }
+
+        /// <summary>
         /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
         /// </summary>
         bool IsDirectionSupported { get; }

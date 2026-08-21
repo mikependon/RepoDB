@@ -4,9 +4,11 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -104,21 +106,57 @@ namespace RepoDb.DbHelpers
             columnType?.StartsWith("Nullable(", StringComparison.OrdinalIgnoreCase) == true;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private static readonly Regex DateTime64ScalePattern =
+            new(@"DateTime64\s*\(\s*(?<scale>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, byte> DateTime64ScaleByColumnName =
+            new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="columnType"></param>
+        /// <param name="numericScale"></param>
+        /// <returns></returns>
+        private static byte? ResolveScale(string columnName,
+            string columnType,
+            byte? numericScale)
+        {
+            var match = DateTime64ScalePattern.Match(columnType ?? string.Empty);
+            if (!match.Success)
+            {
+                return numericScale;
+            }
+
+            var scale = byte.Parse(match.Groups["scale"].Value);
+            DateTime64ScaleByColumnName[columnName] = scale;
+            return scale;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
         private DbField ReaderToDbField(DbDataReader reader)
         {
+            var columnName = reader.GetString(0);
             var columnType = reader.GetString(3);
-            return new DbField(reader.GetString(0),
+            var numericScale = reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetValue(6).ToString());
+            return new DbField(columnName,
                 reader.GetBoolean(1),
                 reader.GetBoolean(2),
                 IsNullableType(columnType),
                 DbTypeResolver.Resolve(columnType),
                 reader.IsDBNull(4) ? (int?)null : Convert.ToInt32(reader.GetValue(4)),
                 reader.IsDBNull(5) ? null : byte.Parse(reader.GetValue(5).ToString()),
-                reader.IsDBNull(6) ? null : byte.Parse(reader.GetValue(6).ToString()),
+                ResolveScale(columnName, columnType, numericScale),
                 reader.GetString(7),
                 reader.GetBoolean(8),
                 "CLICKHOUSE");
@@ -133,15 +171,19 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
+            var columnName = await reader.GetFieldValueAsync<string>(0, cancellationToken);
             var columnType = await reader.GetFieldValueAsync<string>(3, cancellationToken);
-            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
+            var numericScale = await reader.IsDBNullAsync(6, cancellationToken)
+                ? (byte?)null
+                : byte.Parse((await reader.GetFieldValueAsync<object>(6, cancellationToken)).ToString());
+            return new DbField(columnName,
                 Convert.ToBoolean(await reader.GetFieldValueAsync<object>(1, cancellationToken)),
                 Convert.ToBoolean(await reader.GetFieldValueAsync<object>(2, cancellationToken)),
                 IsNullableType(columnType),
                 DbTypeResolver.Resolve(columnType),
                 await reader.IsDBNullAsync(4, cancellationToken) ? (int?)null : Convert.ToInt32(await reader.GetFieldValueAsync<object>(4, cancellationToken)),
                 await reader.IsDBNullAsync(5, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<object>(5, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(6, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<object>(6, cancellationToken)).ToString()),
+                ResolveScale(columnName, columnType, numericScale),
                 await reader.GetFieldValueAsync<string>(7, cancellationToken),
                 Convert.ToBoolean(await reader.GetFieldValueAsync<object>(8, cancellationToken)),
                 "CLICKHOUSE");
@@ -246,22 +288,52 @@ namespace RepoDb.DbHelpers
         #region DynamicHandler
 
         /// <summary>
+        /// 
+        /// </summary>
+        private const string AfterCreateDbParameterEventKey = "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly Regex BatchParameterSuffixPattern = new(@"_\d+$", RegexOptions.Compiled);
+
+        /// <summary>
         /// A backdoor access from the core library used to handle an instance of an object to whatever purpose within the extended library.
         /// </summary>
-        /// <remarks>
-        /// Previously used to strip a leading "@" from every newly-created <see cref="ClickHouseDbParameter.ParameterName"/>
-        /// (via the "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]" event), because RepoDb Core always baked an
-        /// "@" into every parameter name unconditionally. That is no longer necessary: <see cref="RepoDb.DbSettings.ClickHouseDbSetting"/>
-        /// now sets <see cref="RepoDb.Interfaces.IDbSetting.ParameterPrefix"/> to <see cref="string.Empty"/> directly, so
-        /// parameters are created with the correct bare name from the start. This method is kept as a no-op implementation
-        /// since it fulfills a required <see cref="IDbHelper"/> interface member.
-        /// </remarks>
         /// <typeparam name="TEventInstance">The type of the event instance to handle.</typeparam>
         /// <param name="instance">The instance of the event object to handle.</param>
         /// <param name="key">The key of the event to handle.</param>
         public void DynamicHandler<TEventInstance>(TEventInstance instance,
             string key)
-        { }
+        {
+            if (key == AfterCreateDbParameterEventKey &&
+                instance is ClickHouseDbParameter parameter &&
+                parameter.ClickHouseType == null &&
+                parameter.Value is DateTime &&
+                TryGetDateTime64Scale(parameter.ParameterName, out var scale))
+            {
+                parameter.ClickHouseType = $"DateTime64({scale})";
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="scale"></param>
+        /// <returns></returns>
+        private static bool TryGetDateTime64Scale(string parameterName,
+            out byte scale)
+        {
+            if (string.IsNullOrEmpty(parameterName))
+            {
+                scale = 0;
+                return false;
+            }
+
+            var columnName = BatchParameterSuffixPattern.Replace(parameterName, string.Empty);
+            return DateTime64ScaleByColumnName.TryGetValue(columnName, out scale);
+        }
 
         #endregion
 

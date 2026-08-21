@@ -1,4 +1,5 @@
 ﻿using System;
+using RepoDb.Attributes.Parameter.ClickHouse;
 
 namespace RepoDb.ClickHouse.IntegrationTests.Models
 {
@@ -17,10 +18,10 @@ namespace RepoDb.ClickHouse.IntegrationTests.Models
         public String ColumnTinyBlob { get; set; }
         public String ColumnVarBinary { get; set; }
         public DateTime? ColumnDate { get; set; }
-        [RepoDb.Attributes.Parameter.ClickHouse.ClickHouseType("Nullable(DateTime64(3))")]
+        [ClickHouseType("Nullable(DateTime64(3))")]
         public DateTime? ColumnDateTime2 { get; set; }
         public String ColumnTime { get; set; }
-        [RepoDb.Attributes.Parameter.ClickHouse.ClickHouseType("Nullable(DateTime64(3))")]
+        [ClickHouseType("Nullable(DateTime64(3))")]
         public DateTime? ColumnTimeStamp { get; set; }
         public Int16? ColumnYear { get; set; }
         public String ColumnGeometry { get; set; }

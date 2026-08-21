@@ -25,11 +25,21 @@ namespace RepoDb.ClickHouse.IntegrationTests.Operations
         {
             Database.Initialize();
             Cleanup();
+
+            // See Helper.StopMerges: pins CompleteTable's physical row count for the duration of every
+            // test in this class so the "...AddsRowInsteadOfDeduping" assertions aren't racing
+            // ClickHouse's background merge scheduler. Restarted in Cleanup() below.
+            using var connection = new ClickHouseConnection(Database.ConnectionString);
+            Helper.StopMerges(connection, "CompleteTable");
         }
 
         [TestCleanup]
         public void Cleanup()
         {
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                Helper.StartMerges(connection, "CompleteTable");
+            }
             Database.Cleanup();
         }
 
