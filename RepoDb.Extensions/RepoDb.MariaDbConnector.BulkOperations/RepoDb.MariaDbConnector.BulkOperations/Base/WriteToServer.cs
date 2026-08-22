@@ -48,8 +48,7 @@ namespace RepoDb
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
             var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
-            bulkCopy.WriteToServer(filteredReader);
-            return entities != null ? entities.Count() : 0;
+            return bulkCopy.WriteToServer(filteredReader);
         }
 
         /// <summary>
@@ -76,8 +75,7 @@ namespace RepoDb
             connection.EnsureOpen();
             var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
-            bulkCopy.WriteToServer(rows);
-            return rows != null ? rows.Length : 0;
+            return bulkCopy.WriteToServer(rows);
         }
 
         /// <summary>
@@ -102,10 +100,8 @@ namespace RepoDb
             Field excludeField = null)
         {
             connection.EnsureOpen();
-            var countingReader = new CountingDataReader(reader);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
-            bulkCopy.WriteToServer(filteredReader);
-            return countingReader.Count;
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
+            return bulkCopy.WriteToServer(filteredReader);
         }
 
         #endregion
@@ -140,8 +136,7 @@ namespace RepoDb
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
             var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
-            await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
-            return entities != null ? entities.Count() : 0;
+            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
         }
 
         /// <summary>
@@ -170,8 +165,7 @@ namespace RepoDb
             await connection.EnsureOpenAsync(cancellationToken);
             var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyTimeout, excludeField);
             var rows = GetDataRows(table, rowState)?.ToArray();
-            await bulkCopy.WriteToServerAsync(rows, cancellationToken);
-            return rows != null ? rows.Length : 0;
+            return await bulkCopy.WriteToServerAsync(rows, cancellationToken);
         }
 
         /// <summary>
@@ -198,14 +192,8 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                var countingReader = new CountingDataReader(reader);
-                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
-                bulkCopy.WriteToServer(filteredReader);
-                return countingReader.Count;
-            },
-            cancellationToken);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyTimeout, transaction, excludeField);
+            return await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
         }
 
         #endregion
