@@ -6,193 +6,274 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using RepoDb.Oracle.BulkOperations;
+using RepoDb.Resolvers;
 
-internal class OracleBulkArrayBinder
+
+namespace RepoDb.Oracle.BulkOperations
 {
-    private const int MaxBindableParametersCount = 65_535;
-    private readonly OracleConnection connection;
-
     /// <summary>
-    /// 
+    /// An async, array-bind based alternative to <see cref="OracleBulkCopy"/> - there is no true async
+    /// equivalent of <see cref="OracleBulkCopy.WriteToServer(IDataReader)"/>, so this issues batched
+    /// <c>INSERT ... VALUES (:p0, :p1, ...)</c> statements with <see cref="OracleCommand.ArrayBindCount"/>
+    /// set, which ODP.NET can execute via <see cref="OracleCommand.ExecuteNonQueryAsync(CancellationToken)"/>.
     /// </summary>
-    /// <param name="connection"></param>
-    public OracleBulkArrayBinder(OracleConnection connection)
+    internal class OracleBulkArrayBinder : IDisposable
     {
-        this.connection = connection;
-    }
+        private const int MaxBindableParametersCount = 65_535;
+        private static readonly TypeToOracleDbTypeResolver dbTypeResolver = new();
+        private readonly OracleConnection connection;
 
-    #region Helpers
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="batchSize"></param>
-    /// <param name="columnCount"></param>
-    /// <returns></returns>
-    private int GetBatchSize(
-        int? batchSize,
-        int columnCount)
-    {
-        if (batchSize == null)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        public OracleBulkArrayBinder(OracleConnection connection)
         {
-            batchSize = Math.Min(1000, MaxBindableParametersCount / columnCount);
-        }
-        return batchSize.Value;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="reader"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    private DataTable ToDataTable(
-        DbDataReader reader)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="dataTable"></param>
-    /// <param name="columnName"></param>
-    /// <param name="arrayBindCount"></param>
-    /// <returns></returns>
-    private object?[] GetBoundValues(
-        DataTable dataTable,
-        string columnName,
-        int arrayBindCount)
-    {
-        var values = new object?[arrayBindCount];
-        for (var rowIndex = 0; rowIndex < arrayBindCount; rowIndex++)
-        {
-            values[rowIndex] = dataTable.Rows[rowIndex][columnName] ?? DBNull.Value;
-        }
-        return values;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="dataType"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    private OracleDbType ToOracleDbType(
-        Type dataType)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tableName"></param>
-    /// <param name="columns"></param>
-    /// <returns></returns>
-    private string BuildInsertStatement(
-        string tableName,
-        IReadOnlyList<string> columns)
-    {
-        var columnList = string.Join(", ", columns);
-        var parameterList = string.Join(", ", columns.Select(column => ":" + column));
-        return $"INSERT INTO {tableName} ({columnList}) VALUES ({parameterList});";
-    }
-
-    #endregion
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tableName"></param>
-    /// <param name="reader"></param>
-    /// <param name="mappings"></param>
-    /// <param name="bulkCopyTimeout"></param>
-    /// <param name="batchSize"></param>
-    /// <param name="transaction"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<int> WriteToServerAsync(
-        string tableName,
-        DbDataReader reader,
-        IEnumerable<OracleBulkInsertMapItem> mappings,
-        int? bulkCopyTimeout,
-        int? batchSize = null,
-        OracleTransaction transaction = null,
-        CancellationToken cancellationToken = default)
-    {
-        if (reader.FieldCount == 0)
-        {
-            return 0;
-        }
-        return await WriteToServerAsync(tableName,
-            ToDataTable(reader),
-            mappings,
-            bulkCopyTimeout,
-            batchSize,
-            transaction,
-            cancellationToken);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="tableName"></param>
-    /// <param name="dataTable"></param>
-    /// <param name="mappings"></param>
-    /// <param name="bulkCopyTimeout"></param>
-    /// <param name="batchSize"></param>
-    /// <param name="transaction"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<int> WriteToServerAsync(
-        string tableName,
-        DataTable dataTable,
-        IEnumerable<OracleBulkInsertMapItem> mappings,
-        int? bulkCopyTimeout,
-        int? batchSize = null,
-        OracleTransaction transaction = null,
-        CancellationToken cancellationToken = default)
-    {
-
-        if (dataTable.Columns.Count == 0)
-        {
-            return 0;
+            this.connection = connection;
         }
 
-        batchSize = GetBatchSize(batchSize, dataTable.Columns.Count);
-        var columnNames = dataTable.Columns.OfType<DataColumn>().Select(c => c.ColumnName).ToArray();
-        var affectedRows = 0;
+        #region Properties
 
-        for (var offset = 0; offset < dataTable.Columns.Count; offset += GetBatchSize(batchSize, dataTable.Columns.Count))
+        /// <summary>
+        ///
+        /// </summary>
+        public string DestinationTableName { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public int BulkCopyTimeout { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public int BatchSize { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public OracleTransaction Transaction { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public OracleBulkArrayBinderColumnMappingCollection ColumnMappings { get; } = new();
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="columnCount"></param>
+        /// <returns></returns>
+        private int GetEffectiveBatchSize(
+            int columnCount)
         {
-            var count = Math.Min(batchSize.Value, (dataTable.Rows.Count - offset));
+            return BatchSize > 0 ? BatchSize : Math.Min(1000, MaxBindableParametersCount / columnCount);
+        }
 
-            await using var command = connection.CreateCommand();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<DataTable> ToDataTableAsync(
+            IDataReader reader,
+            CancellationToken cancellationToken)
+        {
+            var dataTable = new DataTable();
 
-            command.Transaction = transaction;
-            command.BindByName = true;
-            command.ArrayBindCount = count;
-            command.CommandText = BuildInsertStatement(tableName, columnNames);
-
-            foreach (var columnName in columnNames)
+            for (var i = 0; i < reader.FieldCount; i++)
             {
-                var parameter = new OracleParameter
-                {
-                    ParameterName = columnName,
-                    OracleDbType = ToOracleDbType(dataTable.Columns[columnName].DataType),
-                    Direction = ParameterDirection.Input,
-                    Value = GetBoundValues(dataTable, columnName, count)
-                };
-
-                command.Parameters.Add(parameter);
+                dataTable.Columns.Add(reader.GetName(i), reader.GetFieldType(i) ?? typeof(object));
             }
 
-            affectedRows += await command.ExecuteNonQueryAsync(
-                cancellationToken);
+            var values = new object[reader.FieldCount];
+
+            if (reader is DbDataReader dbReader)
+            {
+                while (await dbReader.ReadAsync(cancellationToken))
+                {
+                    dbReader.GetValues(values);
+                    dataTable.Rows.Add(values);
+                }
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    reader.GetValues(values);
+                    dataTable.Rows.Add(values);
+                }
+            }
+
+            return dataTable;
         }
 
-        return affectedRows;
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="columnName"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        private static object[] GetBoundValues(
+            IReadOnlyList<DataRow> rows,
+            string columnName,
+            int offset,
+            int count)
+        {
+            var values = new object[count];
+            for (var rowIndex = 0; rowIndex < count; rowIndex++)
+            {
+                values[rowIndex] = rows[offset + rowIndex][columnName] ?? DBNull.Value;
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        private IReadOnlyList<OracleBulkInsertMapItem> ResolveMappings(
+            DataTable dataTable)
+        {
+            if (ColumnMappings.Count > 0)
+            {
+                return ColumnMappings.ToArray();
+            }
+
+            return dataTable.Columns
+                .OfType<DataColumn>()
+                .Select(column => new OracleBulkInsertMapItem(column.ColumnName, column.ColumnName))
+                .ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        private string BuildInsertStatement(
+            IReadOnlyList<OracleBulkInsertMapItem> mappings)
+        {
+            var columnList = string.Join(", ", mappings.Select(mapping => mapping.DestinationColumn));
+            var parameterList = string.Join(", ", Enumerable.Range(0, mappings.Count).Select(i => ":p" + i));
+            return $"INSERT INTO {DestinationTableName} ({columnList}) VALUES ({parameterList})";
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="rows"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<int> BindArrayCoreAsync(
+            DataTable dataTable,
+            IReadOnlyList<DataRow> rows,
+            CancellationToken cancellationToken)
+        {
+            if (dataTable.Columns.Count == 0 || rows.Count == 0)
+            {
+                return 0;
+            }
+
+            var mappings = ResolveMappings(dataTable);
+            var batchSize = GetEffectiveBatchSize(mappings.Count);
+            var commandText = BuildInsertStatement(mappings);
+            var affectedRows = 0;
+
+            for (var offset = 0; offset < rows.Count; offset += batchSize)
+            {
+                var count = Math.Min(batchSize, rows.Count - offset);
+
+                await using var command = connection.CreateCommand();
+
+                command.Transaction = Transaction;
+                command.BindByName = true;
+                command.ArrayBindCount = count;
+                command.CommandText = commandText;
+                if (BulkCopyTimeout > 0)
+                {
+                    command.CommandTimeout = BulkCopyTimeout;
+                }
+
+                for (var i = 0; i < mappings.Count; i++)
+                {
+                    var mapping = mappings[i];
+                    var parameter = new OracleParameter
+                    {
+                        ParameterName = "p" + i,
+                        OracleDbType = mapping.OracleDbType ?? dbTypeResolver.Resolve(dataTable.Columns[mapping.SourceColumn].DataType),
+                        Direction = ParameterDirection.Input,
+                        Value = GetBoundValues(rows, mapping.SourceColumn, offset, count)
+                    };
+
+                    command.Parameters.Add(parameter);
+                }
+
+                affectedRows += await command.ExecuteNonQueryAsync(
+                    cancellationToken);
+            }
+
+            return affectedRows;
+        }
+
+        #endregion
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<int> BindArrayAsync(
+            IDataReader reader,
+            CancellationToken cancellationToken = default)
+        {
+            if (reader.FieldCount == 0)
+            {
+                return 0;
+            }
+
+            var dataTable = await ToDataTableAsync(reader, cancellationToken);
+            var rows = dataTable.Rows.OfType<DataRow>().ToArray();
+
+            return await BindArrayCoreAsync(dataTable, rows, cancellationToken);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="rowState"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public Task<int> BindArrayAsync(
+            DataTable dataTable,
+            DataRowState? rowState = null,
+            CancellationToken cancellationToken = default)
+        {
+            var rowsQuery = dataTable.Rows.OfType<DataRow>();
+            if (rowState.HasValue)
+            {
+                rowsQuery = rowsQuery.Where(row => row.RowState == rowState);
+            }
+
+            return BindArrayCoreAsync(dataTable, rowsQuery.ToArray(), cancellationToken);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public void Dispose()
+        {
+        }
     }
 }
