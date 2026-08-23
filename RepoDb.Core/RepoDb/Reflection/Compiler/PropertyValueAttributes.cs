@@ -106,7 +106,10 @@ namespace RepoDb.Reflection
         internal static MethodInfo GetPropertyValueAttributeSetValueMethod() =>
 
             StaticType.PropertyValueAttribute.GetMethod("SetValue",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                new[] { StaticType.IDbDataParameter },
+                null);
 
         #endregion
     }

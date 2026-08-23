@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.ClickHouse (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.ClickHouse/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-clickhouse.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.ClickHouse
+      solution-file: RepoDb.ClickHouse.sln
+      artifact-name: release-clickhouse
+      db-engine: clickhouse

@@ -13,14 +13,17 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = false;
             ClosingQuote = "\"";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";
+            SqlTextParameterPrefix = ":";
         }
     }
 }

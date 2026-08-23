@@ -135,5 +135,15 @@ namespace RepoDb.Db2.UnitTests
             // Assert
             Assert.AreEqual(":", setting.ParameterPrefix);
         }
+
+        [TestMethod]
+        public void TestDb2DbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<DB2Connection>();
+
+            // Assert
+            Assert.AreEqual(":", setting.SqlTextParameterPrefix);
+        }
     }
 }

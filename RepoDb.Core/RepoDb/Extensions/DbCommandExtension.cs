@@ -59,7 +59,7 @@ namespace RepoDb.Extensions
             var parameter = command.CreateParameter();
 
             // Set the values
-            parameter.ParameterName = name.AsParameter(DbSettingMapper.Get(command.Connection));
+            parameter.ParameterName = name.AsParameterName(DbSettingMapper.Get(command.Connection));
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values
@@ -141,13 +141,13 @@ namespace RepoDb.Extensions
             {
                 command.Parameters.Add(
                     command.CreateParameter(
-                        commandArrayParameter.ParameterName.AsParameter(dbSetting), null, dbType));
+                        commandArrayParameter.ParameterName.AsParameterName(dbSetting), null, dbType));
             }
             else
             {
                 for (var i = 0; i < values.Length; i++)
                 {
-                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
+                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameterName(dbSetting);
                     var value = values[i];
                     dbType ??= value?.GetType().GetDbType();
                     command.Parameters.Add(
@@ -330,7 +330,7 @@ namespace RepoDb.Extensions
             }
 
             // Parameter values
-            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType), DbSettingMapper.Get(command.Connection));
 
             // Return the parameter
             return parameter;
@@ -379,7 +379,7 @@ namespace RepoDb.Extensions
             parameter.Size = GetSize(size, dbField);
 
             // Type map attributes
-            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType), DbSettingMapper.Get(command.Connection));
 
             // Return the parameter
             return parameter;
@@ -763,7 +763,8 @@ namespace RepoDb.Extensions
         /// <param name="parameter"></param>
         /// <param name="attributes"></param>
         private static void InvokePropertyValueAttributes(IDbDataParameter parameter,
-            IEnumerable<PropertyValueAttribute> attributes)
+            IEnumerable<PropertyValueAttribute> attributes,
+            IDbSetting dbSetting)
         {
             if (attributes?.Any() != true)
             {
@@ -787,7 +788,7 @@ namespace RepoDb.Extensions
                 {
                     continue;
                 }
-                attribute.SetValue(parameter);
+                attribute.SetValue(parameter, dbSetting);
             }
         }
 

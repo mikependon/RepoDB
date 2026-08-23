@@ -1,4 +1,4 @@
-﻿namespace RepoDb.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for SQL Server data provider.
@@ -13,14 +13,17 @@
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

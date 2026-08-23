@@ -1,6 +1,6 @@
-[![OracleBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle-bulk.yml)
-[![OracleBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![OracleBulkVersion](https://img.shields.io/nuget/v/repodb.oracle.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations)
+[![OracleBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-oracle-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-oracle-bulk.yml)
+[![OracleBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![OracleBulkVersion](https://img.shields.io/nuget/v/repodb.oracle.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations)
 
 # [RepoDb.Oracle.BulkOperations](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations)
 

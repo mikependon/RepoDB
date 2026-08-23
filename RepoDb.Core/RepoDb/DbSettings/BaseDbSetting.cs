@@ -1,4 +1,4 @@
-﻿using RepoDb.Interfaces;
+using RepoDb.Interfaces;
 using System;
 using System.Data.Common;
 
@@ -25,14 +25,17 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = true;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
 
         #endregion
@@ -61,6 +64,12 @@ namespace RepoDb.DbSettings
         public string DefaultSchema { get; protected set; }
 
         /// <summary>
+        /// Gets a value that indicates whether the current DB Provider's <see cref="DbCommand.ExecuteNonQuery()"/>
+        /// reliably reports the number of rows affected by a DML statement.
+        /// </summary>
+        public bool IsAffectedRowsSupported { get; protected set; }
+
+        /// <summary>
         /// Gets a value that indicates whether setting of the value of <see cref="DbParameter.Direction"/> object is supported.
         /// </summary>
         public bool IsDirectionSupported { get; protected set; }
@@ -81,6 +90,12 @@ namespace RepoDb.DbSettings
         public bool IsPreparable { get; protected set; }
 
         /// <summary>
+        /// Gets the value that indicates whether the current DB Provider's transaction support (e.g. <c>BeginTransaction()</c>)
+        /// is supported.
+        /// </summary>
+        public bool IsTransactionSupported { get; protected set; }
+
+        /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsert { get; protected set; }
@@ -99,6 +114,12 @@ namespace RepoDb.DbSettings
         /// Gets the character (or string) used for the database command parameter quoting.
         /// </summary>
         public string ParameterPrefix { get; protected set; }
+
+        /// <summary>
+        /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
+        /// generated SQL command text. See <see cref="RepoDb.Interfaces.IDbSetting.SqlTextParameterPrefix"/> for details.
+        /// </summary>
+        public string SqlTextParameterPrefix { get; protected set; }
 
         /// <summary>
         /// Gets the character (or string) used for separating the schema.
@@ -139,6 +160,9 @@ namespace RepoDb.DbSettings
                 hashCode = HashCode.Combine(hashCode, DefaultSchema);
             }
 
+            // IsAffectedRowsSupported
+            hashCode = HashCode.Combine(hashCode, IsAffectedRowsSupported);
+
             // IsDirectionSupported
             hashCode = HashCode.Combine(hashCode, IsDirectionSupported);
 
@@ -150,6 +174,9 @@ namespace RepoDb.DbSettings
 
             // IsPreparable
             hashCode = HashCode.Combine(hashCode, IsPreparable);
+
+            // IsTransactionSupported
+            hashCode = HashCode.Combine(hashCode, IsTransactionSupported);
 
             // IsUseUpsert
             hashCode = HashCode.Combine(hashCode, IsUseUpsert);
@@ -164,6 +191,12 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
                 hashCode = HashCode.Combine(hashCode, ParameterPrefix);
+            }
+
+            // SqlTextParameterPrefix
+            if (!string.IsNullOrWhiteSpace(SqlTextParameterPrefix))
+            {
+                hashCode = HashCode.Combine(hashCode, SqlTextParameterPrefix);
             }
 
             // MultiStatementSeparator

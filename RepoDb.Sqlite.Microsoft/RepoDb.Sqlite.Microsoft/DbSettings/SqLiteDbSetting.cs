@@ -1,4 +1,4 @@
-﻿namespace RepoDb.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for SQLite data provider.
@@ -20,14 +20,17 @@
             AreTableHintsSupported = false;
             ClosingQuote = "]";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = true;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

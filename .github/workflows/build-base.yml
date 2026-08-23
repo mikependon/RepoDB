@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse'
         required: true
         type: string
 
@@ -41,6 +41,8 @@ env:
   REPODB_ORACLE_CONSTR: "User Id=system;Password=RepoDB2026;Data Source=127.0.0.1:1521/FREEPDB1;"
   # Db2
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
+  # ClickHouse
+  REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;"
 
 jobs:
 
@@ -416,6 +418,63 @@ jobs:
       #     echo "Oracle did not become ready within the timeout. Recent container logs:"
       #     docker logs "$CID" --tail 200
       #     exit 1
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # ClickHouse only (e.g. RepoDb.ClickHouse, RepoDb.ClickHouse.BulkOperations)
+  build-clickhouse:
+    if: inputs.db-engine == 'clickhouse'
+    runs-on: ubuntu-latest
+
+    services:
+      clickhouse:
+        image: clickhouse/clickhouse-server:latest
+        ports:
+          - 127.0.0.1:8123:8123
+          - 127.0.0.1:9000:9000
+        env:
+          CLICKHOUSE_USER: default
+          CLICKHOUSE_PASSWORD: RepoDB2026
+          CLICKHOUSE_DB: RepoDb
+        options: >-
+          --ulimit nofile=262144:262144
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 5s
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}

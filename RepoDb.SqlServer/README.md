@@ -1,6 +1,6 @@
-[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
-[![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqlServer)
+[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
+[![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
 
 # [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) — RepoDB for SQL Server
 

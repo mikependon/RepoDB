@@ -1,6 +1,6 @@
-[![MySqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
-[![MySqlHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql)
+[![MySqlBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysql.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysql.yml)
+[![MySqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql)
 
 # [RepoDb.MySql](https://repodb.net/tutorial/get-started-mysql) — RepoDB for MySQL (MySql.Data)
 

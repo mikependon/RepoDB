@@ -1,4 +1,4 @@
-﻿using RepoDb.Connector.MariaDbConnector;
+using RepoDb.Connector.MariaDbConnector;
 
 namespace RepoDb.DbSettings
 {
@@ -15,14 +15,17 @@ namespace RepoDb.DbSettings
             AreTableHintsSupported = false;
             ClosingQuote = "`";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = true;
             IsPreparable = false;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

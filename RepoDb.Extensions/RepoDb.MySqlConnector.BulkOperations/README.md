@@ -1,6 +1,6 @@
-[![MySqlConnectorBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector-bulk.yml?logo=github&label=build&style=for-the-badge)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector-bulk.yml)
-[![MySqlConnectorBulkHome](https://img.shields.io/badge/home-github-important?&logo=github&style=for-the-badge)](https://github.com/mikependon/RepoDb)
-[![MySqlConnectorBulkVersion](https://img.shields.io/nuget/v/repodb.mysqlconnector.bulkoperations?&logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations)
+[![MySqlConnectorBulkBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-mysqlconnector-bulk.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-mysqlconnector-bulk.yml)
+[![MySqlConnectorBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![MySqlConnectorBulkVersion](https://img.shields.io/nuget/v/repodb.mysqlconnector.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations)
 
 # [RepoDb.MySqlConnector.BulkOperations](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations)
 

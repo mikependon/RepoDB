@@ -61,5 +61,6 @@
     <InternalsVisibleTo Include="RepoDb.MariaDbConnector.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.Db2" />
     <InternalsVisibleTo Include="RepoDb.Db2.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.ClickHouse.BulkOperations" />
   </ItemGroup>
 </Project>
