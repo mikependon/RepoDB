@@ -146,9 +146,8 @@ namespace RepoDb
         {
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
-            await Task.Run(async () => bulkCopy.WriteToServer(filteredReader), cancellationToken);
-            return entities != null ? entities.Count() : 0;
+            using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
         }
 
         /// <summary>
@@ -177,10 +176,8 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, excludeField);
-            var rows = GetDataRows(table, rowState)?.ToArray();
-            await Task.Run(async () => bulkCopy.WriteToServer(rows), cancellationToken);
-            return rows != null ? rows.Length : 0;
+            using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, excludeField);
+            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken);
         }
 
         /// <summary>
@@ -209,14 +206,8 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                var countingReader = new CountingDataReader(reader);
-                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, transaction, excludeField);
-                bulkCopy.WriteToServer(filteredReader);
-                return countingReader.Count;
-            },
-            cancellationToken);
+            using var arrayBinder = CreateDb2BulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, transaction, excludeField);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
         }
 
         #endregion
@@ -452,6 +443,110 @@ namespace RepoDb
                     yield return new Db2BulkInsertMapItem(columnName, dbField.Name);
                 }
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
+        private static Db2BulkArrayBinder CreateDb2BulkArrayBinder(DB2Connection connection,
+            string tableName,
+            DataTable table,
+            IEnumerable<Db2BulkInsertMapItem> mappings,
+            DB2BulkCopyOptions bulkCopyOptions,
+            int? bulkCopyTimeout,
+            int? batchSize,
+            Field excludeField = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var arrayBinder = new Db2BulkArrayBinder(connection)
+            {
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+            };
+            if (bulkCopyTimeout.HasValue)
+            {
+                arrayBinder.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                arrayBinder.BatchSize = batchSize.Value;
+            }
+            if (mappings != null)
+            {
+                foreach (var mapping in mappings)
+                {
+                    arrayBinder.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
+                }
+            }
+            else
+            {
+                var destinationFields = DbFieldCache.Get(connection, tableName, null);
+                foreach (DataColumn column in table.Columns)
+                {
+                    if (excludeField != null && string.Equals(column.ColumnName, excludeField.Name, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    if (destinationFields?.GetByUnquotedName(column.ColumnName.AsUnquoted(true, dbSetting)) == null)
+                    {
+                        continue;
+                    }
+                    arrayBinder.ColumnMappings.Add(column.ColumnName, column.ColumnName.AsQuoted(true, dbSetting));
+                }
+            }
+            return arrayBinder;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
+        private static Db2BulkArrayBinder CreateDb2BulkArrayBinder(DB2Connection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Db2BulkInsertMapItem> mappings,
+            DB2BulkCopyOptions bulkCopyOptions,
+            int? bulkCopyTimeout,
+            int? batchSize,
+            DB2Transaction transaction,
+            Field excludeField = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var arrayBinder = new Db2BulkArrayBinder(connection)
+            {
+                DestinationTableName = tableName.AsQuoted(true, dbSetting),
+                Transaction = transaction
+            };
+            if (bulkCopyTimeout.HasValue)
+            {
+                arrayBinder.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                arrayBinder.BatchSize = batchSize.Value;
+            }
+            foreach (var mapping in mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, excludeField))
+            {
+                arrayBinder.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
+            }
+            return arrayBinder;
         }
 
         /// <summary>
