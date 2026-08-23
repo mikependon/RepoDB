@@ -3,6 +3,7 @@ using System.Data;
 
 namespace RepoDb.ClickHouse.BulkOperations
 {
+    [Obsolete]
     internal sealed class CountingDataReader : IDataReader
     {
         private readonly IDataReader _inner;

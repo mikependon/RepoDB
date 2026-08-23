@@ -34,6 +34,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -63,6 +66,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -93,6 +99,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -127,6 +136,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -156,6 +168,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -186,6 +201,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 

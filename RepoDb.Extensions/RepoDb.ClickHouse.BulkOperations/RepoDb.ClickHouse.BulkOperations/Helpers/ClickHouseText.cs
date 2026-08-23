@@ -324,6 +324,35 @@ namespace RepoDb
             IDbSetting dbSetting) => $"{pseudoTableType.ToString()}{tableName.AsUnquoted(dbSetting)}DeleteByKey";
 
         /// <summary>
+        /// Builds the SQL that counts every row of <paramref name="tableName"/> that has a matching row in
+        /// <paramref name="pseudoTableName"/> (matched on <paramref name="qualifiers"/>) - used by
+        /// <c>ClickHouseExecution.DeleteFromPseudoTable</c>/<c>ClickHouseExecution.DeleteFromPseudoTableAsync</c>
+        /// to capture how many rows will be deleted <i>before</i> issuing the asynchronous
+        /// <c>ALTER TABLE ... DELETE WHERE</c> mutation built by <see cref="GetDeleteFromPseudoTableSql"/>
+        /// (counting afterward would always see 0, since the matching rows would already be gone by the time
+        /// the mutation - which applies asynchronously - actually finishes). Shares the same
+        /// <see cref="GetTupleInPseudoTableClause"/> matching predicate as <see cref="GetDeleteFromPseudoTableSql"/>
+        /// so the count and the delete are guaranteed to agree on which rows match (modulo a concurrent write
+        /// between the two - see the caller's remarks).
+        /// </summary>
+        /// <param name="tableName">The real table to count matching rows in.</param>
+        /// <param name="pseudoTableName">The pseudo table holding the key values (or full rows) to match on.</param>
+        /// <param name="qualifiers">The columns used to match a row.</param>
+        /// <param name="dbSetting">The current <see cref="IDbSetting"/>.</param>
+        /// <returns>The <c>SELECT count(*) ... WHERE ... IN (...)</c> SQL text.</returns>
+        public static string GetCountMatchedByPseudoTableSql(string tableName,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var quotedTableName = tableName.AsQuoted(true, dbSetting);
+            var quotedPseudoTableName = pseudoTableName.AsQuoted(true, dbSetting);
+            var whereClause = GetTupleInPseudoTableClause(qualifiers.AsList(), quotedPseudoTableName, dbSetting);
+
+            return $"SELECT count(*) FROM {quotedTableName} WHERE {whereClause}";
+        }
+
+        /// <summary>
         /// Builds the SQL that deletes every row of <paramref name="tableName"/> matched by
         /// <paramref name="pseudoTableName"/>, via ClickHouse's <c>ALTER TABLE ... DELETE WHERE</c> mutation
         /// syntax - much simpler than <see cref="GetUpdateFromPseudoTableSql"/>'s correlated-subquery dance,

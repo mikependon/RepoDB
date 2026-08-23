@@ -69,10 +69,12 @@ namespace RepoDb
 
                 ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize);
 
-                // Execute and return
-                ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                // Execute and return - the actual number of rows matched (and deleted), not merely the
+                // number of entities staged above (see ClickHouseExecution.DeleteFromPseudoTable's remarks;
+                // these can differ, e.g. entities whose key doesn't exist in tableName).
+                result = ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
             finally
             {
@@ -137,10 +139,12 @@ namespace RepoDb
 
                 ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize);
 
-                // Execute and return
-                ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                // Execute and return - the actual number of rows matched (and deleted), not merely the
+                // number of rows staged above (see ClickHouseExecution.DeleteFromPseudoTable's remarks;
+                // these can differ, e.g. rows whose key doesn't exist in tableName).
+                result = ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
             finally
             {
@@ -203,10 +207,12 @@ namespace RepoDb
 
                 ClickHouseExecution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction);
                 ClickHouseExecution.TruncatePseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
-                result = WriteToServerInternal(connection, pseudoTableName, reader, null, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, reader, null, bulkCopyTimeout, batchSize);
 
-                // Execute and return
-                ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
+                // Execute and return - the actual number of rows matched (and deleted), not merely the
+                // number of rows staged above (see ClickHouseExecution.DeleteFromPseudoTable's remarks;
+                // these can differ, e.g. rows whose key doesn't exist in tableName).
+                result = ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction);
             }
             finally
             {
@@ -278,10 +284,8 @@ namespace RepoDb
 
                 await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize, cancellationToken);
-
-                // Execute and return
-                await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityList, null, bulkCopyTimeout, batchSize, cancellationToken);
+                result = await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -348,10 +352,12 @@ namespace RepoDb
 
                 await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, null, bulkCopyTimeout, batchSize, cancellationToken);
 
-                // Execute and return
-                await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                // Execute and return - the actual number of rows matched (and deleted), not merely the
+                // number of rows staged above (see ClickHouseExecution.DeleteFromPseudoTable's remarks;
+                // these can differ, e.g. rows whose key doesn't exist in tableName).
+                result = await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {
@@ -416,10 +422,12 @@ namespace RepoDb
 
                 await ClickHouseExecution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
                 await ClickHouseExecution.TruncatePseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, reader, null, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, reader, null, bulkCopyTimeout, batchSize, cancellationToken);
 
-                // Execute and return
-                await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
+                // Execute and return - the actual number of rows matched (and deleted), not merely the
+                // number of rows staged above (see ClickHouseExecution.DeleteFromPseudoTable's remarks;
+                // these can differ, e.g. rows whose key doesn't exist in tableName).
+                result = await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, qualifierFields, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

@@ -39,6 +39,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -64,6 +67,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -90,6 +96,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -116,6 +125,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -142,6 +154,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(tables);
 
@@ -169,6 +184,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -194,6 +212,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -219,6 +240,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -245,6 +269,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -282,6 +309,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -314,6 +344,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -324,6 +357,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -368,6 +404,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -378,6 +417,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, null, DataRowState.Unchanged);
 
@@ -400,6 +442,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
@@ -418,6 +463,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
@@ -431,6 +479,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -463,6 +514,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -499,6 +553,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -528,6 +585,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -555,11 +615,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -581,7 +644,10 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                Helper.SetupAsyncInsert(connection);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -602,7 +668,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -624,7 +690,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -642,6 +708,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -667,6 +736,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -694,6 +766,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -721,6 +796,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
@@ -744,6 +822,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -754,6 +835,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -798,6 +882,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -808,6 +895,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
@@ -843,6 +933,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -853,6 +946,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
@@ -876,6 +972,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -886,6 +985,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
@@ -912,6 +1014,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -922,6 +1027,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -966,6 +1074,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -976,6 +1087,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
@@ -1011,6 +1125,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1021,6 +1138,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
@@ -1044,6 +1164,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1054,6 +1177,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
@@ -1077,6 +1203,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1105,6 +1234,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1130,6 +1262,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1156,6 +1291,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1182,6 +1320,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1208,6 +1349,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
@@ -1235,6 +1379,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1260,6 +1407,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1285,6 +1435,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1311,6 +1464,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1348,6 +1504,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1386,6 +1545,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1396,6 +1558,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -1440,6 +1605,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1450,6 +1618,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
@@ -1475,6 +1646,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait());
             }
         }
@@ -1495,6 +1669,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null).Wait());
             }
@@ -1512,6 +1689,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1549,6 +1729,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1578,6 +1761,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1607,11 +1793,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1635,7 +1824,10 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+                Helper.SetupAsyncInsert(connection);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1652,11 +1844,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
                 // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1680,7 +1875,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
                 // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1698,6 +1893,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1723,6 +1921,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1750,6 +1951,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -1787,6 +1991,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
@@ -1810,6 +2017,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1820,6 +2030,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -1864,6 +2077,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1874,6 +2090,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
@@ -1909,6 +2128,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1919,6 +2141,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
                         }
@@ -1942,6 +2167,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1952,6 +2180,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
                                 table,
@@ -1978,6 +2209,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1988,6 +2222,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -2032,6 +2269,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2042,6 +2282,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
@@ -2077,6 +2320,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2087,6 +2333,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
                         }
@@ -2110,6 +2359,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2120,6 +2372,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
                                 table,
@@ -2143,6 +2398,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2171,6 +2429,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2196,6 +2457,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2222,6 +2486,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2248,6 +2515,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2274,6 +2544,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(tables);
 
@@ -2301,6 +2574,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2326,6 +2602,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2351,6 +2630,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2377,6 +2659,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2414,6 +2699,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2446,6 +2734,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2456,6 +2747,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -2500,6 +2794,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2510,6 +2807,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, null, DataRowState.Unchanged);
 
@@ -2532,6 +2832,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkDelete((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
@@ -2541,6 +2844,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
@@ -2554,6 +2860,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2590,6 +2899,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2615,6 +2927,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2643,6 +2958,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2668,6 +2986,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2695,6 +3016,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -2729,6 +3053,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2739,6 +3066,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -2783,6 +3113,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2793,6 +3126,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
@@ -2828,6 +3164,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2838,6 +3177,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
@@ -2861,6 +3203,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2871,6 +3216,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
@@ -2897,6 +3245,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2907,6 +3258,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -2951,6 +3305,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2961,6 +3318,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
@@ -2996,6 +3356,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3006,6 +3369,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("InvalidTable", table));
                         }
@@ -3029,6 +3395,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3039,6 +3408,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkDelete("MissingTable",
                                 table,
@@ -3058,6 +3430,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3086,6 +3461,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3111,6 +3489,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3137,6 +3518,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3163,6 +3547,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3189,6 +3576,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
@@ -3216,6 +3606,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3241,6 +3634,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3266,6 +3662,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3292,6 +3691,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3329,6 +3731,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3361,6 +3766,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3371,6 +3779,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
@@ -3415,6 +3826,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3425,6 +3839,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
@@ -3450,6 +3867,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync((IEnumerable<BulkOperationNonIdentityTable>)null).Wait());
             }
         }
@@ -3459,6 +3879,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null).Wait());
             }
@@ -3472,6 +3895,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3509,6 +3935,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3534,6 +3963,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3562,6 +3994,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3587,6 +4022,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3614,6 +4052,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 connection.InsertAll(tables);
 
@@ -3648,6 +4089,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3658,6 +4102,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
@@ -3702,6 +4149,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3712,6 +4162,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
@@ -3747,6 +4200,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3757,6 +4213,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
                         }
@@ -3780,6 +4239,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3790,6 +4252,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
                                 table,
@@ -3816,6 +4281,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3826,6 +4294,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
@@ -3870,6 +4341,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3880,6 +4354,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                                 table,
@@ -3915,6 +4392,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3925,6 +4405,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("InvalidTable", table).Result);
                         }
@@ -3948,6 +4431,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3958,6 +4444,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkDeleteAsync("MissingTable",
                                 table,
@@ -3981,11 +4470,17 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader);
 
@@ -4009,11 +4504,17 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader).Result;
 
@@ -4034,9 +4535,15 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader);
 
@@ -4051,9 +4558,15 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), reader).Result;
 

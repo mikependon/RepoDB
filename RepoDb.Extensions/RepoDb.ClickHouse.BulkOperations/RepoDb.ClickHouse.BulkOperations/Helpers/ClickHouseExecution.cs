@@ -14,15 +14,21 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
     /// <summary>
     /// Issues every ADO.NET round trip the ClickHouse bulk-operations pseudo-table pipeline needs, built
     /// against the SQL text <see cref="ClickHouseText"/> builds. Unlike the MySQL provider's
-    /// <c>MySqlExecution</c>, none of the merge/update/delete methods here return a meaningful affected-row
-    /// count: ClickHouse's <c>ALTER TABLE ... UPDATE</c>/<c>DELETE</c> mutations are asynchronous (registered
-    /// immediately, applied by a background merge afterward - see
+    /// <c>MySqlExecution</c>, none of the merge/update/delete mutations here report a meaningful affected-row
+    /// count of their own: ClickHouse's <c>ALTER TABLE ... UPDATE</c>/<c>DELETE</c> mutations are asynchronous
+    /// (registered immediately, applied by a background merge afterward - see
     /// <c>RepoDb.StatementBuilders.ClickHouseStatementBuilder.CreateUpdate</c> in <c>RepoDb.ClickHouse</c> for
     /// the same caveat at the single-row level), and ClickHouse.Driver's <c>ExecuteNonQuery</c> has no
-    /// reliable "rows affected" figure for either a mutation or a plain <c>INSERT</c>. These methods are
-    /// therefore <see langword="void"/>/non-generic <see cref="Task"/> - they fire the statement(s) and let it
-    /// go - and every <c>Base/*.cs</c> caller reports back the number of rows it staged into the pseudo table
-    /// (already known synchronously from the bulk-copy step) as the operation's result instead.
+    /// reliable "rows affected" figure for either a mutation or a plain <c>INSERT</c>.
+    /// <see cref="DeleteFromPseudoTable"/>/<see cref="DeleteFromPseudoTableAsync"/> compensate by running a
+    /// plain <c>SELECT count(*)</c> with the identical matching predicate <i>before</i> issuing the mutation
+    /// (see <see cref="ClickHouseText.GetCountMatchedByPseudoTableSql"/>) and returning that; every other
+    /// mutation method below (<see cref="UpdateFromPseudoTable"/>, and the update half of
+    /// <see cref="MergeFromPseudoTable"/>) is still <see langword="void"/>/non-generic <see cref="Task"/> -
+    /// they fire the statement(s) and let it go - and their <c>Base/*.cs</c> callers still report back the
+    /// number of rows staged into the pseudo table (already known synchronously from the bulk-copy step) as
+    /// the operation's result instead, which is liable to the same "reports more than it actually matched"
+    /// bug the delete path had (see <see cref="DeleteFromPseudoTable"/>'s remarks) - not yet fixed there.
     ///
     /// <para>
     /// Every mutation method below (<see cref="UpdateFromPseudoTable"/>, <see cref="DeleteFromPseudoTable"/>,
@@ -85,42 +91,6 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 }
 
                 Thread.Sleep(MutationPollInterval);
-            }
-        }
-
-        /// <summary>
-        /// Asynchronous counterpart of <see cref="WaitForMutations"/>.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        private static async Task WaitForMutationsAsync(ClickHouseConnection connection,
-            string tableName,
-            DbTransaction transaction,
-            CancellationToken cancellationToken)
-        {
-            var deadline = DateTime.UtcNow.Add(MutationWaitTimeout);
-
-            while (true)
-            {
-                var pending = await connection.ExecuteScalarAsync<long>(
-                    "SELECT count(*) FROM system.mutations WHERE database = @Database AND table = @Table AND is_done = 0;",
-                    new { Database = connection.Database, Table = tableName },
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-
-                if (pending == 0)
-                {
-                    return;
-                }
-
-                if (DateTime.UtcNow >= deadline)
-                {
-                    throw new TimeoutException($"Timed out waiting for pending mutations on table '{tableName}' to complete.");
-                }
-
-                await Task.Delay(MutationPollInterval, cancellationToken);
             }
         }
 
@@ -340,11 +310,6 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             if (HasUpdatableFields(fieldList, qualifierList))
             {
                 await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
-
-                // The UPDATE above is an asynchronous mutation whose WHERE/JOIN predicate still references
-                // pseudoTableName when it actually runs - wait for it before the caller drops that table
-                // (see the type-level remarks on this class).
-                await WaitForMutationsAsync(connection, tableName, transaction, cancellationToken);
             }
 
             await connection.ExecuteNonQueryAsync(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
@@ -411,11 +376,6 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
             await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-
-            // The UPDATE above is an asynchronous mutation whose WHERE/JOIN predicate still references
-            // pseudoTableName when it actually runs - wait for it before the caller drops that table (see
-            // the type-level remarks on this class).
-            await WaitForMutationsAsync(connection, tableName, transaction, cancellationToken);
         }
 
         #endregion
@@ -424,7 +384,15 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
 
         /// <summary>
         /// Deletes every row of <paramref name="tableName"/> matched by <paramref name="pseudoTableName"/> via
-        /// a single <c>ALTER TABLE ... DELETE WHERE</c> mutation.
+        /// a single <c>ALTER TABLE ... DELETE WHERE</c> mutation, and returns how many rows actually matched
+        /// (and were therefore deleted) - <b>not</b> the number of rows staged into <paramref name="pseudoTableName"/>,
+        /// which may be larger (e.g. keys that don't exist in <paramref name="tableName"/>, as with a delete
+        /// against an empty or partially-populated table). The mutation itself reports no affected-row count
+        /// of its own (see the type-level remarks on <see cref="ClickHouseText"/>), so the count is captured
+        /// with <see cref="ClickHouseText.GetCountMatchedByPseudoTableSql"/> <i>before</i> the mutation runs -
+        /// counting afterward would always see 0, since by then the matching rows are gone. This is a
+        /// best-effort snapshot: nothing prevents a concurrent write from changing which rows match between
+        /// the count and the delete that follows it.
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -433,7 +401,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="trace"></param>
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
-        public static void DeleteFromPseudoTable(ClickHouseConnection connection,
+        /// <returns>The number of rows matched (and deleted).</returns>
+        public static int DeleteFromPseudoTable(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -442,14 +411,9 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             DbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
-
-            // The DELETE above is an asynchronous mutation whose WHERE predicate still references
-            // pseudoTableName when it actually runs - wait for it before the caller drops that table (see
-            // the type-level remarks on this class). Without this, rows the mutation hadn't gotten to yet by
-            // the time the pseudo table disappeared are silently left undeleted.
-            WaitForMutations(connection, tableName, transaction);
+            var qualifierList = qualifiers.AsList();
+            var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
+            return connection.ExecuteNonQuery(commandText, transaction: transaction);
         }
 
         /// <summary>
@@ -463,8 +427,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public static async Task DeleteFromPseudoTableAsync(ClickHouseConnection connection,
+        /// <returns>The number of rows matched (and deleted).</returns>
+        public static async Task<int> DeleteFromPseudoTableAsync(ClickHouseConnection connection,
             string tableName,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -474,14 +438,9 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-
-            // The DELETE above is an asynchronous mutation whose WHERE predicate still references
-            // pseudoTableName when it actually runs - wait for it before the caller drops that table (see
-            // the type-level remarks on this class). Without this, rows the mutation hadn't gotten to yet by
-            // the time the pseudo table disappeared are silently left undeleted.
-            await WaitForMutationsAsync(connection, tableName, transaction, cancellationToken);
+            var qualifierList = qualifiers.AsList();
+            var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
+            return await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         #endregion

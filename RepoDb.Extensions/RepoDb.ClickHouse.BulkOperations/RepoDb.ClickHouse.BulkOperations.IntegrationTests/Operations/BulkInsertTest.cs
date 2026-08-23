@@ -1,15 +1,15 @@
-using System.Data.Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using ClickHouse.Driver.ADO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using RepoDb.Enumerations.ClickHouse;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
-using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
-using ClickHouse.Driver.ADO;
 
 namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 {
@@ -39,6 +39,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -56,38 +59,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 });
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertForEntitiesWithMappings()
@@ -108,6 +79,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings);
 
@@ -134,6 +108,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -151,38 +128,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 });
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForMappedEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertForMappedEntitiesWithMappings()
@@ -203,6 +148,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings);
 
@@ -218,6 +166,101 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertForNonIdentityEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
+                foreach (var table in tables)
+                {
+                    table.Id = table.Id + 100000;
+                }
+
+                // Open the destination connection
+                using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
+                {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
+                    Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(tables));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertForNonIdentityEntitiesDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        foreach (DataRow row in table.Rows)
+                        {
+                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
+                        }
+
+                        // Open the destination connection
+                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
+                        {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertForEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
+                // Act
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -241,6 +284,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 Assert.Throws<InvalidTypeException>(() => connection.BulkInsert(tables, mappings));
             }
@@ -261,6 +307,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -271,6 +320,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -287,60 +339,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForEntitiesDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertForEntitiesDataTableWithMappings()
@@ -368,6 +366,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -378,17 +379,35 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                            // The mappings above deliberately omit Id (ClickHouse has no auto-generated
+                            // identity to fall back to for an unmapped sort-key column), so every row bulk-
+                            // inserted below lands with Id = 0, colliding with every other newly-inserted row
+                            // (not with the pre-existing 1..10 rows, which don't collide with each other or
+                            // with 0). Without pausing the background merge scheduler, those 10 same-Id(0)
+                            // rows can be deduped down to as few as 1 by the time QueryAll below runs, non-
+                            // deterministically undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -422,6 +441,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -432,6 +454,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
@@ -445,6 +470,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null));
             }
         }
@@ -458,13 +486,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         //    }
         //}
 
-        
-
         [TestMethod]
         public void ThrowExceptionOnClickHouseConnectionBulkInsertForNullDataTable()
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null));
             }
@@ -482,6 +511,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -518,6 +550,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -548,6 +583,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
@@ -574,6 +612,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
@@ -600,6 +641,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
@@ -619,75 +663,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForTableNameExpandoObjectsWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        [TestMethod]
         public void TestClickHouseConnectionBulkInsertForTableNameDbDataTable()
         {
             // Setup
@@ -702,6 +677,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -712,6 +690,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -728,60 +709,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForTableNameDbDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertForTableNameDbDataTableWithMappings()
@@ -809,6 +736,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -819,6 +749,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
 
@@ -863,6 +796,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -873,6 +809,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
@@ -896,6 +835,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -906,6 +848,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged));
                         }
@@ -929,6 +874,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -939,6 +887,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged));
                         }
@@ -962,6 +913,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -972,6 +926,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
@@ -983,56 +940,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForTableNameDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -1065,6 +972,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1075,6 +985,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
 
@@ -1119,6 +1032,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1129,6 +1045,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings));
                         }
@@ -1152,6 +1071,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1162,6 +1084,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", table));
                         }
@@ -1185,6 +1110,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1195,6 +1123,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged));
                         }
@@ -1215,6 +1146,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -1229,34 +1163,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1280,6 +1186,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -1306,6 +1215,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -1320,34 +1232,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForMappedEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1371,6 +1255,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables, mappings: mappings).Result;
 
@@ -1386,6 +1273,23 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
                 });
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertAsyncForEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
+                // Act
+                Assert.Throws<AggregateException>(async () =>
+                    await connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1409,16 +1313,13 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(tables, mappings).Result);
             }
         }
-
-        
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertAsyncForEntitiesDataTable()
@@ -1435,6 +1336,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1445,6 +1349,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -1461,60 +1368,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
@@ -1542,6 +1395,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1552,6 +1408,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
@@ -1596,6 +1455,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1606,6 +1468,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -1632,13 +1497,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         //    }
         //}
 
-        
-
         [TestMethod]
         public void ThrowExceptionOnClickHouseConnectionBulkInsertAsyncForNullDataTable()
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null).Wait());
             }
@@ -1649,6 +1515,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Result);
             }
         }
@@ -1665,6 +1534,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -1701,6 +1573,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -1731,6 +1606,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
@@ -1757,6 +1635,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
@@ -1783,6 +1664,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
@@ -1802,75 +1686,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForTableNameExpandoObjectsWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        [TestMethod]
         public void TestClickHouseConnectionBulkInsertAsyncForTableNameDataTable()
         {
             // Setup
@@ -1885,6 +1700,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -1895,6 +1713,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -1911,60 +1732,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 }
             }
         }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        
-
-        
 
         [TestMethod]
         public void TestClickHouseConnectionBulkInsertAsyncForTableNameDataTableWithMappings()
@@ -1992,6 +1759,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2002,6 +1772,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
@@ -2046,6 +1819,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2056,6 +1832,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -2079,6 +1858,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2089,6 +1871,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", table).Result);
                         }
@@ -2112,6 +1897,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2122,6 +1910,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged).Result);
                         }
@@ -2145,6 +1936,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2155,6 +1949,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
@@ -2166,56 +1963,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForTableNameDbDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -2248,6 +1995,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2258,6 +2008,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
@@ -2302,6 +2055,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2312,6 +2068,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -2335,6 +2094,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2345,6 +2107,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", table, DataRowState.Unchanged).Result);
                         }
@@ -2368,6 +2133,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 {
@@ -2378,6 +2146,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged).Result);
                         }
@@ -2398,6 +2169,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -2412,34 +2186,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2464,6 +2210,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings);
 
@@ -2490,6 +2239,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -2504,34 +2256,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityMappedEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2556,6 +2280,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables, mappings: mappings);
 
@@ -2594,6 +2321,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 Assert.Throws<InvalidTypeException>(() => connection.BulkInsert(tables, mappings));
             }
@@ -2614,6 +2344,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2629,6 +2362,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -2640,61 +2376,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityEntitiesDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -2728,6 +2409,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2743,6 +2427,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
@@ -2787,6 +2474,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -2797,6 +2487,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
@@ -2810,6 +2503,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkInsert((IEnumerable<BulkOperationNonIdentityTable>)null));
             }
         }
@@ -2819,6 +2515,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<NullReferenceException>(() => connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null));
             }
@@ -2832,6 +2531,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -2869,6 +2571,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(tables);
 
@@ -2895,6 +2600,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables);
 
@@ -2921,6 +2629,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables);
 
@@ -2947,6 +2658,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables);
 
@@ -2966,61 +2680,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityTableNameExpandoObjectsWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityTableNameDataEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        [TestMethod]
         public void TestClickHouseConnectionBulkInsertForNonIdentityTableNameDbDataTable()
         {
             // Setup
@@ -3035,6 +2694,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3050,6 +2712,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -3061,61 +2726,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityTableNameDbDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -3149,6 +2759,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3164,6 +2777,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
@@ -3208,6 +2824,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3218,6 +2837,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
@@ -3241,6 +2863,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3251,6 +2876,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged));
                         }
@@ -3274,6 +2902,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3284,6 +2915,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged));
                         }
@@ -3307,6 +2941,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3322,6 +2959,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
@@ -3333,61 +2973,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertForNonIdentityTableNameDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -3421,6 +3006,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3436,6 +3024,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
@@ -3480,6 +3071,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3490,6 +3084,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<InvalidTypeException>(() => destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings));
                         }
@@ -3513,6 +3110,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3523,6 +3123,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("InvalidTable", table));
                         }
@@ -3546,6 +3149,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3556,6 +3162,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged));
                         }
@@ -3572,6 +3181,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -3586,34 +3198,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3638,6 +3222,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -3664,6 +3251,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -3678,34 +3268,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityMappedEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationMappedNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3730,6 +3292,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables, mappings: mappings).Result;
 
@@ -3768,110 +3333,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(tables, mappings).Result);
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesDataTable()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
-                        }
-                    }
-                }
             }
         }
 
@@ -3902,6 +3368,91 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
+                        {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertAsyncForNonIdentityEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
+                foreach (var table in tables)
+                {
+                    table.Id = table.Id + 100000;
+                }
+
+                // Open the destination connection
+                using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
+                {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
+                    Assert.Throws<AggregateException>(async () => await destinationConnection.BulkInsertAsync(tables));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
+            {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3917,17 +3468,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            Assert.Throws<AggregateException>(async () =>
+                                await destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table));
                         }
                     }
                 }
@@ -3961,6 +3506,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -3971,6 +3519,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -3984,6 +3535,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(),
                     (DataTable)null).Wait());
             }
@@ -3997,6 +3551,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -4034,6 +3591,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
@@ -4060,6 +3620,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables).Result;
 
@@ -4086,6 +3649,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables).Result;
 
@@ -4112,6 +3678,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 // Act
                 var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables).Result;
 
@@ -4131,61 +3700,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityTableNameExpandoObjectsWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityTableNameDataEntitiesWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Act
-                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkInsertResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
-            }
-        }
-
-        [TestMethod]
         public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityTableNameDataTable()
         {
             // Setup
@@ -4200,6 +3714,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4215,6 +3732,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
@@ -4226,61 +3746,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityTableNameDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -4314,6 +3779,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4329,6 +3797,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
 
@@ -4373,6 +3844,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4383,6 +3857,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -4406,6 +3883,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4416,6 +3896,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", table).Result);
                         }
@@ -4439,6 +3922,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4449,6 +3935,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged).Result);
                         }
@@ -4462,6 +3951,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         {
             using (var connection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(connection);
+
                 Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationNonIdentityTable>)null).Result);
             }
         }
@@ -4481,6 +3973,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4496,6 +3991,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
@@ -4507,61 +4005,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityTableNameDbDataTableWithReturnIdentity()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationNonIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        foreach (DataRow row in table.Rows)
-                        {
-                            row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
-                        }
-
-                        // Open the destination connection
-                        using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
-                        {
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
                         }
                     }
                 }
@@ -4595,6 +4038,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4610,6 +4056,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
 
@@ -4654,6 +4103,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4664,6 +4116,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result);
                         }
@@ -4687,6 +4142,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4697,6 +4155,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("InvalidTable", table, DataRowState.Unchanged).Result);
                         }
@@ -4720,6 +4181,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
             // Open the source connection
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationNonIdentityTable`"))
                 {
@@ -4730,6 +4194,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                         // Open the destination connection
                         using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                         {
+                            // Setup
+                            Helper.SetupAsyncInsert(destinationConnection);
+
                             // Act
                             Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged).Result);
                         }
@@ -4750,11 +4217,17 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
+
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
@@ -4778,11 +4251,16 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
 
             using (var sourceConnection = new ClickHouseConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.SetupAsyncInsert(sourceConnection);
                 sourceConnection.InsertAll(tables);
 
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM `BulkOperationIdentityTable`"))
                 using (var destinationConnection = new ClickHouseConnection(Database.ConnectionString))
                 {
+                    // Setup
+                    Helper.SetupAsyncInsert(destinationConnection);
+
                     // Act
                     var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 

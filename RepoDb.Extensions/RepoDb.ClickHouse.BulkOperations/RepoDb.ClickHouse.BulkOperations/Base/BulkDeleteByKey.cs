@@ -146,10 +146,9 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new ClickHouseBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                result = WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
+                WriteToServerInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize);
 
-                // Execute and return
-                ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
+                result = ClickHouseExecution.DeleteFromPseudoTable(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction);
             }
             finally
             {
@@ -209,10 +208,12 @@ namespace RepoDb
 
                 using var dataTable = CreateKeyValuesDataTable(qualifierField, keyValues);
                 var mappings = new[] { new ClickHouseBulkInsertMapItem(qualifierField.Name, qualifierField.Name) };
-                result = await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, dataTable, null, mappings, bulkCopyTimeout, batchSize, cancellationToken);
 
-                // Execute and return
-                await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
+                // Execute and return - the actual number of keys matched (and deleted), not merely the
+                // number of key values staged above (see ClickHouseExecution.DeleteFromPseudoTable's
+                // remarks; these can differ, e.g. keys that don't exist in tableName).
+                result = await ClickHouseExecution.DeleteFromPseudoTableAsync(connection, tableName, pseudoTableName, new[] { qualifierField }, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

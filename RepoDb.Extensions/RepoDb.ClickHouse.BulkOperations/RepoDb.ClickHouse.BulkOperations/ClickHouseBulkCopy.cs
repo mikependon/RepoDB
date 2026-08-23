@@ -122,6 +122,10 @@ namespace RepoDb.ClickHouse.BulkOperations
                 BatchSize = BatchSize ?? 100_000,
                 MaxDegreeOfParallelism = 4,
                 MaxExecutionTime = TimeSpan.FromSeconds(BulkCopyTimeout),
+                CustomSettings = new Dictionary<string, object>
+                {
+                    ["optimize_on_insert"] = 0,
+                },
             };
 
             return await client.InsertBinaryAsync(
