@@ -132,7 +132,7 @@ namespace RepoDb
             await connection.EnsureOpenAsync(cancellationToken);
             using var reader = new DataEntityDataReader<TEntity>(entities);
             using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await arrayBinder.BindArrayAsync(reader, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace RepoDb
         {
             await connection.EnsureOpenAsync(cancellationToken);
             using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await arrayBinder.BindArrayAsync(table, rowState, cancellationToken);
+            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace RepoDb
             await connection.EnsureOpenAsync(cancellationToken);
             var countingReader = new CountingDataReader(reader);
             using var bulkCopy = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-            return await bulkCopy.BindArrayAsync(countingReader, cancellationToken);
+            return await bulkCopy.WriteToServerAsync(countingReader, cancellationToken);
         }
 
         #endregion

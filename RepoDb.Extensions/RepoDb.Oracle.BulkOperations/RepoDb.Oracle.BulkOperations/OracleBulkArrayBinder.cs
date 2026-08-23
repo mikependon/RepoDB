@@ -287,13 +287,15 @@ namespace RepoDb.Oracle.BulkOperations
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Array-binds and inserts every row of <paramref name="reader"/> into <see cref="DestinationTableName"/>.
         /// </summary>
         /// <param name="reader">The source rows to insert.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of rows affected.</returns>
-        public async Task<int> BindArrayAsync(
+        public async Task<int> WriteToServerAsync(
             IDataReader reader,
             CancellationToken cancellationToken = default)
         {
@@ -316,7 +318,7 @@ namespace RepoDb.Oracle.BulkOperations
         /// <param name="rowState">When specified, only rows in this state are inserted.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of rows affected.</returns>
-        public Task<int> BindArrayAsync(
+        public Task<int> WriteToServerAsync(
             DataTable dataTable,
             DataRowState? rowState = null,
             CancellationToken cancellationToken = default)
@@ -331,6 +333,10 @@ namespace RepoDb.Oracle.BulkOperations
             return BindArrayCoreAsync(dataTable, rowsQuery.ToArray(), mappings, cancellationToken);
         }
 
+        #endregion
+
+        #region IDisposable
+
         /// <summary>
         /// Disposes the underlying resources used by this instance.
         /// </summary>
@@ -338,5 +344,7 @@ namespace RepoDb.Oracle.BulkOperations
         {
             // Does nothing for now; this instance owns no unmanaged resources.
         }
+
+        #endregion
     }
 }
