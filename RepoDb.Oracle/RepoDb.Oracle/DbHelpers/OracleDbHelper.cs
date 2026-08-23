@@ -111,15 +111,15 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default)
         {
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                !await reader.IsDBNullAsync(1, cancellationToken) && await reader.GetFieldValueAsync<int>(1, cancellationToken) == 1,
-                !await reader.IsDBNullAsync(2, cancellationToken) && await reader.GetFieldValueAsync<int>(2, cancellationToken) == 1,
-                !await reader.IsDBNullAsync(3, cancellationToken) && await reader.GetFieldValueAsync<int>(3, cancellationToken) == 1,
+                !await reader.IsDBNullAsync(1, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(1, cancellationToken)) == 1,
+                !await reader.IsDBNullAsync(2, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(2, cancellationToken)) == 1,
+                !await reader.IsDBNullAsync(3, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(3, cancellationToken)) == 1,
                 await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("varchar2") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
                 await reader.IsDBNullAsync(5, cancellationToken) ? 0 : Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(5, cancellationToken)),
                 await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(6, cancellationToken)),
                 await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)0 : Convert.ToByte(await reader.GetFieldValueAsync<decimal>(7, cancellationToken)),
                 await reader.IsDBNullAsync(4, cancellationToken) ? "varchar2" : await reader.GetFieldValueAsync<string>(4, cancellationToken),
-                !await reader.IsDBNullAsync(8, cancellationToken) && await reader.GetFieldValueAsync<int>(8, cancellationToken) == 1,
+                !await reader.IsDBNullAsync(8, cancellationToken) && Convert.ToInt32(await reader.GetFieldValueAsync<decimal>(8, cancellationToken)) == 1,
                 "ORACLE");
         }
 
