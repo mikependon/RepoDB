@@ -6,14 +6,14 @@ namespace RepoDb.Oracle.BulkOperations
     /// A collection used to define the source-to-destination column mappings of an <see cref="OracleBulkArrayBinder"/>,
     /// mirroring the shape of <see cref="OracleBulkCopyColumnMappingCollection"/>.
     /// </summary>
-    internal sealed class OracleBulkArrayBinderColumnMappingCollection : Collection<OracleBulkInsertMapItem>
+    public sealed class OracleBulkArrayBinderColumnMappingCollection : Collection<OracleBulkInsertMapItem>
     {
         /// <summary>
-        ///
+        /// Adds a source-to-destination column mapping.
         /// </summary>
-        /// <param name="sourceColumn"></param>
-        /// <param name="destinationColumn"></param>
-        /// <returns></returns>
+        /// <param name="sourceColumn">The source column or property name.</param>
+        /// <param name="destinationColumn">The destination table's column name.</param>
+        /// <returns>The added mapping.</returns>
         public OracleBulkInsertMapItem Add(
             string sourceColumn,
             string destinationColumn)

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using RepoDb;
 using RepoDb.Extensions;
 using RepoDb.Resolvers;
 
@@ -14,21 +14,18 @@ using RepoDb.Resolvers;
 namespace RepoDb.Oracle.BulkOperations
 {
     /// <summary>
-    /// An async, array-bind based alternative to <see cref="OracleBulkCopy"/> - there is no true async
-    /// equivalent of <see cref="OracleBulkCopy.WriteToServer(IDataReader)"/>, so this issues batched
-    /// <c>INSERT ... VALUES (:p0, :p1, ...)</c> statements with <see cref="OracleCommand.ArrayBindCount"/>
-    /// set, which ODP.NET can execute via <see cref="OracleCommand.ExecuteNonQueryAsync(CancellationToken)"/>.
+    /// Array-bind based alternative to <see cref="OracleBulkCopy"/> for bulk insert huge amount of data with true asynchronous capability.
     /// </summary>
-    internal class OracleBulkArrayBinder : IDisposable
+    public class OracleBulkArrayBinder : IDisposable
     {
         private const int MaxBindableParametersCount = 65_535;
         private static readonly TypeToOracleDbTypeResolver dbTypeResolver = new();
         private readonly OracleConnection connection;
 
         /// <summary>
-        ///
+        /// Creates a new instance bound to <paramref name="connection"/>.
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="connection">The connection to bind array inserts against.</param>
         public OracleBulkArrayBinder(OracleConnection connection)
         {
             this.connection = connection;
@@ -37,27 +34,27 @@ namespace RepoDb.Oracle.BulkOperations
         #region Properties
 
         /// <summary>
-        ///
+        /// Gets or sets the target table name.
         /// </summary>
         public string DestinationTableName { get; set; }
 
         /// <summary>
-        ///
+        /// Gets or sets the command timeout, in seconds. Zero uses the provider default.
         /// </summary>
         public int BulkCopyTimeout { get; set; }
 
         /// <summary>
-        ///
+        /// Gets or sets the array-bind batch size. Zero auto-sizes it from the column count.
         /// </summary>
         public int BatchSize { get; set; }
 
         /// <summary>
-        ///
+        /// Gets or sets the transaction each batch is executed under.
         /// </summary>
         public OracleTransaction Transaction { get; set; }
 
         /// <summary>
-        ///
+        /// Gets the source-to-destination column mappings. Empty maps every source column to itself.
         /// </summary>
         public OracleBulkArrayBinderColumnMappingCollection ColumnMappings { get; } = new();
 
@@ -198,8 +195,9 @@ namespace RepoDb.Oracle.BulkOperations
 
             var dbSetting = connection.GetDbSetting();
             var unquotedTableName = DestinationTableName.AsUnquoted(true, dbSetting);
-            var dbFields = await DbFieldCache.GetAsync(connection, unquotedTableName, Transaction, cancellationToken);
-            var identity = dbFields?.GetIdentity();
+            var dbFieldList = await connection.GetDbHelper().GetFieldsAsync(connection, unquotedTableName, Transaction, cancellationToken);
+            var dbFields = new DbFieldCollection(dbFieldList, dbSetting);
+            var identity = dbFields.GetIdentity();
 
             if (identity == null)
             {
@@ -290,11 +288,11 @@ namespace RepoDb.Oracle.BulkOperations
         #endregion
 
         /// <summary>
-        ///
+        /// Array-binds and inserts every row of <paramref name="reader"/> into <see cref="DestinationTableName"/>.
         /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="reader">The source rows to insert.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
         public async Task<int> BindArrayAsync(
             IDataReader reader,
             CancellationToken cancellationToken = default)
@@ -312,12 +310,12 @@ namespace RepoDb.Oracle.BulkOperations
         }
 
         /// <summary>
-        ///
+        /// Array-binds and inserts the rows of <paramref name="dataTable"/> into <see cref="DestinationTableName"/>.
         /// </summary>
-        /// <param name="dataTable"></param>
-        /// <param name="rowState"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="dataTable">The source rows to insert.</param>
+        /// <param name="rowState">When specified, only rows in this state are inserted.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
         public Task<int> BindArrayAsync(
             DataTable dataTable,
             DataRowState? rowState = null,
@@ -334,10 +332,11 @@ namespace RepoDb.Oracle.BulkOperations
         }
 
         /// <summary>
-        ///
+        /// Disposes the underlying resources used by this instance.
         /// </summary>
         public void Dispose()
         {
+            // Does nothing for now; this instance owns no unmanaged resources.
         }
     }
 }
