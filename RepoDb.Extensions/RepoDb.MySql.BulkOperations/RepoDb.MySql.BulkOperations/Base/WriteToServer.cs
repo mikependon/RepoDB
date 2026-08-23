@@ -197,14 +197,10 @@ namespace RepoDb
             Field excludeField = null)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                var countingReader = new CountingDataReader(reader);
-                var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
-                bulkCopy.WriteToServer(filteredReader);
-                return countingReader.Count;
-            },
-            cancellationToken);
+            var countingReader = new CountingDataReader(reader);
+            var (bulkCopy, filteredReader) = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyTimeout, transaction, excludeField);
+            await bulkCopy.WriteToServerAsync(filteredReader, cancellationToken);
+            return countingReader.Count;
         }
 
         #endregion
