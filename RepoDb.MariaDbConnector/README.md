@@ -6,8 +6,6 @@
 
 The dedicated MariaDB provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector), the dedicated MariaDB ADO.NET provider for RepoDB.
 
-> **Disclaimer:** RepoDb.MariaDbConnector is a direct copy of [RepoDb.MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) as MariaDB is largely wire- and SQL-compatible with MySQL. It is published as its own, de-facto dedicated package rather than folded into RepoDb.MySqlConnector so that MariaDB support can be versioned, tuned, and evolved independently.
-
 ## Important Pages
 
 - [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
@@ -43,7 +41,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.MariaDbBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseMariaDbConnector();
 ```
 
 Then use any RepoDB operation directly on your `MariaDbConnection`, pointed at your MariaDB server:
