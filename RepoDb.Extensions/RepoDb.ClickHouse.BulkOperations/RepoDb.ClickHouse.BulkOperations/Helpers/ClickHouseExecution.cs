@@ -16,6 +16,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
     /// </summary>
     internal static class ClickHouseExecution
     {
+        // TODO: I think the WaitForMutations() calls are slowing down the process. It would be good to have this an option to the user in the IDbSetting.
+
         #region Shared
 
         /// <summary>

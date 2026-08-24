@@ -963,8 +963,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
         ///
         /// </summary>
         /// <param name="count"></param>
+        /// <param name="ids">
+        /// The <see cref="BulkOperationNonIdentityTable.Id"/> value for each generated object, in order - pass
+        /// the Ids of already-inserted rows so the generated objects can be matched back to them (e.g. for a
+        /// bulk delete/update by primary key). Defaults to a fresh, unrelated Id per object when omitted.
+        /// </param>
         /// <returns></returns>
-        public static List<dynamic> CreateBulkOperationAnonymousObjectIdentityTables(int count)
+        public static List<dynamic> CreateBulkOperationAnonymousObjectIdentityTables(int count,
+            IList<long> ids = null)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -972,7 +978,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
             {
                 tables.Add(new
                 {
-                    Id = DateTime.UtcNow.Ticks,
+                    Id = ids != null ? ids[i] : DateTime.UtcNow.Ticks,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -1061,20 +1067,24 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
          */
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="count"></param>
-        /// <param name="hasId"></param>
+        /// <param name="ids">
+        /// The <see cref="BulkOperationNonIdentityTable.Id"/> value for each generated object, in order - pass
+        /// the Ids of already-inserted rows so the generated objects can be matched back to them (e.g. for a
+        /// bulk delete/update by primary key). Defaults to a fresh, unrelated Id per object when omitted.
+        /// </param>
         /// <returns></returns>
-        public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count)
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count,
+            IList<long> ids = null)
         {
             var random = new Random();
             var tables = new List<ExpandoObject>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 var item = new ExpandoObject() as IDictionary<string, object>;
-                item["Id"] = DateTime.UtcNow.Ticks;
+                item["Id"] = ids != null ? ids[i] : DateTime.UtcNow.Ticks;
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
@@ -1365,7 +1375,6 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
             var tables = new List<ExpandoObject>();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 var item = new ExpandoObject() as IDictionary<string, object>;
                 item["Id"] = DateTime.UtcNow.Ticks;
                 item["RowGuid"] = Guid.NewGuid();
