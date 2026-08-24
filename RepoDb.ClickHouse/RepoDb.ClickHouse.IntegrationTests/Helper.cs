@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading;
+using System.Text.Json.Nodes;
 
 namespace RepoDb.ClickHouse.IntegrationTests
 {
@@ -70,6 +71,13 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 else if (value1 is DateTime d1 && value2 is DateTime d2)
                 {
                     AssertDateTimeEqualityWithTolerance(d1, d2, propertyOfType1.Name);
+                }
+                else if (value1 is JsonObject j1 && value2 is JsonObject j2)
+                {
+                   var node1 = j1 as JsonNode;
+                   var node2 = j2 as JsonNode;
+                   Assert.IsTrue(JsonNode.DeepEquals(node1, node2),
+                            $"Assert failed for '{propertyOfType1.Name}'. The values are '{node1}' and '{node2}'.");
                 }
                 else
                 {
@@ -179,14 +187,35 @@ namespace RepoDb.ClickHouse.IntegrationTests
                         {
                             AssertDateTimeEqualityWithTolerance(dv1, dv2, property.Name);
                         }
+                        else if (typeof(JsonNode).IsAssignableFrom(propertyType) || typeof(JsonObject).IsAssignableFrom(propertyType))
+                        {
+                            var node1 = value1 as JsonNode;
+                            var node2 = value2 as JsonNode;
+                            Assert.IsTrue(JsonNode.DeepEquals(node1, node2),
+                                $"Assert failed for '{property.Name}'. The values are '{node1}' and '{node2}'.");
+                        }
                         else
                         {
-                            Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                            var converted1 = SafeChangeType(value1, propertyType);
+                            var converted2 = SafeChangeType(value2, propertyType);
+
+                            Assert.AreEqual(converted1, converted2,
                                 $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                         }
                     }
                 }
             });
+        }
+
+        private static object SafeChangeType(object value, Type propertyType)
+        {
+            if (value == null || value is DBNull)
+                return null;
+
+            // Se il target è Nullable<T>, converti verso il tipo sottostante T
+            var underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+
+            return Convert.ChangeType(value, underlyingType);
         }
 
         /// <summary>
@@ -305,7 +334,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
-                    ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
+                    ColumnJson = new JsonObject
+                    {
+                        ["Field1"] = "Value1",
+                        ["Field2"] = 42,
+                        ["Field3"] = true,
+                        ["Nested"] = new JsonObject
+                        {
+                            ["SubField"] = "SubValue"
+                        },
+                        ["Array"] = new JsonArray(1, 2, 3)
+                    },
+                    ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}",
                     ColumnNChar = "C",
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
@@ -353,7 +393,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
             table.ColumnSmallInt = Convert.ToInt16(1);
             table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
-            table.ColumnJson = "{\"Field\": \"Value-Updated\"}";
+            table.ColumnJson = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2",
+                ["Field3"] = true,
+                ["Nested"] = new JsonObject
+                {
+                    ["SubField"] = "SubValue"
+                },
+                ["Array"] = new JsonArray(1, 2, 3)
+            };
+            table.ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             table.ColumnNChar = "C";
             table.ColumnNVarChar = $"ColumnNVarChar:{1}-Updated";
             table.ColumnLongText = $"ColumnLongText:{1}-Updated";
@@ -405,7 +456,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
-                    ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
+                    ColumnJson = new JsonObject()
+                    {
+                        ["Field1"] = "Value1",
+                        ["Field2"] = "Value2",
+                        ["Field3"] = true,
+                        ["Nested"] = new JsonObject
+                        {
+                            ["SubField"] = "SubValue"
+                        },
+                        ["Array"] = new JsonArray(1, 2, 3)
+                    },
+                    ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}",
                     ColumnNChar = "C",
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
@@ -453,7 +515,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
             table.ColumnSmallInt = Convert.ToInt16(1);
             table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
-            table.ColumnJson = "{ \"Field\" : \"Value\" }";
+            table.ColumnJson = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2",
+                ["Field3"] = true,
+                ["Nested"] = new JsonObject
+                {
+                    ["SubField"] = "SubValue"
+                },
+                ["Array"] = new JsonArray(1, 2, 3)
+            };
+            table.ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             table.ColumnNChar = "C";
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
@@ -504,7 +577,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnTinyInt"] = (SByte)i;
                 item["ColumnChar"] = "C";
-                item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+                item["ColumnJson"] = new JsonObject
+                {
+                    ["Field1"] = "Value1",
+                    ["Field2"] = "Value2",
+                    ["Field3"] = true,
+                    ["Nested"] = new JsonObject
+                    {
+                        ["SubField"] = "SubValue"
+                    },
+                    ["Array"] = new JsonArray(1, 2, 3)
+                };
+                item["ColumnJsonString"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
                 item["ColumnNChar"] = "C";
                 item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
                 item["ColumnLongText"] = $"ColumnLongText:{i}";
@@ -553,7 +637,12 @@ namespace RepoDb.ClickHouse.IntegrationTests
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnTinyInt"] = (SByte)2;
             item["ColumnChar"] = "C";
-            item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+            item["ColumnJson"] = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2"
+            };
+            item["ColumnJsonString"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             item["ColumnNChar"] = "C";
             item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
             item["ColumnLongText"] = $"ColumnLongText:{2}";
@@ -609,7 +698,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
-                    ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
+                    ColumnJson = new JsonObject
+                    {
+                        ["Field1"] = "Value1",
+                        ["Field2"] = "Value2",
+                        ["Field3"] = true,
+                        ["Nested"] = new JsonObject
+                        {
+                            ["SubField"] = "SubValue"
+                        },
+                        ["Array"] = new JsonArray { 1, 2, 3 }
+                    },
+                    ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}",
                     ColumnNChar = "C",
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
@@ -657,7 +757,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
             table.ColumnSmallInt = Convert.ToInt16(1);
             table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
-            table.ColumnJson = "{\"Field\": \"Value\"}";
+            table.ColumnJson = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2",
+                ["Field3"] = true,
+                ["Nested"] = new JsonObject
+                {
+                    ["SubField"] = "SubValue"
+                },
+                ["Array"] = new JsonArray { 1, 2, 3 }
+            };
+            table.ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             table.ColumnNChar = "C";
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
@@ -709,7 +820,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
-                    ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
+                    ColumnJson = new JsonObject
+                    {
+                        ["Field1"] = "Value1",
+                        ["Field2"] = "Value2",
+                        ["Field3"] = true,
+                        ["Nested"] = new JsonObject
+                        {
+                            ["SubField"] = "SubValue"
+                        },
+                        ["Array"] = new JsonArray { 1, 2, 3 }
+                    },
+                    ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}",
                     ColumnNChar = "C",
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
@@ -757,7 +879,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
             table.ColumnSmallInt = Convert.ToInt16(1);
             table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
-            table.ColumnJson = "{ \"Field\" : \"Value\" }";
+            table.ColumnJson = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2",
+                ["Field3"] = true,
+                ["Nested"] = new JsonObject
+                {
+                    ["SubField"] = "SubValue"
+                },
+                ["Array"] = new JsonArray { 1, 2, 3 }
+            };
+            table.ColumnJsonString = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             table.ColumnNChar = "C";
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
@@ -808,7 +941,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnTinyInt"] = (SByte)i;
                 item["ColumnChar"] = "C";
-                item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+                item["ColumnJson"] = new JsonObject
+                {
+                    ["Field1"] = "Value1",
+                    ["Field2"] = "Value2",
+                    ["Field3"] = true,
+                    ["Nested"] = new JsonObject
+                    {
+                        ["SubField"] = "SubValue"
+                    },
+                    ["Array"] = new JsonArray { 1, 2, 3 }
+                };
+                item["ColumnJsonString"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
                 item["ColumnNChar"] = "C";
                 item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
                 item["ColumnLongText"] = $"ColumnLongText:{i}";
@@ -857,7 +1001,18 @@ namespace RepoDb.ClickHouse.IntegrationTests
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnTinyInt"] = (SByte)2;
             item["ColumnChar"] = "C";
-            item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+            item["ColumnJson"] = new JsonObject
+            {
+                ["Field1"] = "Value1",
+                ["Field2"] = "Value2",
+                ["Field3"] = true,
+                ["Nested"] = new JsonObject
+                {
+                    ["SubField"] = "SubValue"
+                },
+                ["Array"] = new JsonArray { 1, 2, 3 }
+            };
+            item["ColumnJsonString"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\", \"Field3\": true, \"Nested\": {\"SubField\": \"SubValue\"}, \"Array\": [1, 2, 3]}";
             item["ColumnNChar"] = "C";
             item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
             item["ColumnLongText"] = $"ColumnLongText:{2}";
