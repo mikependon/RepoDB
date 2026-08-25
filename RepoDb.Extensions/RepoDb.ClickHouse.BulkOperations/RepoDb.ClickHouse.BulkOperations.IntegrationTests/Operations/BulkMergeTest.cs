@@ -70,23 +70,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -142,23 +128,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -321,23 +293,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -393,23 +351,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -633,22 +577,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                            Assert.Throws<NotSupportedException>(() =>
+                                destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
                         }
                     }
                 }
@@ -903,22 +834,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -974,22 +892,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1033,22 +938,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1104,22 +996,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1163,23 +1042,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1235,23 +1100,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1307,23 +1158,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -1484,22 +1321,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                            Assert.Throws<NotSupportedException>(() =>
+                                destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
                         }
                     }
                 }
@@ -1969,23 +1793,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2016,7 +1828,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2035,23 +1848,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 connection.InsertAll(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2086,7 +1887,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2211,23 +2013,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2283,23 +2073,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationMappedIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2530,22 +2308,14 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - must observe the Task synchronously via .Result (not an async lambda, which
+                            // MSTest coerces to async void here - an unhandled exception inside that would crash
+                            // the process instead of being caught by Assert.Throws). ClickHouse has no
+                            // session-wide scope identity/auto-increment mechanism, so ReturnIdentity always
+                            // throws (see ClickHouseConnectionExtension.GuardReturnIdentity) - this asserts that
+                            // guard, rather than the merge succeeding.
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
                         }
                     }
                 }
@@ -2821,22 +2591,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2892,22 +2651,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -2951,22 +2699,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -3022,22 +2759,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -3081,23 +2807,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -3153,23 +2867,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -3225,23 +2927,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -3402,22 +3092,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - must observe the Task synchronously via .Result (not an async lambda, which
+                            // MSTest coerces to async void here - an unhandled exception inside that would crash
+                            // the process instead of being caught by Assert.Throws).
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
                         }
                     }
                 }
@@ -3887,23 +3566,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -3959,23 +3624,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4138,23 +3789,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4210,23 +3847,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationMappedNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4450,22 +4073,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                            Assert.Throws<NotSupportedException>(() =>
+                                destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
                         }
                     }
                 }
@@ -4712,22 +4322,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4783,22 +4380,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4842,22 +4426,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4913,22 +4484,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -4972,23 +4530,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -5044,23 +4588,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -5116,23 +4646,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
 
@@ -5283,22 +4799,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                            Assert.Throws<NotSupportedException>(() =>
+                                destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
                         }
                     }
                 }
@@ -5764,23 +5267,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -5830,23 +5321,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 connection.InsertAll(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6006,23 +5485,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6078,23 +5545,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationMappedNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.IdMapped <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6319,22 +5774,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - must observe the Task synchronously via .Result (not an async lambda, which
+                            // MSTest coerces to async void here - an unhandled exception inside that would crash
+                            // the process instead of being caught by Assert.Throws).
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
                         }
                     }
                 }
@@ -6582,22 +6026,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6653,22 +6086,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6712,22 +6134,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6783,22 +6194,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6842,23 +6242,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6914,23 +6302,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -6986,23 +6362,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.UpdateBulkOperationNonIdentityTables(tables);
 
-                // Act
-                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-                Assert.IsFalse(tables.Any(e => e.Id <= 0));
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                // Act
-                var queryResult = connection.QueryAll<BulkOperationNonIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
-                    Helper.AssertPropertiesEquality(t, item);
-                });
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -7153,22 +6517,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result;
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
-
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
-
-                            // Assert
-                            var rows = table.Rows.OfType<DataRow>();
-                            queryResult.AsList().ForEach(item =>
-                            {
-                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
-                                Assert.IsNotNull(row);
-                            });
+                            // Act - must observe the Task synchronously via .Result (not an async lambda, which
+                            // MSTest coerces to async void here - an unhandled exception inside that would crash
+                            // the process instead of being caught by Assert.Throws).
+                            Assert.Throws<AggregateException>(() =>
+                                destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
                         }
                     }
                 }

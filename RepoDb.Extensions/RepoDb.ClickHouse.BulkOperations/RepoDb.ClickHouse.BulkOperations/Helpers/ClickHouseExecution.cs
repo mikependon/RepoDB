@@ -21,10 +21,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         #region Shared
 
         /// <summary>
-        /// Creates a fresh pseudo table, first dropping any table left over under the same name (see the
-        /// remarks on <see cref="ClickHouseText.GetCreatePseudoTableSql"/> for why a leftover table is never
-        /// reused). Two separate statements/round trips, since ClickHouse.Driver does not support
-        /// multi-statement execution (see the type-level remarks on <see cref="ClickHouseText"/>).
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -185,9 +182,19 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var fieldList = fields.AsList();
             var qualifierList = qualifiers.AsList();
-            if (HasUpdatableFields(fieldList, qualifierList))
+            var keyFields = GetKeyFields(connection, tableName, transaction);
+            if (ClickHouseText.GetUpdatableFields(fieldList, qualifierList, keyFields).Any())
             {
-                connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction);
+                CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
+                try
+                {
+                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction);
+                    connection.WaitForMutations(tableName, transaction);
+                }
+                finally
+                {
+                    DropPseudoJoinTable(connection, pseudoTableName, transaction);
+                }
             }
             connection.ExecuteNonQuery(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction);
             connection.WaitForMutations(tableName, transaction);
@@ -219,9 +226,19 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var fieldList = fields.AsList();
             var qualifierList = qualifiers.AsList();
-            if (HasUpdatableFields(fieldList, qualifierList))
+            var keyFields = GetKeyFields(connection, tableName, transaction);
+            if (ClickHouseText.GetUpdatableFields(fieldList, qualifierList, keyFields).Any())
             {
-                await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+                await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, cancellationToken);
+                try
+                {
+                    await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+                }
+                finally
+                {
+                    await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                }
             }
             await connection.ExecuteNonQueryAsync(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
             await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
@@ -253,9 +270,23 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             DbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
-            connection.WaitForMutations(tableName, transaction);
+            var qualifierList = qualifiers.AsList();
+            var keyFields = GetKeyFields(connection, tableName, transaction);
+            if (ClickHouseText.GetUpdatableFields(fields, qualifierList, keyFields).Any() == false)
+            {
+                return;
+            }
+            CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
+            try
+            {
+                var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
+                connection.ExecuteNonQuery(commandText, transaction: transaction);
+                connection.WaitForMutations(tableName, transaction);
+            }
+            finally
+            {
+                DropPseudoJoinTable(connection, pseudoTableName, transaction);
+            }
         }
 
         /// <summary>
@@ -282,9 +313,23 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
-            await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+            var qualifierList = qualifiers.AsList();
+            var keyFields = GetKeyFields(connection, tableName, transaction);
+            if (ClickHouseText.GetUpdatableFields(fields, qualifierList, keyFields).Any() == false)
+            {
+                return;
+            }
+            await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, cancellationToken);
+            try
+            {
+                var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
+                await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+            }
         }
 
         #endregion
@@ -358,13 +403,92 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fields"></param>
-        /// <param name="qualifiers"></param>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        private static bool HasUpdatableFields(IList<Field> fields,
-            IList<Field> qualifiers) =>
-            fields.Any(field =>
-                qualifiers.Any(qualifier => string.Equals(qualifier.Name, field.Name, System.StringComparison.OrdinalIgnoreCase)) == false);
+        private static List<Field> GetKeyFields(ClickHouseConnection connection,
+            string tableName,
+            DbTransaction transaction) =>
+            DbFieldCache.Get(connection, tableName, transaction)
+                ?.GetItems()
+                ?.Where(df => df.IsPrimary)
+                .AsFields()
+                .ToList() ?? new List<Field>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="transaction"></param>
+        private static void CreatePseudoJoinTable(ClickHouseConnection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            DbTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
+            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task CreatePseudoJoinTableAsync(ClickHouseConnection connection,
+            string pseudoTableName,
+            IEnumerable<Field> qualifiers,
+            DbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="transaction"></param>
+        private static void DropPseudoJoinTable(ClickHouseConnection connection,
+            string pseudoTableName,
+            DbTransaction transaction = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
+            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task DropPseudoJoinTableAsync(ClickHouseConnection connection,
+            string pseudoTableName,
+            DbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+        }
 
         #endregion
     }
