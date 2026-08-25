@@ -42,8 +42,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             DbTransaction transaction = null)
         {
             var dbSetting = connection.GetDbSetting();
-            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting), transaction: transaction);
-            connection.ExecuteNonQuery(ClickHouseText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(ClickHouseText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField), transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetCreatePseudoTableSql(tableName, pseudoTableName, pseudoTableType, dbSetting, qualifierField), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = ClickHouseText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = ClickHouseText.GetTruncatePseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         {
             var dbSetting = connection.GetDbSetting();
             var commandText = ClickHouseText.GetDropPseudoTableSql(pseudoTableName, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -186,20 +186,20 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var keyFields = GetKeyFields(connection, tableName, transaction);
             if (ClickHouseText.GetUpdatableFields(fieldList, qualifierList, keyFields).Any())
             {
-                CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
+                CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction, trace, traceKey);
                 try
                 {
-                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction); if (IsWaitForMutationsEnabled(connection))
+                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey); if (IsWaitForMutationsEnabled(connection))
                     {
                         connection.WaitForMutations(tableName, transaction);
                     }
                 }
                 finally
                 {
-                    DropPseudoJoinTable(connection, pseudoTableName, transaction);
+                    DropPseudoJoinTable(connection, pseudoTableName, transaction, trace, traceKey);
                 }
             }
-            connection.ExecuteNonQuery(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
             if (IsWaitForMutationsEnabled(connection))
             {
                 connection.WaitForMutations(tableName, transaction);
@@ -235,18 +235,18 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var keyFields = GetKeyFields(connection, tableName, transaction);
             if (ClickHouseText.GetUpdatableFields(fieldList, qualifierList, keyFields).Any())
             {
-                await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, cancellationToken);
+                await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, trace, traceKey, cancellationToken);
                 try
                 {
-                    await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.ExecuteNonQueryAsync(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
                     await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
                 }
                 finally
                 {
-                    await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                    await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, trace, traceKey, cancellationToken);
                 }
             }
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
         }
 
@@ -282,18 +282,18 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             {
                 return;
             }
-            CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
+            CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction, trace, traceKey);
             try
             {
                 var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
-                connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsWaitForMutationsEnabled(connection))
+                connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey); if (IsWaitForMutationsEnabled(connection))
                 {
                     connection.WaitForMutations(tableName, transaction);
                 }
             }
             finally
             {
-                DropPseudoJoinTable(connection, pseudoTableName, transaction);
+                DropPseudoJoinTable(connection, pseudoTableName, transaction, trace, traceKey);
             }
         }
 
@@ -327,16 +327,16 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             {
                 return;
             }
-            await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, cancellationToken);
+            await CreatePseudoJoinTableAsync(connection, pseudoTableName, qualifierList, transaction, trace, traceKey, cancellationToken);
             try
             {
                 var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
-                await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
                 await connection.WaitForMutationsAsync(tableName, transaction, cancellationToken: cancellationToken);
             }
             finally
             {
-                await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, cancellationToken);
+                await DropPseudoJoinTableAsync(connection, pseudoTableName, transaction, trace, traceKey, cancellationToken);
             }
         }
 
@@ -366,9 +366,9 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var qualifierList = qualifiers.AsList();
             var countText = ClickHouseText.GetCountMatchedByPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            var result = connection.ExecuteScalar<int>(countText, transaction: transaction);
+            var result = connection.ExecuteScalar<int>(countText, transaction: transaction, trace: trace, traceKey: traceKey);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsWaitForMutationsEnabled(connection))
+            connection.ExecuteNonQuery(commandText, transaction: transaction, trace: trace, traceKey: traceKey); if (IsWaitForMutationsEnabled(connection))
             {
                 connection.WaitForMutations(tableName, transaction);
             }
@@ -399,9 +399,9 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var qualifierList = qualifiers.AsList();
             var countText = ClickHouseText.GetCountMatchedByPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            var result = await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken);
+            var result = await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
             await connection.WaitForMutationsAsync(tableName, transaction: transaction, cancellationToken: cancellationToken);
             return result;
         }
@@ -436,13 +436,15 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         private static void CreatePseudoJoinTable(ClickHouseConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
-            DbTransaction transaction = null)
+            DbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = null)
         {
             var dbSetting = connection.GetDbSetting();
             var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
-            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction);
-            connection.ExecuteNonQuery(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction);
-            connection.ExecuteNonQuery(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
+            connection.ExecuteNonQuery(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -458,13 +460,15 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
             DbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetCreatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetPopulatePseudoJoinTableSql(pseudoTableName, pseudoJoinTableName, qualifiers, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -475,11 +479,13 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// <param name="transaction"></param>
         private static void DropPseudoJoinTable(ClickHouseConnection connection,
             string pseudoTableName,
-            DbTransaction transaction = null)
+            DbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = null)
         {
             var dbSetting = connection.GetDbSetting();
             var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
-            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction);
+            connection.ExecuteNonQuery(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey);
         }
 
         /// <summary>
@@ -493,11 +499,13 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         private static async Task DropPseudoJoinTableAsync(ClickHouseConnection connection,
             string pseudoTableName,
             DbTransaction transaction = null,
+            ITrace trace = null,
+            string traceKey = null,
             CancellationToken cancellationToken = default)
         {
             var dbSetting = connection.GetDbSetting();
             var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
-            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, trace: trace, traceKey: traceKey, cancellationToken: cancellationToken);
         }
 
         /// <summary>
