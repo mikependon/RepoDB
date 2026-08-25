@@ -26,6 +26,7 @@ A high-performant extension library of RepoDB that does bulk operations towards 
 
 - [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) — ask questions and share ideas.
 - [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## License

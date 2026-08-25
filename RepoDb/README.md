@@ -19,6 +19,7 @@ To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/Rep
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [Twitter](https://x.com/mike_pendon) - for the latest news.
 - [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) - for questions, ideas and discussions.
 
 ## License
 
