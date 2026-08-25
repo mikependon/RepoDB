@@ -73,7 +73,7 @@ namespace RepoDb
                 {
                     throw new TimeoutException($"Timed out waiting for pending mutations on table '{tableName}' to complete.");
                 }
-                Thread.Sleep(MutationPollInterval);
+                await Task.Delay(MutationPollInterval, cancellationToken);
             }
         }
     }

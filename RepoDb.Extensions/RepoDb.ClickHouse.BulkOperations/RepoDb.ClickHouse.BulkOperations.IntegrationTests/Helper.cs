@@ -396,7 +396,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
         /// <param name="count"></param>
         /// <param name="hasId"></param>
         /// <returns></returns>
-        public static List<dynamic> CreateBulkOperationAnonymousObjectNonIdentityTables(int count)
+        public static List<dynamic> CreateBulkOperationAnonymousObjectNonIdentityTables(int count,
+            IList<long> ids = null)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -404,7 +405,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
             {
                 tables.Add(new
                 {
-                    Id = DateTime.UtcNow.Ticks,
+                    Id = ids != null ? ids[i] : DateTime.UtcNow.Ticks,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = (byte)1,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
@@ -497,14 +498,15 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static List<ExpandoObject> CreateBulkOperationExpandoObjectNonIdentityTables(int count)
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectNonIdentityTables(int count,
+            IList<long> ids = null)
         {
             var random = new Random();
             var tables = new List<ExpandoObject>();
             for (var i = 0; i < count; i++)
             {
                 var item = new ExpandoObject() as IDictionary<string, object>;
-                item["Id"] = DateTime.UtcNow.Ticks;
+                item["Id"] = ids != null ? ids[i] : DateTime.UtcNow.Ticks;
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = (byte)1;
                 item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
