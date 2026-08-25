@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -55,7 +55,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -95,7 +95,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.RowGuid == t.RowGuid); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -124,7 +124,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -164,13 +164,13 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.RowGuidMapped == t.RowGuidMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertForNonIdentityEntities()
+        public void TestClickHouseConnectionBulkInsertForNonIdentityEntitiesWithDifferentIds()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -198,13 +198,24 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     // Setup
                     Helper.SetupAsyncInsert(destinationConnection);
 
-                    Assert.Throws<AggregateException>(() => destinationConnection.BulkInsertAsync(tables));
+                    // Act - the offset Ids are unique, so re-inserting them alongside the original rows
+                    // succeeds; ClickHouse's ReplacingMergeTree has no unique-key constraint to violate.
+                    var bulkInsertResult = destinationConnection.BulkInsert(tables);
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                    // Act
+                    var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count * 2, countResult);
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertForNonIdentityEntitiesDataTable()
+        public void TestClickHouseConnectionBulkInsertForNonIdentityEntitiesDataTableWithDifferentIds()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -228,6 +239,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -239,8 +255,19 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            Assert.Throws<AggregateException>(() =>
-                                destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table));
+                            // Act - the offset Ids are unique, so re-inserting them alongside the original
+                            // rows succeeds; ClickHouse's ReplacingMergeTree has no unique-key constraint to
+                            // violate.
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, countResult);
                         }
                     }
                 }
@@ -258,8 +285,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                Assert.Throws<AggregateException>(() =>
+                // Act - a sync call throws the guard's NotSupportedException directly, not wrapped.
+                Assert.Throws<NotSupportedException>(() =>
                     connection.BulkInsert(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
             }
         }
@@ -323,17 +350,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -527,7 +566,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -566,7 +605,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -599,7 +638,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id); Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -628,7 +667,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(item, t);
                 });
             }
         }
@@ -657,7 +696,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -693,17 +732,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -752,17 +803,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -929,17 +992,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -988,17 +1063,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -1162,7 +1249,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1202,7 +1289,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1231,7 +1318,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1271,7 +1358,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.RowGuidMapped == t.RowGuidMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1287,9 +1374,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Setup
                 Helper.SetupAsyncInsert(connection);
 
-                // Act
-                Assert.Throws<AggregateException>(async () =>
-                    await connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity));
+                // Act - must observe the Task synchronously via .Result (not an async lambda, which MSTest
+                // coerces to async void here - an unhandled exception inside that would crash the process
+                // instead of being caught by Assert.Throws).
+                Assert.Throws<AggregateException>(() =>
+                    connection.BulkInsertAsync(tables, identityBehavior: ClickHouseBulkImportIdentityBehavior.ReturnIdentity).Result);
             }
         }
 
@@ -1352,17 +1441,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before QueryAll below runs, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -1411,17 +1512,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -1550,7 +1663,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1589,7 +1702,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1622,7 +1735,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id); Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -1651,7 +1764,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(item, t);
                 });
             }
         }
@@ -1680,7 +1793,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1716,17 +1829,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -1775,17 +1900,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -1952,17 +2089,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2011,17 +2160,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2185,7 +2346,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2226,7 +2387,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2255,7 +2416,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2296,7 +2457,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2354,6 +2515,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -2365,17 +2531,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2419,6 +2597,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -2430,17 +2613,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2547,7 +2742,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2587,7 +2782,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2616,7 +2811,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id); Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -2645,7 +2840,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(item, t);
                 });
             }
         }
@@ -2674,7 +2869,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2704,6 +2899,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -2715,17 +2915,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2769,6 +2981,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -2780,17 +2997,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -2951,6 +3180,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -2962,17 +3196,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -3016,6 +3262,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -3027,17 +3278,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings);
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -3197,7 +3460,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3238,7 +3501,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3267,7 +3530,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3308,7 +3571,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3384,17 +3647,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -3402,7 +3677,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertAsyncForNonIdentityEntities()
+        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesWithDifferentIds()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3430,13 +3705,24 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     // Setup
                     Helper.SetupAsyncInsert(destinationConnection);
 
-                    Assert.Throws<AggregateException>(async () => await destinationConnection.BulkInsertAsync(tables));
+                    // Act - the offset Ids are unique, so re-inserting them alongside the original rows
+                    // succeeds; ClickHouse's ReplacingMergeTree has no unique-key constraint to violate.
+                    var bulkInsertResult = destinationConnection.BulkInsertAsync(tables).Result;
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                    // Act
+                    var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count * 2, countResult);
                 }
             }
         }
 
         [TestMethod]
-        public void ThrowExceptionOnTestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesDataTable()
+        public void TestClickHouseConnectionBulkInsertAsyncForNonIdentityEntitiesDataTableWithDifferentIds()
         {
             // Setup
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
@@ -3460,6 +3746,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -3471,8 +3762,19 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            Assert.Throws<AggregateException>(async () =>
-                                await destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table));
+                            // Act - the offset Ids are unique, so re-inserting them alongside the original
+                            // rows succeeds; ClickHouse's ReplacingMergeTree has no unique-key constraint to
+                            // violate.
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationNonIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, countResult);
                         }
                     }
                 }
@@ -3567,7 +3869,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3607,7 +3909,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3636,7 +3938,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id); Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -3665,7 +3967,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(item, t);
                 });
             }
         }
@@ -3694,7 +3996,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3724,6 +4026,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -3735,17 +4042,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -3789,6 +4108,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -3800,17 +4124,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -3983,6 +4319,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -3994,17 +4335,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -4048,6 +4401,11 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     {
                         table.Load(reader);
 
+                        // ClickHouse.Driver reports the Id column (the table's ORDER BY sort key) as
+                        // auto-increment in the reader's schema, so DataTable.Load marks it ReadOnly - clear
+                        // that before mutating it below.
+                        table.Columns["Id"].ReadOnly = false;
+
                         foreach (DataRow row in table.Rows)
                         {
                             row["Id"] = Convert.ToInt64(row["Id"]) + 100000;
@@ -4059,17 +4417,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                             // Setup
                             Helper.SetupAsyncInsert(destinationConnection);
 
-                            // Act
-                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
+                            // This reinserts the same Ids already in the table, so without pausing the
+                            // background merge scheduler those duplicate-Id rows can be deduped by
+                            // ReplacingMergeTree before the assertions below run, non-deterministically
+                            // undercounting - see Helper.StopMerges's remarks.
+                            Helper.StopMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            try
+                            {
+                                // Act
+                                var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), table, mappings: mappings).Result;
 
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                                // Assert
+                                Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                            // Act
-                            var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
+                                // Act
+                                var queryResult = destinationConnection.QueryAll<BulkOperationNonIdentityTable>();
 
-                            // Assert
-                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                                // Assert
+                                Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                            }
+                            finally
+                            {
+                                Helper.StartMerges(destinationConnection, "BulkOperationNonIdentityTable");
+                            }
                         }
                     }
                 }
@@ -4228,17 +4598,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     // Setup
                     Helper.SetupAsyncInsert(destinationConnection);
 
-                    // Act
-                    var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
+                    // This reinserts the same Ids already in the table, so without pausing the
+                    // background merge scheduler those duplicate-Id rows can be deduped by
+                    // ReplacingMergeTree before the assertions below run, non-deterministically
+                    // undercounting - see Helper.StopMerges's remarks.
+                    Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                    try
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader);
 
-                    // Assert
-                    Assert.AreEqual(tables.Count, bulkInsertResult);
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                    // Act
-                    var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                    // Assert
-                    Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                    }
+                    finally
+                    {
+                        Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                    }
                 }
             }
         }
@@ -4261,17 +4643,29 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                     // Setup
                     Helper.SetupAsyncInsert(destinationConnection);
 
-                    // Act
-                    var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
+                    // This reinserts the same Ids already in the table, so without pausing the
+                    // background merge scheduler those duplicate-Id rows can be deduped by
+                    // ReplacingMergeTree before the assertions below run, non-deterministically
+                    // undercounting - see Helper.StopMerges's remarks.
+                    Helper.StopMerges(destinationConnection, "BulkOperationIdentityTable");
+                    try
+                    {
+                        // Act
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), reader).Result;
 
-                    // Assert
-                    Assert.AreEqual(tables.Count, bulkInsertResult);
+                        // Assert
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
-                    // Act
-                    var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+                        // Act
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
-                    // Assert
-                    Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        // Assert
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                    }
+                    finally
+                    {
+                        Helper.StartMerges(destinationConnection, "BulkOperationIdentityTable");
+                    }
                 }
             }
         }

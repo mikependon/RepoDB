@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Text.Json.Nodes;
+using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.ClickHouse;
+using RepoDb.Interfaces;
+using RepoDb.Options;
 
 namespace RepoDb.ClickHouse.IntegrationTests.Models
 {
@@ -41,7 +45,8 @@ namespace RepoDb.ClickHouse.IntegrationTests.Models
         public Int16? ColumnSmallInt { get; set; }
         public SByte? ColumnTinyInt { get; set; }
         public String ColumnChar { get; set; }
-        public String ColumnJson { get; set; }
+        public JsonObject ColumnJson { get; set; }
+        public String ColumnJsonString { get; set; }
         public String ColumnNChar { get; set; }
         public String ColumnNVarChar { get; set; }
         public String ColumnLongText { get; set; }

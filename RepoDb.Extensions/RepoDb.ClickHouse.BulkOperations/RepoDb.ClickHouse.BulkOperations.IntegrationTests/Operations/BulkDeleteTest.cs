@@ -621,8 +621,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
+                // Setup - the Ids must match the already-inserted rows above, since BulkOperationNonIdentityTable
+                // has no identity column and BulkDelete matches on primary key.
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, tables.Select(t => t.Id).ToList());
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -667,8 +668,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
+                // Setup - the Ids must match the already-inserted rows above, since BulkOperationNonIdentityTable
+                // has no identity column and BulkDelete matches on primary key.
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, tables.Select(t => t.Id).ToList());
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -1799,8 +1801,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10);
+                // Setup - the Ids must match the already-inserted rows above, since BulkOperationNonIdentityTable
+                // has no identity column and BulkDelete matches on primary key.
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, tables.Select(t => t.Id).ToList());
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1850,8 +1853,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
+                // Setup - the Ids must match the already-inserted rows above, since BulkOperationNonIdentityTable
+                // has no identity column and BulkDelete matches on primary key.
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, tables.Select(t => t.Id).ToList());
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;

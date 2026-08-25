@@ -1,8 +1,6 @@
-using System.Data.Common;
 using RepoDb.ClickHouse.BulkOperations.IntegrationTests.Models;
 using System;
 using ClickHouse.Driver.ADO;
-using RepoDb.ClickHouse.BulkOperations.IntegrationTests;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -44,7 +42,7 @@ namespace RepoDb.IntegrationTests.Setup
             // Initialize ClickHouse
             GlobalConfiguration
                 .Setup()
-                .UseClickHouse();
+                .UseClickHouse(true);
 
             // Create the database first
             CreateDatabase();

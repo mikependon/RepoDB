@@ -250,6 +250,7 @@ namespace RepoDb
         /// <param name="excludeField"></param>
         /// <returns></returns>
         /// <exception cref="InvalidTypeException"></exception>
+        /// <exception cref="MissingFieldsException"></exception>
         private static ClickHouseBulkCopy CreateBulkCopyForDataTable(ClickHouseConnection connection,
             string tableName,
             DataTable table,
@@ -258,6 +259,12 @@ namespace RepoDb
             Field excludeField = null)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, tableName, null);
+            if (dbFields?.GetAsFields()?.Any() != true)
+            {
+                throw new MissingFieldsException($"There are no field(s) found for table '{tableName}' for this operation.");
+            }
+
             var bulkCopy = new ClickHouseBulkCopy(connection)
             {
                 DestinationTableName = tableName.AsUnquoted(dbSetting)
@@ -268,7 +275,6 @@ namespace RepoDb
             }
             if (mappings != null)
             {
-                var dbFields = DbFieldCache.Get(connection, tableName, null);
                 var columnMappings = mappings.AsList();
                 foreach (var mapping in columnMappings)
                 {
