@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClickHouse.Driver.ADO;
+using RepoDb.ClickHouse.Interfaces;
+using RepoDb.DbSettings;
 
 namespace RepoDb.ClickHouse.UnitTests
 {
@@ -115,6 +117,79 @@ namespace RepoDb.ClickHouse.UnitTests
 
             // Assert
             Assert.AreEqual("@", setting.SqlTextParameterPrefix);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingIsAffectedRowsSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsAffectedRowsSupported);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingIsPreparableProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsPreparable);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingIsTransactionSupportedProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsTransactionSupported);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingMultiStatementSeparatorProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.AreEqual(";", setting.MultiStatementSeparator);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingImplementsIClickHouseDbSetting()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsInstanceOfType(setting, typeof(IClickHouseDbSetting));
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingIsInternalMutationsEnabledDefaultValue()
+        {
+            // Setup
+            var setting = (IClickHouseDbSetting)DbSettingMapper.Get<ClickHouseConnection>();
+
+            // Assert
+            Assert.IsFalse(setting.IsInternalMutationsEnabled);
+        }
+
+        [TestMethod]
+        public void TestClickHouseDbSettingIsInternalMutationsEnabledPropertyCanBeSet()
+        {
+            // Setup
+            var setting = new ClickHouseDbSetting
+            {
+                IsInternalMutationsEnabled = true
+            };
+
+            // Assert
+            Assert.IsTrue(setting.IsInternalMutationsEnabled);
         }
     }
 }
