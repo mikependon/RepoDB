@@ -42,7 +42,7 @@ env:
   # Db2
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
   # ClickHouse
-  REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;"
+  REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;UseCustomDecimals=false;"
 
 jobs:
 

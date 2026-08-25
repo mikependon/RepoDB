@@ -46,6 +46,15 @@ RepoDb
     .UseClickHouse();
 ```
 
+> **Waiting for mutations:** `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey` all resolve to
+> ClickHouse's asynchronous `ALTER TABLE ... UPDATE`/`DELETE` mutations under the hood, applied by a
+> background merge rather than immediately - a query issued right after one of these calls returns is not
+> guaranteed to see the change yet. Pass `isWaitForMutationsEnabled: true` to `UseClickHouse()` (it defaults
+> to `false`) to have these operations block until each mutation actually finishes (up to a 5-second timeout)
+> before returning, trading extra latency per call for read-your-writes consistency. This is read from
+> `ClickHouseDbSetting.IsWaitForMutationsEnabled` on the mapped `IDbSetting` - see the
+> [RepoDb.ClickHouse](https://github.com/mikependon/RepoDB/tree/master/RepoDb.ClickHouse) README for details.
+
 ## Async Methods
 
 Every synchronous operation has a corresponding `Async` overload.

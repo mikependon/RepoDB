@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -60,7 +60,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -96,7 +96,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -132,7 +132,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -179,7 +179,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -214,7 +214,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -250,7 +250,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -286,7 +286,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -333,7 +333,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -585,7 +585,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -630,7 +630,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -653,8 +653,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -669,7 +670,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -688,8 +690,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -704,7 +707,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -739,7 +743,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -776,7 +780,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -813,7 +817,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1323,7 +1327,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1359,7 +1363,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1395,7 +1399,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1439,7 +1444,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1474,7 +1479,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1510,7 +1515,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1546,7 +1551,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1593,7 +1598,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1852,7 +1857,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1898,7 +1903,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1921,8 +1926,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1937,7 +1943,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -1956,8 +1963,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -1972,7 +1980,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -2007,7 +2016,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2044,7 +2053,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2081,7 +2090,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2591,7 +2600,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2627,7 +2636,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2663,7 +2672,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2710,7 +2719,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2745,7 +2754,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2781,7 +2790,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2817,7 +2826,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -2864,7 +2873,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3101,7 +3110,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3146,7 +3155,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3165,8 +3174,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -3181,7 +3191,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -3200,8 +3211,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities);
@@ -3216,7 +3228,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -3251,7 +3264,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3288,7 +3301,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3325,7 +3338,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3821,7 +3834,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3857,7 +3870,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3893,7 +3906,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3937,7 +3950,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -3972,7 +3985,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4008,7 +4021,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4044,7 +4057,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4091,7 +4104,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4329,7 +4342,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4375,7 +4388,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4394,8 +4407,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationExpandoObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -4410,7 +4424,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == ((dynamic)t).Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -4429,8 +4444,9 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10);
+                // Setup - use the same Ids as the already-inserted tables so the update actually matches
+                // existing rows; entities generated with their own fresh Ids would never match anything.
+                var entities = Helper.CreateBulkOperationAnonymousObjectNonIdentityTables(10, tables.Select(x => x.Id).ToList());
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationNonIdentityTable>(), entities).Result;
@@ -4445,7 +4461,8 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 entities.AsList().ForEach(t =>
                 {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertMembersEquality(item, t);
                 });
             }
         }
@@ -4480,7 +4497,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4517,7 +4534,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -4554,7 +4571,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }

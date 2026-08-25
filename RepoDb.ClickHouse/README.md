@@ -60,6 +60,15 @@ GlobalConfiguration
     .UseClickHouse();
 ```
 
+> **Waiting for mutations:** ClickHouse's `ALTER TABLE ... UPDATE`/`DELETE` run as asynchronous background
+> mutations rather than synchronous statements, so a row change is not guaranteed to be visible the instant
+> the call returns. Pass `isWaitForMutationsEnabled: true` to `UseClickHouse()` to have this waited on -
+> honored by `RepoDb.ClickHouse.BulkOperations`'s `BulkMerge`/`BulkUpdate`/`BulkDelete`/`BulkDeleteByKey`,
+> which block until each mutation actually completes (up to a 5-second timeout) before returning, at the
+> cost of extra latency per call. It defaults to `false` here (fire-and-forget); the underlying
+> `ClickHouseDbSetting.IsWaitForMutationsEnabled` property itself defaults to `true` when the setting is
+> constructed directly rather than through `UseClickHouse()`.
+
 Then use any RepoDB operation directly on your `RepoDbClickHouseConnection`, pointed at your ClickHouse server:
 
 ### Query

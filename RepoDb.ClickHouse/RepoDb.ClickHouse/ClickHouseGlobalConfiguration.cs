@@ -15,10 +15,12 @@ namespace RepoDb
         /// Initializes all the necessary settings for ClickHouse.
         /// </summary>
         /// <param name="globalConfiguration">The instance of the global configuration in used.</param>
+        /// <param name="isWaitForMutationsEnabled">A value indicating whether the internal mutations are enabled for the ClickHouse database.</param>
         /// <returns>The used global configuration instance itself.</returns>
-        public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration)
+        public static GlobalConfiguration UseClickHouse(this GlobalConfiguration globalConfiguration,
+            bool isWaitForMutationsEnabled = false)
         {
-            ClickHouseBootstrap.InitializeInternal();
+            ClickHouseBootstrap.InitializeInternal(isWaitForMutationsEnabled);
             return globalConfiguration;
         }
     }
