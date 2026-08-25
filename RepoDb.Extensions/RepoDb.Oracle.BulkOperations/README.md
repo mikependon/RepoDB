@@ -43,7 +43,9 @@ Install-Package RepoDb.Oracle.BulkOperations
 Then initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.OracleBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseOracle();
 ```
 
 ## Async Methods

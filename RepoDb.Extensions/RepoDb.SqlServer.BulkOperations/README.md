@@ -41,7 +41,9 @@ Install-Package RepoDb.SqlServer.BulkOperations
 Then initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.SqlServerBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseSqlServer();
 ```
 
 ## Async Methods

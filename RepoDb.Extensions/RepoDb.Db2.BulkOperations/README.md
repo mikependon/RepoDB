@@ -41,7 +41,9 @@ Install-Package RepoDb.Db2.BulkOperations
 Then initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.Db2Bootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseDb2();
 ```
 
 ## Async Methods

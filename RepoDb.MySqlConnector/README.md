@@ -41,7 +41,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.MySqlConnectorBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseMySqlConnector();
 ```
 
 Then use any RepoDB operation directly on your `MySqlConnection`:

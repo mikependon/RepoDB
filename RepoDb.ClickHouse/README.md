@@ -55,7 +55,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.ClickHouseBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseClickHouse();
 ```
 
 Then use any RepoDB operation directly on your `RepoDbClickHouseConnection`, pointed at your ClickHouse server:
