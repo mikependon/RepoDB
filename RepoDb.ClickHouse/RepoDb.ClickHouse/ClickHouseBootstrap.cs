@@ -29,7 +29,8 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        internal static void InitializeInternal()
+        /// <param name="isWaitForMutationsEnabled">A value indicating whether the internal mutations are enabled for the ClickHouse database.</param>
+        internal static void InitializeInternal(bool isWaitForMutationsEnabled)
         {
             // Skip if already initialized
             if (IsInitialized == true)
@@ -38,7 +39,11 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add<ClickHouseConnection>(new ClickHouseDbSetting(), true);
+            var dbSetting = new ClickHouseDbSetting()
+            {
+                IsInternalMutationsEnabled = isWaitForMutationsEnabled
+            };
+            DbSettingMapper.Add<ClickHouseConnection>(dbSetting, true);
 
             // Map the DbHelper
             DbHelperMapper.Add<ClickHouseConnection>(new ClickHouseDbHelper(), true);
