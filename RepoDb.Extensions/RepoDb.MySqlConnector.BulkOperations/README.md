@@ -41,7 +41,9 @@ Install-Package RepoDb.MySqlConnector.BulkOperations
 Then initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.MySqlConnectorBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseMySqlConnector();
 ```
 
 ## Async Methods

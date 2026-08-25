@@ -24,7 +24,7 @@ It goes beyond the ORM with enterprise-grade capabilities for building, operatin
 
 ### As a Hybrid-ORM
 
-It stays close to the metal while remaining easy to use:
+It stays close to the metal and remaining lightweight:
 
 - **👌 Easy to Use** — All operations are extension methods on [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection). Open a connection and you're ready to go.
 - **🚀 High Performance** — Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time.

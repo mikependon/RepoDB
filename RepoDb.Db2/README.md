@@ -60,14 +60,6 @@ Pick the IBM driver package that matches your target platform.
 | Linux IBM Z | `Net.IBM.Data.Db2-zlnx` |
 | Linux Power | `Net.IBM.Data.Db2-ppc`  |
 
-After installation, call the globalized setup method to initialize all dependencies for Db2.
-
-```csharp
-GlobalConfiguration
-	.Setup()
-	.UseDb2();
-```
-
 ## Get Started
 
 Initialize the bootstrapper once at application startup:

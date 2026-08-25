@@ -45,7 +45,9 @@ Or visit the [installation](http://repodb.net/tutorial/installation) page for mo
 Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.SQLiteBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseSQLite();
 ```
 
 Then use any RepoDB operation directly on your `SQLiteConnection`:

@@ -43,7 +43,9 @@ Install-Package RepoDb.PostgreSql.BulkOperations
 Then initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.PostgreSqlBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UsePostgreSql();
 ```
 
 ## Async Methods

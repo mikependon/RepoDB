@@ -43,7 +43,7 @@ namespace RepoDb
         {
             connection.EnsureOpen();
             using var reader = new DataEntityDataReader<TEntity>(entities);
-            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateOracleBulkCopy(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(reader);
             return entities != null ? entities.Count() : 0;
         }
@@ -70,7 +70,7 @@ namespace RepoDb
             int? batchSize = null)
         {
             connection.EnsureOpen();
-            using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateOracleBulkCopy(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             var rows = GetDataRows(table, rowState)?.ToArray();
             bulkCopy.WriteToServer(rows);
             return rows != null ? rows.Length : 0;
@@ -97,7 +97,7 @@ namespace RepoDb
         {
             connection.EnsureOpen();
             var countingReader = new CountingDataReader(reader);
-            using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            using var bulkCopy = CreateOracleBulkCopy(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
             bulkCopy.WriteToServer(countingReader);
             return countingReader.Count;
         }
@@ -130,14 +130,9 @@ namespace RepoDb
             where TEntity : class
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                using var reader = new DataEntityDataReader<TEntity>(entities);
-                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-                bulkCopy.WriteToServer(reader);
-                return entities != null ? entities.Count() : 0;
-            },
-            cancellationToken);
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+            using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, reader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            return await arrayBinder.WriteToServerAsync(reader, cancellationToken);
         }
 
         /// <summary>
@@ -164,14 +159,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                using var bulkCopy = CreateBulkCopyForDataTable(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-                var rows = GetDataRows(table, rowState)?.ToArray();
-                bulkCopy.WriteToServer(rows);
-                return rows != null ? rows.Length : 0;
-            },
-            cancellationToken);
+            using var arrayBinder = CreateOracleBulkArrayBinder(connection, tableName, table, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            return await arrayBinder.WriteToServerAsync(table, rowState, cancellationToken);
         }
 
         /// <summary>
@@ -196,14 +185,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             await connection.EnsureOpenAsync(cancellationToken);
-            return await Task.Run(() => // No underlying 'Async' equivalent for 'WriteToServerInternal'
-            {
-                var countingReader = new CountingDataReader(reader);
-                using var bulkCopy = CreateBulkCopyForDataReader(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
-                bulkCopy.WriteToServer(countingReader);
-                return countingReader.Count;
-            },
-            cancellationToken);
+            var countingReader = new CountingDataReader(reader);
+            using var bulkCopy = CreateOracleBulkArrayBinder(connection, tableName, countingReader, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+            return await bulkCopy.WriteToServerAsync(countingReader, cancellationToken);
         }
 
         #endregion
@@ -257,7 +241,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        private static OracleBulkCopy CreateBulkCopyForDataTable(OracleConnection connection,
+        private static OracleBulkCopy CreateOracleBulkCopy(OracleConnection connection,
             string tableName,
             DataTable table,
             IEnumerable<OracleBulkInsertMapItem> mappings,
@@ -306,7 +290,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <returns></returns>
-        private static OracleBulkCopy CreateBulkCopyForDataReader(OracleConnection connection,
+        private static OracleBulkCopy CreateOracleBulkCopy(OracleConnection connection,
             string tableName,
             IDataReader reader,
             IEnumerable<OracleBulkInsertMapItem> mappings,
@@ -317,7 +301,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var bulkCopy = new OracleBulkCopy(connection, bulkCopyOptions)
             {
-                // See the remarks in CreateBulkCopyForDataTable - same quoting requirement applies here.
+                // See the remarks in CreateOracleBulkCopy - same quoting requirement applies here.
                 DestinationTableName = tableName.AsQuoted(true, dbSetting)
             };
             if (bulkCopyTimeout.HasValue)
@@ -333,6 +317,95 @@ namespace RepoDb
                 bulkCopy.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
             }
             return bulkCopy;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <returns></returns>
+        private static OracleBulkArrayBinder CreateOracleBulkArrayBinder(OracleConnection connection,
+            string tableName,
+            DataTable table,
+            IEnumerable<OracleBulkInsertMapItem> mappings,
+            OracleBulkCopyOptions bulkCopyOptions,
+            int? bulkCopyTimeout,
+            int? batchSize = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var arrayBinder = new OracleBulkArrayBinder(connection)
+            {
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+            };
+            if (bulkCopyTimeout.HasValue)
+            {
+                arrayBinder.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                arrayBinder.BatchSize = batchSize.Value;
+            }
+            if (mappings != null)
+            {
+                foreach (var mapping in mappings)
+                {
+                    arrayBinder.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
+                }
+            }
+            else
+            {
+                foreach (DataColumn column in table.Columns)
+                {
+                    arrayBinder.ColumnMappings.Add(column.ColumnName, column.ColumnName.AsQuoted(true, dbSetting));
+                }
+            }
+            return arrayBinder;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <returns></returns>
+        private static OracleBulkArrayBinder CreateOracleBulkArrayBinder(OracleConnection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<OracleBulkInsertMapItem> mappings,
+            OracleBulkCopyOptions bulkCopyOptions,
+            int? bulkCopyTimeout,
+            int? batchSize = null)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var arrayBinder = new OracleBulkArrayBinder(connection)
+            {
+                // See the remarks in CreateOracleBulkCopy - same quoting requirement applies here.
+                DestinationTableName = tableName.AsQuoted(true, dbSetting)
+            };
+            if (bulkCopyTimeout.HasValue)
+            {
+                arrayBinder.BulkCopyTimeout = bulkCopyTimeout.Value;
+            }
+            if (batchSize.HasValue)
+            {
+                arrayBinder.BatchSize = batchSize.Value;
+            }
+            foreach (var mapping in mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader))
+            {
+                arrayBinder.ColumnMappings.Add(mapping.SourceColumn, mapping.DestinationColumn.AsQuoted(true, dbSetting));
+            }
+            return arrayBinder;
         }
 
         /// <summary>

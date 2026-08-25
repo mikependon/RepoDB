@@ -336,7 +336,7 @@ namespace RepoDb
         public override string GetDataTypeName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].PropertyInfo.PropertyType.Name;
+            return GetFieldType(i).Name;
         }
 
         /// <summary>
@@ -377,10 +377,37 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The property type from the property index.</returns>
-        public override Type GetFieldType(int i)
+        public override Type GetFieldType(int i) =>
+            isDictionaryStringObject ? GetFieldTypeForDictionaryStringObject(i) : GetFieldTypeForEntities(i);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Type GetFieldTypeForEntities(int i)
         {
             ThrowExceptionIfNotAvailable();
+            if (i == Properties.Count)
+            {
+                return StaticType.Int32;
+            }
             return Properties[i].PropertyInfo.PropertyType;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Type GetFieldTypeForDictionaryStringObject(int i)
+        {
+            ThrowExceptionIfNotAvailable();
+            if (i == Fields.Count)
+            {
+                return StaticType.Int32;
+            }
+            return Fields[i].Type ?? StaticType.Object;
         }
 
         /// <summary>
