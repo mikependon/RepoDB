@@ -7,6 +7,6 @@ namespace RepoDb.ClickHouse.Interfaces
     /// </summary>
     public interface IClickHouseDbSetting : IDbSetting
     {
-        public bool IsInternalMutationsEnabled { get; set;}
+        public bool IsWaitForMutationsEnabled { get; set;}
     }
 }

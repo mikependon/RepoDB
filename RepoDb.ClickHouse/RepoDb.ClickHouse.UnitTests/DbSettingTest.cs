@@ -170,26 +170,26 @@ namespace RepoDb.ClickHouse.UnitTests
         }
 
         [TestMethod]
-        public void TestClickHouseDbSettingIsInternalMutationsEnabledDefaultValue()
+        public void TestClickHouseDbSettingIsWaitForMutationsEnabledDefaultValue()
         {
             // Setup
             var setting = (IClickHouseDbSetting)DbSettingMapper.Get<ClickHouseConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsInternalMutationsEnabled);
+            Assert.IsFalse(setting.IsWaitForMutationsEnabled);
         }
 
         [TestMethod]
-        public void TestClickHouseDbSettingIsInternalMutationsEnabledPropertyCanBeSet()
+        public void TestClickHouseDbSettingIsWaitForMutationsEnabledPropertyCanBeSet()
         {
             // Setup
             var setting = new ClickHouseDbSetting
             {
-                IsInternalMutationsEnabled = true
+                IsWaitForMutationsEnabled = true
             };
 
             // Assert
-            Assert.IsTrue(setting.IsInternalMutationsEnabled);
+            Assert.IsTrue(setting.IsWaitForMutationsEnabled);
         }
     }
 }

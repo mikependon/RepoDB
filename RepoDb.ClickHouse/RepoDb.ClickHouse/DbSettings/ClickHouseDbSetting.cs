@@ -30,8 +30,8 @@ namespace RepoDb.DbSettings
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the internal mutations are enabled for the ClickHouse database.
+        /// Gets or sets a value indicating whether waiting for mutations to complete is enabled for the ClickHouse database.
         /// </summary>
-        public bool IsInternalMutationsEnabled { get; set; } = true;
+        public bool IsWaitForMutationsEnabled { get; set; } = true;
     }
 }

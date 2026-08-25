@@ -189,7 +189,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
                 try
                 {
-                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction); if (IsInternalMutationsEnabled(connection))
+                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction); if (IsWaitForMutationsEnabled(connection))
                     {
                         connection.WaitForMutations(tableName, transaction);
                     }
@@ -200,7 +200,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 }
             }
             connection.ExecuteNonQuery(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction);
-            if (IsInternalMutationsEnabled(connection))
+            if (IsWaitForMutationsEnabled(connection))
             {
                 connection.WaitForMutations(tableName, transaction);
             }
@@ -286,7 +286,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             try
             {
                 var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
-                connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsInternalMutationsEnabled(connection))
+                connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsWaitForMutationsEnabled(connection))
                 {
                     connection.WaitForMutations(tableName, transaction);
                 }
@@ -368,7 +368,7 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var countText = ClickHouseText.GetCountMatchedByPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
             var result = connection.ExecuteScalar<int>(countText, transaction: transaction);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsInternalMutationsEnabled(connection))
+            connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsWaitForMutationsEnabled(connection))
             {
                 connection.WaitForMutations(tableName, transaction);
             }
@@ -505,10 +505,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        private static bool IsInternalMutationsEnabled(ClickHouseConnection connection)
+        private static bool IsWaitForMutationsEnabled(ClickHouseConnection connection)
         {
             var setting = connection.GetDbSetting() as ClickHouseDbSetting;
-            return (setting != null) && setting.IsInternalMutationsEnabled;
+            return (setting != null) && setting.IsWaitForMutationsEnabled;
         }
 
         #endregion

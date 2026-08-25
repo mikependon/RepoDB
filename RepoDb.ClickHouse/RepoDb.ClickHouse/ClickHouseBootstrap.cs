@@ -41,7 +41,7 @@ namespace RepoDb
             // Map the DbSetting
             var dbSetting = new ClickHouseDbSetting()
             {
-                IsInternalMutationsEnabled = isWaitForMutationsEnabled
+                IsWaitForMutationsEnabled = isWaitForMutationsEnabled
             };
             DbSettingMapper.Add<ClickHouseConnection>(dbSetting, true);
 
