@@ -95,7 +95,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id); Helper.AssertPropertiesEquality(t, item);
+                    var item = queryResult.FirstOrDefault(e => e.RowGuid == t.RowGuid); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -164,7 +164,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
+                    var item = queryResult.FirstOrDefault(e => e.RowGuidMapped == t.RowGuidMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1358,7 +1358,7 @@ namespace RepoDb.ClickHouse.BulkOperations.IntegrationTests.Operations
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.AsList().ForEach(t =>
                 {
-                    var item = queryResult.FirstOrDefault(e => e.IdMapped == t.IdMapped); Helper.AssertPropertiesEquality(t, item);
+                    var item = queryResult.FirstOrDefault(e => e.RowGuidMapped == t.RowGuidMapped); Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
