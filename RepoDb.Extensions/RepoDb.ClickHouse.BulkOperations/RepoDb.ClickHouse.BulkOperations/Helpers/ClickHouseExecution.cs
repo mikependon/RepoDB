@@ -8,6 +8,7 @@ using RepoDb.Enumerations.ClickHouse;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using ClickHouse.Driver.ADO;
+using RepoDb.DbSettings;
 
 namespace RepoDb.ClickHouse.BulkOperations.Extensions
 {
@@ -188,8 +189,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 CreatePseudoJoinTable(connection, pseudoTableName, qualifierList, transaction);
                 try
                 {
-                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction);
-                    connection.WaitForMutations(tableName, transaction);
+                    connection.ExecuteNonQuery(ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, keyFields, connection.Database, dbSetting), transaction: transaction); if (IsInternalMutationsEnabled(connection))
+                    {
+                        connection.WaitForMutations(tableName, transaction);
+                    }
                 }
                 finally
                 {
@@ -197,7 +200,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
                 }
             }
             connection.ExecuteNonQuery(ClickHouseText.GetInsertUnmatchedFromPseudoTableSql(tableName, pseudoTableName, fieldList, qualifierList, dbSetting), transaction: transaction);
-            connection.WaitForMutations(tableName, transaction);
+            if (IsInternalMutationsEnabled(connection))
+            {
+                connection.WaitForMutations(tableName, transaction);
+            }
         }
 
         /// <summary>
@@ -280,8 +286,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             try
             {
                 var commandText = ClickHouseText.GetUpdateFromPseudoTableSql(tableName, pseudoTableName, fields, qualifierList, keyFields, connection.Database, dbSetting);
-                connection.ExecuteNonQuery(commandText, transaction: transaction);
-                connection.WaitForMutations(tableName, transaction);
+                connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsInternalMutationsEnabled(connection))
+                {
+                    connection.WaitForMutations(tableName, transaction);
+                }
             }
             finally
             {
@@ -360,8 +368,10 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var countText = ClickHouseText.GetCountMatchedByPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
             var result = connection.ExecuteScalar<int>(countText, transaction: transaction);
             var commandText = ClickHouseText.GetDeleteFromPseudoTableSql(tableName, pseudoTableName, qualifierList, dbSetting);
-            connection.ExecuteNonQuery(commandText, transaction: transaction);
-            connection.WaitForMutations(tableName, transaction);
+            connection.ExecuteNonQuery(commandText, transaction: transaction); if (IsInternalMutationsEnabled(connection))
+            {
+                connection.WaitForMutations(tableName, transaction);
+            }
             return result;
         }
 
@@ -488,6 +498,17 @@ namespace RepoDb.ClickHouse.BulkOperations.Extensions
             var dbSetting = connection.GetDbSetting();
             var pseudoJoinTableName = ClickHouseText.GetPseudoJoinTableName(pseudoTableName);
             await connection.ExecuteNonQueryAsync(ClickHouseText.GetDropPseudoTableSql(pseudoJoinTableName, dbSetting), transaction: transaction, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        private static bool IsInternalMutationsEnabled(ClickHouseConnection connection)
+        {
+            var setting = connection.GetDbSetting() as ClickHouseDbSetting;
+            return (setting != null) && setting.IsInternalMutationsEnabled;
         }
 
         #endregion
