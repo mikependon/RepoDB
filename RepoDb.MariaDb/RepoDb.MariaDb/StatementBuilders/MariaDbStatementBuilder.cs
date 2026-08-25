@@ -62,6 +62,36 @@ namespace RepoDb.StatementBuilders
             return null;
         }
 
+        /// <summary>
+        /// Builds the 'ON DUPLICATE KEY UPDATE' assignment list for a merge statement. The identity
+        /// column, if any, is assigned via 'LAST_INSERT_ID(column)' instead of its incoming parameter
+        /// so that a duplicate-key update never overwrites the row's real identity with a client-side
+        /// default (e.g. 0), and so 'LAST_INSERT_ID()' reliably reflects the affected row afterwards.
+        /// </summary>
+        private string GetUpdateAssignmentsForMerge(IEnumerable<Field> fields,
+            DbField identityField,
+            int index)
+        {
+            if (identityField == null)
+            {
+                return fields
+                    .Select(f => string.Concat(f.Name.AsField(DbSetting), " = ", f.Name.AsParameter(index, DbSetting)))
+                    .Join(", ");
+            }
+
+            var identityFieldName = identityField.Name.AsField(DbSetting);
+            var assignments = new List<string>
+            {
+                string.Concat(identityFieldName, " = LAST_INSERT_ID(", identityFieldName, ")")
+            };
+
+            assignments.AddRange(fields
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .Select(f => string.Concat(f.Name.AsField(DbSetting), " = ", f.Name.AsParameter(index, DbSetting))));
+
+            return assignments.Join(", ");
+        }
+
         #endregion
 
         #region CreateBatchQuery
@@ -545,16 +575,24 @@ namespace RepoDb.StatementBuilders
                 .ParametersFrom(fields, 0, DbSetting)
                 .CloseParen()
                 .WriteText("ON DUPLICATE KEY")
-                .Update()
-                .FieldsAndParametersFrom(fields, 0, DbSetting)
-                .End();
+                .Update();
+
+            // The identity column must never be overwritten with its incoming parameter (which
+            // may just be a default value), otherwise an existing row's identity gets corrupted
+            // and LAST_INSERT_ID() can no longer be trusted to reflect the affected row. Using the
+            // LAST_INSERT_ID(column) trick keeps it pointing to the affected row's real identity
+            // whether this statement inserted a new row or updated an existing one.
+            builder.WriteText(GetUpdateAssignmentsForMerge(fields, identityField, 0));
+
+            builder.End();
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(DbSetting) : "NULL";
-            var coalesceExpression = $"COALESCE({returnValue}, LAST_INSERT_ID())";
+            var returnValue = keyColumn != null ?
+                keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                    keyColumn.Name.AsParameter(DbSetting) : "NULL";
             var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
-            var resultExpression = castType != null ? $"CAST({coalesceExpression} AS {castType})" : coalesceExpression;
+            var resultExpression = castType != null ? $"CAST({returnValue} AS {castType})" : returnValue;
 
             // Set the return value
             builder
@@ -628,15 +666,19 @@ namespace RepoDb.StatementBuilders
                     .ParametersFrom(fields, index, DbSetting)
                     .CloseParen()
                     .WriteText("ON DUPLICATE KEY")
-                    .Update()
-                    .FieldsAndParametersFrom(fields, index, DbSetting)
-                    .End();
+                    .Update();
+
+                // See the CreateMerge() remarks on why the identity column is special-cased here.
+                builder.WriteText(GetUpdateAssignmentsForMerge(fields, identityField, index));
+
+                builder.End();
 
                 // Set the return value
-                var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
-                var coalesceExpression = $"COALESCE({returnValue}, LAST_INSERT_ID())";
+                var returnValue = keyColumn != null ?
+                    keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                        keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
                 var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
-                var resultExpression = castType != null ? $"CAST({coalesceExpression} AS {castType})" : coalesceExpression;
+                var resultExpression = castType != null ? $"CAST({returnValue} AS {castType})" : returnValue;
                 builder
                     .Select()
                         .WriteText(
