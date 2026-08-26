@@ -487,11 +487,9 @@ namespace RepoDb.StatementBuilders
                 .WriteText("ON DUPLICATE KEY")
                 .Update();
 
-            // The identity column must never be overwritten with its incoming parameter (which
-            // may just be a default value), otherwise an existing row's identity gets corrupted
-            // and LAST_INSERT_ID() can no longer be trusted to reflect the affected row. Using the
-            // LAST_INSERT_ID(column) trick keeps it pointing to the affected row's real identity
-            // whether this statement inserted a new row or updated an existing one.
+            // The identity column must never be blindly overwritten with its incoming parameter,
+            // otherwise an existing row's identity gets corrupted whenever the caller leaves it at
+            // its default (e.g. 0 for a non-nullable property). See GetUpdateAssignmentsForMerge().
             builder.WriteText(GetUpdateAssignmentsForMerge(fields, identityField, 0));
 
             builder.End();
@@ -499,7 +497,7 @@ namespace RepoDb.StatementBuilders
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
             var returnValue = keyColumn != null ?
-                keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, 0) :
                     keyColumn.Name.AsParameter(DbSetting) : "NULL";
 
             // Set the return value
@@ -583,7 +581,7 @@ namespace RepoDb.StatementBuilders
 
                 // Set the return value
                 var returnValue = keyColumn != null ?
-                    keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                    keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, index) :
                         keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
                 builder
                     .Select()
@@ -830,11 +828,21 @@ namespace RepoDb.StatementBuilders
         #region Helpers
 
         /// <summary>
-        /// Builds the 'ON DUPLICATE KEY UPDATE' assignment list for a merge statement. The identity
-        /// column, if any, is assigned via 'LAST_INSERT_ID(column)' instead of its incoming parameter
-        /// so that a duplicate-key update never overwrites the row's real identity with a client-side
-        /// default (e.g. 0), and so 'LAST_INSERT_ID()' reliably reflects the affected row afterwards.
+        /// 
         /// </summary>
+        /// <param name="identityField"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private string GetIdentityReturnExpression(DbField identityField, int index) =>
+            $"COALESCE(NULLIF({identityField.Name.AsParameter(index, DbSetting)}, 0), LAST_INSERT_ID())";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private string GetUpdateAssignmentsForMerge(IEnumerable<Field> fields,
             DbField identityField,
             int index)
@@ -847,9 +855,10 @@ namespace RepoDb.StatementBuilders
             }
 
             var identityFieldName = identityField.Name.AsField(DbSetting);
+            var identityParameter = identityField.Name.AsParameter(index, DbSetting);
             var assignments = new List<string>
             {
-                string.Concat(identityFieldName, " = LAST_INSERT_ID(", identityFieldName, ")")
+                string.Concat(identityFieldName, " = COALESCE(NULLIF(", identityParameter, ", 0), LAST_INSERT_ID(", identityFieldName, "))")
             };
 
             assignments.AddRange(fields

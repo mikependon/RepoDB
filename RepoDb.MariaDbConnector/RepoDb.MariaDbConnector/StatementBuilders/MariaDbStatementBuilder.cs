@@ -63,11 +63,21 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Builds the 'ON DUPLICATE KEY UPDATE' assignment list for a merge statement. The identity
-        /// column, if any, is assigned via 'LAST_INSERT_ID(column)' instead of its incoming parameter
-        /// so that a duplicate-key update never overwrites the row's real identity with a client-side
-        /// default (e.g. 0), and so 'LAST_INSERT_ID()' reliably reflects the affected row afterwards.
+        /// 
         /// </summary>
+        /// <param name="identityField"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private string GetIdentityReturnExpression(DbField identityField, int index) =>
+            $"COALESCE(NULLIF({identityField.Name.AsParameter(index, DbSetting)}, 0), LAST_INSERT_ID())";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private string GetUpdateAssignmentsForMerge(IEnumerable<Field> fields,
             DbField identityField,
             int index)
@@ -80,9 +90,10 @@ namespace RepoDb.StatementBuilders
             }
 
             var identityFieldName = identityField.Name.AsField(DbSetting);
+            var identityParameter = identityField.Name.AsParameter(index, DbSetting);
             var assignments = new List<string>
             {
-                string.Concat(identityFieldName, " = LAST_INSERT_ID(", identityFieldName, ")")
+                string.Concat(identityFieldName, " = COALESCE(NULLIF(", identityParameter, ", 0), LAST_INSERT_ID(", identityFieldName, "))")
             };
 
             assignments.AddRange(fields
@@ -589,7 +600,7 @@ namespace RepoDb.StatementBuilders
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
             var returnValue = keyColumn != null ?
-                keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, 0) :
                     keyColumn.Name.AsParameter(DbSetting) : "NULL";
             var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
             var resultExpression = castType != null ? $"CAST({returnValue} AS {castType})" : returnValue;
@@ -675,7 +686,7 @@ namespace RepoDb.StatementBuilders
 
                 // Set the return value
                 var returnValue = keyColumn != null ?
-                    keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                    keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, index) :
                         keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
                 var castType = keyColumn == null ? "UNSIGNED" : GetIntegerCastType(keyColumn.Type);
                 var resultExpression = castType != null ? $"CAST({returnValue} AS {castType})" : returnValue;

@@ -283,7 +283,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, result);
-                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -500,7 +500,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, result);
-                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
