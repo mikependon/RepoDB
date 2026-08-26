@@ -4,7 +4,7 @@ using RepoDb.Options;
 
 namespace RepoDb.MySqlConnector.PropertyHandlers
 {
-    public class BoolPropertyHandler : IPropertyHandler<SByte, bool>
+    public class SByteToBooleanPropertyHandler : IPropertyHandler<SByte, bool>
     {
         public bool Get(SByte input, PropertyHandlerGetOptions options)
         {
