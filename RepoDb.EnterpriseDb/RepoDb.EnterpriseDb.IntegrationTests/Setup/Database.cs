@@ -1,0 +1,502 @@
+﻿using System;
+using System.Collections.Generic;
+using EnterpriseDB.EDBClient;
+using RepoDb.EnterpriseDb.IntegrationTests.Models;
+
+namespace RepoDb.EnterpriseDb.IntegrationTests.Setup
+{
+    public static class Database
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the connection string to be used for the default administrative database.
+        /// </summary>
+        public static string ConnectionStringForSystem { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the connection string to be used.
+        /// </summary>
+        public static string ConnectionString { get; private set; }
+
+        #endregion
+
+        #region Methods
+
+        public static void Initialize()
+        {
+            // Master connection (targets EDB Postgres Advanced Server's default administrative database)
+            ConnectionStringForSystem =
+                Environment.GetEnvironmentVariable("REPODB_EDB_CONSTR_SYSTEM") ??
+                "Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;";
+
+            // RepoDb connection
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_EDB_CONSTR") ??
+                "Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;";
+
+            // For >= v6.0.0: To reutilize the legacy behavior
+            // https://github.com/abpframework/abp/issues/10273
+            // AppContext.SetSwitch("EnterpriseDB.EDBClient.EnableLegacyTimestampBehavior", true);
+
+            // Initialize EnterpriseDB (EDB Postgres Advanced Server)
+            GlobalConfiguration
+                .Setup()
+                .UseEnterpriseDb();
+
+            // Create databases
+            CreateDatabase();
+
+            // Create tables
+            CreateTables();
+        }
+
+        public static void Cleanup()
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                connection.Truncate<CompleteTable>();
+                connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate<EnumTable>();
+            }
+        }
+
+        #endregion
+
+        #region CreateDatabases
+
+        private static void CreateDatabase()
+        {
+            using (var connection = new EDBConnection(ConnectionStringForSystem))
+            {
+                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
+                if (recordCount <= 0)
+                {
+                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDb""
+                        WITH OWNER = ""enterprisedb""
+                        ENCODING = ""UTF8""
+                        CONNECTION LIMIT = -1;");
+                }
+            }
+        }
+
+        #endregion
+
+        #region CreateTables
+
+        private static void CreateTables()
+        {
+            CreateCompleteTable();
+            CreateNonIdentityCompleteTable();
+            CreateEnumTable();
+        }
+
+        private static void CreateCompleteTable()
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""CompleteTable""
+                    (
+                        ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
+                        ""ColumnChar"" ""char"",
+                        ""ColumnCharAsArray"" ""char""[],
+                        --""ColumnAclItem"" aclitem,
+                        --""ColumnAclItemAsArray"" aclitem[],
+                        ""ColumnBigInt"" bigint,
+                        ""ColumnBigIntAsArray"" bigint[],
+                        ""ColumnBigSerial"" bigint,
+                        ""ColumnBit"" bit(1),
+                        ""ColumnBitVarying"" bit varying,
+                        ""ColumnBitVaryingAsArray"" bit varying[],
+                        ""ColumnBitAsArray"" bit(1)[],
+                        ""ColumnBoolean"" boolean,
+                        ""ColumnBooleanAsArray"" boolean[],
+                        ""ColumnBox"" box,
+                        ""ColumnBoxAsArray"" box[],
+                        ""ColumnByteA"" bytea,
+                        ""ColumnByteAAsArray"" bytea[],
+                        ""ColumnCharacter"" character(1) COLLATE pg_catalog.""default"",
+                        ""ColumnCharacterVarying"" character varying COLLATE pg_catalog.""default"",
+                        ""ColumnCharacterVaryingAsArray"" character varying[] COLLATE pg_catalog.""default"",
+                        --""ColumnCid"" cid,
+                        --""ColumnCidAsArray"" cid[],
+                        ""ColumnCidr"" cidr,
+                        ""ColumnCircle"" circle,
+                        ""ColumnCircleAsArray"" circle[],
+                        ""ColumnDate"" date,
+                        ""ColumnDateAsArray"" date[],
+                        ""ColumnDateRange"" daterange,
+                        ""ColumnDateRangeAsArray"" daterange[],
+                        ""ColumnDoublePrecision"" double precision,
+                        ""ColumnDoublePrecisionAsArray"" double precision[],
+                        --""ColumnGtsVector"" gtsvector,
+                        ""ColumnInet"" inet,
+                        ""ColumnInetAsArray"" inet[],
+                        --""ColumnInt2Vector"" int2vector,
+                        --""ColumnInt2VectorAsArray"" int2vector[],
+                        ""ColumnInt4Range"" int4range,
+                        ""ColumnInt4RangeAsArray"" int4range[],
+                        ""ColumnInt8Range"" int8range,
+                        ""ColumnInt8RangeAsArray"" int8range[],
+                        ""ColumnInteger"" integer,
+                        ""ColumnIntegerAsArray"" integer[],
+                        ""ColumnInterval"" interval,
+                        ""ColumnIntervalAsArray"" interval[],
+                        ""ColumnJson"" json,
+                        ""ColumnJsonAsArray"" json[],
+                        ""ColumnJsonB"" jsonb,
+                        ""ColumnJsonBAsArray"" jsonb[],
+                        ""ColumnJsonPath"" jsonpath,
+                        ""ColumnJsonPathAsArray"" jsonpath[],
+                        ""ColumnLine"" line,
+                        ""ColumnLineAsArray"" line[],
+                        ""ColumnLSeg"" lseg,
+                        ""ColumnLSegAsArray"" lseg[],
+                        ""ColumnMacAddr"" macaddr,
+                        ""ColumnMacAddrAsArray"" macaddr[],
+                        ""ColumnMacAddr8"" macaddr8,
+                        ""ColumnMacAddr8AsArray"" macaddr8[],
+                        ""ColumnMoney"" money,
+                        ""ColumnMoneyAsArray"" money[],
+                        ""ColumnName"" name COLLATE pg_catalog.""C"",
+                        ""ColumnNameAsArray"" name[] COLLATE pg_catalog.""C"",
+                        ""ColumnNumeric"" numeric,
+                        ""ColumnNumericAsArray"" numeric[],
+                        ""ColumnNumRange"" numrange,
+                        ""ColumnNumRangeAsArray"" numrange[],
+                        ""ColumnOId"" oid,
+                        ""ColumnOIdAsArray"" oid[],
+                        --""ColumnOIdVector"" oidvector,
+                        --""ColumnOIdVectorAsArray"" oidvector[],
+                        ""ColumnPath"" path,
+                        ""ColumnPathAsArray"" path[],
+                        --""ColumnPgDependencies"" pg_dependencies COLLATE pg_catalog.""default"",
+                        --""ColumnPgLsn"" pg_lsn,
+                        --""ColumnPgLsnAsArray"" pg_lsn[],
+                        --""ColumnPgMcvList"" pg_mcv_list COLLATE pg_catalog.""default"",
+                        --""ColumnPgNDistinct"" pg_ndistinct COLLATE pg_catalog.""default"",
+                        --""ColumnPgNodeTree"" pg_node_tree COLLATE pg_catalog.""default"",
+                        ""ColumnPoint"" point,
+                        ""ColumnPointAsArray"" point[],
+                        ""ColumnPolygon"" polygon,
+                        ""ColumnPolygonAsArray"" polygon[],
+                        ""ColumnReal"" real,
+                        ""ColumnRealAsArray"" real[],
+                        --""ColumnRefCursor"" refcursor,
+                        --""ColumnRefCursorAsArray"" refcursor[],
+                        --""ColumnRegClass"" regclass,
+                        --""ColumnRegClassAsArray"" regclass[],
+                        --""ColumnRegConfig"" regconfig,
+                        --""ColumnRegConfigAsArray"" regconfig[],
+                        --""ColumnRegDictionary"" regdictionary,
+                        --""ColumnRegDictionaryAsArray"" regdictionary[],
+                        --""ColumnRegNamespace"" regnamespace,
+                        --""ColumnRegNamespaceAsArray"" regnamespace[],
+                        --""ColumnRegOper"" regoper,
+                        --""ColumnRegOperAsArray"" regoper[],
+                        --""ColumnRegOperator"" regoperator,
+                        --""ColumnRegOperationAsArray"" regoperator[],
+                        --""ColumnRegProc"" regproc,
+                        --""ColumnRegProcAsArray"" regproc[],
+                        --""ColumnRegProcedure"" regprocedure,
+                        --""ColumnRegProcedureAsArray"" regprocedure[],
+                        --""ColumnRegRole"" regrole,
+                        --""ColumnRegRoleAsArray"" regrole[],
+                        --""ColumnRegType"" regtype,
+                        --""ColumnRegTypeAsArray"" regtype[],
+                        ""ColumnSerial"" integer,
+                        ""ColumnSmallInt"" smallint,
+                        ""ColumnSmallIntAsArray"" smallint[],
+                        ""ColumnSmallSerial"" smallint,
+                        ""ColumnText"" text COLLATE pg_catalog.""default"",
+                        ""ColumnTextAsArray"" text[] COLLATE pg_catalog.""default"",
+                        --""ColumnTId"" tid,
+                        --""ColumnTidAsArray"" tid[],
+                        ""ColumnTimeWithTimeZoneAsArray"" time with time zone[],
+                        ""ColumnTimeWithTimeZone"" time with time zone,
+                        ""ColumnTimeWithoutTimeZone"" time without time zone,
+                        ""ColumnTimeWithoutTimeZoneAsArray"" time without time zone[],
+                        ""ColumnTimestampWithTimeZone"" timestamp with time zone,
+                        ""ColumnTimestampWithTimeZoneAsArray"" timestamp with time zone[],
+                        ""ColumnTimestampWithoutTimeZone"" timestamp without time zone,
+                        ""ColumnTimestampWithoutTimeZoneAsArray"" timestamp without time zone[],
+                        ""ColumnTSQuery"" tsquery,
+                        ""ColumnTSQueryAsArray"" tsquery[],
+                        ""ColumnTSRange"" tsrange,
+                        ""ColumnTSRangeAsArray"" tsrange[],
+                        ""ColumnTSTZRange"" tstzrange,
+                        ""ColumnTSTZRangeAsArray"" tstzrange[],
+                        ""ColumnTSVector"" tsvector,
+                        ""ColumnTSVectorAsArray"" tsvector[],
+                        --""ColumnTXIDSnapshot"" txid_snapshot,
+                        --""ColumnTXIDSnapshotAsArray"" txid_snapshot[],
+                        ""ColumnUUID"" uuid,
+                        ""ColumnUUIDAsArray"" uuid[],
+                        --""ColumnXID"" xid,
+                        --""ColumnXIDAsArray"" xid[],
+                        ""ColumnXML"" xml,
+                        ""ColumnXMLAsArray"" xml[],
+                        CONSTRAINT ""CompleteTable_pkey"" PRIMARY KEY (""Id"")
+                    )
+
+                    TABLESPACE pg_default;
+
+                    ALTER TABLE public.""CompleteTable""
+                        OWNER to enterprisedb;");
+
+                // System catalog types no longer readable as System.Object in EDBClient 10.
+                // Drop them from existing tables that were created before this fix.
+                connection.ExecuteNonQuery(@"
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgDependencies"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgLsn"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgLsnAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgMcvList"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgNDistinct"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnPgNodeTree"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegClass"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegClassAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegDictionary"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegDictionaryAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegNamespace"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegNamespaceAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOper"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperator"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegOperationAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProc"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcedure"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegProcedureAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegRole"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegRoleAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegType"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegTypeAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnCid"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnCidAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnInt2Vector"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnInt2VectorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnOIdVector"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnOIdVectorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRefCursor"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRefCursorAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegConfig"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnRegConfigAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnTId"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnTidAsArray"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnXID"";
+                    ALTER TABLE public.""CompleteTable"" DROP COLUMN IF EXISTS ""ColumnXIDAsArray"";");
+            }
+        }
+
+        private static void CreateNonIdentityCompleteTable()
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""NonIdentityCompleteTable""
+                    (
+                        ""Id"" bigint NOT NULL,
+                        ""ColumnChar"" ""char"",
+                        ""ColumnCharAsArray"" ""char""[],
+                        --""ColumnAclItem"" aclitem,
+                        --""ColumnAclItemAsArray"" aclitem[],
+                        ""ColumnBigInt"" bigint,
+                        ""ColumnBigIntAsArray"" bigint[],
+                        ""ColumnBigSerial"" bigint,
+                        ""ColumnBit"" bit(1),
+                        ""ColumnBitVarying"" bit varying,
+                        ""ColumnBitVaryingAsArray"" bit varying[],
+                        ""ColumnBitAsArray"" bit(1)[],
+                        ""ColumnBoolean"" boolean,
+                        ""ColumnBooleanAsArray"" boolean[],
+                        ""ColumnBox"" box,
+                        ""ColumnBoxAsArray"" box[],
+                        ""ColumnByteA"" bytea,
+                        ""ColumnByteAAsArray"" bytea[],
+                        ""ColumnCharacter"" character(1) COLLATE pg_catalog.""default"",
+                        ""ColumnCharacterVarying"" character varying COLLATE pg_catalog.""default"",
+                        ""ColumnCharacterVaryingAsArray"" character varying[] COLLATE pg_catalog.""default"",
+                        ""ColumnCid"" cid,
+                        ""ColumnCidAsArray"" cid[],
+                        ""ColumnCidr"" cidr,
+                        ""ColumnCircle"" circle,
+                        ""ColumnCircleAsArray"" circle[],
+                        ""ColumnDate"" date,
+                        ""ColumnDateAsArray"" date[],
+                        ""ColumnDateRange"" daterange,
+                        ""ColumnDateRangeAsArray"" daterange[],
+                        ""ColumnDoublePrecision"" double precision,
+                        ""ColumnDoublePrecisionAsArray"" double precision[],
+                        --""ColumnGtsVector"" gtsvector,
+                        ""ColumnInet"" inet,
+                        ""ColumnInetAsArray"" inet[],
+                        ""ColumnInt2Vector"" int2vector,
+                        ""ColumnInt2VectorAsArray"" int2vector[],
+                        ""ColumnInt4Range"" int4range,
+                        ""ColumnInt4RangeAsArray"" int4range[],
+                        ""ColumnInt8Range"" int8range,
+                        ""ColumnInt8RangeAsArray"" int8range[],
+                        ""ColumnInteger"" integer,
+                        ""ColumnIntegerAsArray"" integer[],
+                        ""ColumnInterval"" interval,
+                        ""ColumnIntervalAsArray"" interval[],
+                        ""ColumnJson"" json,
+                        ""ColumnJsonAsArray"" json[],
+                        ""ColumnJsonB"" jsonb,
+                        ""ColumnJsonBAsArray"" jsonb[],
+                        ""ColumnJsonPath"" jsonpath,
+                        ""ColumnJsonPathAsArray"" jsonpath[],
+                        ""ColumnLine"" line,
+                        ""ColumnLineAsArray"" line[],
+                        ""ColumnLSeg"" lseg,
+                        ""ColumnLSegAsArray"" lseg[],
+                        ""ColumnMacAddr"" macaddr,
+                        ""ColumnMacAddrAsArray"" macaddr[],
+                        ""ColumnMacAddr8"" macaddr8,
+                        ""ColumnMacAddr8AsArray"" macaddr8[],
+                        ""ColumnMoney"" money,
+                        ""ColumnMoneyAsArray"" money[],
+                        ""ColumnName"" name COLLATE pg_catalog.""C"",
+                        ""ColumnNameAsArray"" name[] COLLATE pg_catalog.""C"",
+                        ""ColumnNumeric"" numeric,
+                        ""ColumnNumericAsArray"" numeric[],
+                        ""ColumnNumRange"" numrange,
+                        ""ColumnNumRangeAsArray"" numrange[],
+                        ""ColumnOId"" oid,
+                        ""ColumnOIdAsArray"" oid[],
+                        ""ColumnOIdVector"" oidvector,
+                        ""ColumnOIdVectorAsArray"" oidvector[],
+                        ""ColumnPath"" path,
+                        ""ColumnPathAsArray"" path[],
+                        --""ColumnPgDependencies"" pg_dependencies COLLATE pg_catalog.""default"",
+                        ""ColumnPgLsn"" pg_lsn,
+                        ""ColumnPgLsnAsArray"" pg_lsn[],
+                        --""ColumnPgMcvList"" pg_mcv_list COLLATE pg_catalog.""default"",
+                        --""ColumnPgNDistinct"" pg_ndistinct COLLATE pg_catalog.""default"",
+                        --""ColumnPgNodeTree"" pg_node_tree COLLATE pg_catalog.""default"",
+                        ""ColumnPoint"" point,
+                        ""ColumnPointAsArray"" point[],
+                        ""ColumnPolygon"" polygon,
+                        ""ColumnPolygonAsArray"" polygon[],
+                        ""ColumnReal"" real,
+                        ""ColumnRealAsArray"" real[],
+                        ""ColumnRefCursor"" refcursor,
+                        ""ColumnRefCursorAsArray"" refcursor[],
+                        --""ColumnRegClass"" regclass,
+                        --""ColumnRegClassAsArray"" regclass[],
+                        ""ColumnRegConfig"" regconfig,
+                        ""ColumnRegConfigAsArray"" regconfig[],
+                        --""ColumnRegDictionary"" regdictionary,
+                        --""ColumnRegDictionaryAsArray"" regdictionary[],
+                        --""ColumnRegNamespace"" regnamespace,
+                        --""ColumnRegNamespaceAsArray"" regnamespace[],
+                        --""ColumnRegOper"" regoper,
+                        --""ColumnRegOperAsArray"" regoper[],
+                        --""ColumnRegOperator"" regoperator,
+                        --""ColumnRegOperationAsArray"" regoperator[],
+                        --""ColumnRegProc"" regproc,
+                        --""ColumnRegProcAsArray"" regproc[],
+                        --""ColumnRegProcedure"" regprocedure,
+                        --""ColumnRegProcedureAsArray"" regprocedure[],
+                        --""ColumnRegRole"" regrole,
+                        --""ColumnRegRoleAsArray"" regrole[],
+                        --""ColumnRegType"" regtype,
+                        --""ColumnRegTypeAsArray"" regtype[],
+                        ""ColumnSerial"" integer,
+                        ""ColumnSmallInt"" smallint,
+                        ""ColumnSmallIntAsArray"" smallint[],
+                        ""ColumnSmallSerial"" smallint,
+                        ""ColumnText"" text COLLATE pg_catalog.""default"",
+                        ""ColumnTextAsArray"" text[] COLLATE pg_catalog.""default"",
+                        ""ColumnTId"" tid,
+                        ""ColumnTidAsArray"" tid[],
+                        ""ColumnTimeWithTimeZoneAsArray"" time with time zone[],
+                        ""ColumnTimeWithTimeZone"" time with time zone,
+                        ""ColumnTimeWithoutTimeZone"" time without time zone,
+                        ""ColumnTimeWithoutTimeZoneAsArray"" time without time zone[],
+                        ""ColumnTimestampWithTimeZone"" timestamp with time zone,
+                        ""ColumnTimestampWithTimeZoneAsArray"" timestamp with time zone[],
+                        ""ColumnTimestampWithoutTimeZone"" timestamp without time zone,
+                        ""ColumnTimestampWithoutTimeZoneAsArray"" timestamp without time zone[],
+                        ""ColumnTSQuery"" tsquery,
+                        ""ColumnTSQueryAsArray"" tsquery[],
+                        ""ColumnTSRange"" tsrange,
+                        ""ColumnTSRangeAsArray"" tsrange[],
+                        ""ColumnTSTZRange"" tstzrange,
+                        ""ColumnTSTZRangeAsArray"" tstzrange[],
+                        ""ColumnTSVector"" tsvector,
+                        ""ColumnTSVectorAsArray"" tsvector[],
+                        --""ColumnTXIDSnapshot"" txid_snapshot,
+                        --""ColumnTXIDSnapshotAsArray"" txid_snapshot[],
+                        ""ColumnUUID"" uuid,
+                        ""ColumnUUIDAsArray"" uuid[],
+                        ""ColumnXID"" xid,
+                        ""ColumnXIDAsArray"" xid[],
+                        ""ColumnXML"" xml,
+                        ""ColumnXMLAsArray"" xml[],
+                        CONSTRAINT ""NonIdentityCompleteTable_pkey"" PRIMARY KEY (""Id"")
+                    )
+
+                    TABLESPACE pg_default;
+
+                    ALTER TABLE public.""NonIdentityCompleteTable""
+                        OWNER to enterprisedb;");
+            }
+        }
+
+        #endregion
+
+        #region CompleteTable
+
+        public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                var tables = Helper.CreateCompleteTables(count);
+                connection.InsertAll(tables);
+                return tables;
+            }
+        }
+
+        #endregion
+
+        #region NonIdentityCompleteTable
+
+        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                var tables = Helper.CreateNonIdentityCompleteTables(count);
+                connection.InsertAll(tables);
+                return tables;
+            }
+        }
+
+        #endregion
+
+        #region EnumTable
+
+        private static void CreateEnumTable()
+        {
+            using (var connection = new EDBConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hand') THEN
+                            CREATE TYPE hand AS ENUM ('Unidentified', 'Left', 'Right');
+                        END IF;
+                    END
+                    $$;
+
+                    CREATE TABLE IF NOT EXISTS public.""EnumTable""
+                    (
+                        ""Id"" bigint primary key,
+                        ""ColumnEnumHand"" hand null
+                    );");
+                connection.ReloadTypes();
+            }
+        }
+
+        #endregion
+    }
+}

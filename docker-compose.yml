@@ -70,6 +70,21 @@ services:
       DB2INST1_PASSWORD: RepoDB2026
       DBNAME: repodb
 
+  enterprisedb:
+    container_name: enterprisedb
+    # Official EDB Postgres Advanced Server image. Requires an EDB subscription;
+    # authenticate first with:
+    #   docker login docker.enterprisedb.com --username k8s --password <EDB_SUBSCRIPTION_TOKEN>
+    image: docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+    ports:
+      - 127.0.0.1:5444:5444
+    networks:
+      - repodb
+    environment:
+      ACCEPT_EULA: Y
+      ENTERPRISEDB_PASSWORD: RepoDB2026
+      DATABASE_NAME: repodb
+
   clickhouse:
     container_name: clickhouse
     image: clickhouse/clickhouse-server:latest

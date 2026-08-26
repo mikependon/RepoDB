@@ -1,0 +1,78 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using EnterpriseDB.EDBClient;
+using EDBTypes;
+using RepoDb.Attributes.Parameter.EnterpriseDb;
+using RepoDb.DbSettings;
+using RepoDb.Extensions;
+
+namespace RepoDb.EnterpriseDb.UnitTests.Attributes.Parameter.EnterpriseDb
+{
+    [TestClass]
+    public class EnterpriseDbTypeAttributeTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add<EDBConnection>(new EnterpriseDbDbSetting(), true);
+        }
+
+        #region Classes
+
+        private class EnterpriseDbTypeAttributeTestClass
+        {
+            [EnterpriseDbType(EDBDbType.Box)]
+            public object ColumnName { get; set; }
+        }
+
+        #endregion
+
+        [TestMethod]
+        public void TestEnterpriseDbTypeAttributeViaEntityViaCreateParameters()
+        {
+            // Act
+            using (var connection = new EDBConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    DbCommandExtension
+                        .CreateParameters(command, new EnterpriseDbTypeAttributeTestClass
+                        {
+                            ColumnName = "Test"
+                        });
+
+                    // Assert
+                    Assert.AreEqual(1, command.Parameters.Count);
+
+                    // Assert
+                    var parameter = command.Parameters["@ColumnName"];
+                    Assert.AreEqual(EDBDbType.Box, parameter.EDBDbType);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestEnterpriseDbTypeAttributeViaAnonymousViaCreateParameters()
+        {
+            // Act
+            using (var connection = new EDBConnection())
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    DbCommandExtension
+                        .CreateParameters(command, new
+                        {
+                            ColumnName = "Test"
+                        },
+                        typeof(EnterpriseDbTypeAttributeTestClass));
+
+                    // Assert
+                    Assert.AreEqual(1, command.Parameters.Count);
+
+                    // Assert
+                    var parameter = command.Parameters["@ColumnName"];
+                    Assert.AreEqual(EDBDbType.Box, parameter.EDBDbType);
+                }
+            }
+        }
+    }
+}
