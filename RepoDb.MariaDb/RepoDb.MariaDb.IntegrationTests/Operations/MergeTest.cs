@@ -38,10 +38,11 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Merge<CompleteTable>(table);
+                var result = connection.Merge<CompleteTable, int>(table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
+                Assert.IsTrue((int)result > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
@@ -119,10 +120,11 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync<CompleteTable>(table);
+                var result = await connection.MergeAsync<CompleteTable, int>(table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
+                Assert.IsTrue(result > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
@@ -204,11 +206,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Merge<int>(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
+                Assert.IsTrue(result > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
@@ -420,11 +423,12 @@ namespace RepoDb.MariaDb.IntegrationTests.Operations
             using (var connection = new MariaDbConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAsync<int>(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
+                Assert.IsTrue(result > 0);
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }

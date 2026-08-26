@@ -566,7 +566,7 @@ namespace RepoDb.MySql.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT @Id AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -585,7 +585,7 @@ namespace RepoDb.MySql.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT @Id AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -604,7 +604,7 @@ namespace RepoDb.MySql.UnitTests
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
-                "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
+                "UPDATE `Id` = COALESCE(NULLIF(@Id, 0), LAST_INSERT_ID(`Id`)), `Name` = @Name, `Address` = @Address ; SELECT COALESCE(NULLIF(@Id, 0), LAST_INSERT_ID()) AS `Result` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -673,9 +673,9 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT @Id AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT @Id_1 AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT @Id_2 AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -694,9 +694,9 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT @Id AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT @Id_1 AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT @Id_2 AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -715,9 +715,9 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = COALESCE(NULLIF(@Id, 0), LAST_INSERT_ID(`Id`)), `Name` = @Name, `Address` = @Address ; SELECT COALESCE(NULLIF(@Id, 0), LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = COALESCE(NULLIF(@Id_1, 0), LAST_INSERT_ID(`Id`)), `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(NULLIF(@Id_1, 0), LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
+                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = COALESCE(NULLIF(@Id_2, 0), LAST_INSERT_ID(`Id`)), `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(NULLIF(@Id_2, 0), LAST_INSERT_ID()) AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
 
             // Assert
             Assert.AreEqual(expected, query);

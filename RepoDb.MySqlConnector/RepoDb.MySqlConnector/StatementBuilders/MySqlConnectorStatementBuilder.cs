@@ -9,12 +9,12 @@ using RepoDb.Interfaces;
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
-    /// A class that is being used to build a SQL Statement for MySql.
+    /// A class used to build a SQL Statement for MySql.
     /// </summary>
     public sealed class MySqlConnectorStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <see cref="MySqlConnectorStatementBuilder"/> object.
+        /// Creates a new instance of <see cref="MySqlStatementBuilder"/> object.
         /// </summary>
         public MySqlConnectorStatementBuilder()
             : this(DbSettingMapper.Get<MySqlConnection>(),
@@ -23,7 +23,7 @@ namespace RepoDb.StatementBuilders
         { }
 
         /// <summary>
-        /// Creates a new instance of <see cref="MySqlConnectorStatementBuilder"/> class.
+        /// Creates a new instance of <see cref="MySqlStatementBuilder"/> class.
         /// </summary>
         /// <param name="dbSetting">The database settings object currently in used.</param>
         /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
@@ -252,11 +252,11 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(string tableName,
-          IEnumerable<Field> fields = null,
-          int batchSize = 1,
-          DbField primaryField = null,
-          DbField identityField = null,
-          string hints = null)
+            IEnumerable<Field> fields = null,
+            int batchSize = 1,
+            DbField primaryField = null,
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
@@ -485,18 +485,25 @@ namespace RepoDb.StatementBuilders
                 .ParametersFrom(fields, 0, DbSetting)
                 .CloseParen()
                 .WriteText("ON DUPLICATE KEY")
-                .Update()
-                .FieldsAndParametersFrom(fields, 0, DbSetting)
-                .End();
+                .Update();
+
+            // The identity column must never be blindly overwritten with its incoming parameter,
+            // otherwise an existing row's identity gets corrupted whenever the caller leaves it at
+            // its default (e.g. 0 for a non-nullable property). See GetUpdateAssignmentsForMerge().
+            builder.WriteText(GetUpdateAssignmentsForMerge(fields, identityField, 0));
+
+            builder.End();
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(DbSetting) : "NULL";
+            var returnValue = keyColumn != null ?
+                keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, 0) :
+                    keyColumn.Name.AsParameter(DbSetting) : "NULL";
 
             // Set the return value
             builder
                 .Select()
-                .WriteText($"COALESCE({returnValue}, LAST_INSERT_ID())")
+                .WriteText(returnValue)
                 .As("Result".AsQuoted(DbSetting))
                 .End();
 
@@ -565,16 +572,21 @@ namespace RepoDb.StatementBuilders
                     .ParametersFrom(fields, index, DbSetting)
                     .CloseParen()
                     .WriteText("ON DUPLICATE KEY")
-                    .Update()
-                    .FieldsAndParametersFrom(fields, index, DbSetting)
-                    .End();
+                    .Update();
+
+                // See the CreateMerge() remarks on why the identity column is special-cased here.
+                builder.WriteText(GetUpdateAssignmentsForMerge(fields, identityField, index));
+
+                builder.End();
 
                 // Set the return value
-                var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                var returnValue = keyColumn != null ?
+                    keyColumn.IsIdentity ? GetIdentityReturnExpression(keyColumn, index) :
+                        keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
                 builder
                     .Select()
                         .WriteText(
-                            string.Concat($"COALESCE({returnValue}, LAST_INSERT_ID())", " AS ", "Result".AsQuoted(DbSetting), ","))
+                            string.Concat(returnValue, " AS ", "Result".AsQuoted(DbSetting), ","))
                         .WriteText(
                             string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
 
@@ -693,13 +705,13 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateBatchQuery
+        #region CreateSkipQuery
 
         /// <summary>
-        /// Creates a SQL Statement for batch query operation.
+        /// Creates a SQL Statement for 'BatchQuery' operation.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="skip">The number of rows to skip.</param>
         /// <param name="take">The number of rows to take.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
@@ -809,6 +821,54 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return result.Replace("SUM (", "SUM(");
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Builds the return expression for an identity column on a merge statement. A caller-supplied
+        /// value (e.g. an explicit id on an otherwise-empty table, or the real id of an existing row
+        /// being updated) always wins; 'NULLIF(param, 0)' is required because an unset non-nullable
+        /// identity property arrives here as 0 rather than NULL, and MySQL never touches
+        /// LAST_INSERT_ID() when a non-NULL, non-zero value is supplied for the auto_increment column,
+        /// so falling back to LAST_INSERT_ID() only covers the case where the value was really unset.
+        /// </summary>
+        private string GetIdentityReturnExpression(DbField identityField, int index) =>
+            $"COALESCE(NULLIF({identityField.Name.AsParameter(index, DbSetting)}, 0), LAST_INSERT_ID())";
+
+        /// <summary>
+        /// Builds the 'ON DUPLICATE KEY UPDATE' assignment list for a merge statement. The identity
+        /// column, if any, keeps the caller-supplied value when one is given (see
+        /// <see cref="GetIdentityReturnExpression"/>); otherwise it falls back to 'LAST_INSERT_ID(column)'
+        /// instead of blindly re-assigning its incoming parameter, so a duplicate-key update never
+        /// overwrites an existing row's identity with a client-side default (e.g. 0), and so
+        /// 'LAST_INSERT_ID()' reliably reflects the affected row afterwards.
+        /// </summary>
+        private string GetUpdateAssignmentsForMerge(IEnumerable<Field> fields,
+            DbField identityField,
+            int index)
+        {
+            if (identityField == null)
+            {
+                return fields
+                    .Select(f => string.Concat(f.Name.AsField(DbSetting), " = ", f.Name.AsParameter(index, DbSetting)))
+                    .Join(", ");
+            }
+
+            var identityFieldName = identityField.Name.AsField(DbSetting);
+            var identityParameter = identityField.Name.AsParameter(index, DbSetting);
+            var assignments = new List<string>
+            {
+                string.Concat(identityFieldName, " = COALESCE(NULLIF(", identityParameter, ", 0), LAST_INSERT_ID(", identityFieldName, "))")
+            };
+
+            assignments.AddRange(fields
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .Select(f => string.Concat(f.Name.AsField(DbSetting), " = ", f.Name.AsParameter(index, DbSetting))));
+
+            return assignments.Join(", ");
         }
 
         #endregion
