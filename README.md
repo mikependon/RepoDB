@@ -60,6 +60,7 @@ Choose your database and follow the quick-start guide:
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [Db2](http://repodb.net/tutorial/get-started-db2)
+- [Firebird](http://repodb.net/tutorial/get-started-firebird)
 - [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
 - [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [Oracle](http://repodb.net/tutorial/get-started-oracle)

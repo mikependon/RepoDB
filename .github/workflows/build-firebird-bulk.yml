@@ -1,0 +1,25 @@
+# NOTE: This is a stub, mirroring the other providers' *-bulk.yml pipelines ahead of time.
+# RepoDb.Extensions/RepoDb.Firebird.BulkOperations does not exist yet, so this workflow will fail
+# until that project is scaffolded (see the other RepoDb.Extensions/RepoDb.*.BulkOperations projects
+# for the pattern to follow).
+
+name: Build & Run Tests - RepoDb.Firebird.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Firebird/**'
+      - 'RepoDb.Extensions/RepoDb.Firebird.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-firebird-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.Firebird.BulkOperations
+      solution-file: RepoDb.Firebird.BulkOperations.sln
+      artifact-name: release-firebird-bulk
+      db-engine: firebird
