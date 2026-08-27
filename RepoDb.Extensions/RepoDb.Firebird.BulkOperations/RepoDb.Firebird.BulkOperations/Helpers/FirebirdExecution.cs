@@ -12,12 +12,23 @@ using RepoDb.Interfaces;
 namespace RepoDb.Firebird.BulkOperations.Extensions
 {
     /// <summary>
-    /// Executes the SQL text built by <see cref="FirebirdText"/> against the database.
+    /// 
     /// </summary>
     internal static class FirebirdExecution
     {
         #region Shared
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         public static void CreatePseudoTable(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -31,6 +42,19 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task CreatePseudoTableAsync(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> fields,
@@ -45,6 +69,15 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         public static void CreatePseudoTableIndex(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -56,6 +89,17 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task CreatePseudoTableIndexAsync(FbConnection connection,
             string pseudoTableName,
             IEnumerable<Field> qualifiers,
@@ -68,6 +112,14 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
         public static void DropPseudoTable(FbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -78,6 +130,16 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task DropPseudoTableAsync(FbConnection connection,
             string pseudoTableName,
             ITrace trace = null,
@@ -89,15 +151,36 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static FbCommand CreateReaderCommand(FbConnection connection,
+            string commandText,
+            FbTransaction transaction) =>
+            (FbCommand)connection.CreateCommand(commandText, CommandType.Text, null, transaction);
+
         #endregion
 
         #region Insert
 
         /// <summary>
-        /// Runs the <c>EXECUTE BLOCK</c> loop built by <see cref="FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql"/>
-        /// and assigns each yielded identity value back onto the matching source entity, by position (row
-        /// order is guaranteed by the pseudo table's client-assigned row-order column).
+        /// 
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="entities"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int InsertFromPseudoTableForReturnIdentity<TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -112,7 +195,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = command.ExecuteReader();
             var result = 0;
 
             while (reader.Read())
@@ -124,6 +208,21 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="entities"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> InsertFromPseudoTableForReturnIdentityAsync<TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -139,7 +238,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -151,6 +251,19 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="rows"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int InsertFromPseudoTableForReturnIdentityForDataTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -163,7 +276,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         {
             var commandText = FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = command.ExecuteReader();
             var result = 0;
 
             while (reader.Read())
@@ -175,6 +289,20 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="rows"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> InsertFromPseudoTableForReturnIdentityForDataTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -188,7 +316,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         {
             var commandText = FirebirdText.GetInsertFromPseudoTableForReturnIdentitySql(tableName, pseudoTableName, fields, identityField, connection.GetDbSetting());
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -205,9 +334,18 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         #region Merge
 
         /// <summary>
-        /// Applies a no-return-identity merge (see <see cref="FirebirdText.GetMergeFromPseudoTableSql"/> for
-        /// the three possible statement shapes) and returns the number of rows processed.
+        /// 
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int MergeFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -222,6 +360,20 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> MergeFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -238,9 +390,20 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// Applies a return-identity merge and assigns each yielded identity value back onto the matching
-        /// source entity, by position.
+        /// 
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="entities"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int MergeFromPseudoTableForReturnIdentity<TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -256,7 +419,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, true, connection.GetDbSetting());
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = command.ExecuteReader();
             var result = 0;
 
             while (reader.Read())
@@ -268,6 +432,22 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="entities"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> MergeFromPseudoTableForReturnIdentityAsync<TEntity>(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -284,7 +464,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, true, connection.GetDbSetting());
             var setter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(typeof(TEntity), identityField);
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -296,6 +477,20 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="rows"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int MergeFromPseudoTableForReturnIdentityForDataTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -309,7 +504,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         {
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, true, connection.GetDbSetting());
 
-            using var reader = (DbDataReader)connection.ExecuteReader(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = command.ExecuteReader();
             var result = 0;
 
             while (reader.Read())
@@ -321,6 +517,21 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="rows"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> MergeFromPseudoTableForReturnIdentityForDataTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -335,7 +546,8 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         {
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, true, connection.GetDbSetting());
 
-            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            using var command = CreateReaderCommand(connection, commandText, transaction);
+            using var reader = await command.ExecuteReaderAsync(cancellationToken);
             var result = 0;
 
             while (await reader.ReadAsync(cancellationToken))
@@ -351,6 +563,18 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
         #region Update
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int UpdateFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -364,6 +588,19 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> UpdateFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -382,6 +619,17 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
         #region Delete
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public static int DeleteFromPseudoTable(FbConnection connection,
             string tableName,
             string pseudoTableName,
@@ -394,6 +642,18 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public static async Task<int> DeleteFromPseudoTableAsync(FbConnection connection,
             string tableName,
             string pseudoTableName,

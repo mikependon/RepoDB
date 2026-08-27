@@ -29,17 +29,19 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
         #region Methods
 
         /// <summary>
-        /// Returns the current UTC time truncated to Firebird's fixed <c>TIMESTAMP</c> precision (4
-        /// fractional digits / 100-microsecond resolution). Without truncating here, the sub-100-microsecond
-        /// remainder would be silently dropped by Firebird on write, and a direct equality assertion between
-        /// the in-memory value and the value read back from the database would fail.
+        /// 
         /// </summary>
+        /// <returns></returns>
         private static DateTime UtcNowFirebirdPrecision() =>
             new(DateTime.UtcNow.Ticks / 1000 * 1000, DateTimeKind.Utc);
 
         /// <summary>
-        /// Asserts the properties equality of 2 types.
+        /// 
         /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
         public static void AssertPropertiesEquality<T1, T2>(T1 t1, T2 t2)
         {
             var propertiesOfType1 = typeof(T1).GetProperties();
@@ -57,19 +59,8 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                if (value1 is byte[] b1 && value2 is byte[] b2)
-                {
-                    for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
-                    {
-                        Assert.AreEqual(b1[i], b2[i],
-                            $"Assert failed for '{propertyOfType1.Name}[{i}]'.");
-                    }
-                }
-                else
-                {
-                    Assert.AreEqual(value1, value2,
-                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
-                }
+                Assert.AreEqual(value1, value2,
+                    $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1}' and '{value2}'.");
             });
         }
 
@@ -77,6 +68,12 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
 
         #region BulkOperationIdentityTable
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
         public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
             bool hasId = false)
         {
@@ -88,7 +85,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationIdentityTable
                 {
                     Id = hasId ? index : 0,
-                    RowGuid = Guid.NewGuid().ToByteArray(),
+                    RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
                     ColumnDateTime2 = UtcNowFirebirdPrecision(),
@@ -101,6 +98,10 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
         public static void UpdateBulkOperationIdentityTables(List<BulkOperationIdentityTable> tables)
         {
             var random = new Random();
@@ -119,6 +120,12 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
 
         #region BulkOperationNonIdentityTable
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
         public static List<BulkOperationNonIdentityTable> CreateBulkOperationNonIdentityTables(int count,
             bool hasId = true)
         {
@@ -130,7 +137,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationNonIdentityTable
                 {
                     Id = hasId ? index : 0,
-                    RowGuid = Guid.NewGuid().ToByteArray(),
+                    RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(random.Next(100)),
                     ColumnDateTime2 = UtcNowFirebirdPrecision(),
@@ -143,6 +150,10 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
         public static void UpdateBulkOperationNonIdentityTables(List<BulkOperationNonIdentityTable> tables)
         {
             var random = new Random();
@@ -161,6 +172,12 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
 
         #region BulkOperationMappedIdentityTable
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
         public static List<BulkOperationMappedIdentityTable> CreateBulkOperationMappedIdentityTables(int count,
             bool hasId = false)
         {
@@ -172,7 +189,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationMappedIdentityTable
                 {
                     IdMapped = hasId ? index : 0,
-                    RowGuidMapped = Guid.NewGuid().ToByteArray(),
+                    RowGuidMapped = Guid.NewGuid(),
                     ColumnBitMapped = true,
                     ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100)),
                     ColumnDateTime2Mapped = UtcNowFirebirdPrecision(),
@@ -189,6 +206,12 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
 
         #region BulkOperationMappedNonIdentityTable
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
         public static List<BulkOperationMappedNonIdentityTable> CreateBulkOperationMappedNonIdentityTables(int count,
             bool hasId = true)
         {
@@ -200,7 +223,7 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationMappedNonIdentityTable
                 {
                     IdMapped = hasId ? index : 0,
-                    RowGuidMapped = Guid.NewGuid().ToByteArray(),
+                    RowGuidMapped = Guid.NewGuid(),
                     ColumnBitMapped = true,
                     ColumnDateTimeMapped = EpocDate.AddDays(random.Next(100)),
                     ColumnDateTime2Mapped = UtcNowFirebirdPrecision(),

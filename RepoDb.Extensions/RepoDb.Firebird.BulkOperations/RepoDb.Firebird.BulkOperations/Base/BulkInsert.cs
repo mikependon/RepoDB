@@ -13,12 +13,31 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static partial class FirebirdConnectionExtension
     {
         #region Sync
 
         #region BulkInsertBase<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBase<TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -43,6 +62,21 @@ namespace RepoDb
                 : connection.BulkInsertBaseNoReturnIdentity(tableName, entityList, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBaseForReturnIdentity<TEntity>(this FbConnection connection,
             string tableName,
             IList<TEntity> entities,
@@ -84,6 +118,20 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBaseNoReturnIdentity<TEntity>(this FbConnection connection,
             string tableName,
             IList<TEntity> entities,
@@ -98,9 +146,11 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
             var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
             using var entityTable = BuildEntityDataTable(entities, entityFields);
-            var result = WriteToServerInternal(connection, tableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
+            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(entityTable, identityField).AsList();
+            var result = WriteToServerInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction);
 
             Tracer.InvokeAfterExecution(traceResult, trace, result);
             return result;
@@ -110,6 +160,22 @@ namespace RepoDb
 
         #region BulkInsertBase<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBase(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -133,6 +199,21 @@ namespace RepoDb
                 : connection.BulkInsertBaseNoReturnIdentity(tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBaseForReturnIdentity(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -174,6 +255,20 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static int BulkInsertBaseNoReturnIdentity(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -188,7 +283,9 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-            var result = WriteToServerInternal(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction);
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
+            var result = WriteToServerInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction);
 
             Tracer.InvokeAfterExecution(traceResult, trace, result);
             return result;
@@ -211,7 +308,8 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command);
 
-            var result = WriteToServerInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction);
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var result = WriteToServerInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction);
 
             Tracer.InvokeAfterExecution(traceResult, trace, result);
             return result;
@@ -225,6 +323,23 @@ namespace RepoDb
 
         #region BulkInsertBaseAsync<TEntity>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync<TEntity>(this FbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -250,6 +365,22 @@ namespace RepoDb
                 : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, entityList, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this FbConnection connection,
             string tableName,
             IList<TEntity> entities,
@@ -292,6 +423,21 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this FbConnection connection,
             string tableName,
             IList<TEntity> entities,
@@ -307,9 +453,11 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
             var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
             using var entityTable = BuildEntityDataTable(entities, entityFields);
-            var result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: mappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
+            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(entityTable, identityField).AsList();
+            var result = await WriteToServerAsyncInternal(connection, tableName, entityTable, mappings: writeMappings, bulkCopyTimeout: bulkCopyTimeout, batchSize: batchSize, transaction: transaction, cancellationToken: cancellationToken);
 
             await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             return result;
@@ -319,6 +467,23 @@ namespace RepoDb
 
         #region BulkInsertBaseAsync<DataTable>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -343,6 +508,22 @@ namespace RepoDb
                 : await connection.BulkInsertBaseNoReturnIdentityAsync(tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, trace, traceKey, transaction, cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseForReturnIdentityAsync(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -385,6 +566,21 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseNoReturnIdentityAsync(this FbConnection connection,
             string tableName,
             DataTable table,
@@ -400,7 +596,9 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            var result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, mappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var writeMappings = mappings ?? GetDefaultMappingsForDataTable(table, identityField).AsList();
+            var result = await WriteToServerAsyncInternal(connection, tableName, table, rowState, writeMappings, bulkCopyTimeout, batchSize, transaction, cancellationToken);
 
             await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             return result;
@@ -410,6 +608,20 @@ namespace RepoDb
 
         #region BulkInsertBaseAsync<DbDataReader>
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> BulkInsertBaseAsync(this FbConnection connection,
             string tableName,
             IDataReader reader,
@@ -424,7 +636,8 @@ namespace RepoDb
             using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
             var traceResult = await Tracer.InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
-            var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var result = await WriteToServerAsyncInternal(connection, tableName, reader, mappings ?? GetDefaultMappingsForDataReader(connection, tableName, reader, transaction, identityField).AsList(), bulkCopyTimeout, batchSize, transaction, cancellationToken);
 
             await Tracer.InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             return result;

@@ -3,13 +3,16 @@ using System;
 
 namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Map("BulkOperationNonIdentityTable")]
     public class BulkOperationMappedNonIdentityTable
     {
         [Map("Id")]
         public long IdMapped { get; set; }
         [Map("RowGuid")]
-        public byte[] RowGuidMapped { get; set; }
+        public Guid RowGuidMapped { get; set; }
         [Map("ColumnBit")]
         public bool? ColumnBitMapped { get; set; }
         [Map("ColumnDateTime")]

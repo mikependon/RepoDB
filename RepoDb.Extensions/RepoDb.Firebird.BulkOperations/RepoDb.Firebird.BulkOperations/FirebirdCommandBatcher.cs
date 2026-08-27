@@ -6,16 +6,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FirebirdSql.Data.FirebirdClient;
+using RepoDb.Extensions;
 
 namespace RepoDb.Firebird.BulkOperations
 {
     /// <summary>
-    /// A <see cref="FbBatchCommand"/>-based alternative to a native bulk-copy class for writing rows into
-    /// Firebird, kept API-shaped like <c>SqlBulkCopy</c> (<see cref="DestinationTableName"/>,
-    /// <see cref="ColumnMappings"/>, <c>WriteToServer</c>/<c>WriteToServerAsync</c>). The ADO.NET provider has
-    /// no <c>SqlBulkCopy</c>/<c>DB2BulkCopy</c> equivalent, so this submits one parameterized <c>INSERT</c>,
-    /// once per source row, through a single <see cref="FbBatchCommand"/> round trip (or one round trip per
-    /// <see cref="BatchSize"/>-sized chunk, for very large row counts).
+    /// A <see cref="FbBatchCommand"/>-based bulk-copy class for bulk-inserting huge datasets.
     /// </summary>
     public class FirebirdCommandBatcher : IDisposable
     {
@@ -25,7 +21,8 @@ namespace RepoDb.Firebird.BulkOperations
         /// Creates a new instance bound to <paramref name="connection"/>.
         /// </summary>
         /// <param name="connection">The connection to batch inserts against.</param>
-        public FirebirdCommandBatcher(FbConnection connection)
+        public FirebirdCommandBatcher(
+            FbConnection connection)
         {
             this.connection = connection;
         }
@@ -98,13 +95,12 @@ namespace RepoDb.Firebird.BulkOperations
             return mappings;
         }
 
-        // Positional "p0", "p1", ... names sidestep having to turn a (possibly already-quoted)
-        // DestinationColumn back into a valid bind-variable identifier.
         private static string ParameterName(int index) => "p" + index;
 
         private string BuildInsertStatement(IReadOnlyList<FirebirdCommandBatcherMapItem> mappings)
         {
-            var columnList = string.Join(", ", mappings.Select(m => m.DestinationColumn));
+            var dbSetting = connection.GetDbSetting();
+            var columnList = string.Join(", ", mappings.Select(m => m.DestinationColumn.AsQuoted(true, dbSetting)));
             var parameterList = string.Join(", ", Enumerable.Range(0, mappings.Count).Select(i => "@" + ParameterName(i)));
             return $"INSERT INTO {DestinationTableName} ({columnList}) VALUES ({parameterList})";
         }

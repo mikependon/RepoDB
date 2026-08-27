@@ -4,6 +4,7 @@ using RepoDb.Enumerations.Firebird;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Firebird.BulkOperations.IntegrationTests.Models;
+using System;
 using System.Data;
 using System.Linq;
 
@@ -106,10 +107,10 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationNonIdentityTables(10);
             using var dataTable = new DataTable();
             dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.Id), typeof(long));
-            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.RowGuid), typeof(byte[]));
+            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.RowGuid), typeof(Guid));
             dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnBit), typeof(bool));
-            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnDateTime), typeof(System.DateTime));
-            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnDateTime2), typeof(System.DateTime));
+            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnDateTime), typeof(DateTime));
+            dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnDateTime2), typeof(DateTime));
             dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnDecimal), typeof(decimal));
             dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnFloat), typeof(double));
             dataTable.Columns.Add(nameof(BulkOperationNonIdentityTable.ColumnInt), typeof(int));

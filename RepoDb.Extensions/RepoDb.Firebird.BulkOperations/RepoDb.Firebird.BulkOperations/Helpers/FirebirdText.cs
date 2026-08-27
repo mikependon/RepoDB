@@ -9,13 +9,7 @@ using RepoDb.Interfaces;
 namespace RepoDb
 {
     /// <summary>
-    /// Builds the SQL text used by the Firebird bulk operations. Firebird has no <c>CREATE TABLE ... AS
-    /// SELECT</c>, so pseudo tables are declared column-by-column from <see cref="DbField"/> metadata rather
-    /// than copied from the real table's definition (see <see cref="GetCreatePseudoTableSql"/>). Identity
-    /// return values come back via an <c>EXECUTE BLOCK ... SUSPEND</c> loop - Firebird's <c>RETURNING</c>
-    /// clause, like Oracle's, only ever returns a single row, so a multi-row result set needs the same
-    /// "loop and yield" shape as the core <c>RepoDb.Firebird</c> provider's own identity-as-qualifier
-    /// <c>Merge</c> (see <c>FirebirdStatementBuilder.BuildMergeExecuteBlock</c>).
+    /// 
     /// </summary>
     internal static class FirebirdText
     {
@@ -24,32 +18,23 @@ namespace RepoDb
         #region Shared
 
         /// <summary>
-        /// Builds a short, per-call unique pseudo table name. Every pseudo table is created fresh and
-        /// dropped at the end of the call (see <see cref="RepoDb.Firebird.BulkOperations.Base"/>), so unlike
-        /// some other providers' bulk-operations packages there is no deterministic, reused name for
-        /// concurrent callers targeting the same real table to race on. Kept well under Firebird's 31-byte
-        /// identifier limit (Firebird 3.0/3.0.x) so appending "IX" for the qualifier index (see
-        /// <see cref="GetCreatePseudoTableIndexSql"/>) never overflows it.
+        /// 
         /// </summary>
-        /// <param name="operationTag">A single-letter tag identifying the calling operation (for readability only).</param>
+        /// <param name="operationTag"></param>
+        /// <returns></returns>
         public static string CreatePseudoTableName(string operationTag) =>
             "RDBLK" + operationTag + Guid.NewGuid().ToString("N")[..20];
 
         /// <summary>
-        /// The row-order column carried on every pseudo table. Its value is assigned client-side (see
-        /// <see cref="RepoDb.Firebird.BulkOperations.FirebirdCommandBatcher"/>) rather than server-generated,
-        /// so read-back queries can rely on it matching the source row order exactly - no dependency on a
-        /// bulk-write mechanism preserving input order, unlike the identity-column-based row-order trick
-        /// other providers' bulk-operations packages use.
+        /// 
         /// </summary>
         public static Field RowOrderField { get; } = new(RowOrderColumnName, typeof(long));
 
         /// <summary>
-        /// Maps a real column's <see cref="DbField"/> metadata onto a Firebird column declaration. Firebird
-        /// has no "copy this column's type" DDL construct, so every pseudo table column is declared
-        /// explicitly from the real column's <see cref="DbField.DatabaseType"/> (as reported by
-        /// <c>FirebirdDbHelper</c>) plus its size/precision/scale.
+        /// 
         /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
         private static string GetColumnTypeSql(DbField field)
         {
             var precision = field.Precision ?? 18;
@@ -84,10 +69,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Builds the <c>CREATE TABLE</c>/<c>CREATE GLOBAL TEMPORARY TABLE</c> statement for a pseudo table
-        /// holding <paramref name="fields"/> (mirroring their real-table types via <paramref name="dbFields"/>)
-        /// plus the <see cref="RowOrderField"/> tracking column.
+        /// 
         /// </summary>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetCreatePseudoTableSql(string pseudoTableName,
             IEnumerable<Field> fields,
             DbFieldCollection dbFields,
@@ -104,13 +93,16 @@ namespace RepoDb
             var isMemory = pseudoTableType == FirebirdBulkImportPseudoTableType.Memory;
             var tableKind = isMemory ? "GLOBAL TEMPORARY TABLE" : "TABLE";
             var onCommitClause = isMemory ? " ON COMMIT PRESERVE ROWS" : string.Empty;
-
-            return $"CREATE {tableKind} {quotedPseudoTableName} ({columnDefinitions}, {quotedRowOrderColumn} BIGINT NOT NULL){onCommitClause}";
+            return $"CREATE {tableKind} {quotedPseudoTableName} ({columnDefinitions}, {quotedRowOrderColumn} BIGINT DEFAULT 0 NOT NULL){onCommitClause}";
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetCreatePseudoTableIndexSql(string pseudoTableName,
             IEnumerable<Field> qualifiers,
             IDbSetting dbSetting)
@@ -123,15 +115,29 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetDropPseudoTableSql(string pseudoTableName,
             IDbSetting dbSetting) =>
             $"DROP TABLE {pseudoTableName.AsQuoted(true, dbSetting)}";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string ColumnList(IEnumerable<Field> fields, IDbSetting dbSetting) =>
             fields.Select(f => f.Name.AsQuoted(true, dbSetting)).Join(", ");
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         private static string VariableList(int count) =>
             string.Join(", ", Enumerable.Range(0, count).Select(i => ":V" + i));
 
@@ -140,11 +146,14 @@ namespace RepoDb
         #region Insert
 
         /// <summary>
-        /// Builds an <c>EXECUTE BLOCK</c> that loops over every row of <paramref name="pseudoTableName"/> (in
-        /// row-order), inserts it into <paramref name="tableName"/>, and <c>SUSPEND</c>s the generated
-        /// identity value - the only way to get a multi-row result set of generated identities back from a
-        /// single Firebird round trip (see the type-level remarks).
+        /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static string GetInsertFromPseudoTableForReturnIdentitySql(string tableName,
             string pseudoTableName,
             IEnumerable<Field> fields,

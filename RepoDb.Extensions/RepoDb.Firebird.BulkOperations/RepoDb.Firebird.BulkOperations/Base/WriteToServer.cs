@@ -15,10 +15,7 @@ using RepoDb.Options;
 namespace RepoDb
 {
     /// <summary>
-    /// Shared helpers for every Firebird bulk operation: resolving column mappings, staging rows through
-    /// <see cref="FirebirdCommandBatcher"/>, and building the small per-call working <see cref="DataTable"/>
-    /// every entity/qualifier-based operation stages its rows through (property-handler-aware, unlike
-    /// streaming an entity list directly - see <see cref="BuildEntityDataTable{TEntity}"/>).
+    /// 
     /// </summary>
     public static partial class FirebirdConnectionExtension
     {
@@ -27,10 +24,17 @@ namespace RepoDb
         #region WriteToServerInternal
 
         /// <summary>
-        /// Writes <paramref name="table"/> directly into <paramref name="tableName"/> - used both for a
-        /// plain (no-return-identity) <c>BulkInsert</c> straight into the real table, and for staging rows
-        /// into a pseudo table for every other bulk operation.
+        /// 
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         internal static int WriteToServerInternal(FbConnection connection,
             string tableName,
             DataTable table,
@@ -46,9 +50,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Streams <paramref name="reader"/> directly into <paramref name="tableName"/> without
-        /// materializing it into memory first.
+        /// 
         /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         internal static int WriteToServerInternal(FbConnection connection,
             string tableName,
             IDataReader reader,
@@ -66,6 +77,19 @@ namespace RepoDb
 
         #region WriteToServerAsyncInternal
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(FbConnection connection,
             string tableName,
             DataTable table,
@@ -81,6 +105,18 @@ namespace RepoDb
             return await batcher.WriteToServerAsync(table, rowState, cancellationToken);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         internal static async Task<int> WriteToServerAsyncInternal(FbConnection connection,
             string tableName,
             IDataReader reader,
@@ -99,6 +135,16 @@ namespace RepoDb
 
         #region Helpers
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static FirebirdCommandBatcher CreateFirebirdCommandBatcher(FbConnection connection,
             string tableName,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings,
@@ -130,11 +176,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Unlike some other providers' bulk-operations packages, this genuinely switches between
-        /// <see cref="FirebirdBulkImportPseudoTableType.Physical"/> and <see cref="FirebirdBulkImportPseudoTableType.Memory"/>
-        /// based on row count - every pseudo table gets a per-call unique name (see <c>FirebirdText.CreatePseudoTableName</c>),
-        /// so there's no shared, deterministic staging-table name for concurrent callers to race on either way.
+        /// 
         /// </summary>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="rowCount"></param>
+        /// <returns></returns>
         private static FirebirdBulkImportPseudoTableType ResolvePseudoTableType(FirebirdBulkImportPseudoTableType pseudoTableType,
             int? rowCount) =>
             pseudoTableType == FirebirdBulkImportPseudoTableType.Auto
@@ -143,6 +189,13 @@ namespace RepoDb
                     : FirebirdBulkImportPseudoTableType.Memory)
                 : pseudoTableType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        /// <exception cref="PrimaryFieldNotFoundException"></exception>
         private static Field GetPrimaryOrIdentityQualifier(string tableName,
             DbFieldCollection dbFields)
         {
@@ -157,11 +210,27 @@ namespace RepoDb
             return primaryOrIdentity.AsField();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
         private static IEnumerable<Field> GetQualifierFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<Field> qualifiers = null) =>
             qualifiers?.Any() == true ? qualifiers : new[] { GetPrimaryOrIdentityQualifier(tableName, dbFields) };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="mappings"></param>
+        /// <param name="identityField"></param>
+        /// <returns></returns>
+        /// <exception cref="MissingFieldsException"></exception>
         private static IEnumerable<Field> GetInsertFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings,
@@ -188,6 +257,15 @@ namespace RepoDb
             return fields;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="mappings"></param>
+        /// <param name="qualifierFields"></param>
+        /// <returns></returns>
+        /// <exception cref="MissingFieldsException"></exception>
         private static IEnumerable<Field> GetMergeFields(string tableName,
             DbFieldCollection dbFields,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings,
@@ -210,10 +288,23 @@ namespace RepoDb
             return fields;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
         private static bool HasUpdateableFields(IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers) =>
             fields.Any(field => qualifiers.Any(qualifier => string.Equals(qualifier.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="rowState"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         private static IEnumerable<DataRow> GetDataRows(DataTable dataTable,
             DataRowState? rowState = null)
         {
@@ -259,6 +350,11 @@ namespace RepoDb
             return table;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
         private static IEnumerable<FirebirdCommandBatcherMapItem> WithRowOrderMapping(IEnumerable<FirebirdCommandBatcherMapItem> mappings) =>
             mappings == null ? null : mappings.Append(new FirebirdCommandBatcherMapItem(RowOrderColumnName, RowOrderColumnName));
 
@@ -286,11 +382,10 @@ namespace RepoDb
                     Field: f,
                     Property: isDictionaryStringObject ? null : PropertyCache.Get(entityType, f, includeMappings: true)))
                 .AsList();
-
             var table = new DataTable();
             foreach (var column in columns)
             {
-                table.Columns.Add(column.Field.Name, column.Field.Type ?? typeof(object));
+                table.Columns.Add(column.Field.Name, typeof(object));
             }
             if (includeRowOrder)
             {
@@ -315,6 +410,13 @@ namespace RepoDb
             return table;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="entities"></param>
+        /// <param name="isDictionaryStringObject"></param>
+        /// <returns></returns>
         private static IList<Field> GetEntityFieldsForWrite(Type entityType,
             IEnumerable<object> entities,
             bool isDictionaryStringObject)
@@ -328,6 +430,14 @@ namespace RepoDb
             return PropertyCache.Get(entityType)?.Select(p => new Field(p.GetMappedName())).AsList() ?? new List<Field>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="field"></param>
+        /// <param name="property"></param>
+        /// <param name="isDictionaryStringObject"></param>
+        /// <returns></returns>
         private static object GetValueForWrite(object entity,
             Field field,
             ClassProperty property,
@@ -364,13 +474,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
+        /// <param name="qualifierField"></param>
+        /// <param name="keyValues"></param>
+        /// <returns></returns>
         private static DataTable CreateKeyValuesDataTable(Field qualifierField,
             IEnumerable<object> keyValues)
         {
+            // typeof(object), not qualifierField.Type - same reasoning as BuildEntityDataTable above.
             var table = new DataTable();
-            table.Columns.Add(qualifierField.Name, qualifierField.Type ?? typeof(object));
+            table.Columns.Add(qualifierField.Name, typeof(object));
 
             foreach (var keyValue in keyValues)
             {
@@ -380,6 +494,28 @@ namespace RepoDb
             return table;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
+        private static IEnumerable<FirebirdCommandBatcherMapItem> GetDefaultMappingsForDataTable(DataTable table,
+            Field excludeField = null) =>
+            table.Columns
+                .OfType<DataColumn>()
+                .Where(column => excludeField == null || !string.Equals(column.ColumnName, excludeField.Name, StringComparison.OrdinalIgnoreCase))
+                .Select(column => new FirebirdCommandBatcherMapItem(column.ColumnName, column.ColumnName));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="transaction"></param>
+        /// <param name="excludeField"></param>
+        /// <returns></returns>
         private static IEnumerable<FirebirdCommandBatcherMapItem> GetDefaultMappingsForDataReader(FbConnection connection,
             string tableName,
             IDataReader reader,
@@ -400,6 +536,14 @@ namespace RepoDb
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static DbCommand CreateTraceCommand(FbConnection connection,
             string commandText,
             int? commandTimeout = null,
