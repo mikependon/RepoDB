@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Firebird</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>http://repodb.net/release/firebird</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-firebird</PackageProjectUrl>
     <!--

@@ -11,6 +11,7 @@
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="System.Data.SqlClient\**" />

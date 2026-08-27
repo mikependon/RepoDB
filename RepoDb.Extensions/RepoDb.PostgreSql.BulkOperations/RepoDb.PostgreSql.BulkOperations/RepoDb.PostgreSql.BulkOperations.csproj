@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />

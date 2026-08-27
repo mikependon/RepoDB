@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-firebird</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <!--
       Pins the version this project is stamped as when it is a ProjectReference dependency of another
       package, independently of the consuming package's own -p:Version. Pass
