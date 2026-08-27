@@ -48,31 +48,6 @@ RepoDB is evolving from an ORM into a broader data productivity platform, with D
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
-## Packages and Build Status
-
-RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
-
-See the full [package list and build status](PACKAGES.md).
-
-## Bulk Operations Support
-
-Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
-
-| DB Provider | Sync | Async |
-|---|---|---|
-| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) Sync | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) Async |
-| [IBM DB2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native Sync | [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) Async |
-| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) Sync (via **`FbBatchCommand`**) | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) Async (via **`FbBatchCommand`**) |
-| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) Sync (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) Async (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
-| [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | MariaDbBulkCopy Sync (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) | MariaDbBulkCopy Async (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
-| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) Sync | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) Async |
-| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native Sync | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native Async |
-| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native Sync | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native Async |
-| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native Sync | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native Async |
-| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native Sync | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native Async |
-
-MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead.
-
 ## Get Started
 
 Choose your database and follow the quick-start guide:
@@ -100,6 +75,31 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
+
+## Packages and Build Status
+
+RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
+
+See the full [package list and build status](PACKAGES.md).
+
+## Bulk Operations Support
+
+Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
+
+| DB Provider | Sync | Async |
+|---|---|---|
+| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) Sync | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) Async |
+| [IBM DB2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native Sync | [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) Async |
+| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) Sync (via **`FbBatchCommand`**) | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) Async (via **`FbBatchCommand`**) |
+| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) Sync (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) Async (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
+| [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | MariaDbBulkCopy Sync (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) | MariaDbBulkCopy Async (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
+| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) Sync | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) Async |
+| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native Sync | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native Async |
+| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native Sync | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native Async |
+| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native Sync | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native Async |
+| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native Sync | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native Async |
+
+MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead.
 
 ## Type Coercion
 
