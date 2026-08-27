@@ -70,6 +70,12 @@ namespace RepoDb.Interfaces
         bool IsUseUpsert { get; }
 
         /// <summary>
+        /// Gets the maximum number of parameters/members the current DB provider allows in a single generated
+        /// command text.
+        /// </summary>
+        int MaxParameterCount { get; }
+
+        /// <summary>
         /// Gets the character used for opening quote.
         /// </summary>
         string OpeningQuote { get; }

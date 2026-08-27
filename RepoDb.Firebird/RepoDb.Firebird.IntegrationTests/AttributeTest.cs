@@ -38,13 +38,13 @@ namespace RepoDb.Firebird.IntegrationTests
             public byte[] ColumnBlob { get; set; }
 
             [FbDbType(FbDbType.BigInt)]
-            public long ColumnBigInt { get; set; }
+            public long ColumnBigint { get; set; }
 
             [FbDbType(FbDbType.TimeStamp)]
             public DateTime ColumnDateTime2 { get; set; }
 
             [FbDbType(FbDbType.VarChar)]
-            public string ColumnVarChar { get; set; }
+            public string ColumnVarchar { get; set; }
         }
 
         #endregion
@@ -59,10 +59,10 @@ namespace RepoDb.Firebird.IntegrationTests
                 yield return new AttributeTable
                 {
                     Id = i,
-                    ColumnBigInt = Convert.ToInt64(random.Next(int.MaxValue)),
+                    ColumnBigint = Convert.ToInt64(random.Next(int.MaxValue)),
                     ColumnBlob = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()),
                     ColumnDateTime2 = DateTime.UtcNow.Date.AddDays(-random.Next(100)),
-                    ColumnVarChar = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
+                    ColumnVarchar = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
                 };
             }
         }

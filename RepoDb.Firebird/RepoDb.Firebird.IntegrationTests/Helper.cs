@@ -158,7 +158,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<CompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -191,7 +191,7 @@ namespace RepoDb.Firebird.IntegrationTests
                     ColumnTinyInt = Convert.ToInt16(i),
                     ColumnChar = "C",
                     ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
-                    ColumnNChar = "C",
+                    ColumnNChar = "C".PadRight(16),
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
                     ColumnMediumText = $"ColumnMediumText:{i}",
@@ -210,7 +210,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateCompleteTableProperties(CompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}-Updated";
             table.ColumnInt = 1;
@@ -239,7 +239,7 @@ namespace RepoDb.Firebird.IntegrationTests
             table.ColumnTinyInt = Convert.ToInt16(1);
             table.ColumnChar = "C";
             table.ColumnJson = "{\"Field\": \"Value-Updated\"}";
-            table.ColumnNChar = "C";
+            table.ColumnNChar = "C".PadRight(16);
             table.ColumnNVarChar = $"ColumnNVarChar:{1}-Updated";
             table.ColumnLongText = $"ColumnLongText:{1}-Updated";
             table.ColumnMediumText = $"ColumnMediumText:{1}-Updated";
@@ -257,7 +257,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -291,7 +291,7 @@ namespace RepoDb.Firebird.IntegrationTests
                     ColumnTinyInt = Convert.ToInt16(i),
                     ColumnChar = "C",
                     ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
-                    ColumnNChar = "C",
+                    ColumnNChar = "C".PadRight(16),
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
                     ColumnMediumText = $"ColumnMediumText:{i}",
@@ -310,7 +310,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -339,7 +339,7 @@ namespace RepoDb.Firebird.IntegrationTests
             table.ColumnTinyInt = Convert.ToInt16(1);
             table.ColumnChar = "C";
             table.ColumnJson = "{ \"Field\" : \"Value\" }";
-            table.ColumnNChar = "C";
+            table.ColumnNChar = "C".PadRight(16);
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
             table.ColumnMediumText = $"ColumnMediumText:{1}";
@@ -357,7 +357,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -390,7 +390,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 item["ColumnTinyInt"] = Convert.ToInt16(i);
                 item["ColumnChar"] = "C";
                 item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
-                item["ColumnNChar"] = "C";
+                item["ColumnNChar"] = "C".PadRight(16);
                 item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
                 item["ColumnLongText"] = $"ColumnLongText:{i}";
                 item["ColumnMediumText"] = $"ColumnMediumText:{i}";
@@ -409,7 +409,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnVarchar"] = $"ColumnVarChar:{2}";
@@ -439,7 +439,7 @@ namespace RepoDb.Firebird.IntegrationTests
             item["ColumnTinyInt"] = Convert.ToInt16(2);
             item["ColumnChar"] = "C";
             item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
-            item["ColumnNChar"] = "C";
+            item["ColumnNChar"] = "C".PadRight(16);
             item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
             item["ColumnLongText"] = $"ColumnLongText:{2}";
             item["ColumnMediumText"] = $"ColumnMediumText:{2}";
@@ -461,7 +461,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<NonIdentityCompleteTable>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -495,7 +495,7 @@ namespace RepoDb.Firebird.IntegrationTests
                     ColumnTinyInt = Convert.ToInt16(i),
                     ColumnChar = "C",
                     ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
-                    ColumnNChar = "C",
+                    ColumnNChar = "C".PadRight(16),
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
                     ColumnMediumText = $"ColumnMediumText:{i}",
@@ -514,7 +514,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -543,7 +543,7 @@ namespace RepoDb.Firebird.IntegrationTests
             table.ColumnTinyInt = Convert.ToInt16(1);
             table.ColumnChar = "C";
             table.ColumnJson = "{\"Field\": \"Value\"}";
-            table.ColumnNChar = "C";
+            table.ColumnNChar = "C".PadRight(16);
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
             table.ColumnMediumText = $"ColumnMediumText:{1}";
@@ -561,7 +561,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<dynamic>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -595,7 +595,7 @@ namespace RepoDb.Firebird.IntegrationTests
                     ColumnTinyInt = Convert.ToInt16(i),
                     ColumnChar = "C",
                     ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
-                    ColumnNChar = "C",
+                    ColumnNChar = "C".PadRight(16),
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
                     ColumnMediumText = $"ColumnMediumText:{i}",
@@ -614,7 +614,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             table.ColumnVarchar = $"ColumnVarChar:{1}";
             table.ColumnInt = 1;
@@ -643,7 +643,7 @@ namespace RepoDb.Firebird.IntegrationTests
             table.ColumnTinyInt = Convert.ToInt16(1);
             table.ColumnChar = "C";
             table.ColumnJson = "{ \"Field\" : \"Value\" }";
-            table.ColumnNChar = "C";
+            table.ColumnNChar = "C".PadRight(16);
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
             table.ColumnMediumText = $"ColumnMediumText:{1}";
@@ -661,7 +661,7 @@ namespace RepoDb.Firebird.IntegrationTests
         {
             var tables = new List<ExpandoObject>();
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
@@ -694,7 +694,7 @@ namespace RepoDb.Firebird.IntegrationTests
                 item["ColumnTinyInt"] = Convert.ToInt16(i);
                 item["ColumnChar"] = "C";
                 item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
-                item["ColumnNChar"] = "C";
+                item["ColumnNChar"] = "C".PadRight(16);
                 item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
                 item["ColumnLongText"] = $"ColumnLongText:{i}";
                 item["ColumnMediumText"] = $"ColumnMediumText:{i}";
@@ -713,7 +713,7 @@ namespace RepoDb.Firebird.IntegrationTests
         public static void UpdateNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
         {
             var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.ffff")),
                     DateTimeKind.Unspecified);
             var item = table as IDictionary<string, object>;
             item["ColumnVarchar"] = $"ColumnVarChar:{2}";
@@ -743,7 +743,7 @@ namespace RepoDb.Firebird.IntegrationTests
             item["ColumnTinyInt"] = Convert.ToInt16(2);
             item["ColumnChar"] = "C";
             item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
-            item["ColumnNChar"] = "C";
+            item["ColumnNChar"] = "C".PadRight(16);
             item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
             item["ColumnLongText"] = $"ColumnLongText:{2}";
             item["ColumnMediumText"] = $"ColumnMediumText:{2}";

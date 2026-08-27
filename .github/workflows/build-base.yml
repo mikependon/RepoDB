@@ -43,8 +43,9 @@ env:
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
   # ClickHouse
   REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;UseCustomDecimals=false;"
-  # Firebird
-  REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;"
+  # Firebird — Pooling=false so RECREATE TABLE never collides with a leftover implicit
+  # transaction carried over on a pooled connection from an earlier test (see Database.cs).
+  REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
 
 jobs:
 

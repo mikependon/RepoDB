@@ -27,7 +27,7 @@ The Firebird provider for RepoDB — a fast, lightweight .NET ORM that lets you 
 
 - Targets **Firebird 3.0 and later**. Identity-column detection relies on `RDB$RELATION_FIELDS.RDB$IDENTITY_TYPE`, which does not exist on Firebird 2.5 and earlier; tables using the pre-3.0 trigger + generator pattern for auto-increment will not be detected as identity columns.
 - `InsertAll`/`MergeAll` always execute one statement per row (`batchSize` is effectively 1). Firebird's ADO.NET provider does not support executing multiple statements in a single round-trip, unlike SQL Server/MySQL/PostgreSql.
-- `Merge`/`MergeAll` are implemented with Firebird's native `UPDATE OR INSERT ... MATCHING (...)` statement rather than an ANSI `MERGE`.
+- `Merge`/`MergeAll` are implemented with Firebird's native `UPDATE OR INSERT ... MATCHING (...)` statement rather than an ANSI `MERGE`. When the identity column is also a qualifier (the common default case, since qualifiers default to the primary key), a plain `UPDATE OR INSERT` can't tell "match this literal 0/null" apart from "auto-generate me" - `Merge`/`MergeAll` compile to an `EXECUTE BLOCK` in that case, which branches at runtime between a plain `INSERT` (when the identity value is null/0, letting Firebird auto-generate it) and the ordinary `MATCHING`-based `UPDATE OR INSERT` (when a real identity value is supplied).
 - There is no session-wide "last identity" (no equivalent of `SCOPE_IDENTITY()`/`LAST_INSERT_ID()`); the generated key is returned directly by `Insert`/`Merge` via Firebird's `RETURNING` clause.
 
 ## License

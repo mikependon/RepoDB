@@ -50,11 +50,7 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// Firebird has no INFORMATION_SCHEMA; column metadata is read from the RDB$ system tables instead.
-        /// RDB$RELATION_FIELDS holds the per-table column definitions (including, on 3.0+, identity-column
-        /// markers); RDB$FIELDS holds the underlying domain's type/size/precision. Object names in both are
-        /// stored as blank-padded CHAR(31), hence the TRIM() calls. Primary-key membership is derived from
-        /// RDB$RELATION_CONSTRAINTS/RDB$INDEX_SEGMENTS since Firebird has no direct "is primary key" column.
+        /// 
         /// </summary>
         /// <returns></returns>
         private string GetCommandText()
@@ -66,7 +62,8 @@ namespace RepoDb.DbHelpers
                 , f.RDB$FIELD_TYPE AS FieldType
                 , f.RDB$FIELD_SUB_TYPE AS FieldSubType
                 , f.RDB$CHARACTER_SET_ID AS CharacterSetId
-                , COALESCE(f.RDB$CHARACTER_LENGTH, f.RDB$FIELD_LENGTH) AS ColumnSize
+                , CASE WHEN f.RDB$FIELD_TYPE = 261 THEN NULL
+                    ELSE COALESCE(f.RDB$CHARACTER_LENGTH, f.RDB$FIELD_LENGTH) END AS ColumnSize
                 , f.RDB$FIELD_PRECISION AS NumericPrecision
                 , CASE WHEN f.RDB$FIELD_SCALE IS NULL THEN NULL ELSE (0 - f.RDB$FIELD_SCALE) END AS NumericScale
                 , CASE WHEN rf.RDB$IDENTITY_TYPE IS NOT NULL

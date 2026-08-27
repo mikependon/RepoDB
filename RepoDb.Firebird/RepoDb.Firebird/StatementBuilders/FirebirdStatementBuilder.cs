@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -392,21 +393,16 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
-            // Unlike CreateInsert, the identity field is NOT excluded from the column list here.
-            // Firebird's UPDATE OR INSERT requires every column named in MATCHING(...) to also be
-            // part of the statement's own column list - it has no separate USING/source subquery
-            // (the way an ANSI MERGE or Oracle's MERGE INTO ... USING has) whose parameters could
-            // carry the identity's comparison value independently of what gets inserted. Since
-            // qualifiers default to the primary key, and the primary key is frequently also the
-            // identity column, excluding it here would make MATCHING(identity) reference a column
-            // that was never assigned a value, which Firebird rejects.
-            //
-            // Known limitation: this means a Merge against an identity column relies on the caller
-            // supplying the real id for an update, and leaves genuine insert-with-auto-generated-id
-            // to the plain Insert operation instead - there is no MySQL-LAST_INSERT_ID()-style or
-            // PostgreSql-OVERRIDING-SYSTEM-VALUE-style trick available here to distinguish "0/default"
-            // from "a real, caller-chosen value" the way CreateMerge does for those providers.
-            var insertableFields = fields;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var identityIsQualifier = identityField != null &&
+                qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
+            if (identityIsQualifier)
+            {
+                return BuildMergeExecuteBlock(tableName, fields, qualifiers, identityField, keyColumn ?? identityField);
+            }
+            var insertableFields = identityField == null
+                ? fields
+                : fields.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
 
             // Initialize the builder
             var builder = new QueryBuilder();
@@ -430,9 +426,6 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .FieldsFrom(qualifiers, DbSetting)
                 .CloseParen();
-
-            // Variables needed
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
 
             if (keyColumn != null)
             {
@@ -761,6 +754,69 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         private static string TrimTrailingSemicolon(string sql) =>
             sql?.TrimEnd().TrimEnd(';').TrimEnd();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="identityField"></param>
+        /// <param name="keyColumn"></param>
+        /// <returns></returns>
+        private string BuildMergeExecuteBlock(string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            DbField identityField,
+            DbField keyColumn)
+        {
+            var fieldList = fields.AsList();
+            var quotedTable = tableName.AsQuoted(true, DbSetting);
+            var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
+            var paramNamesByField = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var sb = new StringBuilder("EXECUTE BLOCK (");
+
+            for (var i = 0; i < fieldList.Count; i++)
+            {
+                var field = fieldList[i];
+                var paramName = string.Concat("P", i);
+                paramNamesByField[field.Name] = paramName;
+                if (i > 0)
+                {
+                    sb.Append(", ");
+                }
+                sb.Append(paramName)
+                    .Append(" TYPE OF COLUMN ").Append(quotedTable).Append('.').Append(field.Name.AsQuoted(DbSetting))
+                    .Append(" = ").Append(field.Name.AsParameter(DbSetting));
+            }
+
+            sb.Append(") RETURNS (R0 TYPE OF COLUMN ").Append(quotedTable).Append('.').Append(quotedKeyColumn)
+                .Append(") AS BEGIN ");
+
+            var insertableFields = fieldList
+                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
+                .AsList();
+            string ColumnList(IEnumerable<Field> flds) =>
+                flds.Select(f => f.Name.AsQuoted(DbSetting)).Join(", ");
+            string ParamRefList(IEnumerable<Field> flds) =>
+                flds.Select(f => string.Concat(":", paramNamesByField[f.Name])).Join(", ");
+            var identityParam = paramNamesByField[identityField.Name];
+
+            sb.Append("IF (:").Append(identityParam).Append(" IS NULL OR :").Append(identityParam).Append(" = 0) THEN BEGIN ")
+                .Append("INSERT INTO ").Append(quotedTable)
+                .Append(" (").Append(ColumnList(insertableFields)).Append(") VALUES (")
+                .Append(ParamRefList(insertableFields)).Append(") RETURNING ")
+                .Append(quotedKeyColumn).Append(" INTO :R0; END ")
+                .Append("ELSE BEGIN ")
+                .Append("UPDATE OR INSERT INTO ").Append(quotedTable)
+                .Append(" (").Append(ColumnList(fieldList)).Append(") VALUES (")
+                .Append(ParamRefList(fieldList)).Append(") MATCHING (")
+                .Append(ColumnList(qualifiers)).Append(") RETURNING ")
+                .Append(quotedKeyColumn).Append(" INTO :R0; END ")
+                .Append("SUSPEND; END");
+
+            return sb.ToString();
+        }
 
         #endregion
     }

@@ -61,7 +61,7 @@ namespace RepoDb.Firebird.UnitTests
             var setting = DbSettingMapper.Get<FbConnection>();
 
             // Assert
-            Assert.IsTrue(setting.IsExecuteReaderDisposable);
+            Assert.IsFalse(setting.IsExecuteReaderDisposable);
         }
 
         [TestMethod]
@@ -83,6 +83,16 @@ namespace RepoDb.Firebird.UnitTests
 
             // Assert
             Assert.IsFalse(setting.IsUseUpsert);
+        }
+
+        [TestMethod]
+        public void TestFirebirdDbSettingMaxParameterCountProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<FbConnection>();
+
+            // Assert
+            Assert.AreEqual(1500, setting.MaxParameterCount);
         }
 
         [TestMethod]

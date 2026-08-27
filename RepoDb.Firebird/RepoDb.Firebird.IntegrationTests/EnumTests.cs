@@ -233,44 +233,32 @@ namespace RepoDb.Firebird.IntegrationTests
         }
 
         [TestMethod]
-        public void TestInsertAndQueryEnumAsTextAsInt()
+        public void TestInsertAndQueryEnumAsTextAsIntThrows()
         {
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
 
-                // Act
-                connection.Insert(person);
-
-                // Query
-                var queryResult = connection.Query<PersonWithTextAsInteger>(person.Id).First();
-
+                // Act & Assert - unlike MySQL, Firebird's DSQL layer determines a bind parameter's
+                // wire format from the *target column's actual server-side type* (RDB$RELATION_FIELDS
                 // Assert
-                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+                Assert.Throws<InvalidCastException>(() =>
+                    connection.Insert(person));
             }
         }
 
         [TestMethod]
-        public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
+        public void TestInsertAndQueryEnumAsTextAsIntAsBatchThrows()
         {
             using (var connection = new FbConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();
 
-                // Act
-                connection.InsertAll(people);
-
-                // Query
-                var queryResult = connection.QueryAll<PersonWithTextAsInteger>().AsList();
-
-                // Assert
-                people.ForEach(p =>
-                {
-                    var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnText, item.ColumnText);
-                });
+                // Act & Assert
+                Assert.Throws<InvalidCastException>(() =>
+                    connection.InsertAll(people));
             }
         }
     }

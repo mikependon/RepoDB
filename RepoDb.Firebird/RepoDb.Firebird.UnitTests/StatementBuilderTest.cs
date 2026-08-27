@@ -763,16 +763,22 @@ namespace RepoDb.Firebird.UnitTests
             // Setup
             var builder = StatementBuilderMapper.Get<FbConnection>();
 
-            // Act - unlike CreateInsert, the identity field stays in the column list: Firebird's
-            // MATCHING(...) clause can only reference columns that are also part of the statement's
-            // own column list (there is no separate USING/source subquery like an ANSI MERGE has).
+            // Act
             var query = builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "UPDATE OR INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) " +
-                "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "EXECUTE BLOCK (" +
+                "P0 TYPE OF COLUMN \"Table\".\"Id\" = @Id, " +
+                "P1 TYPE OF COLUMN \"Table\".\"Name\" = @Name, " +
+                "P2 TYPE OF COLUMN \"Table\".\"Address\" = @Address" +
+                ") RETURNS (R0 TYPE OF COLUMN \"Table\".\"Id\") AS BEGIN " +
+                "IF (:P0 IS NULL OR :P0 = 0) THEN BEGIN " +
+                "INSERT INTO \"Table\" (\"Name\", \"Address\") VALUES (:P1, :P2) RETURNING \"Id\" INTO :R0; END " +
+                "ELSE BEGIN " +
+                "UPDATE OR INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") VALUES (:P0, :P1, :P2) MATCHING (\"Id\") RETURNING \"Id\" INTO :R0; END " +
+                "SUSPEND; END";
 
             // Assert
             Assert.AreEqual(expected, query);

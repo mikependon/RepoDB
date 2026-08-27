@@ -19,9 +19,13 @@ namespace RepoDb
          * The supposed maximum parameters of 2100 is not working with Microsoft.Data.SqlClient.
          * I reported this issue to SqlClient repository at Github.
          * Link: https://github.com/dotnet/SqlClient/issues/531
+         *
+         * The batch size used below is provider-configurable via IDbSetting.MaxParameterCount
+         * (BaseDbSetting defaults it to the same 2100 - 2 this constant used to hard-code) - some
+         * providers have a much lower hard limit on the number of members a single IN (...) clause
+         * may hold (e.g. Firebird's DSQL parser rejects one past 1500 members outright), so a single
+         * batch size can't safely be hard-coded here for every provider.
          */
-
-        private const int ParameterBatchCount = 2100 - 2;
 
         #region DeleteAll<TEntity>
 
@@ -761,14 +765,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount && dbSetting.IsTransactionSupported)
+                if (transaction == null && count > dbSetting.MaxParameterCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = keys?.Split(ParameterBatchCount).AsList();
+                var splitted = keys?.Split(dbSetting.MaxParameterCount).AsList();
                 if (splitted?.Any() == true)
                 {
                     foreach (var keyValues in splitted)
@@ -959,14 +963,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount && dbSetting.IsTransactionSupported)
+                if (transaction == null && count > dbSetting.MaxParameterCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = (await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = keys?.Split(ParameterBatchCount).AsList();
+                var splitted = keys?.Split(dbSetting.MaxParameterCount).AsList();
                 if (splitted?.Any() == true)
                 {
                     foreach (var keyValues in splitted)

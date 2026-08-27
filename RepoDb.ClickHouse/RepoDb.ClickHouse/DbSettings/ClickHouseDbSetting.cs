@@ -23,6 +23,7 @@ namespace RepoDb.DbSettings
             IsPreparable = false;
             IsTransactionSupported = false;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = string.Empty;

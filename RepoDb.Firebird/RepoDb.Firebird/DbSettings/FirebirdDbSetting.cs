@@ -17,11 +17,12 @@ namespace RepoDb.DbSettings
             DefaultSchema = null;
             IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
-            IsExecuteReaderDisposable = true;
+            IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = false;
             IsPreparable = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 1500;
             MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = "@";
