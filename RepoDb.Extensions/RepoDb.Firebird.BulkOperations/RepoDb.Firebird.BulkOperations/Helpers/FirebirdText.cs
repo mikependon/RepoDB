@@ -34,12 +34,27 @@ namespace RepoDb
         private static readonly DbTypeNameToColumnNameResolver ColumnTypeResolver = new();
 
         /// <summary>
-        ///
+        /// Builds the full column type declaration for <paramref name="field"/>, appending
+        /// <c>(precision,scale)</c>/<c>(size)</c> (and, for binary types, <c>CHARACTER SET OCTETS</c>) onto the
+        /// base keyword resolved by <see cref="DbTypeNameToColumnNameResolver"/>.
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private static string GetColumnTypeSql(DbField field) =>
-            ColumnTypeResolver.Resolve(field);
+        private static string GetColumnTypeSql(DbField field)
+        {
+            var baseType = ColumnTypeResolver.Resolve(field.DatabaseType);
+            var precision = field.Precision ?? 18;
+            var scale = field.Scale ?? 0;
+            var size = field.Size ?? 1;
+
+            return field.DatabaseType?.ToLowerInvariant() switch
+            {
+                "numeric" or "decimal" => $"{baseType}({precision},{scale})",
+                "char" or "varchar" => $"{baseType}({size})",
+                "binary" or "varbinary" => $"{baseType}({size}) CHARACTER SET OCTETS",
+                _ => baseType,
+            };
+        }
 
         /// <summary>
         /// 

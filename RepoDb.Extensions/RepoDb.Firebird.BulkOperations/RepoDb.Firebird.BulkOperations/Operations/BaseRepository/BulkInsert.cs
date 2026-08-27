@@ -20,6 +20,18 @@ namespace RepoDb
         /// <summary>
         /// Inserts a list of entities into the database in bulk. Returns the number of inserted rows.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="repository">The repository object to be used.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="FirebirdBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows.</returns>
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
@@ -33,7 +45,23 @@ namespace RepoDb
             where TEntity : class =>
             repository.DbRepository.BulkInsert(ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
 
-        /// <inheritdoc cref="BulkInsert{TEntity}(BaseRepository{TEntity, FbConnection}, IEnumerable{TEntity}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportIdentityBehavior, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <summary>
+        /// Inserts a list of entities into the database in bulk, targeting an explicitly named table. Returns
+        /// the number of inserted rows.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="repository">The repository object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="FirebirdBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows.</returns>
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -52,7 +80,23 @@ namespace RepoDb
 
         #region Async
 
-        /// <inheritdoc cref="BulkInsert{TEntity}(BaseRepository{TEntity, FbConnection}, IEnumerable{TEntity}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportIdentityBehavior, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <summary>
+        /// Inserts a list of entities into the database in bulk in an asynchronous way. Returns the number
+        /// of inserted rows.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="repository">The repository object to be used.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="FirebirdBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of inserted rows.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
@@ -67,7 +111,24 @@ namespace RepoDb
             where TEntity : class =>
             repository.DbRepository.BulkInsertAsync(ClassMappedNameCache.Get<TEntity>(), entities, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
-        /// <inheritdoc cref="BulkInsert{TEntity}(BaseRepository{TEntity, FbConnection}, IEnumerable{TEntity}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportIdentityBehavior, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <summary>
+        /// Inserts a list of entities into the database in bulk in an asynchronous way, targeting an
+        /// explicitly named table. Returns the number of inserted rows.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="repository">The repository object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted.</param>
+        /// <param name="mappings">The explicit mapping of the source properties/columns to the destination columns.</param>
+        /// <param name="bulkCopyTimeout">The command timeout, in seconds.</param>
+        /// <param name="batchSize">The number of rows in each batch. When null, the provider's default batch size is used.</param>
+        /// <param name="identityBehavior">The behavior of the identity property/column during the operation.</param>
+        /// <param name="pseudoTableType">The type of staging (pseudo) table to create and reuse when <paramref name="identityBehavior"/> is <see cref="FirebirdBulkImportIdentityBehavior.ReturnIdentity"/>.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The token to cancel the asynchronous operation.</param>
+        /// <returns>The number of inserted rows.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
