@@ -201,7 +201,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
             while (reader.Read())
             {
-                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 
@@ -209,7 +209,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -244,7 +244,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 
@@ -357,7 +357,9 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             FbTransaction transaction = null)
         {
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, false, connection.GetDbSetting());
-            return connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            connection.ExecuteNonQuery(commandText, trace: trace, traceKey: traceKey, transaction: transaction);
+            var countText = FirebirdText.GetPseudoTableRowCountSql(pseudoTableName, connection.GetDbSetting());
+            return connection.ExecuteScalar<int>(countText, transaction: transaction);
         }
 
         /// <summary>
@@ -386,7 +388,9 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
             CancellationToken cancellationToken = default)
         {
             var commandText = FirebirdText.GetMergeFromPseudoTableSql(tableName, pseudoTableName, fields, qualifiers, identityField, false, connection.GetDbSetting());
-            return await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(commandText, trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken);
+            var countText = FirebirdText.GetPseudoTableRowCountSql(pseudoTableName, connection.GetDbSetting());
+            return await connection.ExecuteScalarAsync<int>(countText, transaction: transaction, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -425,7 +429,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
             while (reader.Read())
             {
-                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 
@@ -433,7 +437,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -470,7 +474,7 @@ namespace RepoDb.Firebird.BulkOperations.Extensions
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                setter(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
+                setter?.Invoke(entities[result], Converter.DbNullToNull(reader.GetValue(0)));
                 result++;
             }
 

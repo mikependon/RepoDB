@@ -2,8 +2,10 @@ using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
 using RepoDb.Firebird.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace RepoDb
         /// </summary>
         public static int BulkUpdate<TEntity>(this FbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -28,7 +30,7 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkUpdate,
             FbTransaction transaction = null)
             where TEntity : class =>
-            BulkUpdateBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkUpdateBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <inheritdoc cref="BulkUpdate{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static int BulkUpdate<TEntity>(this FbConnection connection,
@@ -98,10 +100,10 @@ namespace RepoDb
 
         #region Async
 
-        /// <inheritdoc cref="BulkUpdate{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <inheritdoc cref="BulkUpdate{TEntity}(FbConnection, IEnumerable{TEntity}, Expression{Func{TEntity, object}}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static Task<int> BulkUpdateAsync<TEntity>(this FbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -111,7 +113,7 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkUpdateBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkUpdateBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), mappings, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <inheritdoc cref="BulkUpdate{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static Task<int> BulkUpdateAsync<TEntity>(this FbConnection connection,

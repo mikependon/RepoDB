@@ -1,4 +1,6 @@
 using FirebirdSql.Data.FirebirdClient;
+using System;
+using System.Linq.Expressions;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
 using RepoDb.Firebird.BulkOperations;
@@ -22,7 +24,7 @@ namespace RepoDb
         /// </summary>
         public static int BulkMerge<TEntity>(this DbRepository<FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -38,7 +40,7 @@ namespace RepoDb
         public static int BulkMerge<TEntity>(this DbRepository<FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -53,7 +55,7 @@ namespace RepoDb
 
             try
             {
-                return connection.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
+                return connection.BulkMerge(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction);
             }
             finally
             {
@@ -68,7 +70,7 @@ namespace RepoDb
         /// <inheritdoc cref="BulkMerge{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, IEnumerable{Field}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportIdentityBehavior, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -85,7 +87,7 @@ namespace RepoDb
         public static async Task<int> BulkMergeAsync<TEntity>(this DbRepository<FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -101,7 +103,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkMergeAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, mappings, bulkCopyTimeout, batchSize, identityBehavior, pseudoTableType, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

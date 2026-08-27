@@ -5,6 +5,7 @@ using System.Text;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 
 namespace RepoDb
 {
@@ -30,43 +31,15 @@ namespace RepoDb
         /// </summary>
         public static Field RowOrderField { get; } = new(RowOrderColumnName, typeof(long));
 
+        private static readonly DbTypeNameToColumnNameResolver ColumnTypeResolver = new();
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private static string GetColumnTypeSql(DbField field)
-        {
-            var precision = field.Precision ?? 18;
-            var scale = field.Scale ?? 0;
-            var size = field.Size ?? 1;
-
-            return field.DatabaseType?.ToLowerInvariant() switch
-            {
-                "smallint" => "SMALLINT",
-                "integer" => "INTEGER",
-                "bigint" => "BIGINT",
-                "boolean" => "BOOLEAN",
-                "float" => "FLOAT",
-                "double precision" => "DOUBLE PRECISION",
-                "date" => "DATE",
-                "time" => "TIME",
-                "time_tz" => "TIME WITH TIME ZONE",
-                "timestamp" => "TIMESTAMP",
-                "timestamp_tz" => "TIMESTAMP WITH TIME ZONE",
-                "numeric" => $"NUMERIC({precision},{scale})",
-                "decimal" => $"DECIMAL({precision},{scale})",
-                "dec16" => "DECFLOAT(16)",
-                "dec34" => "DECFLOAT(34)",
-                "int128" => "INT128",
-                "char" => $"CHAR({size})",
-                "varchar" => $"VARCHAR({size})",
-                "binary" => $"CHAR({size}) CHARACTER SET OCTETS",
-                "varbinary" => $"VARCHAR({size}) CHARACTER SET OCTETS",
-                "blob_binary" => "BLOB SUB_TYPE 0",
-                _ => "BLOB SUB_TYPE TEXT", // blob_text, and a safe catch-all for anything unrecognized.
-            };
-        }
+        private static string GetColumnTypeSql(DbField field) =>
+            ColumnTypeResolver.Resolve(field);
 
         /// <summary>
         /// 
@@ -123,6 +96,16 @@ namespace RepoDb
         public static string GetDropPseudoTableSql(string pseudoTableName,
             IDbSetting dbSetting) =>
             $"DROP TABLE {pseudoTableName.AsQuoted(true, dbSetting)}";
+
+        /// <summary>
+        /// Firebird's engine does not report a records-affected count for an <c>EXECUTE BLOCK</c> or a
+        /// native <c>MERGE</c> statement (<c>ExecuteNonQuery</c> always answers -1 for either), so the
+        /// pseudo table's own row count - every staged row is guaranteed to be either inserted or
+        /// updated - is used as the affected-row count instead.
+        /// </summary>
+        public static string GetPseudoTableRowCountSql(string pseudoTableName,
+            IDbSetting dbSetting) =>
+            $"SELECT COUNT(*) FROM {pseudoTableName.AsQuoted(true, dbSetting)}";
 
         /// <summary>
         /// 

@@ -2,8 +2,10 @@ using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
 using RepoDb.Firebird.BulkOperations;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace RepoDb
         /// </summary>
         public static int BulkDelete<TEntity>(this FbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -27,7 +29,7 @@ namespace RepoDb
             string traceKey = FirebirdTraceKeys.FirebirdBulkDelete,
             FbTransaction transaction = null)
             where TEntity : class =>
-            BulkDeleteBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+            BulkDeleteBase(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
         /// <inheritdoc cref="BulkDelete{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static int BulkDelete<TEntity>(this FbConnection connection,
@@ -93,10 +95,10 @@ namespace RepoDb
 
         #region Async
 
-        /// <inheritdoc cref="BulkDelete{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <inheritdoc cref="BulkDelete{TEntity}(FbConnection, IEnumerable{TEntity}, Expression{Func{TEntity, object}}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static Task<int> BulkDeleteAsync<TEntity>(this FbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -105,7 +107,7 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkDeleteBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+            BulkDeleteBaseAsync(connection, ClassMappedNameCache.Get<TEntity>(), entities, ParseQualifiers(qualifiers), bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
         /// <inheritdoc cref="BulkDelete{TEntity}(FbConnection, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static Task<int> BulkDeleteAsync<TEntity>(this FbConnection connection,
@@ -164,6 +166,14 @@ namespace RepoDb
             FbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkDeleteBaseAsync(connection, tableName, reader, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+
+        #endregion
+
+        #region Helpers
+
+        private static IEnumerable<Field> ParseQualifiers<TEntity>(Expression<Func<TEntity, object>> qualifiers)
+            where TEntity : class =>
+            qualifiers != null ? Field.Parse(qualifiers) : null;
 
         #endregion
     }

@@ -6,11 +6,6 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class that is being used to resolve the Firebird Database Types into its equivalent .NET CLR Types.
     /// </summary>
-    /// <remarks>
-    /// The names resolved here are the canonical, lowercased type names produced by
-    /// <see cref="RepoDb.DbHelpers.FirebirdDbHelper"/> out of Firebird's RDB$FIELD_TYPE/RDB$FIELD_SUB_TYPE
-    /// codes (see FirebirdDbHelper.ResolveColumnTypeName) - they are not Firebird SQL keywords themselves.
-    /// </remarks>
     public class FirebirdDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {
         /// <summary>

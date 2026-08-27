@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
-using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
+using RepoDb.Firebird.BulkOperations;
 using RepoDb.Firebird.BulkOperations.IntegrationTests.Models;
 using System.Linq;
 
@@ -24,37 +24,190 @@ namespace RepoDb.Firebird.BulkOperations.IntegrationTests.Operations
             Database.Cleanup();
         }
 
+        #region Sync
+
         [TestMethod]
         public void TestFirebirdConnectionBulkDeleteByKey()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            using var connection = new FbConnection(Database.ConnectionString);
-            connection.BulkInsert(tables, identityBehavior: FirebirdBulkImportIdentityBehavior.ReturnIdentity);
-            var keysToDelete = tables.Take(6).Select(t => t.Id);
 
-            // Act
-            var deleteResult = connection.BulkDeleteByKey<BulkOperationIdentityTable, long>(keysToDelete);
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
 
-            // Assert
-            Assert.AreEqual(6, deleteResult);
-            Assert.AreEqual(4, connection.CountAll<BulkOperationIdentityTable>());
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
         }
 
         [TestMethod]
-        public async System.Threading.Tasks.Task TestFirebirdConnectionBulkDeleteByKeyAsync()
+        public void TestFirebirdConnectionBulkDeleteByKeyWithBatchSize()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-            using var connection = new FbConnection(Database.ConnectionString);
-            await connection.BulkInsertAsync(tables, identityBehavior: FirebirdBulkImportIdentityBehavior.ReturnIdentity);
-            var keysToDelete = tables.Take(6).Select(t => t.Id);
 
-            // Act
-            var deleteResult = await connection.BulkDeleteByKeyAsync<BulkOperationIdentityTable, long>(keysToDelete);
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
 
-            // Assert
-            Assert.AreEqual(6, deleteResult);
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys,
+                    batchSize: 3);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
         }
+
+        [TestMethod]
+        public void TestFirebirdConnectionBulkDeleteByKeyViaPhysicalTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKey(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys,
+                    pseudoTableType: FirebirdBulkImportPseudoTableType.Physical);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestFirebirdConnectionBulkDeleteByKeyAsync()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestFirebirdConnectionBulkDeleteByKeyAsyncWithBatchSize()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys,
+                    batchSize: 3).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestFirebirdConnectionBulkDeleteByKeyAsyncViaPhysicalTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteByKeyAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys,
+                    pseudoTableType: FirebirdBulkImportPseudoTableType.Physical).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
     }
 }

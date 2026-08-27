@@ -2,7 +2,9 @@ using FirebirdSql.Data.FirebirdClient;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
 using RepoDb.Firebird.BulkOperations;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace RepoDb
         /// </summary>
         public static int BulkDelete<TEntity>(this DbRepository<FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -32,11 +34,11 @@ namespace RepoDb
             where TEntity : class =>
             repository.BulkDelete(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
 
-        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, Expression{Func{TEntity, object}}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static int BulkDelete<TEntity>(this DbRepository<FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -49,7 +51,7 @@ namespace RepoDb
 
             try
             {
-                return connection.BulkDelete(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
+                return connection.BulkDelete(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction);
             }
             finally
             {
@@ -61,10 +63,10 @@ namespace RepoDb
 
         #region Async
 
-        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, Expression{Func{TEntity, object}}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -75,11 +77,11 @@ namespace RepoDb
             where TEntity : class =>
             await repository.BulkDeleteAsync(ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
 
-        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, IEnumerable{Field}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
+        /// <inheritdoc cref="BulkDelete{TEntity}(DbRepository{FbConnection}, IEnumerable{TEntity}, Expression{Func{TEntity, object}}, int?, int?, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static async Task<int> BulkDeleteAsync<TEntity>(this DbRepository<FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             FirebirdBulkImportPseudoTableType pseudoTableType = default,
@@ -93,7 +95,7 @@ namespace RepoDb
 
             try
             {
-                return await connection.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
+                return await connection.BulkDeleteAsync(tableName ?? ClassMappedNameCache.Get<TEntity>(), entities, qualifiers != null ? Field.Parse(qualifiers) : null, bulkCopyTimeout, batchSize, pseudoTableType, trace, traceKey, transaction, cancellationToken);
             }
             finally
             {

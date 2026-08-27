@@ -1,4 +1,6 @@
 using FirebirdSql.Data.FirebirdClient;
+using System;
+using System.Linq.Expressions;
 using RepoDb.Enumerations.Firebird;
 using RepoDb.Interfaces;
 using RepoDb.Firebird.BulkOperations;
@@ -22,7 +24,7 @@ namespace RepoDb
         /// </summary>
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -38,7 +40,7 @@ namespace RepoDb
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -57,7 +59,7 @@ namespace RepoDb
         /// <inheritdoc cref="BulkMerge{TEntity}(BaseRepository{TEntity, FbConnection}, IEnumerable{TEntity}, IEnumerable{Field}, IEnumerable{FirebirdCommandBatcherMapItem}, int?, int?, FirebirdBulkImportIdentityBehavior, FirebirdBulkImportPseudoTableType, ITrace, string, FbTransaction)"/>
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -74,7 +76,7 @@ namespace RepoDb
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, FbConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers = null,
+            Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<FirebirdCommandBatcherMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
