@@ -20,6 +20,7 @@ namespace RepoDb.DbSettings
             IsPreparable = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 1000;
             MultiStatementSeparator = ";";
             OpeningQuote = "\"";
             ParameterPrefix = ":";

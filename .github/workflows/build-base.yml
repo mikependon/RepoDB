@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird'
         required: true
         type: string
 
@@ -43,6 +43,9 @@ env:
   REPODB_DB2_CONSTR: "Server=127.0.0.1:50000;Database=REPODB;UID=db2inst1;PWD=RepoDB2026;"
   # ClickHouse
   REPODB_CLICKHOUSE_CONSTR: "Host=127.0.0.1;Port=8123;Protocol=http;Database=RepoDb;Username=default;Password=RepoDB2026;UseCustomDecimals=false;"
+  # Firebird — Pooling=false so RECREATE TABLE never collides with a leftover implicit
+  # transaction carried over on a pooled connection from an earlier test (see Database.cs).
+  REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
 
 jobs:
 
@@ -418,6 +421,69 @@ jobs:
       #     echo "Oracle did not become ready within the timeout. Recent container logs:"
       #     docker logs "$CID" --tail 200
       #     exit 1
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # Firebird only (e.g. RepoDb.Firebird, RepoDb.Firebird.BulkOperations)
+  build-firebird:
+    if: inputs.db-engine == 'firebird'
+    runs-on: ubuntu-latest
+
+    services:
+      firebird:
+        image: jacobalberty/firebird:latest
+        ports:
+          - 127.0.0.1:3050:3050
+        env:
+          ISC_PASSWORD: RepoDB2026
+          FIREBIRD_DATABASE: repodb.fdb
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Wait for Firebird service to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if (exec 3<>/dev/tcp/127.0.0.1/3050) 2>/dev/null; then
+              exec 3<&- 2>/dev/null
+              exec 3>&- 2>/dev/null
+              echo "Firebird is ready (after $((i * 5))s)."
+              exit 0
+            fi
+            echo "Waiting for Firebird to become ready... attempt $i/30"
+            sleep 5
+          done
+          echo "Firebird did not become ready within the timeout."
+          exit 1
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}

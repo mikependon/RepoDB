@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.Firebird (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Firebird/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-firebird.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Firebird
+      solution-file: RepoDb.Firebird.sln
+      artifact-name: release-firebird
+      db-engine: firebird

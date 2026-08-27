@@ -32,6 +32,7 @@ namespace RepoDb.DbSettings
             IsPreparable = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
@@ -99,6 +100,13 @@ namespace RepoDb.DbSettings
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsert { get; protected set; }
+
+        /// <summary>
+        /// Gets the maximum number of parameters/members the current DB provider allows in a single generated
+        /// command text - most directly, the number of values a single <c>WHERE column IN (...)</c> clause can
+        /// hold.
+        /// </summary>
+        public int MaxParameterCount { get; protected set; }
 
         /// <summary>
         /// Gets the string used to join the individual per-type command texts generated.
@@ -180,6 +188,9 @@ namespace RepoDb.DbSettings
 
             // IsUseUpsert
             hashCode = HashCode.Combine(hashCode, IsUseUpsert);
+
+            // MaxParameterCount
+            hashCode = HashCode.Combine(hashCode, MaxParameterCount);
 
             // OpeningQuote
             if (!string.IsNullOrWhiteSpace(OpeningQuote))
