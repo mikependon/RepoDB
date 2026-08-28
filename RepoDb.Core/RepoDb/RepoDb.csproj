@@ -64,5 +64,6 @@
     <InternalsVisibleTo Include="RepoDb.Db2.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.ClickHouse.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.Firebird.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.Vertica.BulkOperations" />
   </ItemGroup>
 </Project>
