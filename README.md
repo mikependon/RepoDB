@@ -61,6 +61,7 @@ Choose your database and follow the quick-start guide:
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
+- [Vertica](http://repodb.net/tutorial/get-started-vertica)
 
 Explore individual features in the [documentation](http://repodb.net/docs).
 
@@ -98,8 +99,9 @@ Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `
 | [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
 | [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
 | [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
+| [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
 
-MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead.
+MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead. Vertica's `VerticaBulkCopy` wraps its native `COPY`-based streaming primitive, `VerticaCopyStream`.
 
 ## Type Coercion
 
