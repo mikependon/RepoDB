@@ -92,6 +92,16 @@ services:
     environment:
       POSTGRES_PASSWORD: RepoDB2026
 
+  vertica:
+    container_name: vertica
+    image: vertica/vertica-ce:latest
+    ports:
+      - 127.0.0.1:5433:5433
+    networks:
+      - repodb
+    environment:
+      APP_DB_PASSWORD: RepoDB2026
+
 networks:
   repodb:
     driver: bridge
