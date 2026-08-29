@@ -27,6 +27,21 @@ services:
       DB2INST1_PASSWORD: RepoDB2026
       DBNAME: repodb
 
+  enterprisedb:
+    container_name: enterprisedb
+    # Official EDB Postgres Advanced Server image. Requires an EDB subscription;
+    # authenticate first with:
+    #   docker login docker.enterprisedb.com --username k8s --password <EDB_SUBSCRIPTION_TOKEN>
+    image: docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+    ports:
+      - 127.0.0.1:5444:5444
+    networks:
+      - repodb
+    environment:
+      ACCEPT_EULA: Y
+      ENTERPRISEDB_PASSWORD: RepoDB2026
+      DATABASE_NAME: repodb
+
   firebird:
     container_name: firebird
     image: jacobalberty/firebird:latest
@@ -93,18 +108,12 @@ services:
 
   vertica:
     container_name: vertica
-    # The official vertica/vertica-ce image was pulled from Docker Hub (both vertica/vertica-ce and
-    # opentext/vertica-ce 404 as of 2026-08). Using a well-known community mirror instead - only tag
-    # published is 24.1.0-0, there is no `latest`.
     image: molo17/vertica-ce:24.1.0-0
     ports:
       - 127.0.0.1:5433:5433
     networks:
       - repodb
     environment:
-      # This image only sets a password on VERTICA_DB_NAME's superuser (dbadmin) when APP_DB_USER is
-      # ALSO given - the alter-password step it runs is unconditional, so pointing APP_DB_USER at the
-      # existing "dbadmin" account (rather than a new app-only one) just sets its password.
       VERTICA_DB_NAME: RepoDb
       APP_DB_USER: dbadmin
       APP_DB_PASSWORD: RepoDB2026
