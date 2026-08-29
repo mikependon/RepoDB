@@ -57,9 +57,20 @@ namespace RepoDb.Extensions
         {
             // Create the parameter
             var parameter = command.CreateParameter();
+            var dbSetting = DbSettingMapper.Get(command.Connection);
 
             // Set the values
-            parameter.ParameterName = name.AsParameterName(DbSettingMapper.Get(command.Connection));
+            parameter.ParameterName = name.AsParameterName(dbSetting);
+
+            // Some providers (e.g. Vertica) lazily initialize internal parameter state inside the DbType
+            // setter, and throw setting Value first on a parameter fresh off IDbCommand.CreateParameter()
+            // if DbType was never touched - so for those, assign one (inferred from the value's CLR type
+            // when the caller didn't supply one) before Value rather than after.
+            if (dbSetting?.RequiresDbTypeBeforeValue == true)
+            {
+                parameter.DbType = dbType ?? (value != null ? clientTypeToDbTypeResolver.Resolve(value.GetType()) : null) ?? parameter.DbType;
+            }
+
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values
@@ -473,12 +484,23 @@ namespace RepoDb.Extensions
             HashSet<string> propertiesToSkip,
             DbFieldCollection dbFields = null)
         {
+            var dbSetting = DbSettingMapper.Get(command.Connection);
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key) != true);
 
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
+                // A null-valued equality filter (e.g. WHERE "Id" = @Id with a null value) is rendered by
+                // QueryField.GetString() as the literal "Id" IS NULL, with no @Id placeholder in the command
+                // text at all. Most providers silently tolerate the resulting unused bound parameter, but a
+                // strict provider (e.g. Vertica) rejects the whole command outright - skip binding it there.
+                if (dbSetting?.SkipsUnreferencedParameters == true &&
+                    !CommandTextReferencesParameter(command.CommandText, kvp.Key, dbSetting.SqlTextParameterPrefix))
+                {
+                    continue;
+                }
+
                 var dbField = GetDbField(kvp.Key, dbFields);
                 var value = kvp.Value;
                 var classProperty = (ClassProperty)null;
@@ -501,6 +523,45 @@ namespace RepoDb.Extensions
                         null,
                         null);
                 command.Parameters.Add(parameter);
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the given <paramref name="commandText"/> references a parameter named
+        /// <paramref name="parameterName"/> via a placeholder token (e.g. <c>@Id</c>), as a whole token rather
+        /// than as a substring of a longer name (e.g. <c>@Identity</c> must not match a search for <c>Id</c>).
+        /// </summary>
+        /// <param name="commandText">The generated SQL command text to search.</param>
+        /// <param name="parameterName">The bare (unprefixed) parameter name to look for.</param>
+        /// <param name="sqlTextParameterPrefix">The provider's placeholder prefix (e.g. <c>@</c>).</param>
+        /// <returns>True if the command text contains a matching placeholder token.</returns>
+        private static bool CommandTextReferencesParameter(string commandText,
+            string parameterName,
+            string sqlTextParameterPrefix)
+        {
+            if (string.IsNullOrEmpty(commandText) || string.IsNullOrEmpty(parameterName))
+            {
+                return false;
+            }
+
+            var token = string.Concat(sqlTextParameterPrefix, parameterName);
+            var startIndex = 0;
+
+            while (true)
+            {
+                var index = commandText.IndexOf(token, startIndex, StringComparison.OrdinalIgnoreCase);
+                if (index < 0)
+                {
+                    return false;
+                }
+
+                var endIndex = index + token.Length;
+                if (endIndex >= commandText.Length || (!char.IsLetterOrDigit(commandText[endIndex]) && commandText[endIndex] != '_'))
+                {
+                    return true;
+                }
+
+                startIndex = endIndex;
             }
         }
 

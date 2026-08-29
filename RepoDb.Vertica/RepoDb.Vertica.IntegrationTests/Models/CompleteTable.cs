@@ -18,7 +18,7 @@ namespace RepoDb.Vertica.IntegrationTests.Models
         public Byte[] ColumnVarBinary { get; set; }
         public DateTime? ColumnDate { get; set; }
         public DateTime? ColumnDateTime2 { get; set; }
-        public TimeSpan? ColumnTime { get; set; }
+        public DateTime? ColumnTime { get; set; }
         public DateTime? ColumnTimeStamp { get; set; }
         public Int16? ColumnYear { get; set; }
         public Int64? ColumnBigint { get; set; }

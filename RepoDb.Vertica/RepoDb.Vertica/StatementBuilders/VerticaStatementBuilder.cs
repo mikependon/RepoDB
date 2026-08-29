@@ -58,16 +58,15 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query. Vertica has no "TOP"; "FIRST n" is Vertica's equivalent and is
-            // written directly after SELECT (unlike MySQL/PostgreSql's trailing "LIMIT").
+            // Build the query.
             builder.Clear()
                 .Select()
-                .WriteText("FIRST 1")
                 .WriteText(string.Concat("1 AS ", "ExistsValue".AsQuoted(DbSetting)))
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
-                .WhereFrom(where, DbSetting);
+                .WhereFrom(where, DbSetting)
+                .Limit(1);
 
             // Return the query. Deliberately no ".End()" - see the remarks on TrimTrailingSemicolon:
             // Vertica's DSQL layer rejects a trailing ';' on a statement sent through VerticaCommand.
@@ -108,20 +107,19 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query
+            // Build the query.
             builder.Clear()
-                .Select();
-            if (top > 0)
-            {
-                builder.WriteText(string.Concat("FIRST ", top));
-            }
-            builder
+                .Select()
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting);
+            if (top > 0)
+            {
+                builder.Limit(top);
+            }
 
             // Return the query. Deliberately no ".End()" - see CreateExists.
             return builder.GetString();
@@ -184,16 +182,15 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query. "FIRST m SKIP n" is Vertica's LIMIT/OFFSET equivalent, written
-            // directly after SELECT.
+            // Build the query.
             builder.Clear()
                 .Select()
-                .WriteText(string.Concat("FIRST ", rowsPerBatch, " SKIP ", skip))
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .WhereFrom(where, DbSetting)
-                .OrderByFrom(orderBy, DbSetting);
+                .OrderByFrom(orderBy, DbSetting)
+                .LimitOffset(rowsPerBatch, skip);
 
             // Return the query. Deliberately no ".End()" - see CreateExists.
             return builder.GetString();
@@ -253,15 +250,15 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query
+            // Build the query.
             builder.Clear()
                 .Select()
-                .WriteText(string.Concat("FIRST ", take, " SKIP ", skip))
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .WhereFrom(where, DbSetting)
-                .OrderByFrom(orderBy, DbSetting);
+                .OrderByFrom(orderBy, DbSetting)
+                .LimitOffset(take, skip);
 
             // Return the query. Deliberately no ".End()" - see CreateExists.
             return builder.GetString();
@@ -286,29 +283,12 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Let the base implementation handle the guards/validation and produce the plain
-            // "INSERT INTO ... VALUES ( ... ) ;" statement. It already excludes the identity field
-            // from the column list, which is exactly what Vertica needs: a GENERATED ALWAYS/BY
-            // DEFAULT AS IDENTITY column auto-populates when omitted from the statement.
-            var insertStatement = TrimTrailingSemicolon(base.CreateInsert(tableName,
+            
+            return TrimTrailingSemicolon(base.CreateInsert(tableName,
                 fields,
                 primaryField,
                 identityField,
                 hints));
-
-            // Variables needed
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-
-            if (keyColumn == null)
-            {
-                return insertStatement;
-            }
-
-            // Vertica's RETURNING clause on INSERT natively produces a single-row result set that
-            // VerticaCommand.ExecuteScalar()/ExecuteReader() can read directly - unlike Oracle, no PL/SQL
-            // block or OUT-parameter/implicit-result-set wrapping is required here.
-            return string.Concat(insertStatement,
-                " RETURNING ", keyColumn.Name.AsQuoted(DbSetting), " AS ", "Result".AsQuoted(DbSetting));
         }
 
         #endregion
@@ -407,11 +387,7 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = new QueryBuilder();
 
-            // Build the query. UPDATE OR INSERT is Vertica's native single-statement upsert: it
-            // matches on the MATCHING(...) column list (falling back to the table's primary key when
-            // omitted) and either updates the matched row or inserts a new one - closest in shape to
-            // MySQL's "ON DUPLICATE KEY UPDATE"/PostgreSql's "ON CONFLICT DO UPDATE" used by the
-            // providers this was ported from, and simpler than an ANSI MERGE for a single-row upsert.
+            // Build the query.
             builder.Clear()
                 .WriteText("UPDATE OR INSERT INTO")
                 .TableNameFrom(tableName, DbSetting)

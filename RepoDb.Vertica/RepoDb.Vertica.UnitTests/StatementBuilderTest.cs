@@ -31,7 +31,7 @@ namespace RepoDb.Vertica.UnitTests
                 0,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }));
-            var expected = "SELECT FIRST 10 SKIP 0 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -49,7 +49,7 @@ namespace RepoDb.Vertica.UnitTests
                 3,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }));
-            var expected = "SELECT FIRST 10 SKIP 30 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -225,7 +225,7 @@ namespace RepoDb.Vertica.UnitTests
             // Act
             var query = builder.CreateExists("Table",
                 QueryGroup.Parse(new { Id = 1 }));
-            var expected = "SELECT FIRST 1 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id)";
+            var expected = "SELECT 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id) LIMIT 1";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -271,14 +271,12 @@ namespace RepoDb.Vertica.UnitTests
             // Setup
             var builder = StatementBuilderMapper.Get<VerticaConnection>();
 
-            // Act - a plain (non-identity) primary is included in the column list (only an identity
-            // column is excluded); GetReturnKeyColumnAsDbField's default (IdentityOrElsePrimary) falls
-            // back to the primary as the RETURNING key column since there is no identity here.
+            // Act
             var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address )";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -295,7 +293,7 @@ namespace RepoDb.Vertica.UnitTests
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -340,13 +338,13 @@ namespace RepoDb.Vertica.UnitTests
             // Setup
             var builder = StatementBuilderMapper.Get<VerticaConnection>();
 
-            // Act - batchSize of 1 reuses the single-row Insert statement.
+            // Act
             var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 1,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address )";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -962,7 +960,7 @@ namespace RepoDb.Vertica.UnitTests
                 null,
                 10,
                 null);
-            var expected = "SELECT FIRST 10 \"Id\", \"Name\", \"Address\" FROM \"Table\"";
+            var expected = "SELECT \"Id\", \"Name\", \"Address\" FROM \"Table\" LIMIT 10";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -1057,7 +1055,7 @@ namespace RepoDb.Vertica.UnitTests
                 0,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }));
-            var expected = "SELECT FIRST 10 SKIP 0 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -1075,7 +1073,7 @@ namespace RepoDb.Vertica.UnitTests
                 30,
                 10,
                 OrderField.Parse(new { Id = Order.Ascending }));
-            var expected = "SELECT FIRST 10 SKIP 30 \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC";
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30";
 
             // Assert
             Assert.AreEqual(expected, query);

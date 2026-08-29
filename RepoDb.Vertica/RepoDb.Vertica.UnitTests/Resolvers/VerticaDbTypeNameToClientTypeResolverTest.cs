@@ -16,29 +16,16 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForSmallInt()
+        public void TestVerticaDbTypeNameToClientTypeResolverForInt()
         {
             // Setup
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("smallint");
+            var result = resolver.Resolve("int");
 
             // Assert
-            Assert.AreEqual(typeof(short), result);
-        }
-
-        [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForInteger()
-        {
-            // Setup
-            var resolver = new VerticaDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("integer");
-
-            // Assert
-            Assert.AreEqual(typeof(int), result);
+            Assert.AreEqual(typeof(long), result);
         }
 
         [TestMethod]
@@ -55,19 +42,6 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForInt128()
-        {
-            // Setup
-            var resolver = new VerticaDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("int128");
-
-            // Assert
-            Assert.AreEqual(typeof(System.Numerics.BigInteger), result);
-        }
-
-        [TestMethod]
         public void TestVerticaDbTypeNameToClientTypeResolverForFloat()
         {
             // Setup
@@ -77,7 +51,7 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("float");
 
             // Assert
-            Assert.AreEqual(typeof(float), result);
+            Assert.AreEqual(typeof(double), result);
         }
 
         [TestMethod]
@@ -88,6 +62,19 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
 
             // Act
             var result = resolver.Resolve("double precision");
+
+            // Assert
+            Assert.AreEqual(typeof(double), result);
+        }
+
+        [TestMethod]
+        public void TestVerticaDbTypeNameToClientTypeResolverForReal()
+        {
+            // Setup
+            var resolver = new VerticaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("real");
 
             // Assert
             Assert.AreEqual(typeof(double), result);
@@ -120,26 +107,13 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForDec16()
+        public void TestVerticaDbTypeNameToClientTypeResolverForMoney()
         {
             // Setup
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("dec16");
-
-            // Assert
-            Assert.AreEqual(typeof(decimal), result);
-        }
-
-        [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForDec34()
-        {
-            // Setup
-            var resolver = new VerticaDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("dec34");
+            var result = resolver.Resolve("money");
 
             // Assert
             Assert.AreEqual(typeof(decimal), result);
@@ -172,29 +146,16 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForBlobText()
+        public void TestVerticaDbTypeNameToClientTypeResolverForLongVarChar()
         {
             // Setup
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("blob_text");
+            var result = resolver.Resolve("long varchar");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
-        }
-
-        [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForBlobBinary()
-        {
-            // Setup
-            var resolver = new VerticaDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("blob_binary");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
         }
 
         [TestMethod]
@@ -218,6 +179,19 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
 
             // Act
             var result = resolver.Resolve("varbinary");
+
+            // Assert
+            Assert.AreEqual(typeof(byte[]), result);
+        }
+
+        [TestMethod]
+        public void TestVerticaDbTypeNameToClientTypeResolverForLongVarBinary()
+        {
+            // Setup
+            var resolver = new VerticaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("long varbinary");
 
             // Assert
             Assert.AreEqual(typeof(byte[]), result);
@@ -259,7 +233,20 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
             var result = resolver.Resolve("time");
 
             // Assert
-            Assert.AreEqual(typeof(TimeSpan), result);
+            Assert.AreEqual(typeof(DateTime), result);
+        }
+
+        [TestMethod]
+        public void TestVerticaDbTypeNameToClientTypeResolverForTimeWithTimezone()
+        {
+            // Setup
+            var resolver = new VerticaDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("time with timezone");
+
+            // Assert
+            Assert.AreEqual(typeof(DateTimeOffset), result);
         }
 
         [TestMethod]
@@ -276,29 +263,29 @@ namespace RepoDb.Vertica.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForTimeTz()
+        public void TestVerticaDbTypeNameToClientTypeResolverForTimestampWithTimezone()
         {
             // Setup
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("time_tz");
+            var result = resolver.Resolve("timestamp with timezone");
 
             // Assert
             Assert.AreEqual(typeof(DateTimeOffset), result);
         }
 
         [TestMethod]
-        public void TestVerticaDbTypeNameToClientTypeResolverForTimestampTz()
+        public void TestVerticaDbTypeNameToClientTypeResolverForUuid()
         {
             // Setup
             var resolver = new VerticaDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("timestamp_tz");
+            var result = resolver.Resolve("uuid");
 
             // Assert
-            Assert.AreEqual(typeof(DateTimeOffset), result);
+            Assert.AreEqual(typeof(Guid), result);
         }
 
         [TestMethod]

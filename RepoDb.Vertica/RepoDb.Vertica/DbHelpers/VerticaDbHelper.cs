@@ -15,10 +15,8 @@ namespace RepoDb.DbHelpers
     /// A helper class for database specially for the direct access. This class is only meant for Vertica.
     /// </summary>
     /// <remarks>
-    /// Targets Vertica 3.0 and later - identity-column introspection relies on the
-    /// RDB$RELATION_FIELDS.RDB$IDENTITY_TYPE/RDB$GENERATOR_NAME columns, which do not exist on Vertica 2.5
-    /// and earlier. Tables whose auto-increment behavior is implemented the pre-3.0 way (a BEFORE INSERT
-    /// trigger plus a bare RDB$GENERATOR/SEQUENCE) will not be detected as identity columns here.
+    /// Column metadata is read from Vertica's own <c>v_catalog.columns</c>/<c>v_catalog.primary_keys</c>
+    /// system tables - Vertica has no relation to Firebird's <c>RDB$</c> catalog.
     /// </remarks>
     public sealed class VerticaDbHelper : IDbHelper
     {
@@ -50,89 +48,55 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// 
+        /// Builds the query against Vertica's <c>v_catalog.columns</c>/<c>v_catalog.primary_keys</c> system
+        /// tables - the real Vertica equivalent of Firebird's <c>RDB$RELATION_FIELDS</c>/<c>RDB$FIELDS</c>.
         /// </summary>
         /// <returns></returns>
         private string GetCommandText()
         {
-            return @"SELECT TRIM(rf.RDB$FIELD_NAME) AS ColumnName
-                , CASE WHEN pk.RDB$FIELD_NAME IS NOT NULL THEN 1 ELSE 0 END AS IsPrimary
-                , CASE WHEN rf.RDB$IDENTITY_TYPE IS NOT NULL THEN 1 ELSE 0 END AS IsIdentity
-                , CASE WHEN COALESCE(rf.RDB$NULL_FLAG, f.RDB$NULL_FLAG, 0) = 1 THEN 0 ELSE 1 END AS IsNullable
-                , f.RDB$FIELD_TYPE AS FieldType
-                , f.RDB$FIELD_SUB_TYPE AS FieldSubType
-                , f.RDB$CHARACTER_SET_ID AS CharacterSetId
-                , CASE WHEN f.RDB$FIELD_TYPE = 261 THEN NULL
-                    ELSE COALESCE(f.RDB$CHARACTER_LENGTH, f.RDB$FIELD_LENGTH) END AS ColumnSize
-                , f.RDB$FIELD_PRECISION AS NumericPrecision
-                , CASE WHEN f.RDB$FIELD_SCALE IS NULL THEN NULL ELSE (0 - f.RDB$FIELD_SCALE) END AS NumericScale
-                , CASE WHEN rf.RDB$IDENTITY_TYPE IS NOT NULL
-                    OR rf.RDB$DEFAULT_SOURCE IS NOT NULL
-                    OR f.RDB$DEFAULT_SOURCE IS NOT NULL THEN 1 ELSE 0 END AS HasDefaultValue
-            FROM RDB$RELATION_FIELDS rf
-            INNER JOIN RDB$FIELDS f
-                ON f.RDB$FIELD_NAME = rf.RDB$FIELD_SOURCE
-            LEFT JOIN (
-                SELECT TRIM(s.RDB$FIELD_NAME) AS RDB$FIELD_NAME
-                FROM RDB$RELATION_CONSTRAINTS rc
-                INNER JOIN RDB$INDEX_SEGMENTS s
-                    ON s.RDB$INDEX_NAME = rc.RDB$INDEX_NAME
-                WHERE rc.RDB$CONSTRAINT_TYPE = 'PRIMARY KEY'
-                    AND TRIM(rc.RDB$RELATION_NAME) = @TableName
-            ) pk
-                ON pk.RDB$FIELD_NAME = TRIM(rf.RDB$FIELD_NAME)
-            WHERE TRIM(rf.RDB$RELATION_NAME) = @TableName
-            ORDER BY rf.RDB$FIELD_POSITION;";
+            // IsIdentity/IsNullable are selected straight from v_catalog.columns' own genuinely-boolean
+            // columns; IsPrimary/HasDefaultValue are derived, so they use TRUE/FALSE (not 1/0) to keep
+            // the result column's server-side type a real BOOLEAN rather than INTEGER - GetFieldValueAsync<bool>
+            // does a strict type check (unlike the sync GetBoolean(), which coerces), so an INTEGER
+            // result here throws InvalidCastException on the async path only.
+            return @"SELECT c.column_name AS ColumnName
+                , CASE WHEN pk.column_name IS NOT NULL THEN TRUE ELSE FALSE END AS IsPrimary
+                , c.is_identity AS IsIdentity
+                , c.is_nullable AS IsNullable
+                , c.data_type AS DataType
+                , c.character_maximum_length AS ColumnSize
+                , c.numeric_precision AS NumericPrecision
+                , c.numeric_scale AS NumericScale
+                , CASE WHEN (c.column_default IS NOT NULL AND c.column_default != '') OR c.is_identity
+                    THEN TRUE ELSE FALSE END AS HasDefaultValue
+            FROM v_catalog.columns c
+            LEFT JOIN v_catalog.primary_keys pk
+                ON pk.table_schema = c.table_schema
+                AND pk.table_name = c.table_name
+                AND pk.column_name = c.column_name
+                AND pk.constraint_type = 'p'
+            WHERE c.table_name = @TableName
+            ORDER BY c.ordinal_position;";
         }
 
         /// <summary>
-        /// Maps a Vertica RDB$FIELD_TYPE/RDB$FIELD_SUB_TYPE/RDB$CHARACTER_SET_ID triple into the canonical
-        /// type-name strings consumed by <see cref="VerticaDbTypeNameToClientTypeResolver"/>. RDB$FIELD_TYPE
-        /// codes are not exposed as named constants by the ADO.NET provider, so the raw integers (per the
-        /// Vertica engine's internal blr type codes) are matched directly.
+        /// Strips the <c>(size)</c>/<c>(precision,scale)</c> suffix off a raw <c>v_catalog.columns.data_type</c>
+        /// value (e.g. <c>"varchar(256)"</c>, <c>"long varbinary(1000000)"</c>, <c>"numeric(18,2)"</c>) down to
+        /// its base type-name keyword (e.g. <c>"varchar"</c>, <c>"long varbinary"</c>, <c>"numeric"</c>), lower-cased.
         /// </summary>
-        /// <param name="fieldType"></param>
-        /// <param name="subType"></param>
-        /// <param name="characterSetId"></param>
+        /// <param name="rawDataType"></param>
         /// <returns></returns>
-        private string ResolveColumnTypeName(short fieldType,
-            short? subType,
-            short? characterSetId)
+        private static string ResolveColumnTypeName(string rawDataType)
         {
-            // CHARACTER_SET_ID 1 == OCTETS, i.e. a CHAR/VARCHAR declared as a binary string.
-            var isOctets = characterSetId == 1;
-
-            return fieldType switch
+            if (string.IsNullOrEmpty(rawDataType))
             {
-                7 => "smallint",
-                8 => "integer",
-                10 => "float",
-                12 => "date",
-                13 => "time",
-                14 => isOctets ? "binary" : "char",
-                16 => subType switch
-                {
-                    1 => "numeric",
-                    2 => "decimal",
-                    _ => "bigint",
-                },
-                23 => "boolean",
-                24 => "dec16",
-                25 => "dec34",
-                26 => subType switch
-                {
-                    1 => "numeric",
-                    2 => "decimal",
-                    _ => "int128",
-                },
-                27 => "double precision",
-                28 => "time_tz",
-                29 => "timestamp_tz",
-                35 => "timestamp",
-                37 => isOctets ? "varbinary" : "varchar",
-                261 => subType == 1 ? "blob_text" : "blob_binary",
-                _ => "none",
-            };
+                return "none";
+            }
+
+            var parenIndex = rawDataType.IndexOf('(');
+            var baseType = (parenIndex >= 0 ? rawDataType[..parenIndex] : rawDataType).Trim();
+
+            return baseType.ToLowerInvariant();
         }
 
         /// <summary>
@@ -142,21 +106,18 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private DbField ReaderToDbField(DbDataReader reader)
         {
-            var fieldType = reader.GetInt16(4);
-            var subType = reader.IsDBNull(5) ? (short?)null : reader.GetInt16(5);
-            var characterSetId = reader.IsDBNull(6) ? (short?)null : reader.GetInt16(6);
-            var columnType = ResolveColumnTypeName(fieldType, subType, characterSetId);
+            var columnType = ResolveColumnTypeName(reader.GetString(4));
 
             return new DbField(reader.GetString(0),
                 reader.GetBoolean(1),
                 reader.GetBoolean(2),
                 reader.GetBoolean(3),
                 DbTypeResolver.Resolve(columnType),
-                reader.IsDBNull(7) ? (int?)null : reader.GetInt32(7),
-                reader.IsDBNull(8) ? (byte?)null : byte.Parse(reader.GetInt16(8).ToString()),
-                reader.IsDBNull(9) ? (byte?)null : byte.Parse(reader.GetInt16(9).ToString()),
+                reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
+                reader.IsDBNull(6) ? (byte?)null : (byte)reader.GetInt32(6),
+                reader.IsDBNull(7) ? (byte?)null : (byte)reader.GetInt32(7),
                 columnType,
-                reader.GetBoolean(10),
+                reader.GetBoolean(8),
                 "VERTICA");
         }
 
@@ -169,23 +130,18 @@ namespace RepoDb.DbHelpers
         private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
             CancellationToken cancellationToken = default)
         {
-            var fieldType = await reader.GetFieldValueAsync<short>(4, cancellationToken);
-            var subType = await reader.IsDBNullAsync(5, cancellationToken) ? (short?)null :
-                await reader.GetFieldValueAsync<short>(5, cancellationToken);
-            var characterSetId = await reader.IsDBNullAsync(6, cancellationToken) ? (short?)null :
-                await reader.GetFieldValueAsync<short>(6, cancellationToken);
-            var columnType = ResolveColumnTypeName(fieldType, subType, characterSetId);
+            var columnType = ResolveColumnTypeName(await reader.GetFieldValueAsync<string>(4, cancellationToken));
 
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(1, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(2, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 DbTypeResolver.Resolve(columnType),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (int?)null : await reader.GetFieldValueAsync<int>(7, cancellationToken),
-                await reader.IsDBNullAsync(8, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(8, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(9, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<short>(9, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(5, cancellationToken) ? (int?)null : (int)(await reader.GetFieldValueAsync<long>(5, cancellationToken)),
+                await reader.IsDBNullAsync(6, cancellationToken) ? null : (byte)(await reader.GetFieldValueAsync<long>(6, cancellationToken)),
+                await reader.IsDBNullAsync(7, cancellationToken) ? null : (byte)(await reader.GetFieldValueAsync<long>(7, cancellationToken)),
                 columnType,
-                await reader.GetFieldValueAsync<bool>(10, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(8, cancellationToken),
                 "VERTICA");
         }
 
@@ -274,7 +230,7 @@ namespace RepoDb.DbHelpers
 
         /// <summary>
         /// Vertica has no session-wide "last identity" construct equivalent to SQL Server's SCOPE_IDENTITY()
-        /// or MySQL's LAST_INSERT_ID() - identity/generator values are scoped per-generator, not per-session.
+        /// or MySQL's LAST_INSERT_ID() - identity/sequence values are scoped per-sequence, not per-session.
         /// Use the identity value returned directly by the Insert/Merge operations (via the RETURNING clause)
         /// instead of this method.
         /// </summary>
@@ -286,12 +242,12 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null) =>
             throw new NotSupportedException("Vertica has no session-wide scope identity. The generated key " +
                 "is already returned by the Insert/Merge operations via the RETURNING clause; query the " +
-                "underlying generator explicitly (e.g. via GEN_ID(generator_name, 0), found in " +
-                "RDB$RELATION_FIELDS.RDB$GENERATOR_NAME) if you need it out-of-band.");
+                "underlying sequence explicitly (e.g. via CURRVAL/LAST_INSERT_ID(), found in " +
+                "v_catalog.sequences) if you need it out-of-band.");
 
         /// <summary>
         /// Vertica has no session-wide "last identity" construct equivalent to SQL Server's SCOPE_IDENTITY()
-        /// or MySQL's LAST_INSERT_ID() - identity/generator values are scoped per-generator, not per-session.
+        /// or MySQL's LAST_INSERT_ID() - identity/sequence values are scoped per-sequence, not per-session.
         /// Use the identity value returned directly by the Insert/Merge operations (via the RETURNING clause)
         /// instead of this method.
         /// </summary>
@@ -305,8 +261,8 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException("Vertica has no session-wide scope identity. The generated key " +
                 "is already returned by the Insert/Merge operations via the RETURNING clause; query the " +
-                "underlying generator explicitly (e.g. via GEN_ID(generator_name, 0), found in " +
-                "RDB$RELATION_FIELDS.RDB$GENERATOR_NAME) if you need it out-of-band.");
+                "underlying sequence explicitly (e.g. via CURRVAL/LAST_INSERT_ID(), found in " +
+                "v_catalog.sequences) if you need it out-of-band.");
 
         #endregion
 

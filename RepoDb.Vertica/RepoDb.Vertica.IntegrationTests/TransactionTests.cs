@@ -165,6 +165,7 @@ namespace RepoDb.Vertica.IntegrationTests
             {
                 // Act
                 connection.Insert<CompleteTable>(entity);
+                entity = connection.QueryAll<CompleteTable>().First();
 
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -191,6 +192,7 @@ namespace RepoDb.Vertica.IntegrationTests
             {
                 // Act
                 connection.Insert<CompleteTable>(entity);
+                entity = connection.QueryAll<CompleteTable>().First();
 
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -221,6 +223,7 @@ namespace RepoDb.Vertica.IntegrationTests
             {
                 // Act
                 connection.Insert<CompleteTable>(entity);
+                entity = connection.QueryAll<CompleteTable>().First();
 
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -247,6 +250,7 @@ namespace RepoDb.Vertica.IntegrationTests
             {
                 // Act
                 connection.Insert<CompleteTable>(entity);
+                entity = connection.QueryAll<CompleteTable>().First();
 
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())

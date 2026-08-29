@@ -40,10 +40,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var fields = helper.GetFields(connection, "CompleteTable", null);
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT TRIM(RDB$FIELD_NAME) AS ColumnName
-                    FROM RDB$RELATION_FIELDS
-                    WHERE TRIM(RDB$RELATION_NAME) = @TableName
-                    ORDER BY RDB$FIELD_POSITION", new { TableName = "CompleteTable" }))
+                using (var reader = connection.ExecuteReader(@"SELECT column_name AS ColumnName
+                    FROM v_catalog.columns
+                    WHERE table_name = @TableName
+                    ORDER BY ordinal_position", new { TableName = "CompleteTable" }))
                 {
                     var fieldCount = 0;
 
@@ -116,10 +116,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var fields = await helper.GetFieldsAsync(connection, "CompleteTable", null);
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT TRIM(RDB$FIELD_NAME) AS ColumnName
-                    FROM RDB$RELATION_FIELDS
-                    WHERE TRIM(RDB$RELATION_NAME) = @TableName
-                    ORDER BY RDB$FIELD_POSITION", new { TableName = "CompleteTable" }))
+                using (var reader = connection.ExecuteReader(@"SELECT column_name AS ColumnName
+                    FROM v_catalog.columns
+                    WHERE table_name = @TableName
+                    ORDER BY ordinal_position", new { TableName = "CompleteTable" }))
                 {
                     var fieldCount = 0;
 
@@ -194,11 +194,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var table = Helper.CreateCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<CompleteTable, long>(table);
+                connection.Insert<CompleteTable>(table);
 
-                // Assert
-                Assert.IsTrue(insertResult > 0);
-                Assert.IsTrue(table.Id > 0);
+                // Assert - verify the row was actually written, since the generated Id can't be read back.
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act & Assert
                 // Vertica has no session-wide "last identity" concept (see VerticaDbHelper.GetScopeIdentity),
@@ -222,11 +221,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var table = Helper.CreateCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<CompleteTable, long>(table);
+                await connection.InsertAsync<CompleteTable>(table);
 
                 // Assert
-                Assert.IsTrue(insertResult > 0);
-                Assert.IsTrue(table.Id > 0);
+                Assert.AreEqual(1, await connection.CountAllAsync<CompleteTable>());
 
                 // Act & Assert
                 // Vertica has no session-wide "last identity" concept (see VerticaDbHelper.GetScopeIdentityAsync),

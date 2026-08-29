@@ -177,7 +177,7 @@ namespace RepoDb.Vertica.IntegrationTests
                     ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
                     ColumnDate = EpocDate,
                     ColumnDateTime2 = now,
-                    ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay,
+                    ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12),
                     ColumnTimeStamp = now,
                     ColumnYear = Convert.ToInt16(now.Year),
                     ColumnBigint = Convert.ToInt64(i),
@@ -225,7 +225,7 @@ namespace RepoDb.Vertica.IntegrationTests
             table.ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{1}-Updated");
             table.ColumnDate = EpocDate;
             table.ColumnDateTime2 = now;
-            table.ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            table.ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             table.ColumnTimeStamp = now;
             table.ColumnYear = Convert.ToInt16(now.Year);
             table.ColumnBigint = Convert.ToInt64(1);
@@ -277,7 +277,7 @@ namespace RepoDb.Vertica.IntegrationTests
                     ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
                     ColumnDate = EpocDate,
                     ColumnDateTime2 = now,
-                    ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay,
+                    ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12),
                     ColumnTimeStamp = now,
                     ColumnYear = Convert.ToInt16(now.Year),
                     ColumnBigint = Convert.ToInt64(i),
@@ -325,7 +325,7 @@ namespace RepoDb.Vertica.IntegrationTests
             table.ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{1}");
             table.ColumnDate = EpocDate;
             table.ColumnDateTime2 = now;
-            table.ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            table.ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             table.ColumnTimeStamp = now;
             table.ColumnYear = Convert.ToInt16(now.Year);
             table.ColumnBigint = Convert.ToInt64(1);
@@ -376,7 +376,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{i}");
                 item["ColumnDate"] = EpocDate;
                 item["ColumnDateTime2"] = now;
-                item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+                item["ColumnTime"] = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
                 item["ColumnTimeStamp"] = now;
                 item["ColumnYear"] = Convert.ToInt16(now.Year);
                 item["ColumnBigint"] = Convert.ToInt64(i);
@@ -425,7 +425,7 @@ namespace RepoDb.Vertica.IntegrationTests
             item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{2}");
             item["ColumnDate"] = EpocDate;
             item["ColumnDateTime2"] = now;
-            item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            item["ColumnTime"] = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             item["ColumnTimeStamp"] = now;
             item["ColumnYear"] = Convert.ToInt16(now.Year);
             item["ColumnBigint"] = Convert.ToInt64(2);
@@ -481,7 +481,7 @@ namespace RepoDb.Vertica.IntegrationTests
                     ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
                     ColumnDate = EpocDate,
                     ColumnDateTime2 = now,
-                    ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay,
+                    ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12),
                     ColumnTimeStamp = now,
                     ColumnYear = Convert.ToInt16(now.Year),
                     ColumnBigint = Convert.ToInt64(i),
@@ -529,7 +529,7 @@ namespace RepoDb.Vertica.IntegrationTests
             table.ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{1}");
             table.ColumnDate = EpocDate;
             table.ColumnDateTime2 = now;
-            table.ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            table.ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             table.ColumnTimeStamp = now;
             table.ColumnYear = Convert.ToInt16(now.Year);
             table.ColumnBigint = Convert.ToInt64(1);
@@ -581,7 +581,7 @@ namespace RepoDb.Vertica.IntegrationTests
                     ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
                     ColumnDate = EpocDate,
                     ColumnDateTime2 = now,
-                    ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay,
+                    ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12),
                     ColumnTimeStamp = now,
                     ColumnYear = Convert.ToInt16(now.Year),
                     ColumnBigint = Convert.ToInt64(i),
@@ -629,7 +629,7 @@ namespace RepoDb.Vertica.IntegrationTests
             table.ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{1}");
             table.ColumnDate = EpocDate;
             table.ColumnDateTime2 = now;
-            table.ColumnTime = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            table.ColumnTime = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             table.ColumnTimeStamp = now;
             table.ColumnYear = Convert.ToInt16(now.Year);
             table.ColumnBigint = Convert.ToInt64(1);
@@ -680,7 +680,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{i}");
                 item["ColumnDate"] = EpocDate;
                 item["ColumnDateTime2"] = now;
-                item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+                item["ColumnTime"] = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
                 item["ColumnTimeStamp"] = now;
                 item["ColumnYear"] = Convert.ToInt16(now.Year);
                 item["ColumnBigint"] = Convert.ToInt64(i);
@@ -729,7 +729,7 @@ namespace RepoDb.Vertica.IntegrationTests
             item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{2}");
             item["ColumnDate"] = EpocDate;
             item["ColumnDateTime2"] = now;
-            item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            item["ColumnTime"] = default(DateTime).AddHours(5).AddMinutes(7).AddSeconds(12);
             item["ColumnTimeStamp"] = now;
             item["ColumnYear"] = Convert.ToInt16(now.Year);
             item["ColumnBigint"] = Convert.ToInt64(2);

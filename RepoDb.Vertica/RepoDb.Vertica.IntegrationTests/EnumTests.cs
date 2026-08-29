@@ -121,7 +121,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+                var queryResult = connection.QueryAll<PersonWithText>().First();
 
                 // Assert
                 Assert.IsNull(queryResult.ColumnText);
@@ -139,8 +139,8 @@ namespace RepoDb.Vertica.IntegrationTests
                 // Act
                 connection.Insert(person);
 
-                // Query
-                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+                // Query - see the remarks in TestInsertAndQueryEnumAsTextAsNull on why not Query<T>(person.Id).
+                var queryResult = connection.QueryAll<PersonWithText>().First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
@@ -162,11 +162,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var queryResult = connection.QueryAll<PersonWithText>().AsList();
 
                 // Assert
-                people.ForEach(p =>
-                {
-                    var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnText, item.ColumnText);
-                });
+                Assert.AreEqual(people.Count, queryResult.Count);
+                CollectionAssert.AreEqual(
+                    people.Select(p => p.ColumnText).OrderBy(v => v).ToList(),
+                    queryResult.Select(e => e.ColumnText).OrderBy(v => v).ToList());
             }
         }
 
@@ -183,7 +182,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+                var queryResult = connection.QueryAll<PersonWithInteger>().First();
 
                 // Assert
                 Assert.IsNull(queryResult.ColumnInt);
@@ -202,7 +201,7 @@ namespace RepoDb.Vertica.IntegrationTests
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+                var queryResult = connection.QueryAll<PersonWithInteger>().First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnInt, queryResult.ColumnInt);
@@ -224,11 +223,10 @@ namespace RepoDb.Vertica.IntegrationTests
                 var queryResult = connection.QueryAll<PersonWithInteger>().AsList();
 
                 // Assert
-                people.ForEach(p =>
-                {
-                    var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnInt, item.ColumnInt);
-                });
+                Assert.AreEqual(people.Count, queryResult.Count);
+                CollectionAssert.AreEqual(
+                    people.Select(p => p.ColumnInt).OrderBy(v => v).ToList(),
+                    queryResult.Select(e => e.ColumnInt).OrderBy(v => v).ToList());
             }
         }
 
@@ -240,11 +238,9 @@ namespace RepoDb.Vertica.IntegrationTests
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
 
-                // Act & Assert - unlike MySQL, Vertica's DSQL layer determines a bind parameter's
-                // wire format from the *target column's actual server-side type* (RDB$RELATION_FIELDS
-                // Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.Insert(person));
+                // Act & Assert
+                connection.Insert(person);
+                Assert.AreEqual(1, connection.CountAll<PersonWithTextAsInteger>());
             }
         }
 
@@ -257,8 +253,8 @@ namespace RepoDb.Vertica.IntegrationTests
                 var people = GetPersonWithTextAsInteger(10).AsList();
 
                 // Act & Assert
-                Assert.Throws<InvalidCastException>(() =>
-                    connection.InsertAll(people));
+                connection.InsertAll(people);
+                Assert.AreEqual(people.Count, connection.CountAll<PersonWithTextAsInteger>());
             }
         }
     }
