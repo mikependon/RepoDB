@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.Firebird.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Firebird/**'
+      - 'RepoDb.Extensions/RepoDb.Firebird.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-firebird-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.Firebird.BulkOperations
+      solution-file: RepoDb.Firebird.BulkOperations.sln
+      artifact-name: release-firebird-bulk
+      db-engine: firebird

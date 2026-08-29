@@ -1,0 +1,179 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FirebirdSql.Data.FirebirdClient;
+using RepoDb.Firebird.IntegrationTests.Models;
+using RepoDb.Firebird.IntegrationTests.Setup;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.Firebird.IntegrationTests.Operations
+{
+    [TestClass]
+    public class MinAllTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region DataEntity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestFirebirdConnectionMinAll()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnFirebirdConnectionMinAllWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestFirebirdConnectionMinAllAsync()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnFirebirdConnectionMinAllAsyncWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestFirebirdConnectionMinAllViaTableName()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void ThrowExceptionOnFirebirdConnectionMinAllViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestFirebirdConnectionMinAllAsyncViaTableName()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnFirebirdConnectionMinAllAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new FbConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

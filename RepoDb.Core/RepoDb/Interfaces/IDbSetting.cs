@@ -54,6 +54,13 @@ namespace RepoDb.Interfaces
         bool IsMultiStatementExecutable { get; }
 
         /// <summary>
+        /// Gets a value that overrides <see cref="IsMultiStatementExecutable"/> specifically for whether
+        /// <c>InsertAll</c> can batch more than one row into a single statement (a genuine multi-row
+        /// <c>VALUES (...), (...), ...</c> list, not multiple <c>;</c>-separated statements).
+        /// </summary>
+        bool? IsInsertAllBatchable { get; }
+
+        /// <summary>
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         bool IsPreparable { get; }
@@ -68,6 +75,29 @@ namespace RepoDb.Interfaces
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         bool IsUseUpsert { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether <see cref="System.Data.IDataParameter.DbType"/> must be assigned
+        /// an (inferred, if not explicitly given) value before <see cref="System.Data.IDataParameter.Value"/> is
+        /// set.
+        bool RequiresDbTypeBeforeValue { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider strictly validates that every parameter
+        /// bound to the command is actually referenced by a placeholder in the generated <see cref="DbCommand.CommandText"/>,
+        /// throwing when a bound parameter has no corresponding placeholder. A null-valued equality filter (e.g.
+        /// <c>WHERE "Id" = @Id</c> with a <see langword="null"/> value) is rendered by <see cref="QueryField"/> as the
+        /// literal <c>"Id" IS NULL</c> with no <c>@Id</c> placeholder at all, yet the parameter is still normally bound -
+        /// most providers silently tolerate the unused parameter, but a strict provider rejects the whole command. When
+        /// <see langword="true"/>, such unreferenced parameters are skipped instead of bound. Defaults to <see langword="false"/>.
+        /// </summary>
+        bool SkipsUnreferencedParameters { get; }
+
+        /// <summary>
+        /// Gets the maximum number of parameters/members the current DB provider allows in a single generated
+        /// command text.
+        /// </summary>
+        int MaxParameterCount { get; }
 
         /// <summary>
         /// Gets the character used for opening quote.

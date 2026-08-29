@@ -9,6 +9,7 @@
     <PackageTags>orm hybrid-orm micro-orm</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
@@ -62,5 +63,7 @@
     <InternalsVisibleTo Include="RepoDb.Db2" />
     <InternalsVisibleTo Include="RepoDb.Db2.BulkOperations" />
     <InternalsVisibleTo Include="RepoDb.ClickHouse.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.Firebird.BulkOperations" />
+    <InternalsVisibleTo Include="RepoDb.Vertica.BulkOperations" />
   </ItemGroup>
 </Project>

@@ -35,8 +35,13 @@ namespace RepoDb.Contexts.Execution
         public Action<DbCommand, IList<object>> MultipleDataEntitiesParametersSetterFunc { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Action<object, object> KeyPropertySetterFunc { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasIdentityKey { get; set; }
     }
 }

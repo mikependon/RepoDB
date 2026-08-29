@@ -48,24 +48,20 @@ RepoDB is evolving from an ORM into a broader data productivity platform, with D
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
-## Packages and Build Status
-
-RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
-
-See the full [package list and build status](PACKAGES.md).
-
 ## Get Started
 
 Choose your database and follow the quick-start guide:
 
 - [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
 - [Db2](http://repodb.net/tutorial/get-started-db2)
+- [Firebird](http://repodb.net/tutorial/get-started-firebird)
 - [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
 - [MySQL](http://repodb.net/tutorial/get-started-mysql)
 - [Oracle](http://repodb.net/tutorial/get-started-oracle)
 - [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
 - [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
 - [SQLite](http://repodb.net/tutorial/get-started-sqlite)
+- [Vertica](http://repodb.net/tutorial/get-started-vertica)
 
 Explore individual features in the [documentation](http://repodb.net/docs).
 
@@ -80,6 +76,32 @@ Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
 Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
+
+## Packages and Build Status
+
+RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
+
+See the full [package list and build status](PACKAGES.md).
+
+## Bulk Operations Support
+
+Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
+
+| DB Provider | Sync | Async | Class |
+|---|---|---|---|
+| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) |
+| [Db2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
+| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | ✅ | ✅ | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) (via **`FbBatchCommand`**) |
+| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
+| [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDB.Connectors/blob/main/src/RepoDb.Connector.MariaDbConnector/RepoDb.Connector.MariaDbConnector/Bulk/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
+| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | ✅ | ✅ | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) (via [MySqlBulkLoader](https://www.nuget.org/packages/MySql.Data)) |
+| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
+| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
+| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
+| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
+| [Vertica](https://www.nuget.org/packages/RepoDb.Vertica.BulkOperations) | ✅ | ✅ | [VerticaBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Vertica.BulkOperations/RepoDb.Vertica.BulkOperations/VerticaBulkCopy.cs) (via **`VerticaCopyStream`**) |
+
+MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead. Vertica's `VerticaBulkCopy` wraps its native `COPY`-based streaming primitive, `VerticaCopyStream`.
 
 ## Type Coercion
 
@@ -173,7 +195,7 @@ Read our [contributing](CONTRIBUTING.md) page for more.
 
 Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
-Tools and projects that make RepoDB possible: [GitHub](https://github.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/).
+Tools and projects that make RepoDB possible: [GitHub](https://github.com/), [GitHub Actions](https://github.com/features/actions), [Docker](https://www.docker.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [MSTest](https://github.com/microsoft/testfx), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/), [FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/), [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/), [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/), [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/), [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/), [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector/), [Vertica.Data](https://www.nuget.org/packages/Vertica.Data/).
 
 ## License
 
