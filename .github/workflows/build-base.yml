@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica, enterprisedb'
         required: true
         type: string
 
@@ -48,6 +48,9 @@ env:
   REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
   # Vertica
   REPODB_VERTICA_CONSTR: "Host=127.0.0.1;Port=5433;Database=RepoDb;User=dbadmin;Password=RepoDB2026;"
+  # EnterpriseDB (EDB Postgres Advanced Server)
+  REPODB_EDB_CONSTR_SYSTEM: "Server=127.0.0.1;Port=5444;Database=edb;User Id=enterprisedb;Password=RepoDB2026;"
+  REPODB_EDB_CONSTR: "Server=127.0.0.1;Port=5444;Database=RepoDb;User Id=enterprisedb;Password=RepoDB2026;"
 
 jobs:
 
@@ -543,6 +546,81 @@ jobs:
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # EnterpriseDB (EDB Postgres Advanced Server) only (e.g. RepoDb.EnterpriseDb, RepoDb.EnterpriseDb.BulkOperations)
+  build-enterprisedb:
+    if: inputs.db-engine == 'enterprisedb'
+    runs-on: ubuntu-latest
+
+    services:
+      enterprisedb:
+        image: docker.enterprisedb.com/k8s/edb-postgres-advanced:18
+        # Official EDB image - the registry requires an EDB subscription. Configure the
+        # EDB_DOCKER_USERNAME/EDB_DOCKER_PASSWORD repository secrets (see docker-compose.yml's
+        # comment on the equivalent local service) before this job can pull it.
+        credentials:
+          username: ${{ secrets.EDB_DOCKER_USERNAME }}
+          password: ${{ secrets.EDB_DOCKER_PASSWORD }}
+        ports:
+          - 127.0.0.1:5444:5444
+        env:
+          ACCEPT_EULA: Y
+          ENTERPRISEDB_PASSWORD: RepoDB2026
+          DATABASE_NAME: repodb
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Wait for EnterpriseDB service to be ready
+        run: |
+          CID=$(docker ps -q --filter "ancestor=docker.enterprisedb.com/k8s/edb-postgres-advanced:18")
+          if [ -z "$CID" ]; then
+            echo "Could not find the EnterpriseDB service container."
+            exit 1
+          fi
+          echo "EnterpriseDB container id: $CID"
+          for i in $(seq 1 60); do
+            if docker exec "$CID" pg_isready -h 127.0.0.1 -p 5444 -U enterprisedb > /dev/null 2>&1; then
+              echo "EnterpriseDB is ready (after $((i * 5))s)."
+              exit 0
+            fi
+            echo "Waiting for EnterpriseDB to become ready... attempt $i/60"
+            sleep 5
+          done
+          echo "EnterpriseDB did not become ready within the timeout. Recent container logs:"
+          docker logs "$CID" --tail 200
+          exit 1
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}

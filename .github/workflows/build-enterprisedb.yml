@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.EnterpriseDb (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.EnterpriseDb/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-enterprisedb.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.EnterpriseDb
+      solution-file: RepoDb.EnterpriseDb.sln
+      artifact-name: release-enterprisedb
+      db-engine: enterprisedb
