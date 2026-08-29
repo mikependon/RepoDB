@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.Vertica (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Vertica/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-vertica.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Vertica
+      solution-file: RepoDb.Vertica.sln
+      artifact-name: release-vertica
+      db-engine: vertica
