@@ -1,4 +1,13 @@
-﻿using RepoDb.Enumerations;
+﻿#region Copyright Attributions
+
+// Copyright (c) 2019 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using RepoDb.Enumerations;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;

@@ -1,4 +1,12 @@
-﻿using System.ComponentModel;
+﻿#region Copyright Attributions
+
+// Copyright (c) 2021 SergerGood and Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using System.ComponentModel;
 using BenchmarkDotNet.Attributes;
 using Dapper;
 using RepoDb.Benchmarks.PostgreSql.Configurations;

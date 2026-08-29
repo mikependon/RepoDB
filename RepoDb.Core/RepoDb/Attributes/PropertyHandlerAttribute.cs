@@ -1,4 +1,12 @@
-﻿using RepoDb.Exceptions;
+﻿#region Copyright Attributions
+
+// Copyright (c) 2020 Michael Camara Pendon.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 

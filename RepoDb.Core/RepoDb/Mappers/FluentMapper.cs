@@ -1,4 +1,13 @@
-﻿namespace RepoDb
+﻿#region Copyright Attributions
+
+// Copyright (c) 2020 Michael Camara Pendon.
+// Portions copyright their respective RepoDB contributors.
+// Licensed under the Apache License, Version 2.0.
+// See the LICENSE file in the project root for full license information.
+
+#endregion
+
+namespace RepoDb
 {
     /// <summary>
     /// A class that is being used to define the mappings for the target class or .NET CLR type in a fluent manner.
