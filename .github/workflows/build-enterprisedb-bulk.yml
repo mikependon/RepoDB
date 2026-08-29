@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.EnterpriseDb.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.EnterpriseDb/**'
+      - 'RepoDb.Extensions/RepoDb.EnterpriseDb.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-enterprisedb-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.EnterpriseDb.BulkOperations
+      solution-file: RepoDb.EnterpriseDb.BulkOperations.sln
+      artifact-name: release-enterprisedb-bulk
+      db-engine: enterprisedb
