@@ -57,19 +57,51 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestVerticaConnectionExecuteReaderThrowsOnMultiStatementText()
+        public void TestVerticaConnectionExecuteReaderMultiStatementText()
         {
             // Setup
-            Database.CreateCompleteTables(10);
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                // Act & Assert - VerticaCommand does not support multiple statements in a single command
-                // text (see VerticaDbSetting.IsMultiStatementExecutable == false); the classic
-                // "SELECT ...; SELECT ...;" + NextResult() pattern used by SqlServer/MySqlConnector
-                // is not available on Vertica.
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\""))
+                {
+                    var count1 = 0;
+                    while (reader.Read())
+                    {
+                        count1++;
+                    }
+
+                    var hasSecondResult = reader.NextResult();
+                    var count2 = 0;
+                    while (hasSecondResult && reader.Read())
+                    {
+                        count2++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(tables.Count(), count1);
+                    Assert.IsTrue(hasSecondResult);
+                    Assert.AreEqual(tables.Count(), count2);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestVerticaConnectionExecuteReaderThrowsOnParameterizedMultiStatementText()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var id = tables.First().Id;
+
+            using (var connection = new VerticaConnection(Database.ConnectionString))
+            {
+                // Act & Assert
                 Assert.Throws<VerticaException>(() =>
-                    connection.ExecuteReader("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\""));
+                    connection.ExecuteReader(
+                        "SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id; SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id",
+                        new { Id = id }));
             }
         }
 
@@ -146,16 +178,51 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestVerticaConnectionExecuteReaderAsyncThrowsOnMultiStatementText()
+        public async Task TestVerticaConnectionExecuteReaderAsyncMultiStatementText()
         {
             // Setup
-            Database.CreateCompleteTables(10);
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                // Act & Assert - async counterpart of the same known Vertica limitation.
+                // Act - async counterpart of TestVerticaConnectionExecuteReaderMultiStatementText.
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\""))
+                {
+                    var count1 = 0;
+                    while (reader.Read())
+                    {
+                        count1++;
+                    }
+
+                    var hasSecondResult = reader.NextResult();
+                    var count2 = 0;
+                    while (hasSecondResult && reader.Read())
+                    {
+                        count2++;
+                    }
+
+                    // Assert
+                    Assert.AreEqual(tables.Count(), count1);
+                    Assert.IsTrue(hasSecondResult);
+                    Assert.AreEqual(tables.Count(), count2);
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task TestVerticaConnectionExecuteReaderAsyncThrowsOnParameterizedMultiStatementText()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var id = tables.First().Id;
+
+            using (var connection = new VerticaConnection(Database.ConnectionString))
+            {
+                // Act & Assert
                 await Assert.ThrowsAsync<VerticaException>(() =>
-                    connection.ExecuteReaderAsync("SELECT \"Id\" FROM \"CompleteTable\"; SELECT \"Id\" FROM \"CompleteTable\""));
+                    connection.ExecuteReaderAsync(
+                        "SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id; SELECT \"Id\" FROM \"CompleteTable\" WHERE \"Id\" = @Id",
+                        new { Id = id }));
             }
         }
 

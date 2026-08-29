@@ -491,10 +491,6 @@ namespace RepoDb.Extensions
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
-                // A null-valued equality filter (e.g. WHERE "Id" = @Id with a null value) is rendered by
-                // QueryField.GetString() as the literal "Id" IS NULL, with no @Id placeholder in the command
-                // text at all. Most providers silently tolerate the resulting unused bound parameter, but a
-                // strict provider (e.g. Vertica) rejects the whole command outright - skip binding it there.
                 if (dbSetting?.SkipsUnreferencedParameters == true &&
                     !CommandTextReferencesParameter(command.CommandText, kvp.Key, dbSetting.SqlTextParameterPrefix))
                 {

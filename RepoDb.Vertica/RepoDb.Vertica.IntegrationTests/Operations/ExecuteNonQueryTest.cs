@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Vertica.Data.VerticaClient;
+using RepoDb.Vertica.IntegrationTests.Models;
 using RepoDb.Vertica.IntegrationTests.Setup;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,17 +59,34 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestVerticaConnectionExecuteNonQueryThrowsOnMultiStatementText()
+        public void TestVerticaConnectionExecuteNonQueryMultiStatementText()
         {
             // Setup
             Database.CreateCompleteTables(10);
 
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                // Act & Assert - VerticaCommand does not support multiple statements in a single command
-                // text (see VerticaDbSetting.IsMultiStatementExecutable == false).
+                // Act
+                connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<CompleteTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestVerticaConnectionExecuteNonQueryThrowsOnParameterizedMultiStatementText()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new VerticaConnection(Database.ConnectionString))
+            {
+                // Act & Assert
                 Assert.Throws<VerticaException>(() =>
-                    connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\""));
+                    connection.ExecuteNonQuery(
+                        "DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id; DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id",
+                        new { Id = 1 }));
             }
         }
 
@@ -110,16 +128,34 @@ namespace RepoDb.Vertica.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public async Task TestVerticaConnectionExecuteNonQueryAsyncThrowsOnMultiStatementText()
+        public async Task TestVerticaConnectionExecuteNonQueryAsyncMultiStatementText()
         {
             // Setup
             Database.CreateCompleteTables(10);
 
             using (var connection = new VerticaConnection(Database.ConnectionString))
             {
-                // Act & Assert - async counterpart of the same known Vertica limitation.
+                // Act
+                await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\"");
+
+                // Assert
+                Assert.AreEqual(0, await connection.CountAllAsync<CompleteTable>());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestVerticaConnectionExecuteNonQueryAsyncThrowsOnParameterizedMultiStatementText()
+        {
+            // Setup
+            Database.CreateCompleteTables(10);
+
+            using (var connection = new VerticaConnection(Database.ConnectionString))
+            {
+                // Act & Assert
                 await Assert.ThrowsAsync<VerticaException>(() =>
-                    connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\""));
+                    connection.ExecuteNonQueryAsync(
+                        "DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id; DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id",
+                        new { Id = 1 }));
             }
         }
 

@@ -70,9 +70,18 @@ namespace RepoDb.Vertica.UnitTests
             // Setup
             var setting = DbSettingMapper.Get<VerticaConnection>();
 
-            // Assert - Vertica's ADO.NET provider does not support executing multiple statements
-            // in a single round-trip, unlike MySQL/PostgreSql/SQL Server.
+            // Assert
             Assert.IsFalse(setting.IsMultiStatementExecutable);
+        }
+
+        [TestMethod]
+        public void TestVerticaDbSettingIsInsertAllBatchableProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<VerticaConnection>();
+
+            // Assert
+            Assert.IsTrue(setting.IsInsertAllBatchable);
         }
 
         [TestMethod]
@@ -82,7 +91,7 @@ namespace RepoDb.Vertica.UnitTests
             var setting = DbSettingMapper.Get<VerticaConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsUseUpsert);
+            Assert.IsTrue(setting.IsUseUpsert);
         }
 
         [TestMethod]

@@ -229,10 +229,7 @@ namespace RepoDb.DbHelpers
         #region GetScopeIdentity
 
         /// <summary>
-        /// Vertica has no session-wide "last identity" construct equivalent to SQL Server's SCOPE_IDENTITY()
-        /// or MySQL's LAST_INSERT_ID() - identity/sequence values are scoped per-sequence, not per-session.
-        /// Use the identity value returned directly by the Insert/Merge operations (via the RETURNING clause)
-        /// instead of this method.
+        /// Returns the newly generated identity from the database.
         /// </summary>
         /// <typeparam name="T">The type of newly generated identity.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
@@ -240,16 +237,10 @@ namespace RepoDb.DbHelpers
         /// <returns>The newly generated identity from the database.</returns>
         public T GetScopeIdentity<T>(IDbConnection connection,
             IDbTransaction transaction = null) =>
-            throw new NotSupportedException("Vertica has no session-wide scope identity. The generated key " +
-                "is already returned by the Insert/Merge operations via the RETURNING clause; query the " +
-                "underlying sequence explicitly (e.g. via CURRVAL/LAST_INSERT_ID(), found in " +
-                "v_catalog.sequences) if you need it out-of-band.");
+            connection.ExecuteScalar<T>("SELECT LAST_INSERT_ID()", transaction: transaction);
 
         /// <summary>
-        /// Vertica has no session-wide "last identity" construct equivalent to SQL Server's SCOPE_IDENTITY()
-        /// or MySQL's LAST_INSERT_ID() - identity/sequence values are scoped per-sequence, not per-session.
-        /// Use the identity value returned directly by the Insert/Merge operations (via the RETURNING clause)
-        /// instead of this method.
+        /// Returns the newly generated identity from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="T">The type of newly generated identity.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
@@ -259,10 +250,7 @@ namespace RepoDb.DbHelpers
         public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException("Vertica has no session-wide scope identity. The generated key " +
-                "is already returned by the Insert/Merge operations via the RETURNING clause; query the " +
-                "underlying sequence explicitly (e.g. via CURRVAL/LAST_INSERT_ID(), found in " +
-                "v_catalog.sequences) if you need it out-of-band.");
+            connection.ExecuteScalarAsync<T>("SELECT LAST_INSERT_ID()", transaction: transaction, cancellationToken: cancellationToken);
 
         #endregion
 

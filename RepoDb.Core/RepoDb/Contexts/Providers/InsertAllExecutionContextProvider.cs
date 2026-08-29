@@ -270,7 +270,9 @@ namespace RepoDb.Contexts.Providers
                 BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
-                KeyPropertySetterFunc = keyPropertySetterFunc
+                KeyPropertySetterFunc = keyPropertySetterFunc,
+                HasIdentityKey = keyField != null &&
+                    string.Equals(keyField.Name.AsUnquoted(true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };
         }
     }

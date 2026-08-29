@@ -54,6 +54,13 @@ namespace RepoDb.Interfaces
         bool IsMultiStatementExecutable { get; }
 
         /// <summary>
+        /// Gets a value that overrides <see cref="IsMultiStatementExecutable"/> specifically for whether
+        /// <c>InsertAll</c> can batch more than one row into a single statement (a genuine multi-row
+        /// <c>VALUES (...), (...), ...</c> list, not multiple <c>;</c>-separated statements).
+        /// </summary>
+        bool? IsInsertAllBatchable { get; }
+
+        /// <summary>
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         bool IsPreparable { get; }

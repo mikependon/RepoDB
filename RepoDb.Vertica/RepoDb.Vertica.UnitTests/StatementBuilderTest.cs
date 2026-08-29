@@ -351,20 +351,22 @@ namespace RepoDb.Vertica.UnitTests
         }
 
         [TestMethod]
-        public void ThrowExceptionOnVerticaStatementBuilderCreateInsertAllIfBatchSizeIsGreaterThanOne()
+        public void TestVerticaStatementBuilderCreateInsertAllWithBatchSizeGreaterThanOne()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<VerticaConnection>();
 
-            // Act - VerticaDbSetting.IsMultiStatementExecutable is false, so a batchSize greater than
-            // 1 is rejected rather than silently producing multiple statements the ADO.NET provider
-            // cannot execute in one round-trip.
-            Assert.Throws<NotSupportedException>(() =>
-                builder.CreateInsertAll("Table",
-                    Field.From("Id", "Name", "Address"),
-                    3,
-                    null,
-                    null));
+            // Act
+            var query = builder.CreateInsertAll("Table",
+                Field.From("Id", "Name", "Address"),
+                3,
+                null,
+                null);
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES " +
+                "( @Id, @Name, @Address ) , ( @Id_1, @Name_1, @Address_1 ) , ( @Id_2, @Name_2, @Address_2 )";
+
+            // Assert
+            Assert.AreEqual(expected, query);
         }
 
         [TestMethod]
@@ -729,8 +731,9 @@ namespace RepoDb.Vertica.UnitTests
                 null,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "UPDATE OR INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) " +
-                "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
+                "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -748,8 +751,9 @@ namespace RepoDb.Vertica.UnitTests
                 Field.From("Id"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "UPDATE OR INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) " +
-                "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
+                "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -767,16 +771,10 @@ namespace RepoDb.Vertica.UnitTests
                 null,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "EXECUTE BLOCK (" +
-                "P0 TYPE OF COLUMN \"Table\".\"Id\" = @Id, " +
-                "P1 TYPE OF COLUMN \"Table\".\"Name\" = @Name, " +
-                "P2 TYPE OF COLUMN \"Table\".\"Address\" = @Address" +
-                ") RETURNS (R0 TYPE OF COLUMN \"Table\".\"Id\") AS BEGIN " +
-                "IF (:P0 IS NULL OR :P0 = 0) THEN BEGIN " +
-                "INSERT INTO \"Table\" (\"Name\", \"Address\") VALUES (:P1, :P2) RETURNING \"Id\" INTO :R0; END " +
-                "ELSE BEGIN " +
-                "UPDATE OR INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") VALUES (:P0, :P1, :P2) MATCHING (\"Id\") RETURNING \"Id\" INTO :R0; END " +
-                "SUSPEND; END";
+            var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
+                "INSERT INTO \"Table\" (\"Name\", \"Address\") SELECT @Name, @Address " +
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id); " +
+                "SELECT CASE WHEN @Id IS NULL THEN LAST_INSERT_ID() ELSE @Id END AS \"Result\"";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -794,8 +792,9 @@ namespace RepoDb.Vertica.UnitTests
                 Field.From("Name"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "UPDATE OR INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) " +
-                "MATCHING ( \"Name\" ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "UPDATE \"Table\" SET \"Id\" = @Id, \"Address\" = @Address WHERE \"Name\" = @Name; " +
+                "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Name\" = @Name)";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -849,8 +848,9 @@ namespace RepoDb.Vertica.UnitTests
                 1,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "UPDATE OR INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) " +
-                "MATCHING ( \"Id\" ) RETURNING \"Id\" AS \"Result\"";
+            var expected = "UPDATE \"Table\" SET \"Name\" = @Name, \"Address\" = @Address WHERE \"Id\" = @Id; " +
+                "INSERT INTO \"Table\" (\"Id\", \"Name\", \"Address\") SELECT @Id, @Name, @Address " +
+                "WHERE NOT EXISTS (SELECT 1 FROM \"Table\" WHERE \"Id\" = @Id)";
 
             // Assert
             Assert.AreEqual(expected, query);

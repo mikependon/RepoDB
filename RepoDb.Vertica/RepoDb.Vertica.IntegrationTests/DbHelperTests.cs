@@ -196,14 +196,11 @@ namespace RepoDb.Vertica.IntegrationTests
                 // Act
                 connection.Insert<CompleteTable>(table);
 
-                // Assert - verify the row was actually written, since the generated Id can't be read back.
+                // Assert - verify the row was actually written.
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
 
                 // Act & Assert
-                // Vertica has no session-wide "last identity" concept (see VerticaDbHelper.GetScopeIdentity),
-                // so the helper deliberately throws instead of returning a (meaningless) value.
-                Assert.Throws<NotSupportedException>(() =>
-                    helper.GetScopeIdentity<long>(connection, null));
+                Assert.AreEqual(table.Id, helper.GetScopeIdentity<long>(connection, null));
             }
         }
 
@@ -226,11 +223,12 @@ namespace RepoDb.Vertica.IntegrationTests
                 // Assert
                 Assert.AreEqual(1, await connection.CountAllAsync<CompleteTable>());
 
-                // Act & Assert
-                // Vertica has no session-wide "last identity" concept (see VerticaDbHelper.GetScopeIdentityAsync),
-                // so the helper deliberately throws instead of returning a (meaningless) value.
-                await Assert.ThrowsAsync<NotSupportedException>(() =>
-                    helper.GetScopeIdentityAsync<long>(connection, null));
+                // Act & Assert - Vertica has no RETURNING clause, so RepoDb reads the generated IDENTITY
+                // value back via LAST_INSERT_ID() (see VerticaDbHelper.GetScopeIdentityAsync) as a
+                // separate query; connection.InsertAsync above already used it internally to populate
+                // table.Id, and it remains valid (same session, no intervening insert) to query again
+                // directly here.
+                Assert.AreEqual(table.Id, await helper.GetScopeIdentityAsync<long>(connection, null));
             }
         }
 

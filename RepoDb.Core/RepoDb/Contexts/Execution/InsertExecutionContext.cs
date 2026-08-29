@@ -25,8 +25,13 @@ namespace RepoDb.Contexts.Execution
         public Action<DbCommand, object> ParametersSetterFunc { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public Action<object, object> KeyPropertySetterFunc { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool HasIdentityKey { get; set; }
     }
 }

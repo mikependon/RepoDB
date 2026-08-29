@@ -449,7 +449,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = ((dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -511,6 +511,10 @@ namespace RepoDb
                                 .InvokeAfterExecution(traceResult, trace, result);
 
                             // Set the return value
+                            if (returnValue == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                            {
+                                returnValue = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+                            }
                             if (returnValue != null)
                             {
                                 context.KeyPropertySetterFunc?.Invoke(entity, returnValue);
@@ -557,7 +561,10 @@ namespace RepoDb
                             else
                             {
                                 context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
-                                AddOrderColumnParameters(command, batchItems);
+                                if (dbSetting.IsMultiStatementExecutable)
+                                {
+                                    AddOrderColumnParameters(command, batchItems);
+                                }
                             }
 
                             // Prepare the command
@@ -567,7 +574,39 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (context.KeyPropertySetterFunc == null)
+                            if (dbSetting.IsMultiStatementExecutable == false)
+                            {
+                                var traceResult = Tracer
+                                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                var affected = command.ExecuteNonQuery();
+
+                                if (context.HasIdentityKey)
+                                {
+                                    var lastIdentity = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+                                    if (lastIdentity != null)
+                                    {
+                                        var lastIdentityValue = Convert.ToInt64(lastIdentity);
+                                        for (var i = 0; i < batchItems.Count; i++)
+                                        {
+                                            context.KeyPropertySetterFunc.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
+                                        }
+                                    }
+                                }
+
+                                result += affected;
+
+                                // After Execution
+                                Tracer
+                                    .InvokeAfterExecution(traceResult, trace, result);
+                            }
+                            else if (context.KeyPropertySetterFunc == null)
                             {
                                 // Before Execution
                                 var traceResult = Tracer
@@ -689,7 +728,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = ((dbSetting.IsInsertAllBatchable ?? dbSetting.IsMultiStatementExecutable) == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -752,6 +791,10 @@ namespace RepoDb
                                 .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                             // Set the return value
+                            if (returnValue == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                            {
+                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                            }
                             if (returnValue != null)
                             {
                                 context.KeyPropertySetterFunc?.Invoke(entity, returnValue);
@@ -799,7 +842,10 @@ namespace RepoDb
                             else
                             {
                                 context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
-                                AddOrderColumnParameters<TEntity>(command, batchItems);
+                                if (dbSetting.IsMultiStatementExecutable)
+                                {
+                                    AddOrderColumnParameters<TEntity>(command, batchItems);
+                                }
                             }
 
                             // Prepare the command
@@ -809,7 +855,39 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (context.KeyPropertySetterFunc == null)
+                            if (dbSetting.IsMultiStatementExecutable == false)
+                            {
+                                var traceResult = await Tracer
+                                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
+
+                                var affected = await command.ExecuteNonQueryAsync(cancellationToken);
+
+                                if (context.HasIdentityKey)
+                                {
+                                    var lastIdentity = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                                    if (lastIdentity != null)
+                                    {
+                                        var lastIdentityValue = Convert.ToInt64(lastIdentity);
+                                        for (var i = 0; i < batchItems.Count; i++)
+                                        {
+                                            context.KeyPropertySetterFunc.Invoke(batchItems[i], lastIdentityValue - (batchItems.Count - 1 - i));
+                                        }
+                                    }
+                                }
+
+                                result += affected;
+
+                                // After Execution
+                                await Tracer
+                                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                            }
+                            else if (context.KeyPropertySetterFunc == null)
                             {
                                 // Before Execution
                                 var traceResult = await Tracer

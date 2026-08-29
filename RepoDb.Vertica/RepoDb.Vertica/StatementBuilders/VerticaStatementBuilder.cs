@@ -283,7 +283,6 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            
             return TrimTrailingSemicolon(base.CreateInsert(tableName,
                 fields,
                 primaryField,
@@ -312,13 +311,53 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // VerticaDbSetting.IsMultiStatementExecutable is false - Vertica's ADO.NET provider
-            // (VerticaCommand) does not support executing multiple statements in one round-trip, so
-            // RepoDb.Core always calls this with batchSize == 1 (see ValidateMultipleStatementExecution).
-            // True multi-row batching is not implemented; reuse the single-row Insert statement.
-            ValidateMultipleStatementExecution(batchSize);
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
 
-            return CreateInsert(tableName, fields, primaryField, identityField, hints);
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
+            }
+
+            if (batchSize <= 1)
+            {
+                return CreateInsert(tableName, fields, primaryField, identityField, hints);
+            }
+
+            // IDENTITY columns can never be written to in Vertica - exclude, same as CreateInsert.
+            var insertableFields = (identityField == null
+                ? fields
+                : fields.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
+                .AsList();
+            var builder = new QueryBuilder();
+            builder.Clear()
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder.WriteText(",");
+                }
+            }
+
+            // Return the query. Deliberately no ".End()" - see CreateExists.
+            return builder.GetString();
         }
 
         #endregion
@@ -373,45 +412,7 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var identityIsQualifier = identityField != null &&
-                qualifiers.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
-            if (identityIsQualifier)
-            {
-                return BuildMergeExecuteBlock(tableName, fields, qualifiers, identityField, keyColumn ?? identityField);
-            }
-            var insertableFields = identityField == null
-                ? fields
-                : fields.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Initialize the builder
-            var builder = new QueryBuilder();
-
-            // Build the query.
-            builder.Clear()
-                .WriteText("UPDATE OR INSERT INTO")
-                .TableNameFrom(tableName, DbSetting)
-                .OpenParen()
-                .FieldsFrom(insertableFields, DbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(insertableFields, 0, DbSetting)
-                .CloseParen()
-                .WriteText("MATCHING")
-                .OpenParen()
-                .FieldsFrom(qualifiers, DbSetting)
-                .CloseParen();
-
-            if (keyColumn != null)
-            {
-                // Vertica 3.0+ supports RETURNING on UPDATE OR INSERT natively, returning the value
-                // (existing or newly generated) as an ordinary single-row result set.
-                builder.WriteText(string.Concat("RETURNING ", keyColumn.Name.AsQuoted(DbSetting), " AS ", "Result".AsQuoted(DbSetting)));
-            }
-
-            // Return the query. Deliberately no ".End()" - see CreateExists.
-            return builder.GetString();
+            return BuildMergeStatement(tableName, fields, qualifiers, primaryField, identityField);
         }
 
         #endregion
@@ -437,11 +438,7 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // See the comment on CreateInsertAll - batching multiple UPDATE OR INSERT statements
-            // (and their RETURNING values) into a single round-trip is not implemented, since
-            // VerticaDbSetting.IsMultiStatementExecutable is false.
             ValidateMultipleStatementExecution(batchSize);
-
             return CreateMerge(tableName, fields, qualifiers, primaryField, identityField, hints);
         }
 
@@ -737,61 +734,62 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
         /// <param name="identityField"></param>
-        /// <param name="keyColumn"></param>
         /// <returns></returns>
-        private string BuildMergeExecuteBlock(string tableName,
+        private string BuildMergeStatement(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
-            DbField identityField,
-            DbField keyColumn)
+            DbField primaryField,
+            DbField identityField)
         {
             var fieldList = fields.AsList();
+            var qualifierList = qualifiers.AsList();
             var quotedTable = tableName.AsQuoted(true, DbSetting);
-            var quotedKeyColumn = keyColumn.Name.AsQuoted(DbSetting);
-            var paramNamesByField = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            var sb = new StringBuilder("EXECUTE BLOCK (");
 
-            for (var i = 0; i < fieldList.Count; i++)
+            // IDENTITY columns (and columns defaulting to a named sequence) can never be written to
+            // in Vertica - exclude from both the UPDATE SET and INSERT column lists.
+            var writableFields = (identityField == null
+                ? fieldList
+                : fieldList.Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
+                .AsList();
+            var updatableFields = writableFields
+                .Where(f => !qualifierList.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)))
+                .AsList();
+
+            string WhereQualifiers() =>
+                qualifierList.Select(f => string.Concat(f.Name.AsQuoted(DbSetting), " = ", f.Name.AsParameter(DbSetting))).Join(" AND ");
+
+            var sb = new StringBuilder();
+
+            if (updatableFields.Count > 0)
             {
-                var field = fieldList[i];
-                var paramName = string.Concat("P", i);
-                paramNamesByField[field.Name] = paramName;
-                if (i > 0)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(paramName)
-                    .Append(" TYPE OF COLUMN ").Append(quotedTable).Append('.').Append(field.Name.AsQuoted(DbSetting))
-                    .Append(" = ").Append(field.Name.AsParameter(DbSetting));
+                sb.Append("UPDATE ").Append(quotedTable).Append(" SET ")
+                    .Append(updatableFields.Select(f => string.Concat(f.Name.AsQuoted(DbSetting), " = ", f.Name.AsParameter(DbSetting))).Join(", "))
+                    .Append(" WHERE ").Append(WhereQualifiers()).Append("; ");
             }
 
-            sb.Append(") RETURNS (R0 TYPE OF COLUMN ").Append(quotedTable).Append('.').Append(quotedKeyColumn)
-                .Append(") AS BEGIN ");
+            sb.Append("INSERT INTO ").Append(quotedTable)
+                .Append(" (").Append(writableFields.Select(f => f.Name.AsQuoted(DbSetting)).Join(", ")).Append(')')
+                .Append(" SELECT ").Append(writableFields.Select(f => f.Name.AsParameter(DbSetting)).Join(", "))
+                .Append(" WHERE NOT EXISTS (SELECT 1 FROM ").Append(quotedTable).Append(" WHERE ").Append(WhereQualifiers()).Append(')');
 
-            var insertableFields = fieldList
-                .Where(f => !string.Equals(f.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
-                .AsList();
-            string ColumnList(IEnumerable<Field> flds) =>
-                flds.Select(f => f.Name.AsQuoted(DbSetting)).Join(", ");
-            string ParamRefList(IEnumerable<Field> flds) =>
-                flds.Select(f => string.Concat(":", paramNamesByField[f.Name])).Join(", ");
-            var identityParam = paramNamesByField[identityField.Name];
+            var mergeStatement = sb.ToString();
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            if (keyColumn == null || identityField == null)
+            {
+                return mergeStatement;
+            }
+            var resultAlias = "Result".AsQuoted(DbSetting);
 
-            sb.Append("IF (:").Append(identityParam).Append(" IS NULL OR :").Append(identityParam).Append(" = 0) THEN BEGIN ")
-                .Append("INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(insertableFields)).Append(") VALUES (")
-                .Append(ParamRefList(insertableFields)).Append(") RETURNING ")
-                .Append(quotedKeyColumn).Append(" INTO :R0; END ")
-                .Append("ELSE BEGIN ")
-                .Append("UPDATE OR INSERT INTO ").Append(quotedTable)
-                .Append(" (").Append(ColumnList(fieldList)).Append(") VALUES (")
-                .Append(ParamRefList(fieldList)).Append(") MATCHING (")
-                .Append(ColumnList(qualifiers)).Append(") RETURNING ")
-                .Append(quotedKeyColumn).Append(" INTO :R0; END ")
-                .Append("SUSPEND; END");
+            if (qualifierList.Any(qf => string.Equals(qf.Name, identityField.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                var identityParam = identityField.Name.AsParameter(DbSetting);
+                return string.Concat(mergeStatement, "; SELECT CASE WHEN ", identityParam,
+                    " IS NULL THEN LAST_INSERT_ID() ELSE ", identityParam, " END AS ", resultAlias);
+            }
 
-            return sb.ToString();
+            return string.Concat(mergeStatement, "; SELECT LAST_INSERT_ID() AS ", resultAlias);
         }
 
         #endregion
