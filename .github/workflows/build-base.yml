@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       db-engine:
-        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird'
+        description: 'Database service required for this build: none, sqlserver, postgresql, mysql, mariadb, oracle, db2, clickhouse, firebird, vertica'
         required: true
         type: string
 
@@ -46,6 +46,8 @@ env:
   # Firebird — Pooling=false so RECREATE TABLE never collides with a leftover implicit
   # transaction carried over on a pooled connection from an earlier test (see Database.cs).
   REPODB_FIREBIRD_CONSTR: "DataSource=127.0.0.1;Port=3050;Database=/firebird/data/repodb.fdb;User=SYSDBA;Password=RepoDB2026;Charset=UTF8;Pooling=false;"
+  # Vertica
+  REPODB_VERTICA_CONSTR: "Host=127.0.0.1;Port=5433;Database=RepoDb;User=dbadmin;Password=RepoDB2026;"
 
 jobs:
 
@@ -541,6 +543,79 @@ jobs:
 
       - name: Dotnet Build
         run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Test for .NET 8.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net8.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 9.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net9.0 --no-build ${{ inputs.solution-file }}
+
+      - name: Test for .NET 10.0
+        working-directory: ${{ inputs.solution-dir }}
+        run: dotnet test -c release -f net10.0 --no-build -p:TestingPlatformDotnetTestSupport=true -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false ${{ inputs.solution-file }}
+
+      - name: Run Dotnet Pack
+        run: dotnet pack -c release -p Version="1.14.0-dev-${{ github.run_number }}" -o release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Package Nuget
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: release/*nupkg
+
+  # Vertica only (e.g. RepoDb.Vertica, RepoDb.Vertica.BulkOperations)
+  build-vertica:
+    if: inputs.db-engine == 'vertica'
+    runs-on: ubuntu-latest
+
+    services:
+      vertica:
+        image: molo17/vertica-ce:24.1.0-0
+        ports:
+          - 127.0.0.1:5433:5433
+        env:
+          # This image only sets a password on VERTICA_DB_NAME's superuser (dbadmin) when
+          # APP_DB_USER is ALSO given - the alter-password step it runs is unconditional, so
+          # pointing APP_DB_USER at the existing "dbadmin" account (rather than a new app-only
+          # one) just sets its password. Mirrors the same setup in docker-compose.yml.
+          VERTICA_DB_NAME: RepoDb
+          APP_DB_USER: dbadmin
+          APP_DB_PASSWORD: RepoDB2026
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET Versions
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+
+      - name: Dotnet Build
+        run: dotnet build -c release "${{ inputs.solution-dir }}/${{ inputs.solution-file }}"
+
+      - name: Wait for Vertica service to be ready
+        run: |
+          CID=$(docker ps -q --filter "ancestor=molo17/vertica-ce:24.1.0-0")
+          if [ -z "$CID" ]; then
+            echo "Could not find the Vertica service container."
+            exit 1
+          fi
+          echo "Vertica container id: $CID"
+          for i in $(seq 1 60); do
+            if docker exec "$CID" /opt/vertica/bin/vsql -U dbadmin -w RepoDB2026 -d RepoDb -c "SELECT 1" > /dev/null 2>&1; then
+              echo "Vertica is ready (after $((i * 10))s)."
+              exit 0
+            fi
+            echo "Waiting for Vertica to become ready... attempt $i/60"
+            sleep 10
+          done
+          echo "Vertica did not become ready within the timeout. Recent container logs:"
+          docker logs "$CID" --tail 200
+          exit 1
 
       - name: Test for .NET 8.0
         working-directory: ${{ inputs.solution-dir }}

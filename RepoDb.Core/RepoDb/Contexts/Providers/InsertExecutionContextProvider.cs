@@ -198,7 +198,9 @@ namespace RepoDb.Contexts.Providers
                         null,
                         dbSetting,
                         dbHelper),
-                KeyPropertySetterFunc = keyPropertySetterFunc
+                KeyPropertySetterFunc = keyPropertySetterFunc,
+                HasIdentityKey = keyField != null &&
+                    string.Equals(keyField.Name.AsUnquoted(true, dbSetting), dbFields?.GetIdentity()?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)
             };
         }
     }

@@ -1,5 +1,4 @@
 name: repodb
-version: '3.8'
 
 services:
 
@@ -94,12 +93,20 @@ services:
 
   vertica:
     container_name: vertica
-    image: vertica/vertica-ce:latest
+    # The official vertica/vertica-ce image was pulled from Docker Hub (both vertica/vertica-ce and
+    # opentext/vertica-ce 404 as of 2026-08). Using a well-known community mirror instead - only tag
+    # published is 24.1.0-0, there is no `latest`.
+    image: molo17/vertica-ce:24.1.0-0
     ports:
       - 127.0.0.1:5433:5433
     networks:
       - repodb
     environment:
+      # This image only sets a password on VERTICA_DB_NAME's superuser (dbadmin) when APP_DB_USER is
+      # ALSO given - the alter-password step it runs is unconditional, so pointing APP_DB_USER at the
+      # existing "dbadmin" account (rather than a new app-only one) just sets its password.
+      VERTICA_DB_NAME: RepoDb
+      APP_DB_USER: dbadmin
       APP_DB_PASSWORD: RepoDB2026
 
 networks:

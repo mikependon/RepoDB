@@ -20,9 +20,12 @@ namespace RepoDb.DbSettings
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = false;
+            IsInsertAllBatchable = false;
             IsPreparable = false;
             IsTransactionSupported = false;
             IsUseUpsert = false;
+            RequiresDbTypeBeforeValue = false;
+            SkipsUnreferencedParameters = false;
             MaxParameterCount = 2100 - 2;
             MultiStatementSeparator = ";";
             OpeningQuote = "`";

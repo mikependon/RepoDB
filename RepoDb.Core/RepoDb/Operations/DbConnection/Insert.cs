@@ -692,6 +692,10 @@ namespace RepoDb
                     .InvokeAfterExecution(traceResult, trace, result);
 
                 // Set the return value
+                if (result == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                {
+                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity<object>(connection, transaction));
+                }
                 if (result != null)
                 {
                     context.KeyPropertySetterFunc?.Invoke(entity, result);
@@ -776,6 +780,10 @@ namespace RepoDb
                     .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                 // Set the return value
+                if (result == null && context.HasIdentityKey && dbSetting.IsMultiStatementExecutable == false)
+                {
+                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync<object>(connection, transaction, cancellationToken));
+                }
                 if (result != null)
                 {
                     context.KeyPropertySetterFunc?.Invoke(entity, result);

@@ -32,6 +32,8 @@ namespace RepoDb.DbSettings
             IsPreparable = true;
             IsTransactionSupported = true;
             IsUseUpsert = false;
+            RequiresDbTypeBeforeValue = false;
+            SkipsUnreferencedParameters = false;
             MaxParameterCount = 2100 - 2;
             MultiStatementSeparator = ";";
             OpeningQuote = "[";
@@ -86,6 +88,14 @@ namespace RepoDb.DbSettings
         public bool IsMultiStatementExecutable { get; protected set; }
 
         /// <summary>
+        /// Gets a value that overrides <see cref="IsMultiStatementExecutable"/> specifically for whether
+        /// <c>InsertAll</c> can batch more than one row into a single statement. See the remarks on
+        /// <see cref="IDbSetting.IsInsertAllBatchable"/>. Left unset (<see langword="null"/>) by default,
+        /// which falls back to <see cref="IsMultiStatementExecutable"/>.
+        /// </summary>
+        public bool? IsInsertAllBatchable { get; protected set; }
+
+        /// <summary>
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
         /// </summary>
         public bool IsPreparable { get; protected set; }
@@ -100,6 +110,19 @@ namespace RepoDb.DbSettings
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsert { get; protected set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether <see cref="System.Data.IDataParameter.DbType"/> must be assigned
+        /// an (inferred, if not explicitly given) value before <see cref="System.Data.IDataParameter.Value"/> is
+        /// set.
+        /// </summary>
+        public bool RequiresDbTypeBeforeValue { get; protected set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider strictly validates that every bound
+        /// parameter is referenced by a placeholder in the generated command text.
+        /// </summary> 
+        public bool SkipsUnreferencedParameters { get; protected set; }
 
         /// <summary>
         /// Gets the maximum number of parameters/members the current DB provider allows in a single generated
@@ -180,6 +203,9 @@ namespace RepoDb.DbSettings
             // IsMultiStatementExecutable
             hashCode = HashCode.Combine(hashCode, IsMultiStatementExecutable);
 
+            // IsInsertAllBatchable
+            hashCode = HashCode.Combine(hashCode, IsInsertAllBatchable);
+
             // IsPreparable
             hashCode = HashCode.Combine(hashCode, IsPreparable);
 
@@ -188,6 +214,12 @@ namespace RepoDb.DbSettings
 
             // IsUseUpsert
             hashCode = HashCode.Combine(hashCode, IsUseUpsert);
+
+            // RequiresDbTypeBeforeValue
+            hashCode = HashCode.Combine(hashCode, RequiresDbTypeBeforeValue);
+
+            // SkipsUnreferencedParameters
+            hashCode = HashCode.Combine(hashCode, SkipsUnreferencedParameters);
 
             // MaxParameterCount
             hashCode = HashCode.Combine(hashCode, MaxParameterCount);
