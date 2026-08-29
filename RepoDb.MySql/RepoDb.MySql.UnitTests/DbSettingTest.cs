@@ -35,16 +35,6 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestMySqlDbSettingDefaultSchemaProperty()
         {
             // Setup
@@ -112,6 +102,16 @@ namespace RepoDb.MySql.UnitTests
 
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
+        }
+
+        [TestMethod]
+        public void TestMySqlDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
         }
     }
 }

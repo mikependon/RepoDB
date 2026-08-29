@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -12,6 +12,7 @@ using System.Data.Common;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Options;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -137,7 +138,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -163,13 +164,45 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestBatchQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.BatchQueryAsync<ClassHandlerIdentityTable>(page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnBatchQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -178,10 +211,38 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.BatchQuery<ClassHandlerIdentityTableWithTestModel>(page: 0,
-                    rowsPerBatch: 10,
-                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    where: (object)null);
+                Assert.Throws<InvalidTypeException>(() =>
+                {
+                    connection.BatchQuery<ClassHandlerIdentityTableWithTestModel>(page: 0,
+                        rowsPerBatch: 10,
+                        orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                        where: (object)null);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnBatchQueryAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () =>
+                {
+                    await connection.BatchQueryAsync<ClassHandlerIdentityTableWithTestModel>(page: 0,
+                        rowsPerBatch: 10,
+                        orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                        where: (object)null);
+                });
             }
         }
 
@@ -195,7 +256,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -218,13 +279,42 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestExecuteQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<ClassHandlerIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnExecuteQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -233,7 +323,26 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.ExecuteQuery<ClassHandlerIdentityTableWithTestModel>("SELECT * FROM [sc].[IdentityTable];");
+                Assert.Throws<InvalidTypeException>(() => connection.ExecuteQuery<ClassHandlerIdentityTableWithTestModel>("SELECT * FROM [sc].[IdentityTable];"));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnExecuteQueryAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.ExecuteQueryAsync<ClassHandlerIdentityTableWithTestModel>("SELECT * FROM [sc].[IdentityTable];"));
             }
         }
 
@@ -247,7 +356,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -262,12 +371,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestMergeAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var id = await connection.MergeAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestMergeManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -281,19 +410,58 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestMergeAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.MergeAsync(table);
+                }
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnMergeWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Merge(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Merge(table));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnMergeAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.MergeAsync(table));
             }
         }
 
@@ -307,7 +475,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -321,19 +489,55 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestMergeAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.MergeAllAsync(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnMergeAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.MergeAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.MergeAll(tables));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnMergeAllAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.MergeAllAsync(tables));
             }
         }
 
@@ -347,7 +551,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -362,12 +566,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestInsertAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var id = await connection.InsertAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestInsertManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -381,19 +605,58 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestInsertAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.InsertAsync(table);
+                }
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnInsertWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Insert(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Insert(table));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnInsertAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.InsertAsync(table));
             }
         }
 
@@ -407,7 +670,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -421,19 +684,55 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestInsertAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnInsertAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.InsertAll(tables));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnInsertAllAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.InsertAllAsync(tables));
             }
         }
 
@@ -447,7 +746,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);
@@ -465,13 +764,37 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = await connection.InsertAsync(table);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = (await connection.QueryAsync<ClassHandlerIdentityTable>(id)).First();
+
+                // Assert
+                Assert.AreEqual(1, handler.GetMethodCallCount);
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnQueryWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -480,7 +803,26 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Query<ClassHandlerIdentityTableWithTestModel>(e => e.Id > 0);
+                Assert.Throws<InvalidTypeException>(() => connection.Query<ClassHandlerIdentityTableWithTestModel>(e => e.Id > 0));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnQueryAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.QueryAsync<ClassHandlerIdentityTableWithTestModel>(e => e.Id > 0));
             }
         }
 
@@ -494,7 +836,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -517,13 +859,42 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestQueryAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.QueryAllAsync<ClassHandlerIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnQueryAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -532,7 +903,26 @@ namespace RepoDb.IntegrationTests
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.QueryAll<ClassHandlerIdentityTableWithTestModel>();
+                Assert.Throws<InvalidTypeException>(() => connection.QueryAll<ClassHandlerIdentityTableWithTestModel>());
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnQueryAllAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.QueryAllAsync<ClassHandlerIdentityTableWithTestModel>());
             }
         }
 
@@ -546,7 +936,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -564,12 +954,35 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestUpdateAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.UpdateAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestUpdateManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -586,22 +999,67 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestUpdateAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.UpdateAsync(table);
+                }
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnUpdateWithClassHandlerWithDifferentModel()
         {
             // Setup
             var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Insert(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Insert(table));
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.Update(table);
+                Assert.Throws<InvalidTypeException>(() => connection.Update(table));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnUpdateAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTableWithTestModels(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.InsertAsync(table));
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.UpdateAsync(table));
             }
         }
 
@@ -615,7 +1073,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -632,22 +1090,64 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
+        public async Task TestUpdateAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.UpdateAllAsync(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void ThrowExceptionOnUpdateAllWithClassHandlerWithDifferentModel()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.InsertAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.InsertAll(tables));
 
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
 
                 // Act
-                connection.UpdateAll(tables);
+                Assert.Throws<InvalidTypeException>(() => connection.UpdateAll(tables));
+            }
+        }
+
+        [TestMethod]
+        public async Task ThrowExceptionOnUpdateAllAsyncWithClassHandlerWithDifferentModel()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTableWithTestModels(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.InsertAllAsync(tables));
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerTestModelClassHandler>(typeof(ClassHandlerIdentityTableWithTestModel));
+
+                // Act
+                await Assert.ThrowsAsync<InvalidTypeException>(async () => await connection.UpdateAllAsync(tables));
             }
         }
 

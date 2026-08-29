@@ -312,38 +312,84 @@ namespace RepoDb.Extensions
                 string.Format(functionFormat, value.AsQuoted(true, true, dbSetting));
 
         /// <summary>
-        /// Returns the string as a parameter name in the database.
+        /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
+        /// command text (e.g. the "@Name" in <c>... VALUES (@Name)</c>), using <see cref="IDbSetting.SqlTextParameterPrefix"/>.
         /// </summary>
         /// <param name="value">The string to be converted.</param>
-        /// <returns>The string value represented as database parameter.</returns>
+        /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
         public static string AsParameter(this string value) =>
             AsParameter(value, 0, null);
 
         /// <summary>
-        /// Returns the string as a parameter name in the database.
+        /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
+        /// command text (e.g. the "@Name" in <c>... VALUES (@Name)</c>), using <see cref="IDbSetting.SqlTextParameterPrefix"/>.
         /// </summary>
         /// <param name="value">The string to be converted.</param>
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
-        /// <returns>The string value represented as database parameter.</returns>
+        /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
         public static string AsParameter(this string value,
             IDbSetting dbSetting) =>
             AsParameter(value, 0, dbSetting);
 
         /// <summary>
-        /// Returns the string as a parameter name in the database.
+        /// Returns the string as a parameter placeholder token suitable for embedding directly into a generated SQL
+        /// command text (e.g. the "@Name" in <c>... VALUES (@Name)</c>), using <see cref="IDbSetting.SqlTextParameterPrefix"/>.
         /// </summary>
         /// <param name="value">The string to be converted.</param>
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
-        /// <returns>The string value represented as database parameter.</returns>
+        /// <returns>The string value represented as a SQL text parameter placeholder.</returns>
         public static string AsParameter(this string value,
             int index,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting) =>
+            AsParameterWithPrefix(value, index, dbSetting, dbSetting?.SqlTextParameterPrefix ?? "@");
+
+        /// <summary>
+        /// Returns the string as the actual value to be assigned to a real <see cref="System.Data.Common.DbParameter.ParameterName"/>
+        /// property, using <see cref="IDbSetting.ParameterPrefix"/>. This is intentionally distinct from <see cref="AsParameter(string, int, IDbSetting)"/>,
+        /// which builds the placeholder token used in the generated SQL command text - the two only differ for providers
+        /// (e.g. ClickHouse) whose driver binds parameters by their bare name.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
+        /// <returns>The string value represented as an actual database parameter name.</returns>
+        internal static string AsParameterName(this string value,
+            IDbSetting dbSetting) =>
+            AsParameterName(value, 0, dbSetting);
+
+        /// <summary>
+        /// Returns the string as the actual value to be assigned to a real <see cref="System.Data.Common.DbParameter.ParameterName"/>
+        /// property, using <see cref="IDbSetting.ParameterPrefix"/>. This is intentionally distinct from <see cref="AsParameter(string, int, IDbSetting)"/>,
+        /// which builds the placeholder token used in the generated SQL command text - the two only differ for providers
+        /// (e.g. ClickHouse) whose driver binds parameters by their bare name.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
+        /// <returns>The string value represented as an actual database parameter name.</returns>
+        internal static string AsParameterName(this string value,
+            int index,
+            IDbSetting dbSetting) =>
+            AsParameterWithPrefix(value, index, dbSetting, dbSetting?.ParameterPrefix ?? "@");
+
+        /// <summary>
+        /// Shared core used by <see cref="AsParameter(string, int, IDbSetting)"/> and <see cref="AsParameterName(string, int, IDbSetting)"/>.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used (for unquoting only).</param>
+        /// <param name="parameterPrefix">The prefix to apply - may be <see cref="string.Empty"/> (e.g. ClickHouse).</param>
+        /// <returns>The prefixed string value.</returns>
+        private static string AsParameterWithPrefix(string value,
+            int index,
+            IDbSetting dbSetting,
+            string parameterPrefix)
         {
-            var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
+            var alreadyPrefixed = !string.IsNullOrEmpty(parameterPrefix) &&
+                value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase);
 
             value = string.Concat(parameterPrefix,
-                (value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
+                (alreadyPrefixed ? value.Substring(parameterPrefix.Length) : value)
                 .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
 

@@ -41,7 +41,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -110,7 +110,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -144,7 +144,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -179,7 +179,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -215,7 +215,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -252,7 +252,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -288,7 +288,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -329,7 +329,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
@@ -363,7 +363,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
@@ -398,7 +398,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);

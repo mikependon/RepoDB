@@ -116,7 +116,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -186,7 +186,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -230,7 +230,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -268,7 +268,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -300,7 +300,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -348,7 +348,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -386,7 +386,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -418,7 +418,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -462,7 +462,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -500,7 +500,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMappedWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -532,7 +532,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMappedWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -584,7 +584,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -636,7 +636,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNonNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -676,7 +676,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNonNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -735,7 +735,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullableProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -786,7 +786,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWhateverClassWithNullablePropertiesAndWithExtraClassProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new
@@ -826,7 +826,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleWithWhateverClassWithNullablePropertiesAndWithExtraQueryProperties()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var param = new

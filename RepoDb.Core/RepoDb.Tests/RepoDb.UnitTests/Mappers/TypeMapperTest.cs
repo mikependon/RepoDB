@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using System;
@@ -236,98 +236,98 @@ namespace RepoDb.UnitTests.Mappers
          * Override False
          */
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaPropertyNameThatIsAlreadyExisting()
         {
             // Setup
             var propertyName = "ColumnString";
             TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.AnsiStringFixedLength);
+            Assert.Throws<MappingExistsException>(() => TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.AnsiStringFixedLength));
         }
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldThatIsAlreadyExisting()
         {
             // Setup
             var field = new Field("ColumnString");
             TypeMapper.Add<TypeMapperTestClass>(field, DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>(field, DbType.AnsiStringFixedLength);
+            Assert.Throws<MappingExistsException>(() => TypeMapper.Add<TypeMapperTestClass>(field, DbType.AnsiStringFixedLength));
         }
 
-        [TestMethod, ExpectedException(typeof(MappingExistsException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaExpressionThatIsAlreadyExisting()
         {
             // Setup
             TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, DbType.AnsiStringFixedLength);
+            Assert.Throws<MappingExistsException>(() => TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, DbType.AnsiStringFixedLength));
         }
 
         /*
          * Null Properties
          */
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaPropertyNameThatIsNull()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>((string)null, DbType.AnsiStringFixedLength);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>((string)null, DbType.AnsiStringFixedLength));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldThatIsNull()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>((Field)null, DbType.AnsiStringFixedLength);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>((Field)null, DbType.AnsiStringFixedLength));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaExpressionThatIsNull()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>(expression: null, dbType: null);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(expression: null, dbType: null));
         }
 
         /*
          * Missing Properties
          */
 
-        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaPropertyNameThatIsMissing()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>("Whatever", DbType.AnsiStringFixedLength);
+            Assert.Throws<PropertyNotFoundException>(() => TypeMapper.Add<TypeMapperTestClass>("Whatever", DbType.AnsiStringFixedLength));
         }
 
-        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldThatIsIsMissing()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>(new Field("Whatever"), DbType.AnsiStringFixedLength);
+            Assert.Throws<PropertyNotFoundException>(() => TypeMapper.Add<TypeMapperTestClass>(new Field("Whatever"), DbType.AnsiStringFixedLength));
         }
 
         /*
          * Null ColumnName
          */
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaPropertyNameWithNullTargetColumnName()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", null);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>("ColumnString", null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaFieldWithNullTargetColumnName()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), null);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnTypeMapperViaExpressionWithNullTargetColumnName()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, null);
+            Assert.Throws<NullReferenceException>(() => TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, null));
         }
 
         #endregion

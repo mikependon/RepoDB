@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!--
+      This project's long name, nested three levels deep under RepoDb.Extensions\RepoDb.MariaDbConnector.BulkOperations\,
+      pushes generated obj\ file paths (e.g. ...GeneratedMSBuildEditorConfig.editorconfig) past Windows' 260-character
+      MAX_PATH, which some tooling still enforces even with the OS-level long-path opt-in enabled. Redirect
+      intermediate/output artifacts to a shorter path near the repo root instead. Must live in a Directory.Build.props
+      (imported before the SDK's Sdk.props) rather than the .csproj itself - setting BaseIntermediateOutputPath from
+      inside the .csproj body is too late and triggers MSB3539.
+    -->
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\..\obj\RepoDb.MariaDbConnector.BulkOperations.IntegrationTests\</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\..\..\bin\RepoDb.MariaDbConnector.BulkOperations.IntegrationTests\</BaseOutputPath>
+  </PropertyGroup>
+</Project>

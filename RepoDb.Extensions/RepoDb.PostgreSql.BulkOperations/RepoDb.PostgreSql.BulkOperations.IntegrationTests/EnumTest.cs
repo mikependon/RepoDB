@@ -1,34 +1,47 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Npgsql;
-using RepoDb.IntegrationTests.Setup;
-using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
-using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using Npgsql.NameTranslation;
+using RepoDb.Enumerations.PostgreSql;
+using RepoDb.IntegrationTests.Setup;
+using RepoDb.PostgreSql.BulkOperations;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 {
     [TestClass]
     public class EnumTest
     {
+        private NpgsqlDataSource _enumDataSource;
+
         [TestInitialize]
         public void Initialize()
         {
             Database.Initialize();
             Cleanup();
+            _enumDataSource = new NpgsqlDataSourceBuilder(Database.ConnectionString)
+                .MapEnum<Hands>("hand", new NpgsqlNullNameTranslator())
+                .Build();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
+            _enumDataSource?.Dispose();
+            _enumDataSource = null;
         }
 
         #region Methods
 
         private NpgsqlConnection GetConnection() =>
-            (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen());
+            (NpgsqlConnection)(_enumDataSource.CreateConnection()).EnsureOpen();
+
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetEnumColumnMappings() =>
+            Helper.GetEnumTableMappings().Where(m => m.SourceColumn != nameof(Models.EnumTable.Id));
 
         public static List<EnumTable> CreateEnumTablesWithNullValues(int count,
             bool hasId = false,
@@ -130,7 +143,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region TEntity
 
-        #region BinaryBulkInsert
+        #region BulkInsert
 
         [TestMethod]
         public void TestBinaryBulkInsertForEnum()
@@ -138,13 +151,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -166,9 +180,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -182,7 +197,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BulkDelete
 
         [TestMethod]
         public void TestBinaryBulkDeleteForEnum()
@@ -190,16 +205,17 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -223,7 +239,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete<EnumTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -238,7 +254,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BulkMerge
 
         [TestMethod]
         public void TestBinaryBulkMergeForEnum()
@@ -246,13 +262,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -274,9 +291,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -290,7 +308,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BulkUpdate
 
         [TestMethod]
         public void TestBinaryBulkUpdateForEnum()
@@ -298,16 +316,17 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate<EnumTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -332,7 +351,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate<EnumTable>(connection,
                     tableName,
                     entities: entities);
 
@@ -352,7 +371,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region Anonymous
 
-        #region BinaryBulkInsert
+        #region BulkInsert
 
         [TestMethod]
         public void TestBinaryBulkInsertForEnumForAnonymous()
@@ -364,9 +383,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: GetEnumColumnMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -388,9 +408,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -404,7 +425,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BulkDelete
 
         [TestMethod]
         public void TestBinaryBulkDeleteForEnumForAnonymous()
@@ -419,9 +440,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -445,7 +467,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
                     entities: entities);
 
@@ -460,7 +482,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BulkMerge
 
         [TestMethod]
         public void TestBinaryBulkMergeForEnumForAnonymous()
@@ -472,9 +494,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -496,9 +520,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -512,7 +537,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BulkUpdate
 
         [TestMethod]
         public void TestBinaryBulkUpdateForEnumForAnonymous()
@@ -527,9 +552,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -554,7 +580,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
                     entities: entities);
 
@@ -574,7 +600,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region IDictionary<string, object>
 
-        #region BinaryBulkInsert
+        #region BulkInsert
 
         [TestMethod]
         public void TestBinaryBulkInsertForEnumForExpandoObject()
@@ -586,9 +612,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: GetEnumColumnMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -610,9 +637,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -626,7 +654,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BulkDelete
 
         [TestMethod]
         public void TestBinaryBulkDeleteForEnumForExpandoObject()
@@ -641,9 +669,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -667,7 +696,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
                     entities: entities);
 
@@ -682,7 +711,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BulkMerge
 
         [TestMethod]
         public void TestBinaryBulkMergeForEnumForExpandoObject()
@@ -694,9 +723,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -718,9 +749,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -734,7 +766,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BulkUpdate
 
         [TestMethod]
         public void TestBinaryBulkUpdateForEnumForExpandoObject()
@@ -749,9 +781,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -776,7 +809,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
                     entities: entities);
 
@@ -796,7 +829,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region DataTable
 
-        #region BinaryBulkInsert
+        #region BulkInsert
 
         [TestMethod]
         public void TestBinaryBulkInsertForEnumForDataTable()
@@ -809,9 +842,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    table);
+                    table,
+                    mappings: GetEnumColumnMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -829,9 +863,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                var result = NpgsqlConnectionExtension.BulkInsert(connection,
                     tableName,
-                    table);
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -845,7 +880,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BulkDelete
 
         [TestMethod]
         public void TestBinaryBulkDeleteForEnumForDataTable()
@@ -861,9 +896,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
-                    table);
+                    table,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -888,7 +924,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                var result = NpgsqlConnectionExtension.BulkDelete(connection,
                     tableName,
                     table);
 
@@ -903,7 +939,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BulkMerge
 
         [TestMethod]
         public void TestBinaryBulkMergeForEnumForDataTable()
@@ -916,9 +952,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table);
+                    table,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -940,9 +978,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                var result = NpgsqlConnectionExtension.BulkMerge(connection,
                     tableName,
-                    table);
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -955,7 +994,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BulkUpdate
 
         [TestMethod]
         public void TestBinaryBulkUpdateForEnumForDataTable()
@@ -971,9 +1010,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
-                    table);
+                    table,
+                    mappings: Helper.GetEnumTableMappings());
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -994,7 +1034,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdate(connection,
                     tableName,
                     table);
 
@@ -1013,7 +1053,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region TEntity
 
-        #region BinaryBulkInsertAsync
+        #region BulkInsertAsync
 
         [TestMethod]
         public void TestBinaryBulkInsertAsyncForEnum()
@@ -1021,13 +1061,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1049,9 +1090,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1065,7 +1107,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDeleteAsync
+        #region BulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnum()
@@ -1073,16 +1115,17 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1106,7 +1149,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync<EnumTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1121,7 +1164,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMergeAsync
+        #region BulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnum()
@@ -1129,13 +1172,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1157,9 +1201,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1173,7 +1218,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdateAsync
+        #region BulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnum()
@@ -1181,16 +1226,17 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateEnumTables(10, false);
+                var entities = Helper.CreateEnumTables(10, true);
                 var tableName = "EnumTable";
 
                 // Act
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync<EnumTable>(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1215,7 +1261,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll<EnumTable>(entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync<EnumTable>(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync<EnumTable>(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1235,7 +1281,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region Anonymous
 
-        #region BinaryBulkInsertAsync
+        #region BulkInsertAsync
 
         [TestMethod]
         public void TestBinaryBulkInsertAsyncForEnumForAnonymous()
@@ -1247,9 +1293,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: GetEnumColumnMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1271,9 +1318,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1287,7 +1335,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDeleteAsync
+        #region BulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnumForAnonymous()
@@ -1302,9 +1350,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1328,7 +1377,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1343,7 +1392,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMergeAsync
+        #region BulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnumForAnonymous()
@@ -1355,9 +1404,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1379,9 +1430,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1395,7 +1447,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdateAsync
+        #region BulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnumForAnonymous()
@@ -1410,9 +1462,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1437,7 +1490,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1457,7 +1510,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region IDictionary<string, object>
 
-        #region BinaryBulkInsertAsync
+        #region BulkInsertAsync
 
         [TestMethod]
         public void TestBinaryBulkInsertAsyncForEnumForExpandoObject()
@@ -1469,9 +1522,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: GetEnumColumnMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1493,9 +1547,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1509,7 +1564,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDeleteAsync
+        #region BulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnumForExpandoObject()
@@ -1524,9 +1579,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1550,7 +1606,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1565,7 +1621,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMergeAsync
+        #region BulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnumForExpandoObject()
@@ -1577,9 +1633,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1601,9 +1659,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var tableName = "EnumTable";
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1617,7 +1676,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdateAsync
+        #region BulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnumForExpandoObject()
@@ -1632,9 +1691,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
-                    entities: entities).Result;
+                    entities: entities,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1659,7 +1719,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
                     entities: entities).Result;
 
@@ -1679,7 +1739,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region DataTable
 
-        #region BinaryBulkInsertAsync
+        #region BulkInsertAsync
 
         [TestMethod]
         public void TestBinaryBulkInsertAsyncForEnumForDataTable()
@@ -1692,9 +1752,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    mappings: GetEnumColumnMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1712,9 +1773,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkInsertAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1728,7 +1790,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDeleteAsync
+        #region BulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnumForDataTable()
@@ -1744,9 +1806,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1771,7 +1834,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkDeleteAsync(connection,
                     tableName,
                     table).Result;
 
@@ -1786,7 +1849,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMergeAsync
+        #region BulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnumForDataTable()
@@ -1799,9 +1862,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    mappings: Helper.GetEnumTableMappings(),
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1823,9 +1888,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkMergeAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    identityBehavior: PostgreSqlBulkImportIdentityBehavior.ReturnIdentity).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1838,7 +1904,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdateAsync
+        #region BulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnumForDataTable()
@@ -1854,9 +1920,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
-                    table).Result;
+                    table,
+                    mappings: Helper.GetEnumTableMappings()).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1877,7 +1944,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 connection.InsertAll(tableName, entities);
 
                 // Act
-                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                var result = NpgsqlConnectionExtension.BulkUpdateAsync(connection,
                     tableName,
                     table).Result;
 

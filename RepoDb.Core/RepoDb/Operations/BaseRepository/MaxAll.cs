@@ -8,7 +8,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region MaxAll<TEntity>
+
+        #region MaxAll
 
         /// <summary>
         /// Computes the max value of the target field.
@@ -47,50 +48,6 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction);
         }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult MaxAll<TResult>(Field field,
-            string hints = null,
-            string traceKey = TraceKeys.MaxAll,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.MaxAll<TEntity, TResult>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        /// <summary>
-        /// Computes the max value of the target field.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be maximized.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The max value of the target field.</returns>
-        public TResult MaxAll<TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
-            string traceKey = TraceKeys.MaxAll,
-			IDbTransaction transaction = null)
-        {
-            return DbRepository.MaxAll<TEntity, TResult>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction);
-        }
-
-        #endregion
-
-        #region MaxAllAsync<TEntity>
 
         /// <summary>
         /// Computes the max value of the target field in an asynchronous way.
@@ -134,6 +91,50 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction,
                 cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region MaxAll<TResult>
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult MaxAll<TResult>(Field field,
+            string hints = null,
+            string traceKey = TraceKeys.MaxAll,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.MaxAll<TEntity, TResult>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the max value of the target field.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The max value of the target field.</returns>
+        public TResult MaxAll<TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            string traceKey = TraceKeys.MaxAll,
+			IDbTransaction transaction = null)
+        {
+            return DbRepository.MaxAll<TEntity, TResult>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -183,5 +184,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

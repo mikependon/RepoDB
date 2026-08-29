@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsNull()
         {
             // Setup
@@ -79,11 +79,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
+                    tableName: tableName));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsEmpty()
         {
             // Setup
@@ -92,11 +93,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
+                    tableName: tableName));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateTruncateIfTheTableIsWhitespace()
         {
             // Setup
@@ -105,8 +107,9 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
+                    tableName: tableName));
         }
     }
 }

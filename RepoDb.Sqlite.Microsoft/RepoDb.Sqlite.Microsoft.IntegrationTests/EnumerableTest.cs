@@ -20,7 +20,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             GlobalConfiguration
                 .Setup(new()
                 {
-                    ConversionType = Enumerations.ConversionType.Automatic
+                    ConversionType = Enumerations.ConversionType.Default
                 })
                 .UseSqlite();
         }
@@ -29,7 +29,6 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         public void Cleanup()
         {
             Database.Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Default;
         }
 
         #region List
@@ -39,7 +38,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionQueryListContains()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
@@ -58,7 +57,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionQueryEmptyList()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
@@ -78,7 +77,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionQueryAsyncListContains()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
@@ -97,7 +96,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionQueryAsyncEmptyList()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();

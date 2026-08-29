@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMinAllIfTheTableIsNull()
         {
             // Setup
@@ -104,12 +104,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMinAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMinAllIfTheTableIsEmpty()
         {
             // Setup
@@ -118,12 +121,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMinAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMinAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -132,12 +138,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMinAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMinAllIfTheFieldIsNull()
         {
             // Setup
@@ -145,12 +154,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateMinAll(tableName: tableName,
-                field: null,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMinAll(tableName: tableName,
+                    field: null,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMinAllIIfTheHintsAreNotSupported()
         {
             // Setup
@@ -159,9 +171,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(tableName: tableName,
-                field: field,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                statementBuilder.CreateMinAll(tableName: tableName,
+                    field: field,
+                    hints: "Hints");
+            });
         }
     }
 }

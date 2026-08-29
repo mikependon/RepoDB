@@ -38,7 +38,7 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #region SubClasses
 
-        [Map("CompleteTable")]
+        [Map("IdentityCompleteTable")]
         public class PersonWithText
         {
             public System.Int64 Id { get; set; }
@@ -46,7 +46,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             public Hands? ColumnNVarChar { get; set; }
         }
 
-        [Map("CompleteTable")]
+        [Map("IdentityCompleteTable")]
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
@@ -54,7 +54,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             public Hands? ColumnInt { get; set; }
         }
 
-        [Map("CompleteTable")]
+        [Map("IdentityCompleteTable")]
         public class PersonWithTextAsInteger
         {
             public System.Int64 Id { get; set; }

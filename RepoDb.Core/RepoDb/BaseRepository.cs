@@ -316,14 +316,14 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                 transaction: transaction);
         }
 
@@ -354,7 +354,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -362,7 +362,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }

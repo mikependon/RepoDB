@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.Firebird</Title>
+    <AssemblyName>RepoDb.Firebird</AssemblyName>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <Description>A hybrid .NET ORM library for Firebird (using FirebirdSql.Data.FirebirdClient).</Description>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <PackageTags>orm hybrid-orm micro-orm firebird firebirdsql</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Firebird</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReleaseNotes>http://repodb.net/release/firebird</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-firebird</PackageProjectUrl>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbFirebirdVersion=<version> to set it. PackageVersion is used (not Version) because it is
+      not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbFirebirdVersion)' != ''">$(RepoDbFirebirdVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+</Project>

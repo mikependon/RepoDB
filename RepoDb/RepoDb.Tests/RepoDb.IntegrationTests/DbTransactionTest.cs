@@ -34,7 +34,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForBatchQuery()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForBatchQueryAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -74,7 +74,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCount()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -92,7 +92,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCountAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -114,7 +114,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCountAll()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -132,7 +132,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForCountAllAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -157,7 +157,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -183,7 +183,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -213,7 +213,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -239,7 +239,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -273,7 +273,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -299,7 +299,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -329,7 +329,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -355,7 +355,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -389,7 +389,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -412,7 +412,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -439,7 +439,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -462,7 +462,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -493,7 +493,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -516,7 +516,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -543,7 +543,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -566,7 +566,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -597,7 +597,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -620,7 +620,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -647,7 +647,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var transaction = connection.EnsureOpen().BeginTransaction();
@@ -669,7 +669,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 var transaction = connection.EnsureOpen().BeginTransaction();
@@ -699,7 +699,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -722,7 +722,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -749,7 +749,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -772,7 +772,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -800,7 +800,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQuery()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -818,7 +818,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -840,7 +840,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryAll()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -858,7 +858,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryAllAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -880,7 +880,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT2()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -896,7 +896,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT3()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -913,7 +913,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT4()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -931,7 +931,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT5()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -950,7 +950,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT6()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -970,7 +970,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleT7()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -995,7 +995,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT2()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1011,7 +1011,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT3()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1028,7 +1028,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT4()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1046,7 +1046,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT5()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1065,7 +1065,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT6()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1085,7 +1085,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForQueryMultipleAsyncT7()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1114,7 +1114,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForTruncate()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1132,7 +1132,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForTruncateAsync()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
@@ -1157,7 +1157,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1188,7 +1188,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1223,7 +1223,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1254,7 +1254,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTable>(entity);
@@ -1293,7 +1293,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -1324,7 +1324,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -1359,7 +1359,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);
@@ -1390,7 +1390,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTable>(entities);

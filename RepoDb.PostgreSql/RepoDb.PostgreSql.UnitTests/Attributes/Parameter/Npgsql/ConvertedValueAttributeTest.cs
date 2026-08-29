@@ -44,7 +44,7 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter.Npgsql
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("NameColumn", parameter.ConvertedValue);
+                    Assert.AreEqual("NameColumn", parameter.Value);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter.Npgsql
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.AreEqual("NameColumn", parameter.ConvertedValue);
+                    Assert.AreEqual("NameColumn", parameter.Value);
                 }
             }
         }

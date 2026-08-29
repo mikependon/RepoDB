@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -46,13 +46,43 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnHierarchyId.ToString(), data.ColumnHierarchyId?.ToString());
+                Assert.AreEqual(entity.ColumnSqlVariant, data.ColumnSqlVariant);
+                Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
+                Assert.AreEqual(entity.ColumnXml, data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryOthersCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = "/",
+                ColumnSqlVariant = "This is variant!",
+                ColumnUniqueIdentifier = Guid.NewGuid(),
+                ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
+            };
+
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -76,13 +106,43 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnHierarchyId);
+                Assert.IsNull(data.ColumnSqlVariant);
+                Assert.IsNull(data.ColumnUniqueIdentifier);
+                Assert.IsNull(data.ColumnXml);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryOthersNullCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyId = null,
+                ColumnSqlVariant = null,
+                ColumnUniqueIdentifier = null,
+                ColumnXml = null
+            };
+
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -106,13 +166,43 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnHierarchyIdMapped.ToString(), data.ColumnHierarchyIdMapped?.ToString());
+                Assert.AreEqual(entity.ColumnSqlVariantMapped, data.ColumnSqlVariantMapped);
+                Assert.AreEqual(entity.ColumnUniqueIdentifierMapped, data.ColumnUniqueIdentifierMapped);
+                Assert.AreEqual(entity.ColumnXmlMapped, data.ColumnXmlMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryOthersMappedCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyIdMapped = "/",
+                ColumnSqlVariantMapped = "This is variant!",
+                ColumnUniqueIdentifierMapped = Guid.NewGuid(),
+                ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
+            };
+
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -136,13 +226,43 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnHierarchyIdMapped);
+                Assert.IsNull(data.ColumnSqlVariantMapped);
+                Assert.IsNull(data.ColumnUniqueIdentifierMapped);
+                Assert.IsNull(data.ColumnXmlMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestBaseRepositoryOthersMappedNullCrudAsync2()
+        {
+            // Setup
+            var entity = new OthersMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnHierarchyIdMapped = null,
+                ColumnSqlVariantMapped = null,
+                ColumnUniqueIdentifierMapped = null,
+                ColumnXmlMapped = null
+            };
+
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await repository.InsertAsync(entity);
+
+                // Act Query
+                var data = (await repository.QueryAsync(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -166,7 +286,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -198,7 +318,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -230,7 +350,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -262,7 +382,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);

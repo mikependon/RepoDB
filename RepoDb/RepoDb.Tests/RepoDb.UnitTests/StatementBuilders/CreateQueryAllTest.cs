@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.UnitTests.CustomObjects;
@@ -152,7 +152,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheOrderFieldIsNotCovered()
         {
             // Setup
@@ -163,13 +163,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var orderBy = OrderField.Parse(new { Id = Order.Ascending, Field1 = Order.Ascending });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                orderBy: orderBy);
+            Assert.Throws<MissingFieldsException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    orderBy: orderBy));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfThereAreNoFields()
         {
             // Setup
@@ -178,12 +179,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsNull()
         {
             // Setup
@@ -193,12 +195,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsEmpty()
         {
             // Setup
@@ -208,12 +211,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -223,12 +227,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheHintsAreNotSupported()
         {
             // Setup
@@ -238,10 +243,11 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    hints: "Hints"));
         }
     }
 }

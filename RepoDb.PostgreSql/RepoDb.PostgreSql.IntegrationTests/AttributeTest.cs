@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests
 {
@@ -43,7 +44,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             public long ColumnBigInt { get; set; }
 
             [NpgsqlDbType(NpgsqlDbType.Date)]
-            public DateTime ColumnDate { get; set; }
+            public DateOnly ColumnDate { get; set; }
 
             [NpgsqlDbType(NpgsqlDbType.Text)]
             public string ColumnText { get; set; }
@@ -63,7 +64,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     Id = i,
                     ColumnBigInt = Convert.ToInt64(random.Next(int.MaxValue)),
                     ColumnByteA = Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()),
-                    ColumnDate = DateTime.UtcNow.Date.AddDays(-random.Next(100)),
+                    ColumnDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-random.Next(100))),
                     ColumnText = $"ColumnNVarChar-{i}-{Guid.NewGuid()}"
                 };
             }
@@ -149,6 +150,88 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Query
                 var queryResult = connection.QueryAll<AttributeTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestNpgsqlConnectionForInsertAsyncForNpgsqlTypeMapAttribute()
+        {
+            // Setup
+            var table = CreateAttributeTables(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync<AttributeTable>(table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<AttributeTable>());
+
+                // Query
+                var queryResult = connection.QueryAll<AttributeTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestNpgsqlConnectionForInsertAllAsyncForNpgsqlTypeMapAttribute()
+        {
+            // Setup
+            var tables = CreateAttributeTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync<AttributeTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<AttributeTable>());
+
+                // Query
+                var queryResult = connection.QueryAll<AttributeTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestNpgsqlConnectionForQueryAsyncForNpgsqlTypeMapAttribute()
+        {
+            // Setup
+            var table = CreateAttributeTables(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = connection.Insert<AttributeTable>(table);
+
+                // Query
+                var queryResult = (await connection.QueryAsync<AttributeTable>(id)).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestNpgsqlConnectionForQueryAllAsyncForNpgsqlTypeMapAttribute()
+        {
+            // Setup
+            var tables = CreateAttributeTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll<AttributeTable>(tables);
+
+                // Query
+                var queryResult = await connection.QueryAllAsync<AttributeTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());

@@ -1,0 +1,19 @@
+name: PR -  Build & Run Tests - RepoDb.Oracle
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Oracle/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-oracle.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Oracle
+      solution-file: RepoDb.Oracle.sln
+      artifact-name: release-pr
+      db-engine: oracle

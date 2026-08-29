@@ -46,7 +46,7 @@ namespace RepoDb.Resolvers
 
         //private string Extract()
         //{
-        //    using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new NpgsqlConnection(Database.ConnectionString))
         //    {
         //        connection.Open();
         //        using (var command = connection.CreateCommand())

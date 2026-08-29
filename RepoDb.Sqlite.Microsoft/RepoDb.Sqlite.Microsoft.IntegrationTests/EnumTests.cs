@@ -111,7 +111,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -134,7 +134,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -156,7 +156,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -182,7 +182,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -205,7 +205,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -227,7 +227,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -253,7 +253,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);
@@ -275,7 +275,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateMdsCompleteTable(connection);

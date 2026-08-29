@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -73,7 +73,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -94,7 +94,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -119,7 +119,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -145,7 +145,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -165,7 +165,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -185,7 +185,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -205,7 +205,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -251,7 +251,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -277,7 +277,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -291,6 +291,270 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    item => item.ColumnDecimal > 5m && item.ColumnDecimal <= 8m);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    new { ColumnDecimal = 1m });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal == 1m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDecimalViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<IdentityTable, double?>(e => e.ColumnFloat,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region AverageAsync<TEntity>
@@ -301,7 +565,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -321,7 +585,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -341,7 +605,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -362,7 +626,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -387,7 +651,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -413,7 +677,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -433,7 +697,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -453,7 +717,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -473,7 +737,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -494,7 +758,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -519,7 +783,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -545,7 +809,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -559,6 +823,270 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    item => item.ColumnDecimal > 5m && item.ColumnDecimal <= 8m);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    new { ColumnDecimal = 1m });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal == 1m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    item => item.ColumnFloat > 5d && item.ColumnFloat <= 8d);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region Average(TableName)
@@ -569,7 +1097,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -590,7 +1118,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -612,7 +1140,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -638,7 +1166,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -665,7 +1193,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -686,7 +1214,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -707,7 +1235,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -729,7 +1257,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -755,7 +1283,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -782,7 +1310,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -797,6 +1325,240 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDecimalWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDecimalViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    new { ColumnDecimal = 1m });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal == 1m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDecimalViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDecimalViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDecimalViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDoubleWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDoubleViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDoubleViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDoubleViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageViaTableNameTypedResultDoubleViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Average<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region AverageAsync(TableName)
@@ -807,7 +1569,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -828,7 +1590,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -850,7 +1612,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -876,7 +1638,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -903,7 +1665,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -924,7 +1686,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -945,7 +1707,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -967,7 +1729,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -993,7 +1755,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1020,7 +1782,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1032,6 +1794,240 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    new { ColumnDecimal = 1m });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal == 1m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDecimalViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.GreaterThan, 5m),
+                new QueryField(nameof(IdentityTable.ColumnDecimal), Operation.LessThanOrEqual, 8m)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnDecimal > 5m && t.ColumnDecimal <= 8m).Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    new { ColumnFloat = 1d });
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat == 1d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    field);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAsyncTypedResultDoubleViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.GreaterThan, 5d),
+                new QueryField(nameof(IdentityTable.ColumnFloat), Operation.LessThanOrEqual, 8d)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(tables.Where(t => t.ColumnFloat > 5d && t.ColumnFloat <= 8d).Average(t => t.ColumnFloat), result);
             }
         }
 

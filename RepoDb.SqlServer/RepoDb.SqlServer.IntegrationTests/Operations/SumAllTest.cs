@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
+                var result = connection.SumAll<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -48,12 +48,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumAllWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAll<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAll<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -69,12 +69,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAllAsyncWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAllAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -110,13 +110,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = connection.SumAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -127,13 +127,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumAllViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = connection.SumAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -149,13 +149,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -166,13 +166,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock);
 
                 // Assert

@@ -1,4 +1,3 @@
-﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +5,11 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
+using RepoDb.Interfaces;
+
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -28,18 +32,22 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkUpdate<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -54,8 +62,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         /// <summary>
@@ -71,19 +81,23 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkUpdate<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -98,53 +112,15 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk update an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
-            DbDataReader reader,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkUpdateInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                options: options,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         #endregion
 
-        #region BulkUpdate(TableName)
+        #region BulkUpdate(IDataReader)
 
         /// <summary>
         /// Bulk update an instance of <see cref="DbDataReader"/> object into the database.
@@ -158,19 +134,23 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkUpdate(this SqlConnection connection,
             string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IDataReader reader,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null)
         {
             return BulkUpdateInternal(connection: connection,
@@ -182,16 +162,21 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
+
+        #endregion
+
+        #region BulkUpdate(DataTable)
 
         /// <summary>
         /// Bulk update an instance of <see cref="DataTable"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -199,25 +184,28 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkUpdate<TEntity>(this SqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+        public static int BulkUpdate(this SqlConnection connection,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null)
-            where TEntity : class
         {
             return BulkUpdateInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
+                tableName: table.TableName,
+                table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
                 mappings: mappings,
@@ -225,8 +213,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         /// <summary>
@@ -234,7 +224,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -242,25 +232,29 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkUpdate(this SqlConnection connection,
             string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null)
         {
             return BulkUpdateInternal(connection: connection,
                 tableName: tableName,
-                dataTable: dataTable,
+                table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
                 mappings: mappings,
@@ -268,8 +262,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey);
         }
 
         #endregion
@@ -288,19 +284,23 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -316,8 +316,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -334,20 +336,24 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            Expression<Func<TEntity, object>>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -363,57 +369,16 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk update an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
-            DbDataReader reader,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkUpdateAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                options: options,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
         #endregion
 
-        #region BulkUpdateAsync(TableName)
+        #region BulkUpdateAsync(IDataReader)
 
         /// <summary>
         /// Bulk update an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
@@ -427,20 +392,24 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkUpdateAsync(this SqlConnection connection,
             string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IDataReader reader,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -453,17 +422,22 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
+
+        #endregion
+
+        #region BulkUpdateAsync(DataTable)
 
         /// <summary>
         /// Bulk update an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -471,27 +445,30 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkUpdateAsync<TEntity>(this SqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+        public static Task<int> BulkUpdateAsync(this SqlConnection connection,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
             return BulkUpdateAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
+                tableName: table.TableName,
+                table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
                 mappings: mappings,
@@ -499,8 +476,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -509,7 +488,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -517,27 +496,31 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkUpdateAsync(this SqlConnection connection,
             string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = SqlServerTraceKeys.SqlServerBulkUpdate,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return BulkUpdateAsyncInternal(connection: connection,
                 tableName: tableName,
-                dataTable: dataTable,
+                table: table,
                 qualifiers: qualifiers,
                 rowState: rowState,
                 mappings: mappings,
@@ -545,8 +528,10 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                pseudoTableType: pseudoTableType,
                 transaction: transaction,
+                trace: trace,
+                traceKey: traceKey,
                 cancellationToken: cancellationToken);
         }
 
@@ -566,38 +551,44 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkUpdateInternal(SqlConnection connection,
             string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IDataReader reader,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null) =>
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null) =>
             BulkUpdateInternalBase(connection,
                 tableName,
-                reader,
+                (DbDataReader)reader,
                 qualifiers,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                usePhysicalPseudoTempTable,
-                transaction);
+                pseudoTableType,
+                transaction,
+                trace,
+                traceKey);
 
         /// <summary>
         /// Bulk update an instance of <see cref="DataTable"/> object into the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -605,33 +596,39 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkUpdateInternal(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null) =>
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null) =>
             BulkUpdateInternalBase(connection,
                 tableName,
-                dataTable,
+                table,
                 qualifiers,
                 rowState,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                usePhysicalPseudoTempTable,
-                transaction);
+                pseudoTableType,
+                transaction,
+                trace,
+                traceKey);
 
         #endregion
 
@@ -649,33 +646,39 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> BulkUpdateAsyncInternal(SqlConnection connection,
             string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IDataReader reader,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default) =>
             BulkUpdateAsyncInternalBase(connection,
                 tableName,
-                reader,
+                (DbDataReader)reader,
                 qualifiers,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                usePhysicalPseudoTempTable,
+                pseudoTableType,
                 transaction,
+                trace,
+                traceKey,
                 cancellationToken);
 
         /// <summary>
@@ -683,7 +686,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
+        /// <param name="table">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -691,35 +694,41 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="pseudoTableType">The type of the pseudo (staging) table to use.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> BulkUpdateAsyncInternal(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            DataTable table,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions? options = null,
-            string hints = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions options = default,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default) =>
             BulkUpdateAsyncInternalBase(connection,
                 tableName,
-                dataTable,
+                table,
                 qualifiers,
                 rowState,
                 mappings,
-                options.GetValueOrDefault(),
+                options,
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                usePhysicalPseudoTempTable,
+                pseudoTableType,
                 transaction,
+                trace,
+                traceKey,
                 cancellationToken);
 
         #endregion

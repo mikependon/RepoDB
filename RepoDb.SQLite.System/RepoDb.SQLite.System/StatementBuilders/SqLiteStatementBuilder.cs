@@ -210,39 +210,94 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Call the base
-            var commandText = base.CreateInsertAll(tableName,
-                fields,
-                batchSize,
-                primaryField,
-                identityField,
-                hints);
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Validate the multiple statement execution
+            ValidateMultipleStatementExecution(batchSize);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException("The list of fields cannot be null or empty.");
+            }
+
+            // Primary Key
+            if (primaryField != null &&
+                primaryField.HasDefaultValue == false &&
+                !string.Equals(primaryField.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                var isPresent = fields
+                    .FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+
+                if (isPresent == false)
+                {
+                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
+                }
+            }
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear();
+
+            // Compose
+            builder
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
+            }
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var databaseType = GetDatabaseType(keyColumn);
 
             // Set the return value
-            var commandTexts = new List<string>();
-            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Iterate the indexes
-            for (var index = 0; index < splitted.Length; index++)
+            if (keyColumn != null)
             {
-                var line = splitted[index].Trim();
-                var columnName = keyColumn != null ?
-                    keyColumn.IsIdentity ?
-                        "last_insert_rowid()" : keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
-                var result = string.IsNullOrWhiteSpace(databaseType) ?
-                    columnName : $"CAST({columnName} AS {databaseType})";
-                commandTexts.Add(string.Concat(line, " ; SELECT ", result, " AS ", "Result".AsQuoted(DbSetting), $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                var databaseType = (dbType != null) ? new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value) : null;
+                var returnValue = keyColumn == null ? "NULL" :
+                    string.IsNullOrWhiteSpace(databaseType) ?
+                        keyColumn.Name.AsQuoted(DbSetting) :
+                            string.Concat("CAST(", keyColumn.Name.AsQuoted(DbSetting), " AS ", databaseType, ")");
+                builder
+                    .WriteText(
+                        string.Concat("RETURNING ", returnValue, $" AS ", "Result".AsQuoted(DbSetting)));
             }
 
-            // Set the command text
-            commandText = commandTexts.Join(" ");
-
             // Return the query
-            return commandText;
+            return builder
+                .End()
+                .GetString();
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.UnitTests.CustomObjects;
 using System;
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheNonIdentityPrimaryIsNotCovered()
         {
             // Setup
@@ -196,13 +196,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: fields,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<PrimaryFieldNotFoundException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: fields,
+                    primaryField: primaryField,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfThereAreNoFields()
         {
             // Setup
@@ -210,13 +213,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<EmptyException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: null,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheTableIsNull()
         {
             // Setup
@@ -224,13 +230,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: null,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheTableIsEmpty()
         {
             // Setup
@@ -238,13 +247,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: null,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheTableIsWhitespace()
         {
             // Setup
@@ -252,13 +264,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: null,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -268,13 +283,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: fields,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: fields,
+                    primaryField: primaryField,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -285,10 +303,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsert(tableName: tableName,
-                fields: fields,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                statementBuilder.CreateInsert(tableName: tableName,
+                    fields: fields,
+                    primaryField: null,
+                    identityField: identifyField);
+            });
         }
     }
 }

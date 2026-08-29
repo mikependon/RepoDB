@@ -33,12 +33,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -50,13 +50,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -68,12 +68,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -102,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -112,7 +112,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -124,7 +124,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -135,7 +135,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -147,12 +147,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Max<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -169,12 +169,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -186,13 +186,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -204,12 +204,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -221,12 +221,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -238,7 +238,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -248,7 +248,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -260,7 +260,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -271,7 +271,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -283,12 +283,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MaxAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -309,12 +309,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -327,12 +327,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -345,12 +345,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -363,7 +363,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -373,7 +373,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -397,7 +397,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -410,12 +410,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMaxViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Max(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Max(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);
@@ -433,12 +433,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -451,12 +451,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -469,12 +469,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -487,7 +487,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -497,7 +497,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -510,7 +510,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -521,7 +521,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -534,12 +534,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMaxAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);

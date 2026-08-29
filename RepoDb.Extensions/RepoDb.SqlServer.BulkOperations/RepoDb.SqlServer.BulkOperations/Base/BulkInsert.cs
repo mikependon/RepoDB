@@ -1,5 +1,4 @@
-﻿using RepoDb.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -7,7 +6,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Enumerations.SqlServer;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
+
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -27,25 +30,37 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         private static int BulkInsertInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
             where TEntity : class
         {
             // Validate
-            // ThrowIfNullOrEmpty(entities);
+            if (entities?.Any() != true)
+            {
+                return default;
+            }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -87,7 +102,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -97,14 +112,15 @@ namespace RepoDb
                 }
 
                 // Pseudo temp table
-                var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
+                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
                 var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
                     tableName,
-                    usePhysicalPseudoTempTable,
+                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                     transaction,
                     withPseudoExecution,
                     dbSetting,
-                    fields);
+                    fields,
+                    trace);
 
                 // WriteToServer
                 result = WriteToServerInternal(connection,
@@ -127,10 +143,11 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert))
                     {
                         var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                         var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
@@ -139,7 +156,7 @@ namespace RepoDb
 
                     // Drop the table after used
                     sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    connection.ExecuteNonQuery(sql, transaction: transaction);
+                    connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
                 }
 
                 CommitTransaction(transaction, hasTransaction);
@@ -153,7 +170,11 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -169,21 +190,31 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <returns></returns>
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             // Validate
             if (!reader.HasRows)
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables needed
             var hasTransaction = transaction != null;
@@ -222,7 +253,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -252,7 +283,11 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -262,35 +297,44 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null)
         {
             // Validate
-            if (dataTable?.Rows.Count <= 0)
+            if (table?.Rows.Count <= 0)
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -306,7 +350,7 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var tableFields = GetDataColumns(dataTable)
+                var tableFields = GetDataColumns(table)
                     .Select(column => column.ColumnName);
                 var fields = dbFields?.GetAsFields();
 
@@ -330,7 +374,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -340,19 +384,20 @@ namespace RepoDb
                 }
 
                 // Pseudo temp table
-                var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
+                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
                 var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
                     tableName,
-                    usePhysicalPseudoTempTable,
+                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                     transaction,
                     withPseudoExecution,
                     dbSetting,
-                    fields);
+                    fields,
+                    trace);
 
                 // WriteToServer
                 result = WriteToServerInternal(connection,
                     tempTableName ?? tableName,
-                    dataTable,
+                    table,
                     rowState,
                     mappings,
                     options,
@@ -364,7 +409,7 @@ namespace RepoDb
                 // Check if this is with pseudo
                 if (withPseudoExecution)
                 {
-                    if (isReturnIdentity == true)
+                    if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
                     {
                         var sql = GetBulkInsertSqlText(tableName,
                             tempTableName,
@@ -372,24 +417,25 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
-                        var column = dataTable.Columns[identityDbField.Name];
+                        var column = table.Columns[identityDbField.Name];
                         if (column?.ReadOnly == false)
                         {
-                            using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                            using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
 
-                            result = SetIdentityForEntities(dataTable, reader, column);
+                            result = SetIdentityForEntities(table, reader, column);
                         }
                         else
                         {
-                            result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                            result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert);
                         }
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        connection.ExecuteNonQuery(sql, transaction: transaction);
+                        connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
                     }
                 }
 
@@ -404,7 +450,11 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
             // Return the result
             return result;
         }
@@ -425,31 +475,39 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> BulkInsertAsyncInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Validate
-            var firstEntity = entities?.FirstOrDefault();
-            if (firstEntity is null)
+            if (entities?.Any() != true)
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -465,9 +523,9 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var entityType = firstEntity.GetType();
+                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(firstEntity as IDictionary<string, object>) :
+                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.GetAsFields();
 
@@ -491,7 +549,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -500,15 +558,17 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
+                // Pseudo temp table
+                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
                 var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
                     tableName,
-                    usePhysicalPseudoTempTable,
+                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                     transaction,
                     withPseudoExecution,
                     dbSetting,
                     fields,
-                    cancellationToken);
+                    cancellationToken,
+                    trace);
 
                 // WriteToServer
                 result = await WriteToServerAsyncInternal(connection,
@@ -532,17 +592,22 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken)))
                     {
-                        result = await SetIdentityForEntitiesAsync(entities, reader, identityDbField, cancellationToken);
+                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                        var mappedIdentityDbField = mapping != null
+                            ? new DbField(mapping.SourceColumn, identityDbField.IsPrimary, identityDbField.IsIdentity, identityDbField.IsNullable, identityDbField.Type, identityDbField.Size, identityDbField.Precision, identityDbField.Scale, identityDbField.DatabaseType, identityDbField.HasDefaultValue, identityDbField.Provider)
+                            : identityDbField;
+                        result = await SetIdentityForEntitiesAsync(entities, reader, mappedIdentityDbField, cancellationToken);
                     }
 
                     // Drop the table after used
                     sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
                 }
 
                 CommitTransaction(transaction, hasTransaction);
@@ -556,11 +621,15 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
-        
+
         /// <summary>
         ///
         /// </summary>
@@ -572,16 +641,20 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -589,6 +662,12 @@ namespace RepoDb
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var hasTransaction = transaction != null;
@@ -627,7 +706,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -658,7 +737,11 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
@@ -668,37 +751,46 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="dataTable"></param>
+        /// <param name="table"></param>
         /// <param name="rowState"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            SqlServerBulkImportIdentityBehavior identityBehavior = default,
+            SqlServerBulkImportPseudoTableType pseudoTableType = default,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
+            string? traceKey = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
-            if (dataTable?.Rows.Count <= 0)
+            if (table?.Rows.Count <= 0)
             {
                 return default;
             }
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -714,7 +806,7 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.GetIdentity();
-                var tableFields = GetDataColumns(dataTable)
+                var tableFields = GetDataColumns(table)
                     .Select(column => column.ColumnName);
                 var fields = dbFields?.GetAsFields();
 
@@ -738,7 +830,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new SqlServerBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -748,20 +840,21 @@ namespace RepoDb
                 }
 
                 // Pseudo temp table
-                var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
-                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection, 
+                var withPseudoExecution = identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity && identityDbField != null;
+                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
                     tableName,
-                    usePhysicalPseudoTempTable,
+                    pseudoTableType == SqlServerBulkImportPseudoTableType.Physical,
                     transaction,
                     withPseudoExecution,
                     dbSetting,
                     fields,
-                    cancellationToken);
+                    cancellationToken,
+                    trace);
 
                 // WriteToServer
                 result = await WriteToServerAsyncInternal(connection,
                     tempTableName ?? tableName,
-                    dataTable,
+                    table,
                     rowState,
                     mappings,
                     options,
@@ -774,7 +867,7 @@ namespace RepoDb
                 // Check if this is with pseudo
                 if (withPseudoExecution)
                 {
-                    if (isReturnIdentity == true)
+                    if (identityBehavior == SqlServerBulkImportIdentityBehavior.ReturnIdentity)
                     {
                         var sql = GetBulkInsertSqlText(tableName,
                             tempTableName,
@@ -782,24 +875,25 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
-                        var column = dataTable.Columns[identityDbField.Name];
+                        var column = table.Columns[identityDbField.Name];
                         if (column?.ReadOnly == false)
                         {
-                            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+                            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken);
 
-                            result = await SetIdentityForEntitiesAsync(dataTable, reader, column, cancellationToken);
+                            result = await SetIdentityForEntitiesAsync(table, reader, column, cancellationToken);
                         }
                         else
                         {
-                            result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+                            result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, trace: trace, traceKey: traceKey ?? SqlServerTraceKeys.SqlServerBulkInsert, cancellationToken: cancellationToken);
                         }
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
                     }
                 }
 
@@ -814,13 +908,19 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
             // Return the result
             return result;
         }
 
         #endregion
-        
+
+        #region Helpers
+
         private static string CreateBulkInsertTempTableIfNecessary<TSqlTransaction>(
             IDbConnection connection,
             string tableName,
@@ -828,16 +928,17 @@ namespace RepoDb
             TSqlTransaction transaction,
             bool withPseudoExecution,
             IDbSetting dbSetting,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            ITrace? trace = null)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) 
+            if (withPseudoExecution == false)
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
-            connection.ExecuteNonQuery(sql, transaction: transaction);
+            connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
             return tempTableName;
         }
@@ -848,19 +949,22 @@ namespace RepoDb
             TSqlTransaction transaction,
             bool withPseudoExecution,
             IDbSetting dbSetting,
-            IEnumerable<Field> fields, 
-            CancellationToken cancellationToken)
+            IEnumerable<Field> fields,
+            CancellationToken cancellationToken,
+            ITrace? trace = null)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) 
+            if (withPseudoExecution == false)
                 return null;
 
             var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
-            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
             return tempTableName;
         }
+
+        #endregion
     }
 }

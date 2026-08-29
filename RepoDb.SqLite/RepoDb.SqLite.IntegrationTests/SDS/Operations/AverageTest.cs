@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
@@ -63,7 +63,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -72,9 +72,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.Average<SdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average<SdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -117,7 +118,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -126,9 +127,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.AverageAsync<SdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.AverageAsync<SdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 
@@ -177,7 +179,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -186,10 +188,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.Average(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -234,7 +237,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -243,10 +246,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.AverageAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.AverageAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 

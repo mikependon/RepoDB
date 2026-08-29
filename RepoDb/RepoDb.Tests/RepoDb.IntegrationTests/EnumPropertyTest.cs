@@ -34,7 +34,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -55,7 +55,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateTypeLevelMappedForStringEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<TypeLevelMappedForStringEnumCompleteTable>(entities);
@@ -80,7 +80,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -102,7 +102,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -122,7 +122,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -142,7 +142,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -162,7 +162,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -186,7 +186,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumCompleteTable, Guid>(entity);
@@ -204,7 +204,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumAsIntForStringCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumAsIntForStringCompleteTable, Guid>(entity);
@@ -226,7 +226,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -246,7 +246,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumAsIntForStringCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumAsIntForStringCompleteTable>(entities);
@@ -270,7 +270,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Merge<EnumCompleteTable>(entity);
@@ -294,7 +294,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumCompleteTable, Guid>(entity);
@@ -326,7 +326,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumAsIntForStringCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Merge<EnumAsIntForStringCompleteTable>(entity);
@@ -350,7 +350,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumAsIntForStringCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumAsIntForStringCompleteTable, Guid>(entity);
@@ -382,7 +382,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = connection.MergeAll<EnumCompleteTable>(entities);
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -437,7 +437,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumAsIntForStringCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllResult = connection.MergeAll<EnumAsIntForStringCompleteTable>(entities);
@@ -457,7 +457,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumAsIntForStringCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumAsIntForStringCompleteTable>(entities);
@@ -492,7 +492,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<EnumCompleteTable, Guid>(entity);
@@ -509,7 +509,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumAsIntForStringCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<EnumAsIntForStringCompleteTable, Guid>(entity);
@@ -530,7 +530,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumCompleteTable, Guid>(entity);
@@ -562,7 +562,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateEnumAsIntForStringCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<EnumAsIntForStringCompleteTable, Guid>(entity);
@@ -594,7 +594,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumCompleteTable>(entities);
@@ -629,7 +629,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateEnumAsIntForStringCompleteTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<EnumAsIntForStringCompleteTable>(entities);

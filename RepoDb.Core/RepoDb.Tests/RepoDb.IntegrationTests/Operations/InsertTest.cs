@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -56,7 +56,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -81,7 +81,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable, long>(table);
@@ -103,7 +103,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable>(table,
@@ -124,7 +124,7 @@ namespace RepoDb.IntegrationTests.Operations
         [TestMethod]
         public void TestSqlConnectionInsertForIdentityTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateIdentityTable();
@@ -144,9 +144,31 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionInsertAsyncForIdentityTable2()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var item = Helper.CreateIdentityTable();
+
+                // Act
+                var id = await connection.InsertAsync<IdentityTable, long>(item);
+
+                // Assert
+                Assert.IsTrue(item.Id > 0);
+
+                // Act
+                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertForNonIdentityTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var item = Helper.CreateNonIdentityTable();
@@ -172,7 +194,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable, long>(table,
@@ -199,7 +221,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<WithExtraFieldsIdentityTable, long>(table);
@@ -225,7 +247,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -248,7 +270,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -273,7 +295,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable, long>(table);
@@ -295,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable>(table,
@@ -319,7 +341,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<IdentityTable, long>(table);
@@ -336,12 +358,34 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionInsertAsyncAsyncForIdentityTable()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = await connection.InsertAsync<IdentityTable, long>(table);
+
+                // Assert
+                Assert.IsTrue(table.Id > 0);
+
+                // Act
+                var result = (await connection.QueryAsync<IdentityTable>(id))?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionInsertAsyncForNonIdentityTable()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<NonIdentityTable, Guid>(table);
@@ -364,7 +408,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<IdentityTable, long>(table,
@@ -391,7 +435,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateWithExtraFieldsIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<WithExtraFieldsIdentityTable, long>(table);
@@ -417,7 +461,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -440,7 +484,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -465,7 +509,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -489,7 +533,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -516,7 +560,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -539,7 +583,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -564,7 +608,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -588,7 +632,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -615,7 +659,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -638,7 +682,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -663,7 +707,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(ClassMappedNameCache.Get<IdentityTable>(),
@@ -686,7 +730,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -709,7 +753,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -732,7 +776,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(ClassMappedNameCache.Get<IdentityTable>(),
@@ -760,7 +804,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -783,7 +827,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -808,7 +852,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -832,7 +876,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -859,7 +903,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -882,7 +926,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -907,7 +951,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -931,7 +975,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -958,7 +1002,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -981,7 +1025,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1006,7 +1050,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1029,7 +1073,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateNonIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
@@ -1052,7 +1096,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
@@ -1075,7 +1119,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var table = Helper.CreateIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = await connection.InsertAsync(ClassMappedNameCache.Get<IdentityTable>(),

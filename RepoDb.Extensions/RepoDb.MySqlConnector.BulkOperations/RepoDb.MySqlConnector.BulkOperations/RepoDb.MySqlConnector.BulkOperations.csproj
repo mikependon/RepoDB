@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>RepoDb.MySqlConnector.BulkOperations</Title>
+    <AssemblyName>RepoDb.MySqlConnector.BulkOperations</AssemblyName>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>annotations</Nullable>
+    <Description>An extension library that contains the official Bulk Operations of RepoDB for MySQL (using MySqlConnector).</Description>
+    <PackageTags>orm hybrid-orm micro-orm mysqlconnector bulkoperations</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/mysqlconnectorbulk</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysqlconnector</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <!--
+      Pins the version this project is stamped as when it is a ProjectReference dependency of another
+      package, independently of the consuming package's own -p:Version. Pass
+      -p:RepoDbMySqlConnectorBulkOperationsVersion=<version> to set it explicitly. PackageVersion is used (not
+      Version) because it is not overridden by the global Version property.
+    -->
+    <PackageVersion Condition="'$(RepoDbMySqlConnectorBulkOperationsVersion)' != ''">$(RepoDbMySqlConnectorBulkOperationsVersion)</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.6.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\..\..\icon.png" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj" />
+  </ItemGroup>
+</Project>

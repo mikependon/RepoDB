@@ -355,7 +355,19 @@ namespace RepoDb
             }
             else
             {
-                var enumerable = Converter.ToType<System.Collections.IEnumerable>(expression.Arguments.First().GetValue());
+                // In .NET 10, array.Contains(e.Property) compiles to MemoryExtensions.Contains(span, value, comparer).
+                // The first argument is a ReadOnlySpan conversion of the source collection. Try each argument in
+                // order until we find one that produces an IEnumerable (unwrapping span conversions if needed).
+                System.Collections.IEnumerable enumerable = null;
+                foreach (var arg in expression.Arguments)
+                {
+                    var candidate = GetEnumerableValue(arg);
+                    if (candidate != null)
+                    {
+                        enumerable = candidate;
+                        break;
+                    }
+                }
                 return ToIn(property.GetMappedName(), enumerable, unaryNodeType);
             }
         }
@@ -420,6 +432,34 @@ namespace RepoDb
             return ToQueryFields(property.GetMappedName(), enumerable, unaryNodeType);
         }
 
+        #region GetEnumerableValue
+
+        // Tries to extract an IEnumerable from an expression argument. In .NET 10, array.Contains()
+        // compiles to MemoryExtensions.Contains(span_conversion, value, comparer), so the first
+        // argument is a method call returning ReadOnlySpan. We unwrap span conversions to reach
+        // the underlying array/collection argument.
+        private static System.Collections.IEnumerable GetEnumerableValue(Expression expression)
+        {
+            if (expression is MethodCallExpression call)
+            {
+                // Unwrap span-producing methods (e.g., Array.AsSpan, MemoryExtensions.AsSpan)
+                // by looking at their first argument recursively.
+                if (call.Type.IsGenericType &&
+                    call.Type.GetGenericTypeDefinition() == typeof(ReadOnlySpan<>))
+                {
+                    var spanArg = call.Arguments.FirstOrDefault() ?? call.Object;
+                    if (spanArg != null)
+                        return GetEnumerableValue(spanArg);
+                    return null;
+                }
+            }
+
+            var value = expression.GetValue();
+            return value is System.Collections.IEnumerable e ? e : null;
+        }
+
+        #endregion
+
         #region GetProperty
 
         /// <summary>
@@ -437,6 +477,7 @@ namespace RepoDb
                 BinaryExpression binaryExpression => GetProperty<TEntity>(binaryExpression),
                 MethodCallExpression methodCallExpression => GetProperty<TEntity>(methodCallExpression),
                 MemberExpression memberExpression => GetProperty<TEntity>(memberExpression),
+                UnaryExpression unaryExpression => GetProperty<TEntity>(unaryExpression.Operand),
                 _ => null
             };
         }
@@ -468,7 +509,9 @@ namespace RepoDb
             where TEntity : class =>
             expression?.Object?.Type == StaticType.String ?
             GetProperty<TEntity>(expression.Object.ToMember()) :
-            GetProperty<TEntity>(expression.Arguments.LastOrDefault());
+            expression?.Arguments
+                .Select(a => GetProperty<TEntity>(a))
+                .FirstOrDefault(p => p != null);
 
         /// <summary>
         /// 
@@ -477,7 +520,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(MemberExpression expression)
             where TEntity : class =>
-            GetProperty<TEntity>(expression.Member.ToPropertyInfo());
+            expression.Member is PropertyInfo pi ? GetProperty<TEntity>(pi) : null;
 
         /// <summary>
         /// 

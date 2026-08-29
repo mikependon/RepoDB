@@ -32,7 +32,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -51,7 +51,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -71,7 +71,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -90,7 +90,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -104,6 +104,84 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<IdentityTable, decimal?>(e => e.ColumnDecimal);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllWithHintsTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region AverageAllAsync<TEntity>
@@ -114,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            await using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -133,7 +211,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            await using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -153,7 +231,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -172,7 +250,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -186,6 +264,84 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllAsyncTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllAsyncWithHintsTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllAsyncTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllAsyncWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region AverageAll(TableName)
@@ -196,7 +352,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -216,7 +372,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -237,7 +393,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -257,7 +413,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -272,6 +428,88 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDecimalViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDecimalViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDoubleViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionAverageAllTypedResultDoubleViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.AverageAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region AverageAllAsync(TableName)
@@ -282,7 +520,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -302,7 +540,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -323,7 +561,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -343,7 +581,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -355,6 +593,88 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllTypedResultDecimalAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllTypedResultDecimalAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal", typeof(decimal)),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllTypedResultDoubleAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionAverageAllTypedResultDoubleAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(t => t.ColumnFloat), result);
             }
         }
 

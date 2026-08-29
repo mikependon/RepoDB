@@ -1,28 +1,29 @@
-[![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
+[![CoreBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![CoreHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)
-[![CoreReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/core)
-[![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
-[![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
 
-# [RepoDB](http://repodb.net) - a hybrid ORM library for .NET.
+# [RepoDB](http://repodb.net) — a production-ready data access platform for .NET applications.
 
-RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDb is the core package of RepoDB — the thin execution engine that runs directly against `IDbConnection`. It compiles, caches, and executes raw SQL and fluent CRUD operations with minimal overhead, without imposing a provider-specific dialect or data layer on top.
+
+Write raw SQL when you need full control. Use fluent methods when you want productivity. Switch between them freely, in the same codebase.
+
+Provider packages (SQL Server, PostgreSQL, MySQL, and [more](https://github.com/mikependon/RepoDb)) build on top of this core to add provider-native behavior, such as bulk operations.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
 ## Core Features
- 
+
 - [Batch Operations](http://repodb.net/feature/batchoperations)
 - [Bulk Operations](http://repodb.net/feature/bulkoperations)
 - [Caching](http://repodb.net/feature/caching)
 - [Class Handlers](http://repodb.net/feature/classhandlers)
 - [Class Mapping](http://repodb.net/feature/classmapping)
-- [Dynamics](http://repodb.net/feature/dynamics)
 - [Connection Persistency](http://repodb.net/feature/connectionpersistency)
+- [Dynamics](http://repodb.net/feature/dynamics)
 - [Enumeration](http://repodb.net/feature/enumeration)
 - [Expression Trees](http://repodb.net/feature/expressiontrees)
 - [Hints](http://repodb.net/feature/hints)
@@ -31,36 +32,35 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [Property Handlers](http://repodb.net/feature/propertyhandlers)
 - [Repositories](http://repodb.net/feature/repositories)
 - [Targeted Operations](http://repodb.net/feature/targeted)
+- [Telemetry](http://repodb.net/feature/telemetry)
 - [Tracing](http://repodb.net/feature/tracing)
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-## Community Engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) — ask questions and share ideas.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
 ```
 Install-Package RepoDB
 ```
 
-Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.
 
 ## Get Started
 
-After the installation, any library operation can then be called. Please see below for the samples.
+All RepoDB operations are extension methods on `IDbConnection` — no repository classes or extra setup required.
 
 ### Query
 
@@ -110,16 +110,16 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### StoredProcedure
+### Stored Procedure
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcdure).FirstOrDefault();
+	var customer = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure).FirstOrDefault();
 }
 ```
 
-Or via direct calls.
+Or via inline SQL:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -128,4 +128,4 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for SQL Server.
+Visit the [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for the full SQL Server guide.

@@ -33,12 +33,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -50,13 +50,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -68,12 +68,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -102,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -112,7 +112,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -124,7 +124,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -135,7 +135,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -147,12 +147,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -169,12 +169,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null);
 
                 // Assert
@@ -186,13 +186,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var ids = new[] { tables.First().Id, tables.Last().Id };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
 
                 // Assert
@@ -204,12 +204,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
 
                 // Assert
@@ -221,12 +221,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
@@ -238,7 +238,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -248,7 +248,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryFields);
 
                 // Assert
@@ -260,7 +260,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -271,7 +271,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     queryGroup);
 
                 // Assert
@@ -283,12 +283,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.SumAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     (object)null,
                     SqlServerTableHints.NoLock);
 
@@ -309,12 +309,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -327,12 +327,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -345,12 +345,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -363,7 +363,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -373,7 +373,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -397,7 +397,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -410,12 +410,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionSumViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);
@@ -433,12 +433,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameWithoutExpression()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null);
 
@@ -451,12 +451,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameViaDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new { tables.First().Id });
 
@@ -469,12 +469,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameViaQueryField()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
@@ -487,7 +487,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameViaQueryFields()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -497,7 +497,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryFields);
 
@@ -510,7 +510,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameViaQueryGroup()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
             var queryFields = new[]
             {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
@@ -521,7 +521,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     queryGroup);
 
@@ -534,12 +534,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionSumAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
                     SqlServerTableHints.NoLock);

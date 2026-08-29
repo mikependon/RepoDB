@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
@@ -220,7 +220,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryMultipleWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -229,12 +229,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.QueryMultiple<SdsCompleteTable, SdsCompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.QueryMultiple<SdsCompleteTable, SdsCompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver"));
             }
         }
 
@@ -434,7 +435,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionQueryMultipleAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -443,12 +444,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable>(e => e.Id > 0,
-                    e => e.Id > 0,
-                    top1: 1,
-                    hints1: "WhatEver",
-                    top2: 2,
-                    hints2: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable>(e => e.Id > 0,
+                        e => e.Id > 0,
+                        top1: 1,
+                        hints1: "WhatEver",
+                        top2: 2,
+                        hints2: "WhatEver").Wait());
             }
         }
 

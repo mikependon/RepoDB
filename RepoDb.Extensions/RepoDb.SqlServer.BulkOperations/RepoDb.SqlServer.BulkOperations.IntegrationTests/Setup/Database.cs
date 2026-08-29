@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System;
+using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
-using System;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -15,15 +15,19 @@ namespace RepoDb.IntegrationTests.Setup
         public static void Initialize()
         {
             // Master connection
-            ConnectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionStringForMaster =
+                Environment.GetEnvironmentVariable("REPODB_SQLSVR_CONSTR_MASTER") ??
+                @"Server=tcp:127.0.0.1,1433;Database=master;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_SQLSVR_CONSTR_BULK") ??
+                @"Server=tcp:127.0.0.1,1433;Database=RepoDbBulk;User ID=sa;Password=RepoDB2026;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
-            GlobalConfiguration.Setup().UseSqlServer();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlServer();
 
             // Create the database first
             CreateDatabase();
@@ -40,7 +44,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets the connection string for RepoDb.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #region Methods
 
@@ -49,9 +53,9 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
+            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDbBulk'))
                 BEGIN
-	                CREATE DATABASE [RepoDb];
+	                CREATE DATABASE [RepoDbBulk];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
@@ -72,7 +76,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Truncate<BulkOperationIdentityTable>();
             }
@@ -107,7 +111,7 @@ namespace RepoDb.IntegrationTests.Setup
                         WITH (FILLFACTOR = 90) ON [PRIMARY]
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionString).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }

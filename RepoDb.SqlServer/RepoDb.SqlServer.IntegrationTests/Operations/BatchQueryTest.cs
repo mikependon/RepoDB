@@ -33,14 +33,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryFirstBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(0,
+                var result = connection.BatchQuery<IdentityCompleteTable>(0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -53,14 +53,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryFirstBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(0,
+                var result = connection.BatchQuery<IdentityCompleteTable>(0,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -73,14 +73,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryThirdBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(2,
+                var result = connection.BatchQuery<IdentityCompleteTable>(2,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -93,14 +93,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryThirdBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(2,
+                var result = connection.BatchQuery<IdentityCompleteTable>(2,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -113,14 +113,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryFirstBatchAscendingWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(page: 0,
+                var result = connection.BatchQuery<IdentityCompleteTable>(page: 0,
                     rowsPerBatch: 3,
-                    orderBy: OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    orderBy: OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
                     hints: SqlServerTableHints.NoLock);
 
@@ -138,14 +138,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<IdentityCompleteTable>(0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -158,14 +158,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<IdentityCompleteTable>(0,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -178,14 +178,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<IdentityCompleteTable>(2,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -198,14 +198,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<IdentityCompleteTable>(2,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -218,14 +218,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchAscendingWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync<CompleteTable>(page: 0,
+                var result = await connection.BatchQueryAsync<IdentityCompleteTable>(page: 0,
                     rowsPerBatch: 3,
-                    orderBy: OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    orderBy: OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
                     hints: SqlServerTableHints.NoLock);
 
@@ -247,15 +247,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -268,15 +268,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -289,15 +289,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryViaTableNameThirdBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     2,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -310,15 +310,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryViaTableNameThirdBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     2,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -331,15 +331,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchAscendingWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
                     hints: SqlServerTableHints.NoLock);
 
@@ -357,15 +357,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -378,15 +378,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -399,15 +399,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     2,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -420,15 +420,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     2,
                     3,
-                    OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Descending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null);
 
                 // Assert
@@ -441,15 +441,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscendingWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     0,
                     3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    OrderField.Ascending<IdentityCompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
                     hints: SqlServerTableHints.NoLock);
 

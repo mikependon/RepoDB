@@ -30,7 +30,7 @@ namespace RepoDb
             string destinationTableName,
             IEnumerable<Field> fields,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("BinaryBulkInsert".GetHashCode(),
@@ -48,7 +48,7 @@ namespace RepoDb
             }
 
             // Eliminate the identity
-            if (identityBehavior != BulkImportIdentityBehavior.KeepIdentity)
+            if (identityBehavior != PostgreSqlBulkImportIdentityBehavior.KeepIdentity)
             {
                 fields = fields?
                     .Where(field =>
@@ -68,7 +68,7 @@ namespace RepoDb
                 .FieldsFrom(fields, dbSetting)
                 .CloseParen();
 
-            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity)
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity)
             {
                 builder
                     .WriteText("OVERRIDING SYSTEM VALUE");
@@ -82,7 +82,7 @@ namespace RepoDb
                 .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
 
             // Return the Id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity && identityField != null)
             {
                 builder
                     .Returning()
@@ -129,8 +129,8 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
-            BulkImportMergeCommandType mergeCommandType,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportMergeCommandType mergeCommandType,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("BinaryBulkMerge".GetHashCode(),
@@ -151,7 +151,7 @@ namespace RepoDb
             }
 
             // Compose
-            commandText = mergeCommandType == BulkImportMergeCommandType.OnConflictDoUpdate ?
+            commandText = mergeCommandType == PostgreSqlBulkImportMergeCommandType.OnConflictDoUpdate ?
                 GetMergeCommandTextViaOnConflictDoUpdate(sourceTableName,
                     destinationTableName,
                     fields,
@@ -204,7 +204,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             // Qualifiers
@@ -225,7 +225,7 @@ namespace RepoDb
                 .FieldsFrom(fields, dbSetting)
                 .CloseParen();
 
-            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity ||
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity ||
                 primaryField == identityField)
             {
                 builder
@@ -240,7 +240,7 @@ namespace RepoDb
                 .TableNameFrom(sourceTableName, dbSetting);
 
             // Return identity
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
             {
                 builder
                     .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
@@ -268,7 +268,7 @@ namespace RepoDb
                 .WriteText(setColumns);
 
             // Return the Id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity)
             {
                 if (identityField != null)
                 {
@@ -311,9 +311,9 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
-            identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ?
+            identityBehavior == PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ?
             GetMergeCommandTextViaInsertAndUpdateForReturnIdentity(sourceTableName,
                 destinationTableName,
                 fields,
@@ -349,7 +349,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             // Qualifiers
@@ -420,7 +420,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             // Qualifiers
@@ -609,10 +609,10 @@ ORDER BY ""Index"";";
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            if (identityBehavior != BulkImportIdentityBehavior.KeepIdentity)
+            if (identityBehavior != PostgreSqlBulkImportIdentityBehavior.KeepIdentity)
             {
                 fields = fields?
                     .Where(field =>
@@ -631,7 +631,7 @@ ORDER BY ""Index"";";
                 .FieldsFrom(fields, dbSetting)
                 .CloseParen();
 
-            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity)
+            if (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity)
             {
                 builder
                     .WriteText("OVERRIDING SYSTEM VALUE");
@@ -918,7 +918,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("BinaryBulkUpdate".GetHashCode(),
@@ -1011,7 +1011,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             IEnumerable<Field> qualifiers,
             Field primaryField,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             var key = HashCode.Combine("BinaryBulkDelete".GetHashCode(),
@@ -1295,14 +1295,14 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <returns></returns>
         private static IEnumerable<Field> GetInsertableFields(IEnumerable<Field> fields,
             Field identityField,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             fields?
                 .Where(field =>
                 {
                     var isIdentity = string.Equals(identityField?.Name.AsQuoted(true, dbSetting), field.Name.AsQuoted(true, dbSetting), StringComparison.OrdinalIgnoreCase);
                     return (isIdentity == false) ||
-                        (isIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                        (isIdentity && identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 });
 
         /// <summary>

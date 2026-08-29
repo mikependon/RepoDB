@@ -32,7 +32,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -51,7 +51,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -71,7 +71,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -90,7 +90,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -104,6 +104,84 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, decimal?>(e => e.ColumnDecimal);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllWithHintsTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region SumAllAsync<TEntity>
@@ -114,7 +192,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -133,7 +211,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -153,7 +231,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -172,7 +250,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -186,6 +264,84 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllAsyncTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllAsyncWithHintsTypedResultDecimal()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<IdentityTable, decimal?>(e => e.ColumnDecimal,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllAsyncTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<IdentityTable, double?>(e => e.ColumnFloat);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllAsyncWithHintsTypedResultDouble()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<IdentityTable, double?>(e => e.ColumnFloat,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region SumAll(TableName)
@@ -196,7 +352,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -216,7 +372,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -237,7 +393,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -257,7 +413,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -272,6 +428,88 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDecimalViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDecimalViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDoubleViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultDoubleViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
         #endregion
 
         #region SumAllAsync(TableName)
@@ -282,7 +520,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -302,7 +540,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -323,7 +561,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -343,7 +581,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -355,6 +593,88 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllTypedResultDecimalAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllTypedResultDecimalAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<decimal?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnDecimal"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnDecimal), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllTypedResultDoubleAsyncViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionSumAllTypedResultDoubleAsyncViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = await connection.SumAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnFloat"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnFloat), result);
             }
         }
 

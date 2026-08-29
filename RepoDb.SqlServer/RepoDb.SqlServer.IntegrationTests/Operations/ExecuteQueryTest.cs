@@ -30,12 +30,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteQuery()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\";");
+                var result = connection.ExecuteQuery<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -47,12 +47,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteQueryWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                var result = connection.ExecuteQuery<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -69,12 +69,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteQueryAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\";");
+                var result = await connection.ExecuteQueryAsync<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -86,12 +86,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteQueryAsyncWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                var result = await connection.ExecuteQueryAsync<IdentityCompleteTable>("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id });
 
                 // Assert

@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteReader()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
                 {
                     while (reader.Read())
                     {
@@ -60,12 +60,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteReaderWithMultipleStatements()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
                 {
                     do
                     {
@@ -91,15 +91,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteReaderAsExtractedEntity()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"IdentityCompleteTable\";"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+                    var result = DataReader.ToEnumerable<IdentityCompleteTable>((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -111,12 +111,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteReaderAsExtractedDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"IdentityCompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
@@ -135,12 +135,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteReaderAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
                 {
                     while (reader.Read())
                     {
@@ -163,12 +163,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"IdentityCompleteTable\";"))
                 {
                     do
                     {
@@ -194,15 +194,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
+                    var result = DataReader.ToEnumerable<IdentityCompleteTable>((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -214,12 +214,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"IdentityCompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

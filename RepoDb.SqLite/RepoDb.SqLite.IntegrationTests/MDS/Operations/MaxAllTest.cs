@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
@@ -43,7 +43,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionMaxAllWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -52,8 +52,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAll<MdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MaxAll<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver"));
             }
         }
 
@@ -77,7 +78,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -86,8 +87,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAllAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.MaxAllAsync<MdsCompleteTable>(e => e.ColumnInt,
+                        hints: "WhatEver").Wait());
             }
         }
 
@@ -116,7 +118,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionMaxAllViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -125,9 +127,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.MaxAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver"));
             }
         }
 
@@ -152,7 +155,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -161,9 +164,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.MaxAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        hints: "WhatEver").Wait());
             }
         }
 

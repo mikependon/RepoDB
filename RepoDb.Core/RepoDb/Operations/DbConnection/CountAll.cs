@@ -11,6 +11,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+
         #region CountAll<TEntity>
 
         /// <summary>
@@ -81,10 +82,6 @@ namespace RepoDb
                 transaction: transaction,
                 trace: trace);
         }
-
-        #endregion
-
-        #region CountAllAsync<TEntity>
 
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
@@ -235,10 +232,6 @@ namespace RepoDb
                 trace: trace);
         }
 
-        #endregion
-
-        #region CountAllAsync(TableName)
-
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
@@ -356,7 +349,8 @@ namespace RepoDb
 				trace: trace,
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;
@@ -406,7 +400,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;

@@ -3,6 +3,8 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
+using RepoDb.SqlServer.BulkOperations;
+
 namespace RepoDb
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
@@ -65,7 +67,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
@@ -106,7 +108,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
@@ -146,7 +148,7 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<SqlServerBulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,

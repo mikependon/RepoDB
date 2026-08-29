@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -32,11 +33,29 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
                 var deleteResult = connection.Delete<UnorganizedTable>(last.Id);
+
+                // Assert
+                Assert.AreEqual(1, deleteResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDeleteAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+            var last = entities.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+                var deleteResult = await connection.DeleteAsync<UnorganizedTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, deleteResult);
@@ -50,11 +69,29 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
                 var deleteResult = connection.Delete<UnorganizedTable>(e => e.SessionId == last.SessionId);
+
+                // Assert
+                Assert.AreEqual(1, deleteResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestDeleteAsyncObjectQuotationViaNonAlphaNumericField()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+            var last = entities.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+                var deleteResult = await connection.DeleteAsync<UnorganizedTable>(e => e.SessionId == last.SessionId);
 
                 // Assert
                 Assert.AreEqual(1, deleteResult);
@@ -71,15 +108,33 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Insert<UnorganizedTable, long>(entity);
+                long? id = connection.Insert<UnorganizedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
                 Assert.IsTrue(id > 0);
                 Assert.AreEqual(1, connection.CountAll<UnorganizedTable>());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAsyncObjectQuotation()
+        {
+            // Setup
+            var entity = Helper.CreateUnorganizedTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                long? id = await connection.InsertAsync<UnorganizedTable, long>(entity);
+
+                // Assert
+                Assert.IsNotNull(id);
+                Assert.IsTrue(id > 0);
+                Assert.AreEqual(1, await connection.CountAllAsync<UnorganizedTable>());
             }
         }
 
@@ -93,7 +148,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
@@ -101,6 +156,23 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, rowsInserted);
                 Assert.AreEqual(entities.Count, connection.CountAll<UnorganizedTable>());
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAllAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, rowsInserted);
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<UnorganizedTable>());
             }
         }
 
@@ -114,10 +186,10 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var id = connection.Merge<UnorganizedTable, long>(entity);
+                long? id = connection.Merge<UnorganizedTable, long>(entity);
 
                 // Assert
                 Assert.IsNotNull(id);
@@ -138,6 +210,36 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestMergeAsyncObjectQuotation()
+        {
+            // Setup
+            var entity = Helper.CreateUnorganizedTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                long? id = await connection.MergeAsync<UnorganizedTable, long>(entity);
+
+                // Assert
+                Assert.IsNotNull(id);
+                Assert.IsTrue(id > 0);
+                Assert.AreEqual(1, await connection.CountAllAsync<UnorganizedTable>());
+
+                // Setup
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+                entity.ColumnInt = 2;
+                entity.ColumnNVarChar = Guid.NewGuid().ToString();
+
+                // Act
+                id = await connection.MergeAsync<UnorganizedTable, long>(entity);
+                var queryResult = (await connection.QueryAsync<UnorganizedTable>(id)).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region MergeAll
@@ -148,7 +250,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.MergeAll<UnorganizedTable>(entities);
@@ -179,6 +281,43 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestMergeAllAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsAffected = await connection.MergeAllAsync<UnorganizedTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, rowsAffected);
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<UnorganizedTable>());
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnDateTime2 = DateTime.UtcNow;
+                    entity.ColumnInt = 2;
+                    entity.ColumnNVarChar = Guid.NewGuid().ToString();
+                });
+
+                // Act
+                rowsAffected = await connection.MergeAllAsync<UnorganizedTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, rowsAffected);
+
+                // Act
+                var queryAllResult = await connection.QueryAllAsync<UnorganizedTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));
+            }
+        }
+
         #endregion
 
         #region Query
@@ -190,11 +329,30 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
                 var queryResult = connection.Query<UnorganizedTable>(last.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(last, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestQueryAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+            var last = entities.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+                var queryResult = (await connection.QueryAsync<UnorganizedTable>(last.Id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -209,11 +367,30 @@ namespace RepoDb.IntegrationTests
             var entities = Helper.CreateUnorganizedTables(10);
             var last = entities.Last();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
                 var queryResult = connection.Query<UnorganizedTable>(e => e.SessionId == last.SessionId).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(last, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestQueryAsyncObjectQuotationViaNonAlphaNumericField()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+            var last = entities.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+                var queryResult = (await connection.QueryAsync<UnorganizedTable>(e => e.SessionId == last.SessionId)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -231,11 +408,29 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsInserted = connection.InsertAll<UnorganizedTable>(entities);
                 var queryAllResult = connection.QueryAll<UnorganizedTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryAllResult.Count());
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestQueryAllAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsInserted = await connection.InsertAllAsync<UnorganizedTable>(entities);
+                var queryAllResult = await connection.QueryAllAsync<UnorganizedTable>();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryAllResult.Count());
@@ -253,7 +448,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateUnorganizedTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert<UnorganizedTable, long>(entity);
@@ -273,6 +468,32 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestUpdateAsyncObjectQuotation()
+        {
+            // Setup
+            var entity = Helper.CreateUnorganizedTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = await connection.InsertAsync<UnorganizedTable, long>(entity);
+
+                // Setup
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+                entity.ColumnInt = 2;
+                entity.ColumnNVarChar = Guid.NewGuid().ToString();
+
+                // Act
+                var updateReuslt = await connection.UpdateAsync<UnorganizedTable>(entity);
+                var queryResult = (await connection.QueryAsync<UnorganizedTable>(id)).First();
+
+                // Assert
+                Assert.AreEqual(1, updateReuslt);
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region UpdateAll
@@ -283,7 +504,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateUnorganizedTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var rowsAffected = connection.InsertAll<UnorganizedTable>(entities);
@@ -304,6 +525,39 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var queryAllResult = connection.QueryAll<UnorganizedTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestUpdateAllAsyncObjectQuotation()
+        {
+            // Setup
+            var entities = Helper.CreateUnorganizedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var rowsAffected = await connection.InsertAllAsync<UnorganizedTable>(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnDateTime2 = DateTime.UtcNow;
+                    entity.ColumnInt = 2;
+                    entity.ColumnNVarChar = Guid.NewGuid().ToString();
+                });
+
+                // Act
+                rowsAffected = await connection.UpdateAllAsync<UnorganizedTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, rowsAffected);
+
+                // Act
+                var queryAllResult = await connection.QueryAllAsync<UnorganizedTable>();
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryAllResult.First(item => item.Id == entity.Id)));

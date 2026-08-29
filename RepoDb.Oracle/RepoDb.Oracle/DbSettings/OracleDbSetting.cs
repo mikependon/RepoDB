@@ -1,0 +1,30 @@
+namespace RepoDb.DbSettings
+{
+    /// <summary>
+    /// A setting class used for Oracle data provider.
+    /// </summary>
+    public sealed class OracleDbSetting : BaseDbSetting
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="OracleDbSetting"/> class.
+        /// </summary>
+        public OracleDbSetting()
+        {
+            AreTableHintsSupported = false;
+            ClosingQuote = "\"";
+            DefaultSchema = null;
+            IsAffectedRowsSupported = true;
+            IsDirectionSupported = true;
+            IsExecuteReaderDisposable = true;
+            IsMultiStatementExecutable = false;
+            IsPreparable = true;
+            IsTransactionSupported = true;
+            IsUseUpsert = false;
+            MaxParameterCount = 1000;
+            MultiStatementSeparator = ";";
+            OpeningQuote = "\"";
+            ParameterPrefix = ":";
+            SqlTextParameterPrefix = ":";
+        }
+    }
+}

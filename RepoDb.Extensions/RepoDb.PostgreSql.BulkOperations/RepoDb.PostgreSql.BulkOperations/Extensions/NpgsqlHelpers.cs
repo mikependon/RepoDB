@@ -66,7 +66,7 @@ namespace RepoDb
         /// <param name="npgsqlDbType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
+        private static PostgreSqlBulkInsertMapItem GetMapping(string sourceName,
             string destinationName,
             DbFieldCollection dbFields,
             bool includePrimary,
@@ -96,7 +96,7 @@ namespace RepoDb
             }
 
             // Return
-            return new NpgsqlBulkInsertMapItem(sourceName, destinationName, npgsqlDbType);
+            return new PostgreSqlBulkInsertMapItem(sourceName, destinationName, npgsqlDbType);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             bool includePrimary,
             bool includeIdentity,
@@ -183,7 +183,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -216,7 +216,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DataTable table,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(DataTable table,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbDataReader reader,
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> GetMappings(IDataReader reader,
             DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
@@ -341,11 +341,11 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="mappings"></param>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+        private static IEnumerable<PostgreSqlBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<PostgreSqlBulkInsertMapItem> mappings)
         {
-            var list = new List<NpgsqlBulkInsertMapItem>(mappings);
+            var list = new List<PostgreSqlBulkInsertMapItem>(mappings);
             list.Insert(0,
-                new NpgsqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlDbType.Integer));
+                new PostgreSqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlDbType.Integer));
             return list;
         }
 
@@ -372,24 +372,28 @@ namespace RepoDb
             }
             else
             {
-                SetEntityIdentities(entities, dbFields, identityResults, dbSetting);
+                SetEntityIdentities(entityType, entities, dbFields, identityResults, dbSetting);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
-        private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
+        private static void SetEntityIdentities<TEntity>(Type entityType,
+            IEnumerable<TEntity> entities,
             DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
             where TEntity : class =>
-            SetEntityIdentities<TEntity>(entities, GetEntityIdentityField<TEntity>(dbFields, dbSetting), identityResults);
+            // Use the resolved runtime entityType (not the generic TEntity) so anonymous/dynamic-typed
+            // entities (where TEntity infers to 'object'/'dynamic') still resolve their identity property correctly.
+            SetEntityIdentities<TEntity>(entities, GetEntityIdentityField(entityType, dbFields, dbSetting), identityResults);
 
         /// <summary>
         /// 
@@ -424,10 +428,37 @@ namespace RepoDb
             var bulkInsertIndex = -1;
             var index = 0;
 
+            var targetPropertyType = PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo.Name == identityField.Name);
+            var propType = targetPropertyType.PropertyInfo.PropertyType;
+
             foreach (var result in identityResults)
             {
                 var entity = entityList[result.Index == bulkInsertIndex ? index : result.Index];
-                func(entity, result.Identity);
+                object identityValue = result.Identity;
+
+                //When using Return Identity operations the IdentityResult class returns the Identity as long
+                //even though the Identity can be of type short or int so we need to convert it to the correct type
+                if (identityValue is long longValue)
+                {
+                    if (propType == typeof(short))
+                    {
+                        identityValue = Convert.ToInt16(longValue);
+                    }
+                    else if (propType == typeof(int))
+                    {
+                        identityValue = Convert.ToInt32(longValue);
+                    }
+                    else if (propType == typeof(short?))
+                    {
+                        identityValue = (short?)Convert.ToInt16(longValue);
+                    }
+                    else if (propType == typeof(int?))
+                    {
+                        identityValue = (int?)Convert.ToInt32(longValue);
+                    }
+                }
+
+                func(entity, identityValue);
                 index++;
             }
         }
@@ -500,21 +531,25 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static Field GetEntityIdentityField<TEntity>(DbFieldCollection dbFields,
+        private static Field GetEntityIdentityField(Type entityType,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
-            where TEntity : class
         {
             // We cannot use the ClassProperty.AsField() and PropertyInfo.AsField() as it is
-            // using the mappings. We need to get the identity class property name instead
+            // using the mappings. We need to get the identity class property name instead.
+            // Use the non-generic, Type-based caches here (instead of the <TEntity> generic
+            // overloads) since 'entityType' is the resolved runtime type; for anonymous/dynamic
+            // entities the generic TEntity parameter can infer to 'object', which the generic
+            // caches treat as a non-class type and return null for.
 
-            var property = IdentityCache.Get<TEntity>() ??
-                    GetEntityIdentityProperty<TEntity>(dbFields, dbSetting);
+            var property = IdentityCache.Get(entityType) ??
+                    GetEntityIdentityProperty(entityType, dbFields, dbSetting);
 
             if (property != null)
             {
@@ -525,15 +560,15 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static ClassProperty GetEntityIdentityProperty<TEntity>(DbFieldCollection dbFields,
+        private static ClassProperty GetEntityIdentityProperty(Type entityType,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
-            where TEntity : class
         {
             var identityDbField = dbFields?.GetIdentity();
             ClassProperty property = null;
@@ -541,7 +576,7 @@ namespace RepoDb
             if (identityDbField != null)
             {
                 property = PropertyCache
-                   .Get<TEntity>()
+                   .Get(entityType)?
                    .FirstOrDefault(p =>
                        string.Equals(p.GetMappedName().AsUnquoted(true, dbSetting),
                            identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));

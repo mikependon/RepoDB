@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -170,7 +170,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -300,7 +300,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -344,7 +344,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -392,7 +392,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = (decimal?)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -476,7 +476,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);
@@ -520,7 +520,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = (decimal?)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<NumbersClass>(), entity);

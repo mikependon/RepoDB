@@ -98,7 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             // Setup
             var dataTable = CreateIdentityTableType(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var tables = connection.ExecuteQuery<IdentityTable>("EXEC [sp_identity_table_type] @Table = @Table;",
@@ -122,7 +122,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             // Setup
             var dataTable = CreateIdentityTableType(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = connection.ExecuteNonQuery("EXEC [sp_identity_table_type] @Table = @Table;",
@@ -145,7 +145,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             // Setup
             var dataTable = CreateIdentityTableType(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var tables = (await connection.ExecuteQueryAsync<IdentityTable>("EXEC [sp_identity_table_type] @Table = @Table;",
@@ -169,7 +169,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             // Setup
             var dataTable = CreateIdentityTableType(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var result = await connection.ExecuteNonQueryAsync("EXEC [sp_identity_table_type] @Table = @Table;",

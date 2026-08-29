@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 
-namespace RepoDb.UnitTests.Caches
+namespace RepoDb.UnitTests.Cachers
 {
     [TestClass]
     public class IdentityCacheTest

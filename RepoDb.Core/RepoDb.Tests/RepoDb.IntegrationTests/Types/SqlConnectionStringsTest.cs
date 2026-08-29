@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -42,7 +42,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -145,7 +145,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -180,7 +180,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -216,7 +216,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -289,7 +289,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -330,13 +330,48 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
 
                 // Act Query
                 var data = connection.Query(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionStringsCrudViaTableNameAsync()
+        {
+            // Setup
+            var text = Helper.GetUnicodeString();
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = text,
+                ColumnNChar = text,
+                ColumnNText = text,
+                ColumnNVarChar = text,
+                ColumnText = text,
+                ColumnVarChar = text
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -364,13 +399,47 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
 
                 // Act Query
                 var data = connection.Query(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnChar);
+                Assert.IsNull(data.ColumnNChar);
+                Assert.IsNull(data.ColumnNText);
+                Assert.IsNull(data.ColumnNVarChar);
+                Assert.IsNull(data.ColumnText);
+                Assert.IsNull(data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionStringsNullCrudViaTableNameAsync()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = (string)null,
+                ColumnNChar = (string)null,
+                ColumnNText = (string)null,
+                ColumnNVarChar = (string)null,
+                ColumnText = (string)null,
+                ColumnVarChar = (string)null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -399,7 +468,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
@@ -407,6 +476,42 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Act Query
                 var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionStringsCrudViaViaTableName()
+        {
+            // Setup
+            var text = Helper.GetUnicodeString();
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = text,
+                ColumnNChar = text,
+                ColumnNText = text,
+                ColumnNVarChar = text,
+                ColumnText = text,
+                ColumnVarChar = text
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
+
+                // Act Query
+                var queryResult = connection.Query(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.FirstOrDefault();
 
                 // Assert
@@ -435,7 +540,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = (string)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
@@ -443,6 +548,41 @@ namespace RepoDb.IntegrationTests.Types.Strings
 
                 // Act Query
                 var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnChar);
+                Assert.IsNull(data.ColumnNChar);
+                Assert.IsNull(data.ColumnNText);
+                Assert.IsNull(data.ColumnNVarChar);
+                Assert.IsNull(data.ColumnText);
+                Assert.IsNull(data.ColumnVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionStringsNullCrudViaViaTableName()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnChar = (string)null,
+                ColumnNChar = (string)null,
+                ColumnNText = (string)null,
+                ColumnNVarChar = (string)null,
+                ColumnText = (string)null,
+                ColumnVarChar = (string)null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = connection.Insert(ClassMappedNameCache.Get<StringsClass>(), entity);
+
+                // Act Query
+                var queryResult = connection.Query(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
                 var data = queryResult.FirstOrDefault();
 
                 // Assert

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System.Data.Common;
 
 namespace RepoDb.Attributes.Parameter
@@ -23,9 +24,23 @@ namespace RepoDb.Attributes.Parameter
         public string Name => (string)Value;
 
         /// <summary>
-        /// 
+        /// In practice this attribute is always excluded from the compiled (entity/dictionary) parameter-assignment
+        /// path, since its <c>PropertyName</c> is <see cref="DbParameter.ParameterName"/> (see
+        /// <c>Compiler.GetParameterPropertyValueSetterAttributesAssignmentExpressions</c>), so this parameterless
+        /// overload is not expected to run for a real parameter-name assignment. It falls back to the "@"-prefixed
+        /// SQL-text convention only as a defensive default. Prefer <see cref="GetValue(IDbSetting)"/>, which is what
+        /// the runtime (non-compiled) <c>QueryField</c>/dynamic-parameter path actually invokes.
         /// </summary>
         /// <returns></returns>
         internal override object GetValue() => Name.AsParameter();
+
+        /// <summary>
+        /// Builds the actual <see cref="DbParameter.ParameterName"/> value for the current provider, honoring
+        /// <see cref="IDbSetting.ParameterPrefix"/> (which, for a provider such as ClickHouse, is <see cref="string.Empty"/>
+        /// rather than "@").
+        /// </summary>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal override object GetValue(IDbSetting dbSetting) => Name.AsParameterName(dbSetting);
     }
 }

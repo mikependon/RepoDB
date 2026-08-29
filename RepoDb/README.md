@@ -1,8 +1,6 @@
-[![Build](https://img.shields.io/appveyor/ci/mikependon/repodb?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb)
-[![Version](https://img.shields.io/nuget/v/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
-[![DL](https://img.shields.io/nuget/dt/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
-[![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-g4ml5?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5/build/tests)
-[![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-neg8t?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-neg8t/build/tests)
+﻿[![Build](https://img.shields.io/appveyor/ci/mikependon/repodb?label=build)](https://ci.appveyor.com/project/mikependon/repodb)
+[![Version](https://img.shields.io/nuget/v/repodb)](https://www.nuget.org/packages/RepoDb)
+[![DL](https://img.shields.io/nuget/dt/repodb)](https://www.nuget.org/packages/RepoDb)
 
 ## RepoDb - a hybrid ORM library for .NET.
 
@@ -19,9 +17,9 @@ To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/Rep
 ### Community engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Twitter](https://x.com/mike_pendon) - for the latest news.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) - for direct and live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) - for questions, ideas and discussions.
 
 ## License
 

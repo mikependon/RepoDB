@@ -1,6 +1,6 @@
-﻿using RepoDb.Enumerations;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
+using RepoDb.Enumerations;
 
 namespace RepoDb.Options
 {
@@ -15,6 +15,11 @@ namespace RepoDb.Options
         public ConversionType ConversionType { get; set; } = ConversionType.Default;
 
         /// <summary>
+        /// Gets or sets the handling of invalid enum values when converting an instance of <see cref="DbDataReader"/> into .NET enum values
+        /// </summary>
+        public EnumHandling EnumHandling { get; set; } = EnumHandling.ThrowError;
+
+        /// <summary>
         /// Gets or sets the default value of the batch operation size. The value defines on this property mainly affects the batch size of the InsertAll, MergeAll and UpdateAll operations.
         /// </summary>
         public int DefaultBatchOperationSize { get; set; } = Constant.DefaultBatchOperationSize;
@@ -27,11 +32,16 @@ namespace RepoDb.Options
         /// <summary>
         /// Gets or sets the default equivalent <see cref="DbType"/> of an enumeration if it is being used as a parameter to the execution of any non-entity-based operations.
         /// </summary>
-        public DbType EnumDefaultDatabaseType { get; set; } = DbType.String;
+        public DbType EnumDefaultDatabaseType { get; set;    } = DbType.String;
 
         /// <summary>
         /// Gets or sets the default value of how the push operations (i.e.: Insert, InsertAll, Merge and MergeAll) behaves when returning the value from the key columns (i.e.: Primary and Identity).
         /// </summary>
         public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.IdentityOrElsePrimary;
+
+        /// <summary>
+        /// Gets or sets the default value whether the operations should use the registered global traces from all operations.
+        /// </summary>
+        public bool UseRegisteredGlobalTraces { get; set; } = false;
     }
 }

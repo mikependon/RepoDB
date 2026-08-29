@@ -1,0 +1,977 @@
+using IBM.Data.Db2;
+using RepoDb.Enumerations.Db2;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Db2.BulkOperations;
+using RepoDb.Db2.BulkOperations.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace RepoDb
+{
+    /// <summary>
+    ///
+    /// </summary>
+    public static partial class Db2ConnectionExtension
+    {
+        #region Sync
+
+        #region BulkInsertBase<TEntity>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBase<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+            where TEntity : class
+        {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var identityField = dbFields.GetIdentity();
+            var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+
+            if (returnIdentity)
+            {
+                return connection.BulkInsertBaseForReturnIdentity(tableName,
+                    entityList,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityBehavior,
+                    pseudoTableType,
+                    trace,
+                    traceKey,
+                    transaction);
+            }
+            else
+            {
+                return connection.BulkInsertBaseNoReturnIdentity(tableName,
+                    entityList,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseForReturnIdentity<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+            where TEntity : class
+        {
+            var entityList = entities.AsList();
+            var pseudoTableName = Db2Text.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                WriteToServerInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                result = Db2Execution.InsertFromPseudoTableForReturnIdentity(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseNoReturnIdentity<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+            where TEntity : class
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Actual Execution
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var entityList = entities.AsList();
+            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+            using var entityTable = BuildEntityDataTable(entityList, entityFields);
+            var result = WriteToServerInternal(connection,
+                tableName,
+                entityTable,
+                null,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                identityField);
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkInsertBase<DataTable>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBase(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+        {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var identityField = dbFields.GetIdentity();
+            var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+
+            if (returnIdentity)
+            {
+                return connection.BulkInsertBaseForReturnIdentity(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityBehavior,
+                    pseudoTableType,
+                    trace,
+                    traceKey,
+                    transaction);
+            }
+            else
+            {
+                return connection.BulkInsertBaseNoReturnIdentity(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction);
+            }
+        }
+
+        /// <summary>
+        /// <see cref="DataTable"/> counterpart of <see cref="BulkInsertBaseForReturnIdentity{TEntity}"/> - see
+        /// its remarks for the detailed behavior (identical here), except the generated identity values are
+        /// assigned back onto the matching row's identity column of <paramref name="table"/> instead of an
+        /// entity property.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseForReturnIdentity(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+        {
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var pseudoTableName = Db2Text.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                Db2Execution.CreatePseudoTable(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace, traceKey, transaction, new[] { identityField });
+                WriteToServerInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize);
+
+                // Execute and return
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                result = Db2Execution.InsertFromPseudoTableForReturnIdentityForDataTable(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                Db2Execution.DropPseudoTable(connection, pseudoTableName, trace, traceKey, transaction);
+            }
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Bulk-writes the rows of <paramref name="table"/> directly into <paramref name="tableName"/> -
+        /// see <see cref="BulkInsertBaseNoReturnIdentity{TEntity}"/> for the detailed remarks (identical
+        /// here). This is the "actual base execution" that the <see cref="Tracer"/> Before/After pair wraps.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBaseNoReturnIdentity(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Actual Execution
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var result = WriteToServerInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                identityField);
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkInsertBase<DbDataReader>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static int BulkInsertBase(this DB2Connection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Actual Execution
+            var identityField = DbFieldCache.Get(connection, tableName, transaction)?.GetIdentity()?.AsField();
+            var result = WriteToServerInternal(connection,
+                tableName,
+                reader,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                transaction,
+                identityField);
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
+
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Async
+
+        #region BulkInsertBaseAsync<TEntity>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseAsync<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            var entityList = entities.AsList();
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, entityList?.Count);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var identityField = dbFields.GetIdentity();
+            var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+
+            if (returnIdentity)
+            {
+                return await connection.BulkInsertBaseForReturnIdentityAsync(tableName,
+                    entityList,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityBehavior,
+                    pseudoTableType,
+                    trace,
+                    traceKey,
+                    transaction,
+                    cancellationToken);
+            }
+            else
+            {
+                return await connection.BulkInsertBaseNoReturnIdentityAsync(tableName,
+                    entityList,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction,
+                    cancellationToken);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            var entityList = entities.AsList();
+            var pseudoTableName = Db2Text.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
+
+                var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+                using var entityTable = BuildEntityDataTable(entityList, entityFields);
+                await WriteToServerAsyncInternal(connection, pseudoTableName, entityTable, null, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken: cancellationToken);
+
+                // Execute and return
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                result = await Db2Execution.InsertFromPseudoTableForReturnIdentityAsync(connection, tableName, pseudoTableName, insertFields, identityField, entityList, trace, traceKey, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync<TEntity>(this DB2Connection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Actual Execution
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var entityList = entities.AsList();
+            var entityFields = mappings?.Any() == true ? mappings.Select(m => new Field(m.SourceColumn)).AsList() : null;
+            using var entityTable = BuildEntityDataTable(entityList, entityFields);
+            var result = await WriteToServerAsyncInternal(connection,
+                tableName,
+                entityTable,
+                null,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                cancellationToken,
+                identityField);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkInsertBaseAsync<DataTable>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseAsync(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            pseudoTableType = ResolvePseudoTableType(pseudoTableType, table?.Rows.Count);
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var identityField = dbFields.GetIdentity();
+            var returnIdentity = identityBehavior == Db2BulkImportIdentityBehavior.ReturnIdentity && identityField != null;
+
+            if (returnIdentity)
+            {
+                return await connection.BulkInsertBaseForReturnIdentityAsync(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    identityBehavior,
+                    pseudoTableType,
+                    trace,
+                    traceKey,
+                    transaction,
+                    cancellationToken);
+            }
+            else
+            {
+                return await connection.BulkInsertBaseNoReturnIdentityAsync(tableName,
+                    table,
+                    rowState,
+                    mappings,
+                    bulkCopyOptions,
+                    bulkCopyTimeout,
+                    batchSize,
+                    trace,
+                    traceKey,
+                    transaction,
+                    cancellationToken);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseForReturnIdentityAsync(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportIdentityBehavior identityBehavior = default,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var rows = GetDataRows(table, rowState)?.ToArray();
+            var pseudoTableName = Db2Text.GetPseudoTableNameForInsert(tableName, pseudoTableType, connection.GetDbSetting());
+
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName} RETURNING PK", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            int result;
+
+            try
+            {
+                // Bulk and post process
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                var identityField = dbFields.GetIdentity().AsField();
+
+                await Db2Execution.CreatePseudoTableAsync(connection, tableName, pseudoTableName, pseudoTableType, dbFields.GetAsFields(), trace: trace, traceKey: traceKey, transaction: transaction, cancellationToken: cancellationToken, nullableFields: new[] { identityField });
+                await WriteToServerAsyncInternal(connection, pseudoTableName, table, rowState, mappings, bulkCopyOptions, bulkCopyTimeout, batchSize, cancellationToken);
+
+                // Execute and return
+                var insertFields = GetInsertFields(tableName, dbFields, mappings, identityField);
+                result = await Db2Execution.InsertFromPseudoTableForReturnIdentityForDataTableAsync(connection, tableName, pseudoTableName, insertFields, identityField, rows, trace, traceKey, transaction, cancellationToken);
+            }
+            finally
+            {
+                // Drop the pseudo table
+                await Db2Execution.DropPseudoTableAsync(connection, pseudoTableName, trace, traceKey, transaction, cancellationToken);
+            }
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="table"></param>
+        /// <param name="rowState"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseNoReturnIdentityAsync(this DB2Connection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Actual Execution
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var result = await WriteToServerAsyncInternal(connection,
+                tableName,
+                table,
+                rowState,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                cancellationToken,
+                identityField);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        #endregion
+
+        #region BulkInsertBaseAsync<DbDataReader>
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="reader"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyOptions"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> BulkInsertBaseAsync(this DB2Connection connection,
+            string tableName,
+            IDataReader reader,
+            IEnumerable<Db2BulkInsertMapItem> mappings = null,
+            DB2BulkCopyOptions bulkCopyOptions = default,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            Db2BulkImportPseudoTableType pseudoTableType = default,
+            ITrace trace = null,
+            string traceKey = Db2TraceKeys.Db2BulkInsert,
+            DB2Transaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            using var command = CreateTraceCommand(connection, $"BULK INSERT INTO {tableName}", bulkCopyTimeout, transaction);
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Actual Execution
+            var identityField = (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetIdentity()?.AsField();
+            var result = await WriteToServerAsyncInternal(connection,
+                tableName,
+                reader,
+                mappings,
+                bulkCopyOptions,
+                bulkCopyTimeout,
+                batchSize,
+                cancellationToken,
+                transaction,
+                identityField);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="mappings"></param>
+        /// <param name="identityField"></param>
+        /// <returns></returns>
+        /// <exception cref="MissingFieldsException"></exception>
+        private static IEnumerable<Field> GetInsertFields(string tableName,
+            DbFieldCollection dbFields,
+            IEnumerable<Db2BulkInsertMapItem> mappings,
+            Field identityField)
+        {
+            var fields = dbFields?.GetAsFields();
+
+            if (mappings?.Any() == true)
+            {
+                fields = fields?.Where(field =>
+                    mappings.Any(mapping => string.Equals(mapping.DestinationColumn, field.Name, StringComparison.OrdinalIgnoreCase)));
+            }
+
+            if (identityField != null)
+            {
+                fields = fields?.Where(field => !string.Equals(field.Name, identityField.Name, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldsException($"There are no field(s) found for table '{tableName}' for this operation.");
+            }
+
+            return fields;
+        }
+
+        #endregion
+    }
+}

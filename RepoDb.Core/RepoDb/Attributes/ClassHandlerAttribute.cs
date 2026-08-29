@@ -34,7 +34,7 @@ namespace RepoDb.Attributes
         /// 
         /// </summary>
         /// <param name="handlerType"></param>
-        private void Validate(Type handlerType)
+        private static void Validate(Type handlerType)
         {
             if (handlerType?.IsInterfacedTo(StaticType.IClassHandler) != true)
             {
@@ -44,4 +44,33 @@ namespace RepoDb.Attributes
 
         #endregion
     }
+    
+#if NET7_0_OR_GREATER
+    /// <summary>
+    /// An attribute that is used to define a handler for the property transformation.
+    /// </summary>
+    public class ClassHandlerAttribute<T> : Attribute
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref="ClassHandlerAttribute{T}"/> class.
+        /// </summary>
+        public ClassHandlerAttribute() => Validate(typeof(T));
+
+        #region Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerType"></param>
+        private static void Validate(Type handlerType)
+        {
+            if (handlerType?.IsInterfacedTo(StaticType.IClassHandler) != true)
+            {
+                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{StaticType.IClassHandler}' interface.");
+            }
+        }
+
+        #endregion
+    }
+#endif
 }

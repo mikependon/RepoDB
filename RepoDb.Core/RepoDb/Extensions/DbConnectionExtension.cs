@@ -1747,7 +1747,8 @@ namespace RepoDb
                 trace: trace,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: false);
+                skipCommandArrayParametersCheck: false,
+                forceAutomaticConversion: false);
         }
 
         #endregion
@@ -1804,7 +1805,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: false);
+                skipCommandArrayParametersCheck: false,
+                forceAutomaticConversion: false);
         }
 
         #endregion
@@ -1859,7 +1861,8 @@ namespace RepoDb
                 trace: trace,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: false);
+                skipCommandArrayParametersCheck: false,
+                forceAutomaticConversion: false);
         }
 
         /// <summary>
@@ -1880,6 +1883,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="forceAutomaticConversion"></param>
         /// <returns></returns>
         internal static TResult ExecuteScalarInternal<TResult>(this IDbConnection connection,
             string commandText,
@@ -1894,7 +1898,8 @@ namespace RepoDb
             ITrace trace,
             Type entityType,
             DbFieldCollection dbFields,
-            bool skipCommandArrayParametersCheck)
+            bool skipCommandArrayParametersCheck,
+            bool forceAutomaticConversion)
         {
             // Get Cache
             if (cache != null && cacheKey != null)
@@ -1927,7 +1932,7 @@ namespace RepoDb
             }
 
             // Execute
-            var result = Converter.ToType<TResult>(command.ExecuteScalar());
+            var result = Converter.ToType<TResult>(command.ExecuteScalar(), forceAutomaticConversion);
 
             // After Execution
             Tracer
@@ -2001,7 +2006,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: false);
+                skipCommandArrayParametersCheck: false,
+                forceAutomaticConversion: false);
         }
 
         /// <summary>
@@ -2038,7 +2044,8 @@ namespace RepoDb
             CancellationToken cancellationToken,
             Type entityType,
             DbFieldCollection dbFields,
-            bool skipCommandArrayParametersCheck)
+            bool skipCommandArrayParametersCheck,
+            bool forceAutomaticConversion)
         {
             // Get Cache
             if (cache != null && cacheKey != null)
@@ -2072,7 +2079,7 @@ namespace RepoDb
             }
 
             // Execution
-            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken), forceAutomaticConversion);
 
             // After Execution
             await Tracer

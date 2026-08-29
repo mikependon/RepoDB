@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.PostgreSql.IntegrationTests.Models;
@@ -143,7 +143,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnPostgreSqlConnectionSumWithHints()
         {
             // Setup
@@ -152,9 +152,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Sum<CompleteTable>(e => e.ColumnInteger,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Sum<CompleteTable>(e => e.ColumnInteger,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -276,7 +277,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnPostgreSqlConnectionSumAsyncWithHints()
         {
             // Setup
@@ -285,9 +286,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
-                    (object)null,
-                    hints: "WhatEver");
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -400,7 +402,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnPostgreSqlConnectionSumViaTableNameWithHints()
         {
             // Setup
@@ -409,10 +411,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInteger", typeof(int)),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                        new Field("ColumnInteger", typeof(int)),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -521,7 +524,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task ThrowExceptionOnPostgreSqlConnectionSumAsyncViaTableNameWithHints()
         {
             // Setup
@@ -530,10 +533,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInteger", typeof(int)),
-                    (object)null,
-                    hints: "WhatEver");
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                        new Field("ColumnInteger", typeof(int)),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

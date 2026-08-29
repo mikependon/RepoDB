@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
@@ -31,7 +31,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -50,7 +50,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -69,7 +69,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -89,7 +89,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -113,7 +113,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -161,7 +161,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -180,7 +180,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -199,7 +199,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -219,7 +219,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -243,7 +243,7 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -268,7 +268,7 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -291,7 +291,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -306,12 +306,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionCountAsyncViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionCountViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -326,19 +346,60 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionCountAsyncViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionCountViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    field);
+
+                // Assert
+                Assert.AreEqual(5, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionCountAsyncViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     field);
 
                 // Assert
@@ -357,13 +418,38 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionCountAsyncViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields);
 
                 // Assert
@@ -383,13 +469,39 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionCountAsyncViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Act
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup);
 
                 // Assert
@@ -407,7 +519,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -422,12 +534,32 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionCountViaViaTableNameWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionCountViaAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -441,19 +573,59 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionCountViaViaTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Count<IdentityTable>(new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
         public async Task TestSqlConnectionCountViaAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
             var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    field);
+
+                // Assert
+                Assert.AreEqual(5, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCountViaViaTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     field);
 
                 // Assert
@@ -472,13 +644,38 @@ namespace RepoDb.IntegrationTests.Operations
                 new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCountViaViaTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     fields);
 
                 // Assert
@@ -498,13 +695,39 @@ namespace RepoDb.IntegrationTests.Operations
             };
             var queryGroup = new QueryGroup(fields);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
                 var result = await connection.CountAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
+
+                // Assert
+                Assert.AreEqual(3, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCountViaViaTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Count(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup);
 
                 // Assert

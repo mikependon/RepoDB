@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations;
 using RepoDb.MySql.IntegrationTests;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace RepoDb.MySqlConnector.IntegrationTests
 {
@@ -1458,7 +1458,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var entities = Helper.CreateCompleteTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new MySqlConnection(Database.ConnectionString))
                 {
@@ -1484,7 +1484,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var entities = Helper.CreateCompleteTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new MySqlConnection(Database.ConnectionString))
                 {
@@ -1506,7 +1506,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var entities = Helper.CreateCompleteTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new MySqlConnection(Database.ConnectionString))
                 {
@@ -1532,7 +1532,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var entities = Helper.CreateCompleteTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new MySqlConnection(Database.ConnectionString))
                 {
@@ -1563,7 +1563,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
             // Setup
             var entities = Helper.CreateCompleteTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new MySqlConnection(Database.ConnectionString))
                 {

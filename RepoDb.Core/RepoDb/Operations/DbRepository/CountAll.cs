@@ -9,6 +9,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection, new()
     {
+
         #region CountAll<TEntity>
 
         /// <summary>
@@ -43,10 +44,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-
-        #endregion
-
-        #region CountAllAsync<TEntity>
 
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
@@ -122,10 +119,6 @@ namespace RepoDb
             }
         }
 
-        #endregion
-
-        #region CountAllAsync(TableName)
-
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
@@ -164,5 +157,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

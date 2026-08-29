@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.SqlServer.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.SqlServer/**'
+      - 'RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-sqlsvr-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.SqlServer.BulkOperations
+      solution-file: RepoDb.SqlServer.BulkOperations.sln
+      artifact-name: release-sqlsvr-bulk
+      db-engine: sqlserver

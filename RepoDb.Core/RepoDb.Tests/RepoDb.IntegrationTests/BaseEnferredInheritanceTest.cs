@@ -1,6 +1,7 @@
-﻿using System;
-using Microsoft.Data.SqlClient;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -31,7 +32,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<Entity<InheritedIdentityTable>>(entity);
@@ -46,12 +47,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionDeleteAsyncForInheritedViaDataEntity()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync<Entity<InheritedIdentityTable>>(entity);
+
+                // Act
+                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity);
+
+                // Assert
+                Assert.IsTrue(deleteResult > 0);
+                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionDeleteForInheritedViaPrimary()
         {
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(entity);
@@ -65,6 +86,26 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionDeleteAsyncForInheritedViaPrimary()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(entity);
+
+                // Act
+                var deleteResult = await connection.DeleteAsync<InheritedIdentityTable>(entity.Id);
+
+                // Assert
+                Assert.IsTrue(deleteResult > 0);
+                Assert.AreEqual(0, await connection.CountAllAsync<InheritedIdentityTable>());
+            }
+        }
+
         #endregion
 
         #region Insert
@@ -75,7 +116,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<Entity<InheritedIdentityTable>, long>(entity);
@@ -92,6 +133,29 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionInsertAsyncForInherited()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var insertResult = await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(entity.Id, insertResult);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region InsertAll
@@ -100,10 +164,11 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionInsertAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<Entity<InheritedIdentityTable>>(entities);
@@ -122,6 +187,33 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionInsertAllAsyncForInherited()
+        {
+            // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
+            var entities = Helper.CreateInheritedIdentityTables(10)
+                .OfType<Entity<InheritedIdentityTable>>().ToList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, insertAllResult);
+                Assert.AreEqual(entities.Count, await connection.CountAllAsync<InheritedIdentityTable>());
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
         #endregion
 
         #region Merge
@@ -132,7 +224,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeResult = connection.Merge<Entity<InheritedIdentityTable>, long>(entity);
@@ -150,12 +242,35 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionMergeAsyncForInherited()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(entity.Id, mergeResult);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionMergeForInheritedWithNonEmptyTable()
         {
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Merge<Entity<InheritedIdentityTable>, long>(entity);
@@ -184,6 +299,41 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionMergeAsyncForInheritedWithNonEmptyTable()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var insertResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(entity.Id, insertResult);
+                Assert.AreEqual(1, await connection.CountAllAsync<InheritedIdentityTable>());
+
+                // Setup
+                entity.ColumnBit = false;
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+
+                // Act
+                var mergeResult = await connection.MergeAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(entity.Id, mergeResult);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region MergeAll
@@ -192,10 +342,11 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionMergeAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var mergeAllRequest = connection.MergeAll<Entity<InheritedIdentityTable>>(entities);
@@ -214,13 +365,40 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAllForInheritedWithNonEmptyTables()
+        public async Task TestSqlConnectionMergeAllAsyncForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var mergeAllRequest = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllRequest);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForInheritedWithNonEmptyTables()
+        {
+            // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
+            var entities = Helper.CreateInheritedIdentityTables(10)
+                .OfType<Entity<InheritedIdentityTable>>().ToList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<Entity<InheritedIdentityTable>>(entities);
@@ -248,6 +426,42 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionMergeAllAsyncForInheritedWithNonEmptyTables()
+        {
+            // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
+            var entities = Helper.CreateInheritedIdentityTables(10)
+                .OfType<Entity<InheritedIdentityTable>>().ToList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var insertAllResult = await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnBit = false;
+                    entity.ColumnDateTime2 = DateTime.UtcNow;
+                });
+
+                // Act
+                var mergeAllResult = await connection.MergeAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllResult);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
         #endregion
 
         #region Query
@@ -258,13 +472,33 @@ namespace RepoDb.IntegrationTests
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<Entity<InheritedIdentityTable>, long>(entity);
 
                 // Act
                 var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionQueryAsyncForInherited()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -282,7 +516,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<Entity<InheritedIdentityTable>, long>(entity);
@@ -307,12 +541,42 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncForInheritedViaDataEntity()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Setup
+                entity.ColumnBit = false;
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+
+                // Act
+                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateForInheritedViaPrimaryKey()
         {
             // Setup
             Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<Entity<InheritedIdentityTable>, long>(entity);
@@ -336,6 +600,36 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionUpdateAsyncForInheritedViaPrimaryKey()
+        {
+            // Setup
+            Entity<InheritedIdentityTable> entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync<Entity<InheritedIdentityTable>, long>(entity);
+
+                // Setup
+                entity.ColumnBit = false;
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+
+                // Act
+                var updateResult = await connection.UpdateAsync<Entity<InheritedIdentityTable>>(entity, entity.Id);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = (await connection.QueryAsync<InheritedIdentityTable>(entity.Id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region UpdateAll
@@ -344,10 +638,11 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionUpdateAllForInherited()
         {
             // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
             var entities = Helper.CreateInheritedIdentityTables(10)
                 .OfType<Entity<InheritedIdentityTable>>().ToList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<Entity<InheritedIdentityTable>>(entities);
@@ -367,6 +662,42 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var queryResult = connection.QueryAll<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionUpdateAllAsyncForInherited()
+        {
+            // Setup
+            // warning CA2021: This call will always result in an empty sequence because type 'RepoDb.IntegrationTests.Models.InheritedIdentityTable' is incompatible with type 'RepoDb.IntegrationTests.Models.Entity<RepoDb.IntegrationTests.Models.InheritedIdentityTable>' (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2021)
+            var entities = Helper.CreateInheritedIdentityTables(10)
+                .OfType<Entity<InheritedIdentityTable>>().ToList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnBit = false;
+                    entity.ColumnDateTime2 = DateTime.UtcNow;
+                });
+
+                // Act
+                var updateAllResult = await connection.UpdateAllAsync<Entity<InheritedIdentityTable>>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = await connection.QueryAllAsync<InheritedIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());

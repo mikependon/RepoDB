@@ -1,0 +1,51 @@
+﻿using RepoDb.Connector.MariaDb;
+using RepoDb.DbHelpers;
+using RepoDb.DbSettings;
+using RepoDb.StatementBuilders;
+using System;
+
+namespace RepoDb
+{
+    /// <summary>
+    /// A class used to initialize necessary objects that is connected to <see cref="MariaDbConnection"/> object.
+    /// </summary>
+    public static class MariaDbBootstrap
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets the value indicating whether the initialization is completed.
+        /// </summary>
+        public static bool IsInitialized { get; private set; }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal static void InitializeInternal()
+        {
+            // Skip if already initialized
+            if (IsInitialized == true)
+            {
+                return;
+            }
+
+            // Map the DbSetting
+            DbSettingMapper.Add<MariaDbConnection>(new MariaDbDbSetting(), true);
+
+            // Map the DbHelper
+            DbHelperMapper.Add<MariaDbConnection>(new MariaDbDbHelper(), true);
+
+            // Map the Statement Builder
+            StatementBuilderMapper.Add<MariaDbConnection>(new MariaDbStatementBuilder(), true);
+
+            // Set the flag
+            IsInitialized = true;
+        }
+
+        #endregion
+    }
+}

@@ -34,10 +34,11 @@ namespace RepoDb.Extensions
         /// <summary>
         /// 
         /// </summary>
-        internal static void PrependAnUnderscoreAtParameter(this QueryField queryField)
-        {
-            queryField.Parameter?.PrependAnUnderscore();
-        }
+        /// <param name="queryField"></param>
+        /// <param name="prefix"></param>
+        internal static void PrependTextToParameter(this QueryField queryField,
+            string prefix) =>
+            queryField.Parameter?.PrependText(prefix);
 
         /// <summary>
         /// 

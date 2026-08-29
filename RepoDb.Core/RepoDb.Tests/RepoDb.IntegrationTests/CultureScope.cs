@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace RepoDb.IntegrationTests
 {
@@ -11,16 +9,20 @@ namespace RepoDb.IntegrationTests
     /// </summary>
     internal sealed class CultureScope : IDisposable
     {
-        private readonly CultureInfo original;
+        private readonly CultureInfo originalCulture;
+        private readonly CultureInfo originalUICulture;
+
         public CultureScope(string cultureName)
         {
-            original = CultureInfo.DefaultThreadCurrentCulture;
-            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo(cultureName);
+            originalCulture = CultureInfo.CurrentCulture;
+            originalUICulture = CultureInfo.CurrentUICulture;
+            CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(cultureName);
         }
 
         public void Dispose()
         {
-            CultureInfo.DefaultThreadCurrentCulture = original;
+            CultureInfo.CurrentUICulture = originalUICulture;
+            CultureInfo.CurrentCulture = originalCulture;
         }
     }
 }

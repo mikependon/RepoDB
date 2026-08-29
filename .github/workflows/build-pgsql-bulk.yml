@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.PostgreSql.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.PostgreSql/**'
+      - 'RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pgsql-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations
+      solution-file: RepoDb.PostgreSql.BulkOperations.sln
+      artifact-name: release-pgsql-bulk
+      db-engine: postgresql

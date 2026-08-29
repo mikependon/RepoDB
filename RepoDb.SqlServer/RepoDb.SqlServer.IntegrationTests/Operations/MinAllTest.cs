@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
+                var result = connection.MinAll<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -48,12 +48,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinAllWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAll<CompleteTable>(e => e.ColumnInt,
+                var result = connection.MinAll<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -69,12 +69,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.MinAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAllAsyncWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.MinAllAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -110,13 +110,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = connection.MinAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -127,13 +127,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionMinAllViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = connection.MinAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -149,13 +149,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
@@ -166,13 +166,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionMinAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock);
 
                 // Assert

@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 
 namespace RepoDb.DbSettings
 {
@@ -13,16 +13,19 @@ namespace RepoDb.DbSettings
         public PostgreSqlDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "\"";
             DefaultSchema = "public";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using RepoDb.Enumerations;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -19,9 +19,13 @@ namespace RepoDb
          * The supposed maximum parameters of 2100 is not working with Microsoft.Data.SqlClient.
          * I reported this issue to SqlClient repository at Github.
          * Link: https://github.com/dotnet/SqlClient/issues/531
+         *
+         * The batch size used below is provider-configurable via IDbSetting.MaxParameterCount
+         * (BaseDbSetting defaults it to the same 2100 - 2 this constant used to hard-code) - some
+         * providers have a much lower hard limit on the number of members a single IN (...) clause
+         * may hold (e.g. Firebird's DSQL parser rejects one past 1500 members outright), so a single
+         * batch size can't safely be hard-coded here for every provider.
          */
-
-        private const int ParameterBatchCount = 2100 - 2;
 
         #region DeleteAll<TEntity>
 
@@ -44,7 +48,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -58,7 +62,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -84,7 +88,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -95,7 +99,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -120,7 +124,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -131,7 +135,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -154,7 +158,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -168,7 +172,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -192,7 +196,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -203,7 +207,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -226,7 +230,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -237,7 +241,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -258,7 +262,7 @@ namespace RepoDb
         public static int DeleteAll<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -267,7 +271,7 @@ namespace RepoDb
             return DeleteAllInternal<TEntity>(connection: connection,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -288,7 +292,7 @@ namespace RepoDb
         internal static int DeleteAllInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -305,7 +309,7 @@ namespace RepoDb
             return DeleteAllInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -334,7 +338,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -349,7 +353,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -377,7 +381,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -389,7 +393,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -416,7 +420,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -428,7 +432,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -453,7 +457,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -468,7 +472,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -494,7 +498,7 @@ namespace RepoDb
             IEnumerable<TKey> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -506,7 +510,7 @@ namespace RepoDb
                 keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -531,7 +535,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -543,7 +547,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -566,7 +570,7 @@ namespace RepoDb
         public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -576,7 +580,7 @@ namespace RepoDb
             return DeleteAllAsyncInternal<TEntity>(connection: connection,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -599,7 +603,7 @@ namespace RepoDb
         internal static Task<int> DeleteAllAsyncInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -617,7 +621,7 @@ namespace RepoDb
             return DeleteAllAsyncInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -645,7 +649,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -655,7 +659,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -677,7 +681,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -686,7 +690,7 @@ namespace RepoDb
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -708,7 +712,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -724,7 +728,7 @@ namespace RepoDb
             return DeleteAllInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -747,7 +751,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -761,14 +765,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount)
+                if (transaction == null && count > dbSetting.MaxParameterCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = keys?.Split(ParameterBatchCount).AsList();
+                var splitted = keys?.Split(dbSetting.MaxParameterCount).AsList();
                 if (splitted?.Any() == true)
                 {
                     foreach (var keyValues in splitted)
@@ -777,13 +781,13 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
                         deletedRows += DeleteInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
                             hints: hints,
                             commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                            traceKey: traceKey,
                             transaction: transaction,
                             trace: trace,
                             statementBuilder: statementBuilder);
@@ -833,7 +837,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -844,7 +848,7 @@ namespace RepoDb
                 keys: keys,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -868,7 +872,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -878,7 +882,7 @@ namespace RepoDb
                 tableName: tableName,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -902,7 +906,7 @@ namespace RepoDb
             string tableName,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -919,7 +923,7 @@ namespace RepoDb
             return DeleteAllAsyncInternalBase(connection: connection,
                 request: request,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -944,7 +948,7 @@ namespace RepoDb
             IEnumerable<object> keys,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -959,14 +963,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > ParameterBatchCount)
+                if (transaction == null && count > dbSetting.MaxParameterCount && dbSetting.IsTransactionSupported)
                 {
                     transaction = (await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = keys?.Split(ParameterBatchCount).AsList();
+                var splitted = keys?.Split(dbSetting.MaxParameterCount).AsList();
                 if (splitted?.Any() == true)
                 {
                     foreach (var keyValues in splitted)
@@ -975,13 +979,13 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
+                        var field = new QueryField(key.Name, Operation.In, keyValues.AsList(), null, false);
                         deletedRows += await DeleteAsyncInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
                             hints: hints,
                             commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                             transaction: transaction,
                             trace: trace,
                             statementBuilder: statementBuilder,
@@ -1026,13 +1030,23 @@ namespace RepoDb
         internal static int DeleteAllInternalBase(this IDbConnection connection,
             DeleteAllRequest request,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
+            var dbSetting = connection.GetDbSetting();
+            var affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+                (int?)connection.CountAllInternal(tableName: request.Name,
+                    hints: request.Hints,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: request.StatementBuilder) :
+                null;
 
             // Actual Execution
             var result = ExecuteNonQueryInternal(connection: connection,
@@ -1040,7 +1054,7 @@ namespace RepoDb
                 param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 entityType: request.Type,
@@ -1048,7 +1062,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // Result
-            return result;
+            return affectedRowsFallback ?? result;
         }
 
         #endregion
@@ -1069,7 +1083,7 @@ namespace RepoDb
         internal static async Task<int> DeleteAllAsyncInternalBase(this IDbConnection connection,
             DeleteAllRequest request,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.DeleteAll,
+            string traceKey = TraceKeys.DeleteAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             CancellationToken cancellationToken = default)
@@ -1077,14 +1091,25 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteAllText(request);
-            
+            var dbSetting = connection.GetDbSetting();
+            var affectedRowsFallback = dbSetting.IsAffectedRowsSupported == false ?
+                (int?)await connection.CountAllAsyncInternal(tableName: request.Name,
+                    hints: request.Hints,
+                    commandTimeout: commandTimeout,
+                    traceKey: traceKey,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: request.StatementBuilder,
+                    cancellationToken: cancellationToken) :
+                null;
+
             // Actual Execution
             var result = await ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: null,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken,
@@ -1093,7 +1118,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // Result
-            return result;
+            return affectedRowsFallback ?? result;
         }
 
         #endregion

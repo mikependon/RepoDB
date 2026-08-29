@@ -13,7 +13,7 @@ namespace RepoDb.Benchmarks.SqlServer.RepoDb
         [GlobalSetup]
         public void Setup()
         {
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServer();
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
             BaseSetup();
         }

@@ -1,0 +1,246 @@
+C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj : warning NU1903: Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q [C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\RepoDb.Sqlite.Microsoft.IntegrationTests.csproj]
+C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\RepoDb.Sqlite.Microsoft.IntegrationTests.csproj : warning NU1903: Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q
+C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\RepoDb.Sqlite.Microsoft.IntegrationTests.csproj : warning NU1903: Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q [TargetFramework=net10.0]
+C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj : warning NU1903: Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q [TargetFramework=net10.0]
+MSTest v4.2.3 (UTC 14/05/2026) [win-x64 - .NET 10.0.9]
+failed TestSqLiteConnectionAverageWithExpression (11ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.AverageTest.TestSqLiteConnectionAverageWithExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Average[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Average.cs:262
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.AverageTest.TestSqLiteConnectionAverageWithExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\AverageTest.cs:59
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionAverageAsyncWithExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.AverageTest.TestSqLiteConnectionAverageAsyncWithExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.AverageAsync[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Average.cs:1119
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.AverageTest.TestSqLiteConnectionAverageAsyncWithExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\AverageTest.cs:114
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+failed TestSqLiteConnectionCountViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.CountTest.TestSqLiteConnectionCountViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Count[TEntity](IDbConnection connection, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Count.cs:76
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.CountTest.TestSqLiteConnectionCountViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\CountTest.cs:58
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionCountAsyncViaExpression (1ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.CountTest.TestSqLiteConnectionCountAsyncViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.CountAsync[TEntity](IDbConnection connection, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Count.cs:298
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.CountTest.TestSqLiteConnectionCountAsyncViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\CountTest.cs:185
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+failed TestSqLiteConnectionExistsViaExpression (1ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.ExistsTest.TestSqLiteConnectionExistsViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Exists[TEntity](IDbConnection connection, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Exists.cs:110
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.ExistsTest.TestSqLiteConnectionExistsViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\ExistsTest.cs:58
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionExistsAsyncViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.ExistsTest.TestSqLiteConnectionExistsAsyncViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.ExistsAsync[TEntity](IDbConnection connection, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Exists.cs:369
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.ExistsTest.TestSqLiteConnectionExistsAsyncViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\ExistsTest.cs:185
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+failed TestSqLiteConnectionMaxViaExpression (1ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MaxTest.TestSqLiteConnectionMaxViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Max[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Max.cs:262
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MaxTest.TestSqLiteConnectionMaxViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\MaxTest.cs:59
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionMaxAsyncViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MaxTest.TestSqLiteConnectionMaxAsyncViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.MaxAsync[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Max.cs:1119
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MaxTest.TestSqLiteConnectionMaxAsyncViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\MaxTest.cs:193
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+failed TestSqLiteConnectionMinViaExpression (1ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MinTest.TestSqLiteConnectionMinViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Min[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Min.cs:262
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MinTest.TestSqLiteConnectionMinViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\MinTest.cs:59
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionMinAsyncViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MinTest.TestSqLiteConnectionMinAsyncViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.MinAsync[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Min.cs:1119
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.MinTest.TestSqLiteConnectionMinAsyncViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\MinTest.cs:193
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+failed TestSqLiteConnectionSumViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.SumTest.TestSqLiteConnectionSumViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.Sum[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Sum.cs:262
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.SumTest.TestSqLiteConnectionSumViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\SumTest.cs:59
+    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    
+failed TestSqLiteConnectionSumAsyncViaExpression (2ms)
+  Test method RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.SumTest.TestSqLiteConnectionSumAsyncViaExpression threw exception:
+  System.NotSupportedException: Specified method is not supported.
+    at System.Reflection.RuntimeMethodInfo.ThrowNoInvokeException()
+    at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+    at System.Delegate.DynamicInvokeImpl(Object[] args)
+    at RepoDb.Extensions.ExpressionExtension.GetValue(MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:341
+    at RepoDb.Extensions.ExpressionExtension.GetValue(Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\ExpressionExtension.cs:285
+    at RepoDb.QueryField.ParseContains[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:358
+    at RepoDb.QueryField.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryField\ParseExpression.cs:261
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression, Nullable`1 unaryNodeType) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:221
+    at RepoDb.QueryGroup.Parse[TEntity](MethodCallExpression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:207
+    at RepoDb.QueryGroup.Parse[TEntity](Expression expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:87
+    at RepoDb.QueryGroup.Parse[TEntity](Expression`1 expression) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\QueryGroup\ParseExpression.cs:56
+    at RepoDb.DbConnectionExtension.ToQueryGroup[TEntity](Expression`1 where) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Extensions\DbConnectionExtension.cs:2813
+    at RepoDb.DbConnectionExtension.SumAsync[TEntity](IDbConnection connection, Expression`1 field, Expression`1 where, String hints, Nullable`1 commandTimeout, String traceKey, IDbTransaction transaction, ITrace trace, IStatementBuilder statementBuilder, CancellationToken cancellationToken) in C:\Users\micha\source\repos\RepoDB\RepoDb.Core\RepoDb\Operations\DbConnection\Sum.cs:1119
+    at RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS.SumTest.TestSqLiteConnectionSumAsyncViaExpression() in C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\Operations\SumTest.cs:193
+    at Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.Execution.TestMethodInfo.ExecuteInternalAsync(Object[] arguments, CancellationTokenSource timeoutTokenSource) in /_/src/Adapter/MSTestAdapter.PlatformServices/Execution/TestMethodInfo.cs:397
+    
+
+Test run summary: Failed! - C:\Users\micha\source\repos\RepoDB\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\bin\Debug\net10.0\RepoDb.Sqlite.Microsoft.IntegrationTests.dll (net10.0|x64)
+  total: 546
+  failed: 12
+  succeeded: 534
+  skipped: 0
+  duration: 1s 823ms

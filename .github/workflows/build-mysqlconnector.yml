@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.MySqlConnector (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MySqlConnector/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-mysqlconnector.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.MySqlConnector
+      solution-file: RepoDb.MySqlConnector.sln
+      artifact-name: release-mysqlconnector
+      db-engine: mysql

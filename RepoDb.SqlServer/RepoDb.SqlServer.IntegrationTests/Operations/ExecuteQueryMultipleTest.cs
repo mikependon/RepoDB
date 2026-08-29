@@ -31,19 +31,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteQueryMultiple()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; " +
-                    "SELECT * FROM \"CompleteTable\";"))
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"IdentityCompleteTable\"; " +
+                    "SELECT * FROM \"IdentityCompleteTable\";"))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>
@@ -59,24 +59,24 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteQueryMultipleWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
-                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id2;",
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id1; " +
+                    "SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
                     }))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>
@@ -91,20 +91,20 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionExecuteQueryMultipleWithSharedParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +
-                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id; " +
+                    "SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { Id = tables.Last().Id }))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>
@@ -123,19 +123,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteQueryMultipleAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; " +
-                    "SELECT * FROM \"CompleteTable\";"))
+                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"IdentityCompleteTable\"; " +
+                    "SELECT * FROM \"IdentityCompleteTable\";"))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>
@@ -151,24 +151,24 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteQueryMultipleAsyncWithParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
-                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id2;",
+                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id1; " +
+                    "SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
                     }))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>
@@ -183,20 +183,20 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +
-                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                using (var extractor = await connection.ExecuteQueryMultipleAsync("SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id; " +
+                    "SELECT * FROM \"IdentityCompleteTable\" WHERE \"Id\" = @Id;",
                     new { Id = tables.Last().Id }))
                 {
-                    var list = new List<IEnumerable<CompleteTable>>();
+                    var list = new List<IEnumerable<IdentityCompleteTable>>();
 
                     // Act
-                    list.Add(extractor.Extract<CompleteTable>());
-                    list.Add(extractor.Extract<CompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
+                    list.Add(extractor.Extract<IdentityCompleteTable>());
 
                     // Assert
                     list.ForEach(item =>

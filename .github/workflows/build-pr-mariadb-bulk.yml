@@ -1,0 +1,20 @@
+name: PR - Build & Run Tests - RepoDb.MariaDb.BulkOperations
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MariaDb/**'
+      - 'RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-mariadb-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.MariaDb.BulkOperations
+      solution-file: RepoDb.MariaDb.BulkOperations.sln
+      artifact-name: release-pr
+      db-engine: mariadb

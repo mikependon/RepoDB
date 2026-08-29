@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -141,7 +141,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateExistsIfTheTableIsNull()
         {
             // Setup
@@ -150,12 +150,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateExists(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateExists(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateExistsIfTheTableIsEmpty()
         {
             // Setup
@@ -164,12 +165,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateExists(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateExists(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateExistsIfTheTableIsWhitespace()
         {
             // Setup
@@ -178,12 +180,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateExists(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateExists(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateExistsIIfTheHintsAreNotSupported()
         {
             // Setup
@@ -192,9 +195,10 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateExists(queryBuilder: queryBuilder,
-                tableName: tableName,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+                statementBuilder.CreateExists(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    hints: "Hints"));
         }
     }
 }

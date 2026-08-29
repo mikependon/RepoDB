@@ -7,7 +7,6 @@ namespace RepoDb.UnitTests.CustomObjects
         public CustomDbSetting()
         {
             AreTableHintsSupported = true;
-            AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = "dbo";
             IsDirectionSupported = false;
@@ -25,7 +24,6 @@ namespace RepoDb.UnitTests.CustomObjects
         public CustomNonHintsSupportingDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = "dbo";
             IsDirectionSupported = false;
@@ -44,7 +42,6 @@ namespace RepoDb.UnitTests.CustomObjects
         public CustomSingleStatementSupportDbSetting()
         {
             AreTableHintsSupported = true;
-            AverageableType = typeof(double);
             ClosingQuote = "]";
             DefaultSchema = "dbo";
             IsDirectionSupported = false;

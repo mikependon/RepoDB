@@ -59,7 +59,7 @@ namespace RepoDb.Extensions
             var parameter = command.CreateParameter();
 
             // Set the values
-            parameter.ParameterName = name.AsParameter(DbSettingMapper.Get(command.Connection));
+            parameter.ParameterName = name.AsParameterName(DbSettingMapper.Get(command.Connection));
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values
@@ -141,13 +141,13 @@ namespace RepoDb.Extensions
             {
                 command.Parameters.Add(
                     command.CreateParameter(
-                        commandArrayParameter.ParameterName.AsParameter(dbSetting), null, dbType));
+                        commandArrayParameter.ParameterName.AsParameterName(dbSetting), null, dbType));
             }
             else
             {
                 for (var i = 0; i < values.Length; i++)
                 {
-                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
+                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameterName(dbSetting);
                     var value = values[i];
                     dbType ??= value?.GetType().GetDbType();
                     command.Parameters.Add(
@@ -330,7 +330,7 @@ namespace RepoDb.Extensions
             }
 
             // Parameter values
-            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType), DbSettingMapper.Get(command.Connection));
 
             // Return the parameter
             return parameter;
@@ -379,7 +379,7 @@ namespace RepoDb.Extensions
             parameter.Size = GetSize(size, dbField);
 
             // Type map attributes
-            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType), DbSettingMapper.Get(command.Connection));
 
             // Return the parameter
             return parameter;
@@ -763,16 +763,18 @@ namespace RepoDb.Extensions
         /// <param name="parameter"></param>
         /// <param name="attributes"></param>
         private static void InvokePropertyValueAttributes(IDbDataParameter parameter,
-            IEnumerable<PropertyValueAttribute> attributes)
+            IEnumerable<PropertyValueAttribute> attributes,
+            IDbSetting dbSetting)
         {
             if (attributes?.Any() != true)
             {
                 return;
             }
 
-            // In RepoDb, the only way the parameter has '@_' is when the time you call the QueryField.IsForUpdate()
-            // method and it is only happening on update operations.
-            var isForUpdate = parameter.ParameterName.StartsWith("_") || parameter.ParameterName.StartsWith("@_");
+            // In RepoDb, the only way the parameter has the 'StringConstant.UpdateParameterPrefix' prefix is when the
+            // time you call the QueryField.IsForUpdate() method and it is only happening on update operations.
+            var isForUpdate = parameter.ParameterName.StartsWith(StringConstant.UpdateParameterPrefix, StringComparison.OrdinalIgnoreCase) ||
+                parameter.ParameterName.StartsWith(string.Concat("@", StringConstant.UpdateParameterPrefix), StringComparison.OrdinalIgnoreCase);
 
             foreach (var attribute in attributes)
             {
@@ -786,7 +788,7 @@ namespace RepoDb.Extensions
                 {
                     continue;
                 }
-                attribute.SetValue(parameter);
+                attribute.SetValue(parameter, dbSetting);
             }
         }
 
@@ -885,6 +887,12 @@ namespace RepoDb.Extensions
             {
                 return AutomaticConvertGuidToString(value);
             }
+#if NET6_0_OR_GREATER
+            else if (fromType == StaticType.DateOnly && targetType == StaticType.DateTime)
+            {
+                return AutomaticConvertDateOnlyToDateTime(value);
+            }
+#endif
             else
             {
                 return (value != DBNull.Value) ? Convert.ChangeType(value, targetType) : Activator.CreateInstance(targetType);
@@ -915,6 +923,10 @@ namespace RepoDb.Extensions
         private static object AutomaticConvertGuidToString(object value) =>
             value?.ToString();
 
+#if NET6_0_OR_GREATER
+        private static object AutomaticConvertDateOnlyToDateTime(object value) =>
+            (value is DateOnly dateOnly ? dateOnly.ToDateTime(default(TimeOnly)) : null);
+#endif
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Interfaces;
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace RepoDb.Resolvers
@@ -17,23 +18,29 @@ namespace RepoDb.Resolvers
         /// <returns>The equivalent <see cref="IClassHandler{TEntity}"/> object of the .NET CLR type.</returns>
         public object Resolve(Type type)
         {
-            var classHandler = (object)null;
-
-            // Attribute
+            object classHandler = null;
+            
             var attribute = type.GetCustomAttribute<ClassHandlerAttribute>();
-            if (attribute != null)
+            if (attribute is not null)
             {
-                classHandler = Converter.ToType<object>(Activator.CreateInstance(attribute.HandlerType));
+                classHandler = Activator.CreateInstance(attribute.HandlerType);
             }
 
-            // Type Level
-            if (classHandler == null)
+            if (classHandler is not null) return classHandler;
+            
+#if NET7_0_OR_GREATER
+            var genericAttribute = type.GetCustomAttribute(typeof(ClassHandlerAttribute<>));
+            if (genericAttribute is not null)
             {
-                classHandler = ClassHandlerMapper.Get<object>(type);
-            }
+                var handlerType = genericAttribute.GetType()
+                    .GetGenericArguments()
+                    .First();
 
-            // Return the value
-            return classHandler;
+                classHandler = Activator.CreateInstance(handlerType);
+            }
+#endif
+
+            return classHandler ?? ClassHandlerMapper.Get<object>(type);
         }
     }
 }

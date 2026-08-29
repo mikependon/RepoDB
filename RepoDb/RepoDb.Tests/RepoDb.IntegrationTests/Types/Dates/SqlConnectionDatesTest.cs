@@ -42,7 +42,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -76,7 +76,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -112,7 +112,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -146,7 +146,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -182,7 +182,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -217,7 +217,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -255,7 +255,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -290,7 +290,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -332,7 +332,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -366,7 +366,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = (TimeSpan?)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -438,7 +438,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = (TimeSpan?)null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);

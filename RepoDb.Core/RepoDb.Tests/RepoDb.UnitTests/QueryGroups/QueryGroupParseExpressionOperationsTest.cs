@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace RepoDb.UnitTests
@@ -112,10 +112,10 @@ namespace RepoDb.UnitTests
 
         // ExpectedException
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnParseExpressionWithoutProperty()
         {
-            QueryGroup.Parse<QueryGroupTestExpressionClass>(e => true).GetString(m_dbSetting);
+            Assert.Throws<NotSupportedException>(() => QueryGroup.Parse<QueryGroupTestExpressionClass>(e => true).GetString(m_dbSetting));
         }
     }
 }

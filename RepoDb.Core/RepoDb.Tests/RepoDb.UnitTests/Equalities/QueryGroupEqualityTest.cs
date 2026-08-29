@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace RepoDb.UnitTests.Equalities
 {
@@ -128,6 +128,22 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsFalse(equal);
+            Assert.AreEqual(objA.QueryGroups.Count, objB.QueryGroups.Count);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForCollidedExpressions2()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !(c.Value != 1));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+            Assert.AreEqual(objA.QueryGroups?.Count, objB.QueryGroups?.Count);
         }
 
         [TestMethod]

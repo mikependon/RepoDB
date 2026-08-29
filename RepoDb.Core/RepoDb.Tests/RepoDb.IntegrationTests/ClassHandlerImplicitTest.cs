@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
@@ -11,6 +11,7 @@ using RepoDb.IntegrationTests.Models;
 using System.Data.Common;
 using RepoDb.Enumerations;
 using RepoDb.Options;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -112,7 +113,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -138,6 +139,38 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestBatchQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.BatchQueryAsync<ClassHandlerIdentityTable>(page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
         #endregion
 
         #region ExecuteQuery
@@ -148,7 +181,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -171,6 +204,35 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestExecuteQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.ExecuteQueryAsync<ClassHandlerIdentityTable>("SELECT * FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
         #endregion
 
         #region Merge
@@ -181,7 +243,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -196,12 +258,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestMergeAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var id = await connection.MergeAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestMergeManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -209,6 +291,29 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 tables.ForEach(table => connection.Merge(table));
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMergeAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.MergeAsync(table);
+                }
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -225,7 +330,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -233,6 +338,26 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 connection.MergeAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMergeAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.MergeAllAsync(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -249,7 +374,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -264,12 +389,32 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestInsertAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var id = await connection.InsertAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestInsertManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -277,6 +422,29 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 tables.ForEach(table => connection.Insert(table));
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.InsertAsync(table);
+                }
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -293,7 +461,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
@@ -301,6 +469,26 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 connection.InsertAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestInsertAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.InsertAllAsync(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
@@ -317,7 +505,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var id = connection.Insert(table);
@@ -335,6 +523,30 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestQueryAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var id = await connection.InsertAsync(table);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = (await connection.QueryAsync<ClassHandlerIdentityTable>(id)).First();
+
+                // Assert
+                Assert.AreEqual(1, handler.GetMethodCallCount);
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
         #endregion
 
         #region QueryAll
@@ -345,7 +557,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -368,6 +580,35 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestQueryAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                var result = await connection.QueryAllAsync<ClassHandlerIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.GetMethodCallCount);
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
         #endregion
 
         #region Update
@@ -378,7 +619,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var table = CreateClassHandlerIdentityTables(1).First();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert(table);
@@ -396,12 +637,35 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestUpdateAsyncWithClassHandler()
+        {
+            // Setup
+            var table = CreateClassHandlerIdentityTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAsync(table);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.UpdateAsync(table);
+
+                // Assert
+                Assert.AreEqual(1, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
         public void TestUpdateManyWithClassHandler()
         {
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -418,6 +682,32 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestUpdateAsyncManyWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                foreach (var table in tables)
+                {
+                    await connection.UpdateAsync(table);
+                }
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
         #endregion
 
         #region UpdateAll
@@ -428,7 +718,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var tables = CreateClassHandlerIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -439,6 +729,29 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 connection.UpdateAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, handler.SetMethodCallCount);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestUpdateAllAsyncWithClassHandler()
+        {
+            // Setup
+            var tables = CreateClassHandlerIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                await connection.InsertAllAsync(tables);
+
+                // Setup
+                var handler = ClassHandlerCache.Get<ClassHandlerIdentityTableClassHandler>(typeof(ClassHandlerIdentityTable));
+                handler.Reset();
+
+                // Act
+                await connection.UpdateAllAsync(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, handler.SetMethodCallCount);

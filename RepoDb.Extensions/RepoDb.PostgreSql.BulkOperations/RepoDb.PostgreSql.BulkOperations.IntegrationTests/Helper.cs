@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
@@ -236,6 +237,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         #endregion
 
         #region Entity
+
+        #region Helpers
+
+        public static List<PostgreSqlBulkInsertMapItem> GetEnumTableMappings()
+        {
+            return new[]
+            {
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.Id), nameof(EnumTable.Id), NpgsqlTypes.NpgsqlDbType.Bigint),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumText), nameof(EnumTable.ColumnEnumText), NpgsqlTypes.NpgsqlDbType.Text),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumInt), nameof(EnumTable.ColumnEnumInt), NpgsqlTypes.NpgsqlDbType.Integer),
+                new PostgreSqlBulkInsertMapItem(nameof(EnumTable.ColumnEnumHand), nameof(EnumTable.ColumnEnumHand), "hand")
+            }
+            .AsList();
+        }
+
+        #endregion
 
         #region BulkOperationIdentityTable
 
@@ -760,7 +777,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnEnumHand"] = Hands.Right;
                 expandoObject["ColumnEnumInt"] = (int?)null; // Hands.Left;
-                expandoObject["ColumnEnumText"] = (string?)null; // Hands.Unidentified;
+                expandoObject["ColumnEnumText"] = (string)null; // Hands.Unidentified;
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;

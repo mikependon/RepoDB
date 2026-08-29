@@ -32,19 +32,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllForIdentityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateCompleteTables(10);
+            var tables = Helper.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAll<CompleteTable>(tables);
+                var result = connection.MergeAll<IdentityCompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -56,7 +56,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -64,14 +64,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll<CompleteTable>(tables);
+                var result = connection.MergeAll<IdentityCompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -83,7 +83,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -95,15 +95,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll<CompleteTable>(tables,
+                var result = connection.MergeAll<IdentityCompleteTable>(tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -200,19 +200,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateCompleteTables(10);
+            var tables = Helper.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<IdentityCompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -224,7 +224,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -232,14 +232,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<IdentityCompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -251,7 +251,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -263,15 +263,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables,
+                var result = await connection.MergeAllAsync<IdentityCompleteTable>(tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -372,20 +372,20 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllViaTableNameForIdentityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateCompleteTables(10);
+            var tables = Helper.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -402,16 +402,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
                 Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -423,7 +423,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -431,14 +431,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -450,7 +450,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -462,15 +462,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -487,14 +487,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -506,7 +506,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -514,14 +514,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -533,7 +533,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -545,15 +545,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MergeAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -739,19 +739,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateCompleteTables(10);
+            var tables = Helper.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -768,16 +768,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
                 Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -789,7 +789,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -797,14 +797,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -816,7 +816,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -828,15 +828,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -853,14 +853,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -872,7 +872,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -880,14 +880,14 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
@@ -899,7 +899,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
+            var tables = Database.CreateIdentityCompleteTables(10).AsList();
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -911,15 +911,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
                     tables,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, connection.CountAll<IdentityCompleteTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<CompleteTable>();
+                var queryResult = connection.QueryAll<IdentityCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());

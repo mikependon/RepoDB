@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 using RepoDb.Types;
 using System;
@@ -457,11 +457,12 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
             Assert.AreEqual(typeof(string), clientType);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowOnExceptionTestSqlServerTypeNameToClientTypeResolverIfDbTypeNameIsNull()
         {
             // Act
-            m_resolver.Resolve(null);
+            Assert.Throws<NullReferenceException>(() =>
+                m_resolver.Resolve(null));
         }
     }
 }

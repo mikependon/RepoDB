@@ -36,7 +36,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables);
@@ -62,7 +62,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
@@ -90,7 +90,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -122,7 +122,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -156,7 +156,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -189,7 +189,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -234,7 +234,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -266,7 +266,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables);
@@ -292,7 +292,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(tables, isReturnIdentity: true);
@@ -320,7 +320,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -352,7 +352,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -419,7 +419,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -464,7 +464,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -490,7 +490,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -508,10 +508,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BulkMerge(tables, mappings: mappings);
+                Assert.Throws<InvalidOperationException>(() => connection.BulkMerge(tables, mappings: mappings));
             }
         }
 
@@ -522,19 +522,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader);
@@ -565,19 +565,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader,
@@ -590,7 +590,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -609,23 +609,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge<BulkOperationIdentityTable>((DbDataReader)reader,
+                            mappings: mappings));
                     }
                 }
             }
@@ -638,13 +638,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -654,7 +654,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table);
@@ -674,13 +674,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -690,7 +690,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table, isReturnIdentity: true);
@@ -733,13 +733,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -749,7 +749,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge<BulkOperationIdentityTable>(table,
@@ -763,7 +763,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -782,13 +782,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -798,11 +798,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            destinationConnection.BulkMerge<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge<BulkOperationIdentityTable>(table,
+                                mappings: mappings));
                         }
                     }
                 }
@@ -812,38 +812,38 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         //[TestMethod, ExpectedException(typeof(NullReferenceException))]
         //public void ThrowExceptionOnSystemSqlConnectionBulkMergeForNullEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null);
+        //        Assert.Throws<NullReferenceException>(() => connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null));
         //    }
         //}
 
         //[TestMethod, ExpectedException(typeof(EmptyException))]
         //public void ThrowExceptionOnSystemSqlConnectionBulkMergeForEmptyEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
         //        connection.BulkMerge(Enumerable.Empty<BulkOperationIdentityTable>());
         //    }
         //}
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForNullDataReader()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DbDataReader)null);
+                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForNullDataTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null);
+                Assert.Throws<NullReferenceException>(() => connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null));
             }
         }
 
@@ -857,7 +857,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -899,7 +899,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -935,7 +935,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
@@ -961,7 +961,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
@@ -988,7 +988,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1020,7 +1020,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1053,7 +1053,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
@@ -1079,7 +1079,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
@@ -1106,7 +1106,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1138,7 +1138,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1171,7 +1171,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
@@ -1197,7 +1197,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
@@ -1225,7 +1225,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1257,7 +1257,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -1291,7 +1291,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1323,7 +1323,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1357,7 +1357,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1391,7 +1391,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1426,19 +1426,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1470,19 +1470,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1496,7 +1496,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1515,83 +1515,80 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings);
-
-                        // Assert
-                        Assert.AreEqual(tables.Count, bulkMergeResult);
+                            mappings: mappings));
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        destinationConnection.BulkMerge("InvalidTable", (DbDataReader)reader);
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("InvalidTable", (DbDataReader)reader));
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        destinationConnection.BulkMerge("MissingTable", (DbDataReader)reader);
+                        Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("MissingTable", (DbDataReader)reader));
                     }
                 }
             }
@@ -1604,13 +1601,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1620,7 +1617,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
@@ -1640,13 +1637,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1656,7 +1653,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true);
@@ -1699,13 +1696,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1715,7 +1712,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -1730,7 +1727,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -1749,13 +1746,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1765,35 +1762,32 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<InvalidOperationException>(() => destinationConnection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings);
-
-                            // Assert
-                            Assert.AreEqual(tables.Count, bulkMergeResult);
+                                mappings: mappings));
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1803,31 +1797,31 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            destinationConnection.BulkMerge("InvalidTable",
-                                table);
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("InvalidTable",
+                                table));
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1837,11 +1831,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            destinationConnection.BulkMerge("MissingTable",
-                                table);
+                            Assert.Throws<MissingFieldsException>(() => destinationConnection.BulkMerge("MissingTable",
+                                table));
                         }
                     }
                 }
@@ -1858,7 +1852,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables).Result;
@@ -1884,7 +1878,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
@@ -1912,7 +1906,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1941,7 +1935,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -1972,7 +1966,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2005,7 +1999,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2050,7 +2044,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -2079,7 +2073,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables).Result;
@@ -2105,7 +2099,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(tables, isReturnIdentity: true).Result;
@@ -2133,7 +2127,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2165,7 +2159,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2199,7 +2193,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2232,7 +2226,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2277,7 +2271,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -2303,7 +2297,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2321,14 +2315,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var bulkMergeResult = connection.BulkMergeAsync(tables,
-                    mappings: mappings);
-
-                // Trigger
-                var result = bulkMergeResult.Result;
+                Assert.Throws<AggregateException>(() => connection.BulkMergeAsync(tables,
+                    mappings: mappings).Result);
             }
         }
 
@@ -2339,19 +2330,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
@@ -2382,19 +2373,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader,
@@ -2407,7 +2398,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2426,26 +2417,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
-
-                        // Trigger
-                        var result = bulkMergeResult.Result;
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                            mappings: mappings).Result);
                     }
                 }
             }
@@ -2458,13 +2446,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2474,7 +2462,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table).Result;
@@ -2494,13 +2482,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2510,7 +2498,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true).Result;
@@ -2553,13 +2541,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2569,7 +2557,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table,
@@ -2583,7 +2571,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -2602,13 +2590,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2618,14 +2606,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
-
-                            // Trigger
-                            var result = bulkMergeResult.Result;
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync<BulkOperationIdentityTable>(table,
+                                mappings: mappings).Result);
                         }
                     }
                 }
@@ -2635,38 +2620,38 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         //[TestMethod, ExpectedException(typeof(AggregateException))]
         //public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForNullEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+        //        Assert.Throws<AggregateException>(() => connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();)
         //    }
         //}
 
         //[TestMethod, ExpectedException(typeof(AggregateException))]
         //public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForEmptyEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new SqlConnection(Database.ConnectionString))
         //    {
-        //        connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+        //        Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();)
         //    }
         //}
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForNullDataReader()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DbDataReader)null).Wait();
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null).Wait();)
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForNullDataTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
-                connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    (DataTable)null).Wait();
+                Assert.Throws<AggregateException>(() => connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null).Wait();)
             }
         }
 
@@ -2680,7 +2665,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -2723,7 +2708,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -2759,7 +2744,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
@@ -2785,7 +2770,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
@@ -2812,7 +2797,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -2844,7 +2829,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -2877,7 +2862,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
@@ -2903,7 +2888,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
@@ -2930,7 +2915,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -2962,7 +2947,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -2995,7 +2980,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
@@ -3021,7 +3006,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
@@ -3049,7 +3034,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -3081,7 +3066,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<BulkOperationIdentityTable>(tables);
@@ -3115,7 +3100,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3147,7 +3132,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3181,7 +3166,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3215,7 +3200,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 connection.InsertAll(tables);
@@ -3250,19 +3235,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
@@ -3293,19 +3278,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
                         var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -3319,7 +3304,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3338,89 +3323,80 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings);
-
-                        // Trigger
-                        var result = bulkMergeResult.Result;
+                            mappings: mappings).Result);
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync("InvalidTable", (DbDataReader)reader);
-
-                        // Trigger
-                        var result = bulkMergeResult.Result;
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("InvalidTable", (DbDataReader)reader).Result);
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                     {
                         // Act
-                        var bulkMergeResult = destinationConnection.BulkMergeAsync("MissingTable", (DbDataReader)reader);
-
-                        // Trigger
-                        var result = bulkMergeResult.Result;
+                        Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("MissingTable", (DbDataReader)reader).Result);
                     }
                 }
             }
@@ -3433,13 +3409,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3449,7 +3425,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
@@ -3469,13 +3445,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3485,7 +3461,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true).Result;
@@ -3528,13 +3504,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3544,7 +3520,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
                             var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
@@ -3559,7 +3535,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
@@ -3578,13 +3554,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3594,35 +3570,32 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings);
-
-                            // Trigger
-                            var result = bulkMergeResult.Result;
+                                mappings: mappings).Result);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3632,33 +3605,30 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync("InvalidTable", table);
-
-                            // Trigger
-                            var result = bulkMergeResult.Result;
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("InvalidTable", table).Result);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new SqlConnection(Database.ConnectionString))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -3668,14 +3638,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionString))
                         {
                             // Act
-                            var bulkMergeResult = destinationConnection.BulkMergeAsync("MissingTable",
-                                table);
-
-                            // Trigger
-                            var result = bulkMergeResult.Result;
+                            Assert.Throws<AggregateException>(() => destinationConnection.BulkMergeAsync("MissingTable",
+                                table).Result);
                         }
                     }
                 }

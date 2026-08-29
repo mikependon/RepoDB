@@ -4,7 +4,7 @@ namespace RepoDb.MySql.IntegrationTests.Models
 {
     public class NonIdentityCompleteTable
     {
-        public Int64? Id { get; set; }
+        public Int64 Id { get; set; }
         public String ColumnVarchar { get; set; }
         public Int32? ColumnInt { get; set; }
         public Decimal? ColumnDecimal2 { get; set; }

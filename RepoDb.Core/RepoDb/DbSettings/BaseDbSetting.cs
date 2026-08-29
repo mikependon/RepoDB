@@ -1,4 +1,4 @@
-﻿using RepoDb.Interfaces;
+using RepoDb.Interfaces;
 using System;
 using System.Data.Common;
 
@@ -23,16 +23,20 @@ namespace RepoDb.DbSettings
         public BaseDbSetting()
         {
             AreTableHintsSupported = true;
-            AverageableType = StaticType.Double;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
+            MultiStatementSeparator = ";";
             OpeningQuote = "[";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
 
         #endregion
@@ -52,12 +56,19 @@ namespace RepoDb.DbSettings
         /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
         /// </summary>
+        [Obsolete("This will be removed in the future releases.")]
         public Type AverageableType { get; protected set; }
 
         /// <summary>
         /// Gets the default schema of the database.
         /// </summary>
         public string DefaultSchema { get; protected set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider's <see cref="DbCommand.ExecuteNonQuery()"/>
+        /// reliably reports the number of rows affected by a DML statement.
+        /// </summary>
+        public bool IsAffectedRowsSupported { get; protected set; }
 
         /// <summary>
         /// Gets a value that indicates whether setting of the value of <see cref="DbParameter.Direction"/> object is supported.
@@ -80,9 +91,27 @@ namespace RepoDb.DbSettings
         public bool IsPreparable { get; protected set; }
 
         /// <summary>
+        /// Gets the value that indicates whether the current DB Provider's transaction support (e.g. <c>BeginTransaction()</c>)
+        /// is supported.
+        /// </summary>
+        public bool IsTransactionSupported { get; protected set; }
+
+        /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsert { get; protected set; }
+
+        /// <summary>
+        /// Gets the maximum number of parameters/members the current DB provider allows in a single generated
+        /// command text - most directly, the number of values a single <c>WHERE column IN (...)</c> clause can
+        /// hold.
+        /// </summary>
+        public int MaxParameterCount { get; protected set; }
+
+        /// <summary>
+        /// Gets the string used to join the individual per-type command texts generated.
+        /// </summary>
+        public string MultiStatementSeparator { get; protected set; }
 
         /// <summary>
         /// Gets the character (or string) used for opening quote.
@@ -93,6 +122,12 @@ namespace RepoDb.DbSettings
         /// Gets the character (or string) used for the database command parameter quoting.
         /// </summary>
         public string ParameterPrefix { get; protected set; }
+
+        /// <summary>
+        /// Gets the character (or string) used to prefix a parameter placeholder token embedded directly into the
+        /// generated SQL command text. See <see cref="RepoDb.Interfaces.IDbSetting.SqlTextParameterPrefix"/> for details.
+        /// </summary>
+        public string SqlTextParameterPrefix { get; protected set; }
 
         /// <summary>
         /// Gets the character (or string) used for separating the schema.
@@ -127,17 +162,14 @@ namespace RepoDb.DbSettings
                 hashCode = HashCode.Combine(hashCode, ClosingQuote);
             }
 
-            // DefaultAverageableType
-            if (AverageableType != null)
-            {
-                hashCode = HashCode.Combine(hashCode, AverageableType);
-            }
-
             // DefaultSchema
             if (!string.IsNullOrWhiteSpace(DefaultSchema))
             {
                 hashCode = HashCode.Combine(hashCode, DefaultSchema);
             }
+
+            // IsAffectedRowsSupported
+            hashCode = HashCode.Combine(hashCode, IsAffectedRowsSupported);
 
             // IsDirectionSupported
             hashCode = HashCode.Combine(hashCode, IsDirectionSupported);
@@ -151,8 +183,14 @@ namespace RepoDb.DbSettings
             // IsPreparable
             hashCode = HashCode.Combine(hashCode, IsPreparable);
 
+            // IsTransactionSupported
+            hashCode = HashCode.Combine(hashCode, IsTransactionSupported);
+
             // IsUseUpsert
             hashCode = HashCode.Combine(hashCode, IsUseUpsert);
+
+            // MaxParameterCount
+            hashCode = HashCode.Combine(hashCode, MaxParameterCount);
 
             // OpeningQuote
             if (!string.IsNullOrWhiteSpace(OpeningQuote))
@@ -164,6 +202,18 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
                 hashCode = HashCode.Combine(hashCode, ParameterPrefix);
+            }
+
+            // SqlTextParameterPrefix
+            if (!string.IsNullOrWhiteSpace(SqlTextParameterPrefix))
+            {
+                hashCode = HashCode.Combine(hashCode, SqlTextParameterPrefix);
+            }
+
+            // MultiStatementSeparator
+            if (!string.IsNullOrWhiteSpace(MultiStatementSeparator))
+            {
+                hashCode = HashCode.Combine(hashCode, MultiStatementSeparator);
             }
 
             // Set and return the hashcode
@@ -178,7 +228,7 @@ namespace RepoDb.DbSettings
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -190,7 +240,7 @@ namespace RepoDb.DbSettings
         public bool Equals(BaseDbSetting other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 

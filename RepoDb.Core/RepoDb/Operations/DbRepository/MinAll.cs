@@ -10,6 +10,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection, new()
     {
+
         #region MinAll<TEntity>
 
         /// <summary>
@@ -85,84 +86,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the min value of the target field.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be minimized.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The min value of the target field.</returns>
-        public TResult MinAll<TEntity, TResult>(Field field,
-            string hints = null,
-			string traceKey = TraceKeys.MinAll,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.MinAll<TEntity, TResult>(field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Computes the min value of the target field.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="field">The field to be minimized.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The min value of the target field.</returns>
-        public TResult MinAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
-            string hints = null,
-			string traceKey = TraceKeys.MinAll,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.MinAll<TEntity, TResult>(field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region MinAllAsync<TEntity>
-
-        /// <summary>
         /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -232,6 +155,84 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region MinAll<TEntity, TResult>
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult MinAll<TEntity, TResult>(Field field,
+            string hints = null,
+			string traceKey = TraceKeys.MinAll,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.MinAll<TEntity, TResult>(field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult MinAll<TEntity, TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+			string traceKey = TraceKeys.MinAll,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.MinAll<TEntity, TResult>(field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -362,48 +363,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Computes the min value of the target field.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimized.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="traceKey">The tracing key to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The min value of the target field.</returns>
-        public TResult MinAll<TResult>(string tableName,
-            Field field,
-            string hints = null,
-			string traceKey = TraceKeys.MinAll,
-            IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.MinAll<TResult>(tableName: tableName,
-                    field: field,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    traceKey: traceKey,
-					transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region MinAllAsync(TableName)
-
-        /// <summary>
         /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
@@ -435,6 +394,48 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region MinAll<TResult>(TableName)
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult MinAll<TResult>(string tableName,
+            Field field,
+            string hints = null,
+			string traceKey = TraceKeys.MinAll,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.MinAll<TResult>(tableName: tableName,
+                    field: field,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    traceKey: traceKey,
+					transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             finally
             {
@@ -485,5 +486,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

@@ -32,12 +32,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionAverageAll()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAll<CompleteTable>(e => e.ColumnInt);
+                var result = connection.AverageAll<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -48,12 +48,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionAverageAllWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAll<CompleteTable>(e => e.ColumnInt,
+                var result = connection.AverageAll<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.TabLock);
 
                 // Assert
@@ -69,12 +69,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionAverageAllAsync()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt);
+                var result = await connection.AverageAllAsync<IdentityCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -85,12 +85,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionAverageAllAsyncWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.AverageAllAsync<IdentityCompleteTable>(e => e.ColumnInt,
                     SqlServerTableHints.TabLock);
 
                 // Assert
@@ -110,13 +110,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionAverageAllViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = connection.AverageAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -127,13 +127,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlServerConnectionAverageAllViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = connection.AverageAll(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.TabLock);
 
                 // Assert
@@ -149,13 +149,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionAverageAllAsyncViaTableName()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
+                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -166,13 +166,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public async Task TestSqlServerConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var tables = Database.CreateCompleteTables(10);
+            var tables = Database.CreateIdentityCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
+                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityCompleteTable>(),
+                    Field.Parse<IdentityCompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.TabLock);
 
                 // Assert

@@ -1,83 +1,72 @@
+<div align="center">
+    <image src="logo.png" style="width:256px;" />
+    <br/>
+    <span style="font-size:16px;font-weight:bold;">A production-ready data access platform for .NET applications.</span>
+</div>
 
-[![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?&logo=appveyor&label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
-[![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)
-[![Releases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/core)
-[![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
-[![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
-[![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?&logo=gitter&color=48B293)](https://gitter.im/RepoDb/community)
+-----
 
-# [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.
+RepoDB is a high-performance data productivity platform for .NET developers. At its core is the popular hybrid-ORM library for .NET with clean and easy APIs.
 
-RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+It provides the flexibility to work the way you want — all through the [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection) interface. Write raw SQL when you need absolute control, or use the fluent APIs for more productivity, and switch seamlessly between both without sacrificing performance or maintainability.
 
-To get the latest updates about this library, follow us on [Twitter](https://twitter.com/mike_pendon)!
+## Why RepoDB?
 
-## Benefits/Advantages
+RepoDB solves a complex problem in the .NET data access space: making bulk operations simple. It is designed to efficiently move millions of records across different database providers. Imagine migrating massive datasets from legacy databases to modern, cloud-native platforms — efficiently, reliably, and with high performance.
 
-Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations. The good thing is, it also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
+### As a Productivity Platform
 
-If you are to use [RepoDB](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as opening a connection and calling the advance operations with a very minimal code. It is the reason that makes this library the simpliest ORM to use.
+It goes beyond the ORM with enterprise-grade capabilities for building, operating, and scaling with confidence:
 
-When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after your execution. It is an important use-case that is/may needed by you and/or most developers, and both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
+- **📦 Bulk Operations** — High-performance bulk inserts, updates, merges, and deletes built for demanding production workloads.
+- **🔄 Data Replication** — Scalable data movement and synchronization across multiple database platforms.
+- **📊 Telemetry** — Immediate visibility into execution times, failures, and application behavior, with minimal configuration.
 
-RepoDB also does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operation), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operation) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operation)). Through this, it is easy for you to establish your repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of your application.
+### As a Hybrid-ORM
 
-<details>
-<summary><b>Important Attributes</b></summary>
+It stays close to the metal and remaining lightweight:
 
-<p>
+- **👌 Easy to Use** — All operations are extension methods on [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection). Open a connection and you're ready to go.
+- **🚀 High Performance** — Compiled expressions are cached and reused. RepoDB understands your schema to generate the most efficient execution path ahead of time.
+- **🧠 Memory Efficient** — Object properties, execution contexts, mappings, and SQL statements are extracted once and reused throughout the lifetime of your application.
+- **🔀 Hybrid** — Use fluent methods for everyday CRUD, drop down to raw SQL for complex queries, or mix both — all within the same connection.
+- **🏆 Battle-Tested** — Backed by thousands of unit and integration tests, and used in production systems worldwide.
+- **🆓 Always Free** — Apache 2.0 licensed, forever open source.
 
-**Easy to Use** - the operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.
+### As a Universal Connector
 
-**High Performant** - it caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
+It bridges different database systems with a single, unified connectivity layer:
 
-**Memory Efficient** - it extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+- **🔌 Universal Connectivity** — Works with any provider that implements [IDbConnection](https://learn.microsoft.com/en-us/dotnet/api/system.data.idbconnection), from SQL Server and PostgreSQL to ClickHouse, DB2, Oracle, and more.
+- **🌉 Cross-Provider Data Movement** — Move data between different database engines without writing hand-rolled conversion logic.
+- **🧩 Consistent API Surface** — The same fluent methods and conventions work identically regardless of the underlying provider.
+- **⚙️ Provider-Native Optimizations** — Each connector is tuned to exploit the bulk and native capabilities of its target database.
 
-**Dynamic and Hybrid** - it provides some advance features of the full-fledged ORMs. It significantly help the developers to simplify the experience when context-switching during the development.
+### Roadmap
 
-**Open-Source Software** - it is an open-source software and will always be free. It is authored to further improve the .NET data access experiences and solutions, together with the collective ideas of the community.
+RepoDB is evolving from an ORM into a broader data productivity platform, with Data Engineering capabilities — moving data between providers, on-premise or cloud-native — on the roadmap.
 
-**High Quality** - it is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment.
-
-</p>
-
-</details>
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Resources/refs/heads/main/blogs/images/posts/2026-08/repodb-new-architecture.png" style="max-width:768px" />
 
 ## Get Started
 
-Please click any of the link below to fast-track your learnings.
+Choose your database and follow the quick-start guide:
 
-- [SqlServer](http://repodb.net/tutorial/get-started-sqlserver)
-- [SqLite](http://repodb.net/tutorial/get-started-sqlite)
-- [MySql](http://repodb.net/tutorial/get-started-mysql)
-- [PostgreSql](http://repodb.net/tutorial/get-started-postgresql)
+- [ClickHouse](http://repodb.net/tutorial/get-started-clickhouse)
+- [Db2](http://repodb.net/tutorial/get-started-db2)
+- [Firebird](http://repodb.net/tutorial/get-started-firebird)
+- [MariaDB](http://repodb.net/tutorial/get-started-mariadb)
+- [MySQL](http://repodb.net/tutorial/get-started-mysql)
+- [Oracle](http://repodb.net/tutorial/get-started-oracle)
+- [PostgreSQL](http://repodb.net/tutorial/get-started-postgresql)
+- [SQL Server](http://repodb.net/tutorial/get-started-sqlserver)
+- [SQLite](http://repodb.net/tutorial/get-started-sqlite)
 
-Or, learn a specific feature.
-
-- [Batch Operations](http://repodb.net/feature/batchoperations)
-- [Bulk Operations](http://repodb.net/feature/bulkoperations)
-- [Caching](http://repodb.net/feature/caching)
-- [Class Handlers](http://repodb.net/feature/classhandlers)
-- [Class Mapping](http://repodb.net/feature/classmapping)
-- [Dynamics](http://repodb.net/feature/dynamics)
-- [Connection Persistency](http://repodb.net/feature/connectionpersistency)
-- [Enumeration](http://repodb.net/feature/enumeration)
-- [Expression Trees](http://repodb.net/feature/expressiontrees)
-- [Hints](http://repodb.net/feature/hints)
-- [Implicit Mapping](http://repodb.net/feature/implicitmapping)
-- [Multiple Query](http://repodb.net/feature/multiplequery)
-- [Property Handlers](http://repodb.net/feature/propertyhandlers)
-- [Repositories](http://repodb.net/feature/repositories)
-- [Targeted Operations](http://repodb.net/feature/targeted)
-- [Tracing](http://repodb.net/feature/tracing)
-- [Transaction](http://repodb.net/feature/transaction)
-- [Type Mapping](http://repodb.net/feature/typemapping)
-
-Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
+Explore individual features in the [documentation](http://repodb.net/docs).
 
 ## Supported Databases
 
-The execute methods below support all the RDBMS data providers.
+Raw SQL execution methods work with **any** ADO.NET-compatible provider:
 
 - [ExecuteQuery](http://repodb.net/operation/executequery)
 - [ExecuteNonQuery](http://repodb.net/operation/executenonquery)
@@ -85,156 +74,127 @@ The execute methods below support all the RDBMS data providers.
 - [ExecuteReader](http://repodb.net/operation/executereader)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
-Whereas the fluent methods below only support the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
+Fluent operations (Query, Insert, Merge, Delete, Update, and [more](http://repodb.net/operation)) are supported for DB providers mentioned at [get-started](#get-started) section.
 
-- [Query](http://repodb.net/operation/query)
-- [Insert](http://repodb.net/operation/insert)
-- [Merge](http://repodb.net/operation/merge)
-- [Delete](http://repodb.net/operation/delete)
-- [Update](http://repodb.net/operation/update)
- 
-Click [here](http://repodb.net/operation) to see all the operations.
+## Packages and Build Status
 
-## Package Referencing
+RepoDB ships as a core package plus provider-specific packages for each supported database, with optional bulk-operations add-ons.
 
-By default, .NET is auto-resolving the references, however, we strongly recommend that you always explicitly reference the [RepoDb](https://www.nuget.org/packages/RepoDb) core library. The rationale behind this is that, the [RepoDb](https://www.nuget.org/packages/RepoDb) core library is a fast-moving package in which all the alpha/beta releases, hotfixes and/or even the actual releases could happen without affecting the extension libraries.
+See the full [package list and build status](PACKAGES.md).
 
-Please note that we are releasing an actual next released-version if the changes are having minimal impact but is important for the other users.
+## Bulk Operations Support
 
-You can always target the version when installing the library, even it is on a semantic release.
+Every supported database has a dedicated bulk-operations add-on (`BulkInsert`, `BulkMerge`, `BulkUpdate`, `BulkDelete`), each built on top of that provider's own fastest data-loading mechanism, with sync and async variants:
 
-```csharp
-> Install-Package RepoDb -version 1.x.x-betaX
-```
+| DB Provider | Sync | Async | Class |
+|---|---|---|---|
+| [ClickHouse](https://www.nuget.org/packages/RepoDb.ClickHouse.BulkOperations) | ✅ | ✅ | [ClickHouseBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.ClickHouse.BulkOperations/RepoDb.ClickHouse.BulkOperations/ClickHouseBulkCopy.cs) |
+| [Db2](https://www.nuget.org/packages/RepoDb.Db2.BulkOperations) | ✅ | ✅ | [DB2BulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Base/WriteToServer.cs) Native (Sync) / [Db2BulkArrayBinder](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Db2.BulkOperations/RepoDb.Db2.BulkOperations/Db2BulkArrayBinder.cs) (Async) |
+| [Firebird](https://www.nuget.org/packages/RepoDb.Firebird.BulkOperations) | ✅ | ✅ | [FirebirdCommandBatcher](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Firebird.BulkOperations/RepoDb.Firebird.BulkOperations/FirebirdCommandBatcher.cs) (via **`FbBatchCommand`**) |
+| [MariaDB](https://www.nuget.org/packages/RepoDb.MariaDb.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MariaDb.BulkOperations/RepoDb.MariaDb.BulkOperations/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb)**) |
+| [MariaDB Connector](https://www.nuget.org/packages/RepoDb.MariaDbConnector.BulkOperations) | ✅ | ✅ | [MariaDbBulkCopy](https://github.com/mikependon/RepoDB.Connectors/blob/main/src/RepoDb.Connector.MariaDbConnector/RepoDb.Connector.MariaDbConnector/Bulk/MariaDbBulkCopy.cs) (via **[RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector)**) |
+| [MySQL](https://www.nuget.org/packages/RepoDb.MySql.BulkOperations) | ✅ | ✅ | [MySqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySql.BulkOperations/RepoDb.MySql.BulkOperations/MySqlBulkCopy.cs) (via [MySqlBulkLoader](https://www.nuget.org/packages/MySql.Data)) |
+| [MySQL Connector](https://www.nuget.org/packages/RepoDb.MySqlConnector.BulkOperations) | ✅ | ✅ | [MySqlConnectorBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.MySqlConnector.BulkOperations/RepoDb.MySqlConnector.BulkOperations/Base/WriteToServer.cs) Native |
+| [Oracle](https://www.nuget.org/packages/RepoDb.Oracle.BulkOperations) | ✅ | ✅ | [OracleBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.Oracle.BulkOperations/RepoDb.Oracle.BulkOperations/Base/WriteToServer.cs) Native |
+| [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql.BulkOperations) | ✅ | ✅ | [NpgsqlBinaryImporter](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations/RepoDb.PostgreSql.BulkOperations/Base/BinaryImport.cs) Native |
+| [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations) | ✅ | ✅ | [SqlBulkCopy](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations/Base/WriteToServer.cs) Native |
 
-## .NET Type Coercion
+MariaDB and MariaDB Connector route through RepoDB's own low-level connector packages (`RepoDb.Connector.MariaDb` / `RepoDb.Connector.MariaDbConnector`) rather than a database-vendor driver. Firebird has no `SqlBulkCopy`-equivalent in its ADO.NET driver, so `FirebirdCommandBatcher` batches rows through the driver's native `FbBatchCommand` instead.
 
-By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
+## Type Coercion
 
-It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the entity model if being compared to its corresponding database table/view.
-
-If you wish to have an automatic conversion, simply set the [Converter.ConversionType](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
-
-```csharp
-RepoDb.Converter.ConversionType = ConversionType.Automatic;
-```
-
-**Note:** The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception. If the [Automatic](https://repodb.net/enumeration/conversiontype) conversion is used, the extracted value will always be evaluated and an additional conversion logic will be used (if needed). The conversion logic is through the AOT compilation of [System.Linq.Expressions.Expression.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression.convert?view=netcore-3.1) and/or [System.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.convert?view=netcore-3.1).
-
-## Exception Handling
-
-As the compiler exception is a bit low-level and is not descriptive for the native language, therefore, when compiling the process of hydration from/to the database and the application, a customized exception is being thrown to provide a detailed exception messages to the callers.
-
-On the other hand, as part of the standard when writing code in RepoDB (i.e.: respect the default exception handling of .NET, ensure an unharmonized exception when bubbling up the exception messages), RepoDB does not contain a single line of code that catches and rethrowing any exception (try-catch statement). Any exception happens within the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the callers.
-
-## System.Data.SqlClient
-
-If you are working with this package, you are required to bootstrap the connection object on the startup.
+RepoDB uses ADO.NET's native coercion by default, keeping type mismatches visible and explicit. To enable automatic conversion:
 
 ```csharp
-var dbSetting = new SqlServerDbSetting();
-
-DbSettingMapper
-	.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
-DbHelperMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
-StatementBuilderMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
+GlobalConfiguration
+    .Setup(new Options.GlobalConfigurationOptions()
+    {
+        ConversionType = ConversionType.Automatic
+    })
+    .UseSqlServer();
 ```
 
-Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class initializer method explicitly.
+## How RepoDB Compares
 
-## Trust Server Certificate
+RepoDB sits between a micro-ORM and a full ORM. Each tool below makes different tradeoffs — pick the one that fits your project:
 
-For [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer) package, starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it seems to require a TLS 1.2 when connecting to the database via Integrated Security.
+| | RepoDB | Dapper | Entity Framework |
+|---|---|---|---|
+| **Abstraction level** | ✅ Hybrid — fluent CRUD + raw SQL | ❌ Micro-ORM — raw SQL mapping | ✅ Full ORM — LINQ, change tracking |
+| **Fluent CRUD API** | ✅ Yes (Insert, Query, Update, Delete, Merge, [more](http://repodb.net/operation)) | ❌ No — SQL per call | ✅ Yes, via LINQ/`DbSet` |
+| **Raw SQL** | ✅ Yes, mixed freely with fluent calls | ✅ Yes — its core model | ✅ Yes, via `FromSql` |
+| **Change tracking** | ❌ None | ❌ None | ✅ Yes |
+| **Migrations** | ❌ None built-in | ❌ None built-in | ✅ Yes (EF Migrations) |
+| **Native Bulk** | ✅ Built-in, cross-provider | ❌ Via extensions | ❌ Via extensions/third-party |
+| **Insights / telemetry** | ✅ Built-in ([RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md)) | ❌ None built-in — manual or third-party (e.g. MiniProfiler) | ✅ Built-in logging/interceptors; OTel via community packages |
+| **Performance** | ✅ Close to raw ADO.NET | ✅ Close to raw ADO.NET | ❌ Overhead from tracking/materialization |
+| **Best fit** | ✅ EF-like productivity without losing SQL control | ✅ Thinnest possible SQL-to-object mapper | ✅ Rich object graphs, LINQ, migrations |
 
-In most cases, an exception below is thrown if the mentioned security chain is not enabled.
+Dapper and Entity Framework are both excellent, mature tools — this reflects design tradeoffs, not a ranking.
+
+## Telemetry
+
+RepoDB includes opt-in, drop-in telemetry via [RepoDb.Telemetry.Default](RepoDb.Telemetry.Default/README.md). Enable it once at startup and every operation (Insert, Query, Update, Delete, etc.) is captured and published to your insights collector automatically — no custom `ITrace` required.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDB.Blogs.Resources/refs/heads/main/images/repodb-insights-default-telemetry-banner.png" style="max-width:768px;" />
+
+It comes with great and simple dashboards visualization.
+
+Simply `docker compose up -d` the [docker-compose.yml](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/docker-compose.yml) and [.env](https://raw.githubusercontent.com/mikependon/RepoDB/refs/heads/master/RepoDb.Telemetry.Default/.env) files and integrate your code.
 
 ```csharp
-A connection was successfully established with the server, but then an error occurred during the login process.
-(provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)
----> System.ComponentModel.Win32Exception: The certificate chain was issued by an authority that is not trusted..
+GlobalConfiguration
+    .Setup(new GlobalConfigurationOptions { UseRegisteredGlobalTraces = true })
+    .UseDefaultTelemetry(new DefaultTelemetryOption("<YOUR_APPLICATION_NAME>")
+    {
+        Host = "https://your-collector-host",
+        ApiKey = "YOUR_API_KEY",
+        Group = "<YOUR_APPLICATION_GROUP>",
+        Frequency = TimeSpan.FromSeconds(1)
+    });
 ```
 
-The issue above can be rectified by simply enabling the TLS 1.2. Alternatively, the argument [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) can be used on the connection string.
-
-**Note:** By enabling the [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) argument, as per Microsoft, _the transport layer will use SSL to encrypt the channel and bypass walking the certificate chain to validate trust_. Therefore, only enable this flag if needed.
-
-## Library Limitations
-
-It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) page before using the library.
-
-## Benchmark
-
-The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
-
-Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20201112_net5_ef5.txt).
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
-
-RepoDB shows an impressive performance and memory-efficiency if being compared with other ORMs available in the .NET ecosystem. It has positioned itself just right behind the logic-less hand-coded materializer if being benchmark with .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-coded materializer.
-
-### Important Note
-
-The AOT compilation (IL/Expression) has some degree of performance impact, even just for milliseconds, therefore, if you are to materialize RepoDB, it is highly recommended to always eliminate the first execution.
-
-To avoid the bias, you as well should exclude the first execution of the other ORMs during the benchmarking.
+It's intentionally lightweight rather than OTel-based, keeping RepoDB's thin, fast footprint intact. See the [package README](RepoDb.Telemetry.Default/README.md) for configuration options, the full OTel rationale, and the roadmap.
 
 ## Contributions
 
-We would like to make RepoDB the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
+We welcome contributions of all kinds — code, docs, bug reports, and ideas.
 
-To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+- Browse [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) issues and submit a PR.
+- File a [new issue](https://github.com/mikependon/RepoDb/issues/new) to start a discussion.
+- Contribute to the [documentation site](https://github.com/mikependon/RepoDb.NET).
+- Blog about it, share it, or simply give us a :star:
 
-If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
+### Community
 
-Your biggest contribution is to utilize and share this library to the other developers.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A and community chat.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) — ask questions and share ideas.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
-- Blog it
-- Discuss it
-- Document it
-- Share it
-- Use it
+Read our [contributing](CONTRIBUTING.md) page for more.
 
-Or, show your support by simply giving a :star: on this project.
+### Resources
 
-### Engagements
+- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md)
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md)
+- [Issuing a Pull Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md)
+- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md)
+- [Support Policy](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/support-policy.md)
+- [Limitations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/limitations.md)
 
-Please get in touch with us via:
+### Contributors
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
-
-Ensure to visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md) to get more details about our policies when handling the operational support for this library.
-
-### Hints
-
-- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md) - let us build your copies.
-- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md) - let us be uniformed.
-- [Issuing a Pull-Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
-- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md) - let us be organized for easy tracking and fixing.
+<a href="https://github.com/mikependon/RepoDB/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=mikependon/RepoDB" />
+</a>
 
 ## Credits
 
-Thanks to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+Thanks to all [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) and to [Scott Hanselman](https://www.hanselman.com/) for [featuring RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
-And also, thanks to these awesome OSS projects.
-
-- [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
-- [GitHub](https://github.com/) - for hosting this project.
-- [Gitter](https://gitter.im/) - for the community engagements.
-- [Jekyll](https://github.com/jekyll/jekyll) - for powering our website.
-- [Just-the-Docs](https://github.com/pmarsceill/just-the-docs) - for being the awesome library documentation template.
-- [Moq](https://github.com/moq/moq4) - for being the tests mocking framework.
-- [Nuget](https://www.nuget.org/) - for the package deliveries.
-- [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) - for measuring the performance and efficiency.
-- [SharpLab](https://sharplab.io/) - for helping us on our IL coding.
-- [Shields](https://shields.io/) - for the awesome badges.
-- [StackEdit](https://stackedit.io) - for being the markdown file editor.
-- [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/) - for being the extended DB provider drivers.
+Tools and projects that make RepoDB possible: [GitHub](https://github.com/), [GitHub Actions](https://github.com/features/actions), [Docker](https://www.docker.com/), [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ), [Moq](https://github.com/moq/moq4), [MSTest](https://github.com/microsoft/testfx), [NuGet](https://www.nuget.org/), [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher), [Shields](https://shields.io/), [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/), [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/), [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/), [FirebirdSql.Data.FirebirdClient](https://www.nuget.org/packages/FirebirdSql.Data.FirebirdClient/), [Net.IBM.Data.Db2](https://www.nuget.org/packages/Net.IBM.Data.Db2/), [Oracle.ManagedDataAccess.Core](https://www.nuget.org/packages/Oracle.ManagedDataAccess.Core/), [ClickHouse.Driver](https://www.nuget.org/packages/ClickHouse.Driver/), [RepoDb.Connector.MariaDb](https://www.nuget.org/packages/RepoDb.Connector.MariaDb/), [RepoDb.Connector.MariaDbConnector](https://www.nuget.org/packages/RepoDb.Connector.MariaDbConnector/).
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)

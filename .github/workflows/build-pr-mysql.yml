@@ -1,0 +1,19 @@
+name: PR - Build & Run Tests - RepoDb.MySql
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MySql/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-pr-mysql.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.MySql
+      solution-file: RepoDb.MySql.sln
+      artifact-name: release-pr
+      db-engine: mysql

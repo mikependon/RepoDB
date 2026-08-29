@@ -19,28 +19,38 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void CreatePseudoTable(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            int rowCount,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
-            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+            var isPhysical = pseudoTableType == PostgreSqlBulkImportPseudoTableType.Physical ||
+                (pseudoTableType == PostgreSqlBulkImportPseudoTableType.Auto && rowCount >= PostgreSqlConstants.RowCountThresholdForPhysicalTable);
+            var commandText = isPhysical ?
                 GetCreatePseudoTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -50,30 +60,41 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="rowCount"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task CreatePseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            int rowCount,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
-            BulkImportIdentityBehavior identityBehavior = default,
-            BulkImportPseudoTableType pseudoTableType = default,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior = default,
+            PostgreSqlBulkImportPseudoTableType pseudoTableType = default,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+            var isPhysical = pseudoTableType == PostgreSqlBulkImportPseudoTableType.Physical ||
+                (pseudoTableType == PostgreSqlBulkImportPseudoTableType.Auto && rowCount >= PostgreSqlConstants.RowCountThresholdForPhysicalTable);
+            var commandText = isPhysical ?
                 GetCreatePseudoTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, pseudoTableName, mappings, identityBehavior, dbSetting);
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -84,17 +105,23 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int MergeToPseudoTable(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             var commandText = getMergeToPseudoCommandText();
 
             return connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -124,11 +151,16 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task<int> MergeToPseudoTableAsync(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -136,6 +168,8 @@ namespace RepoDb
 
             return await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -168,10 +202,14 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void DropPseudoTable(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             if (string.IsNullOrWhiteSpace(tableName))
@@ -184,6 +222,8 @@ namespace RepoDb
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -193,11 +233,16 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private static async Task DropPseudoTableAsync(NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -211,6 +256,8 @@ namespace RepoDb
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -223,12 +270,16 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         private static void CreatePseudoTableIndex(NpgsqlConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             int? bulkCopyTimeout = null,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null)
         {
             if (fields?.Any() != true)
@@ -240,6 +291,8 @@ namespace RepoDb
 
             connection.ExecuteNonQuery(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction);
         }
 
@@ -251,6 +304,10 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
+        /// <param name="trace"></param>
+        /// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -259,6 +316,8 @@ namespace RepoDb
             IEnumerable<Field> fields,
             int? bulkCopyTimeout = null,
             IDbSetting dbSetting = null,
+            ITrace trace = null,
+            string traceKey = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -271,6 +330,8 @@ namespace RepoDb
 
             await connection.ExecuteNonQueryAsync(commandText,
                 bulkCopyTimeout,
+                trace: trace,
+                traceKey: traceKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -304,8 +365,8 @@ namespace RepoDb
         /// <returns></returns>
         private static string GetCreatePseudoTableCommandText(string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO {pseudoTableName.AsQuoted(true, dbSetting)} " +
@@ -323,8 +384,8 @@ namespace RepoDb
         /// <returns></returns>
         private static string GetCreatePseudoTemporaryTableCommandText(string tableName,
             string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
             $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO TEMPORARY {pseudoTableName.AsQuoted(true, dbSetting)} " +
@@ -338,10 +399,10 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetCreatePseudoTableQueryColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            BulkImportIdentityBehavior identityBehavior,
+        private static string GetCreatePseudoTableQueryColumns(IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting) =>
-            identityBehavior != BulkImportIdentityBehavior.ReturnIdentity ?
+            identityBehavior != PostgreSqlBulkImportIdentityBehavior.ReturnIdentity ?
                 mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ") :
                 $"0 AS {"__RepoDb_OrderColumn".AsQuoted(dbSetting)}, " +
                     $"{mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ")}";

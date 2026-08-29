@@ -1,0 +1,434 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Connector.MariaDbConnector;
+using RepoDb.MariaDb.IntegrationTests.Models;
+using RepoDb.MariaDb.IntegrationTests.Setup;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RepoDb.MariaDb.IntegrationTests.Operations
+{
+    [TestClass]
+    public class InsertAllTest
+    {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Database.Initialize();
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            Database.Cleanup();
+        }
+
+        #region DataEntity
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => table.Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll<NonIdentityCompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync<CompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => table.Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync<NonIdentityCompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region TableName
+
+        #region Sync
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameAsDynamicsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameAsExpandoObjectsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMariaDbConnectionInsertAllViaTableNameAsExpandoObjectsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllViaTableNameAsyncForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllViaTableNameAsyncForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public async Task TestMariaDbConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MariaDbConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

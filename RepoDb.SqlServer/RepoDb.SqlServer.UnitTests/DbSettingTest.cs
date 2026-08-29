@@ -25,16 +25,6 @@ namespace RepoDb.SqlServer.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerDbSettingAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<SqlConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.AverageableType);
-        }
-
-        [TestMethod]
         public void TestSqlServerDbSettingClosingQuoteProperty()
         {
             // Setup
@@ -112,6 +102,16 @@ namespace RepoDb.SqlServer.UnitTests
 
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
+        }
+
+        [TestMethod]
+        public void TestSqlServerDbSettingSqlTextParameterPrefixProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Assert
+            Assert.AreEqual("@", setting.SqlTextParameterPrefix);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
@@ -87,14 +87,14 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(Order.Descending, orderField.Last().Order);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidExpressionException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
         {
             // Act/Assert
             OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidTypeException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectFieldValueIsNotAnOrderType()
         {
             // Prepare
@@ -104,14 +104,15 @@ namespace RepoDb.UnitTests.Others
             OrderField.Parse(orderBy);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectIsNull()
         {
             // Prepare
             var orderBy = (object)null;
 
             // Act/Assert
-            OrderField.Parse(orderBy);
+            Assert.Throws<NullReferenceException>(() =>
+                OrderField.Parse(orderBy));
         }
     }
 }

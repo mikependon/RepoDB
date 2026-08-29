@@ -1,4 +1,4 @@
-﻿using RepoDb.Contexts.Providers;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -424,7 +424,7 @@ namespace RepoDb
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
                         commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                        traceKey: traceKey,
                         transaction: transaction,
                         trace: trace,
                         statementBuilder: statementBuilder);
@@ -439,7 +439,7 @@ namespace RepoDb
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
                         commandTimeout: commandTimeout,
-                traceKey: traceKey,
+                        traceKey: traceKey,
                         transaction: transaction,
                         trace: trace,
                         statementBuilder: statementBuilder);
@@ -1285,7 +1285,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -1307,7 +1307,7 @@ namespace RepoDb
                 // Ensure the connection is open
                 connection.EnsureOpen();
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -1441,7 +1441,7 @@ namespace RepoDb
                                 var position = 0;
                                 do
                                 {
-                                    if (reader.Read())
+                                    while (reader.Read())
                                     {
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
@@ -1460,7 +1460,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -1468,7 +1468,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -1477,7 +1477,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();
@@ -1557,6 +1557,7 @@ namespace RepoDb
 
             // Execution variables
             var result = 0;
+            var dbSetting = connection.GetDbSetting();
 
             // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
@@ -1567,7 +1568,7 @@ namespace RepoDb
                 connection.EnsureOpen();
 
                 // Create a transaction
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     transaction = connection.BeginTransaction();
                 }
@@ -1595,7 +1596,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -1603,7 +1604,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -1612,7 +1613,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();
@@ -1670,7 +1671,7 @@ namespace RepoDb
             }
 
             // Validate the batch size
-            batchSize = Math.Min(batchSize, entities.Count());
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
             var entityType = GetEntityType<TEntity>(entities);
@@ -1693,7 +1694,7 @@ namespace RepoDb
                 // Ensure the connection is open
                 await connection.EnsureOpenAsync(cancellationToken);
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     // Create a transaction
                     transaction = connection.BeginTransaction();
@@ -1828,15 +1829,15 @@ namespace RepoDb
                                 var position = 0;
                                 do
                                 {
-                                    if (await reader.ReadAsync(cancellationToken))
+                                    while (await reader.ReadAsync(cancellationToken))
                                     {
                                         // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
                                         context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
                                         result++;
+                                        position++;
                                     }
-                                    position++;
                                 }
                                 while (await reader.NextResultAsync(cancellationToken));
 
@@ -1848,7 +1849,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -1856,7 +1857,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -1865,7 +1866,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();
@@ -1947,6 +1948,7 @@ namespace RepoDb
 
             // Execution variables
             var result = 0;
+            var dbSetting = connection.GetDbSetting();
 
             // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
@@ -1957,7 +1959,7 @@ namespace RepoDb
                 await connection.EnsureOpenAsync(cancellationToken);
 
                 // Create a transaction
-                if (hasTransaction == false)
+                if (hasTransaction == false && dbSetting.IsTransactionSupported)
                 {
                     transaction = connection.BeginTransaction();
                 }
@@ -1986,7 +1988,7 @@ namespace RepoDb
                     }
                 }
 
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Commit the transaction
                     transaction.Commit();
@@ -1994,7 +1996,7 @@ namespace RepoDb
             }
             catch
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback for any exception
                     transaction.Rollback();
@@ -2003,7 +2005,7 @@ namespace RepoDb
             }
             finally
             {
-                if (hasTransaction == false)
+                if (hasTransaction == false && transaction != null)
                 {
                     // Rollback and dispose the transaction
                     transaction.Dispose();

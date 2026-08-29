@@ -1,8 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.SqlServer.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -12,6 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -21,6 +21,20 @@ namespace RepoDb
     public static partial class SqlConnectionExtension
     {
         #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static DbCommand CreateTraceCommand(SqlConnection connection,
+            string commandText,
+            int? commandTimeout = null,
+            SqlTransaction transaction = null) =>
+            (DbCommand)connection.CreateCommand(commandText, CommandType.Text, commandTimeout, transaction);
 
         /// <summary>
         /// 
@@ -165,7 +179,7 @@ namespace RepoDb
         /// <param name="sqlBulkCopy"></param>
         /// <param name="mappings"></param>
         private static void AddMappings(SqlBulkCopy sqlBulkCopy,
-            IEnumerable<BulkInsertMapItem> mappings)
+            IEnumerable<SqlServerBulkInsertMapItem> mappings)
         {
             var columnMappingsProperty = Compiler.GetPropertyGetterFunc<SqlBulkCopy, SqlBulkCopyColumnMappingCollection>("ColumnMappings");
             var columnMappingsInstance = columnMappingsProperty(sqlBulkCopy);
@@ -280,10 +294,10 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="mappings"></param>
-        private static IEnumerable<BulkInsertMapItem> AddOrderColumnMapping(IEnumerable<BulkInsertMapItem> mappings)
+        private static IEnumerable<SqlServerBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<SqlServerBulkInsertMapItem> mappings)
         {
             var list = mappings.AsList();
-            list.Add(new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
+            list.Add(new SqlServerBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
             return list;
         }
 
@@ -292,11 +306,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        private static IEnumerable<BulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
+        private static IEnumerable<SqlServerBulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
         {
             foreach (var field in fields)
             {
-                yield return new BulkInsertMapItem(field.Name, field.Name);
+                yield return new SqlServerBulkInsertMapItem(field.Name, field.Name);
             }
         }
 
@@ -304,7 +318,8 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        internal static void ThrowIfNullOrEmpty(DbDataReader reader)
+        internal static void ThrowIfNullOrEmpty(
+            DbDataReader reader)
         {
             if (reader == null)
             {
@@ -458,445 +473,7 @@ namespace RepoDb
         #region SQL Helpers
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="tempTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="dbSetting"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <returns></returns>
-        private static string GetCreateTemporaryTableSqlText(string tableName,
-            string tempTableName,
-            IEnumerable<Field> fields,
-            IDbSetting dbSetting,
-            bool isReturnIdentity)
-        {
-            var builder = new QueryBuilder();
-
-            // Compose the statement
-            builder
-                .Clear()
-                .Select()
-                .FieldsFrom(fields, dbSetting);
-
-            // Return Identity
-            if (isReturnIdentity)
-            {
-                builder.WriteText(", CONVERT(INT, NULL) AS [__RepoDb_OrderColumn]");
-            };
-
-            // Continuation
-            builder
-                .Into()
-                .WriteText(tempTableName.AsQuoted(dbSetting))
-                .From()
-                .TableNameFrom(tableName, dbSetting)
-                .Where()
-                .WriteText("(1 = 0)")
-                .End();
-
-            // Return the text
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tempTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetCreateTemporaryTableClusteredIndexSqlText(string tempTableName,
-            IEnumerable<Field> qualifiers,
-            IDbSetting dbSetting)
-        {
-            // Validate the presence
-            if (qualifiers?.Any() != true)
-            {
-                throw new MissingFieldException("There is no qualifier field(s) defined.");
-            }
-
-            // Variables needed
-            var clusteredIndexFields = qualifiers
-                .Select(f => $"{f.Name.AsQuoted(dbSetting)} ASC")
-                .Join(", ");
-            var builder = new QueryBuilder();
-
-            // Compose the statement
-            builder
-                .Clear()
-                .WriteText("CREATE CLUSTERED INDEX")
-                .WriteText($"IX_{tempTableName}".AsQuoted(dbSetting))
-                .On()
-                .WriteText(tempTableName.AsQuoted(dbSetting))
-                .OpenParen()
-                .WriteText(clusteredIndexFields)
-                .CloseParen()
-                .End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tempTableName"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetDropTemporaryTableSqlText(string tempTableName,
-            IDbSetting dbSetting) =>
-            $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="tempTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="hints"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetBulkDeleteSqlText(string tableName,
-            string tempTableName,
-            IEnumerable<Field> qualifiers,
-            string hints,
-            IDbSetting dbSetting)
-        {
-            // Validate the presence
-            if (qualifiers?.Any() != true)
-            {
-                throw new MissingFieldException("There is no qualifier field(s) defined.");
-            }
-
-            // Variables needed
-            var builder = new QueryBuilder();
-
-            // Compose the statement
-            builder
-                .Clear()
-                .Delete()
-                .WriteText("T")
-                .From()
-                .TableNameFrom(tableName, dbSetting)
-                .WriteText("T")
-                .HintsFrom(hints)
-                .WriteText("INNER JOIN")
-                .TableNameFrom(tempTableName, dbSetting)
-                .WriteText("S")
-                .WriteText("ON")
-                .WriteText(qualifiers
-                    .Select(
-                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
-                            .Join(" AND "))
-                .End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="tempTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="identityField"></param>
-        /// <param name="hints"></param>
-        /// <param name="dbSetting"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <returns></returns>
-        private static string GetBulkInsertSqlText(string tableName,
-            string tempTableName,
-            IEnumerable<Field> fields,
-            Field identityField,
-            string hints,
-            IDbSetting dbSetting,
-            bool isReturnIdentity)
-        {
-            // Validate the presence
-            if (fields?.Any() != true)
-            {
-                throw new MissingFieldException("There are no field(s) defined.");
-            }
-
-            // Variables needed
-            var builder = new QueryBuilder();
-
-            // Insertable fields
-            var insertableFields = fields
-                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
-
-            // Compose the statement
-            builder.Clear()
-                // MERGE T USING S
-                .Merge()
-                .TableNameFrom(tableName, dbSetting)
-                .HintsFrom(hints)
-                .As("T")
-                .Using()
-                .OpenParen()
-                .Select()
-                .Top()
-                .WriteText("100 PERCENT")
-                //.FieldsFrom(fields, dbSetting)
-                .WriteText("*") // Including the [__RepoDb_OrderColumn]
-                .From()
-                .TableNameFrom(tempTableName, dbSetting);
-
-            // Return Identity
-            if (isReturnIdentity && identityField != null)
-            {
-                builder
-                    .OrderBy()
-                    .WriteText("[__RepoDb_OrderColumn]")
-                    .Ascending();
-            }
-
-            // Continuation
-            builder
-                .CloseParen()
-                .As("S")
-                // QUALIFIERS
-                .On()
-                .OpenParen()
-                .WriteText("1 = 0")
-                .CloseParen()
-                // WHEN NOT MATCHED THEN INSERT VALUES
-                .When()
-                .Not()
-                .Matched()
-                .Then()
-                .Insert()
-                .OpenParen()
-                .FieldsFrom(insertableFields, dbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
-                .CloseParen();
-
-            // Set the output
-            if (isReturnIdentity == true && identityField != null)
-            {
-                builder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                        .As("[Result],")
-                    .WriteText("S.[__RepoDb_OrderColumn]")
-                        .As("[OrderColumn]");
-            }
-
-            // End
-            builder.End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="tempTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="primaryField"></param>
-        /// <param name="identityField"></param>
-        /// <param name="hints"></param>
-        /// <param name="dbSetting"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <returns></returns>
-        private static string GetBulkMergeSqlText(string tableName,
-            string tempTableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            Field primaryField,
-            Field identityField,
-            string hints,
-            IDbSetting dbSetting,
-            bool isReturnIdentity)
-        {
-            // Validate the presence
-            if (fields?.Any() != true)
-            {
-                throw new MissingFieldException("There are no field(s) defined.");
-            }
-
-            if (qualifiers?.Any() != true)
-            {
-                throw new MissingFieldException("There is no qualifier field(s) defined.");
-            }
-
-            // Variables needed
-            var builder = new QueryBuilder();
-
-            // Insertable fields
-            var insertableFields = fields
-                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
-
-            // Updatable fields
-            var updateableFields = fields
-                .Where(field => field != identityField && field != primaryField)
-                .Where(field =>
-                    qualifiers.Any(
-                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
-
-            // Compose the statement
-            builder.Clear()
-                // MERGE T USING S
-                .Merge()
-                .TableNameFrom(tableName, dbSetting)
-                .HintsFrom(hints)
-                .As("T")
-                .Using()
-                .OpenParen()
-                .Select()
-                .Top()
-                .WriteText("100 PERCENT")
-                //.FieldsFrom(fields, dbSetting)
-                .WriteText("*") // Including the [__RepoDb_OrderColumn]
-                .From()
-                .TableNameFrom(tempTableName, dbSetting);
-
-            // Return Identity
-            if (isReturnIdentity && identityField != null)
-            {
-                builder
-                    .OrderBy()
-                    .WriteText("[__RepoDb_OrderColumn]")
-                    .Ascending();
-            }
-
-            // Continuation
-            builder
-                .CloseParen()
-                .As("S")
-                // QUALIFIERS
-                .On()
-                .OpenParen()
-                .WriteText(qualifiers
-                    .Select(
-                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
-                            .Join(" AND "))
-                .CloseParen();
-
-            if (insertableFields?.Any() == true)
-            {
-                // WHEN NOT MATCHED THEN INSERT VALUES
-                builder
-                    .When()
-                    .Not()
-                    .Matched()
-                    .Then()
-                    .Insert()
-                    .OpenParen()
-                    .FieldsFrom(insertableFields, dbSetting)
-                    .CloseParen()
-                    .Values()
-                    .OpenParen()
-                    .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
-                    .CloseParen();
-            }
-
-            if (updateableFields?.Any() == true)
-            {
-                // WHEN MATCHED THEN UPDATE SET
-                builder
-                    .When()
-                    .Matched()
-                    .Then()
-                    .Update()
-                    .Set()
-                    .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
-            }
-
-            // Set the output
-            if (isReturnIdentity == true && identityField != null)
-            {
-                builder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                        .As("[Result],")
-                    .WriteText("S.[__RepoDb_OrderColumn]")
-                        .As("[OrderColumn]");
-            }
-
-            // End the builder
-            builder.End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="tempTableName"></param>
-        /// <param name="fields"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="primaryField"></param>
-        /// <param name="identityField"></param>
-        /// <param name="hints"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        private static string GetBulkUpdateSqlText(string tableName,
-            string tempTableName,
-            IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
-            Field primaryField,
-            Field identityField,
-            string hints,
-            IDbSetting dbSetting)
-        {
-            // Validate the presence
-            if (fields?.Any() != true)
-            {
-                throw new MissingFieldException("There are no field(s) defined.");
-            }
-
-            if (qualifiers?.Any() != true)
-            {
-                throw new MissingFieldException("There is no qualifier field(s) defined.");
-            }
-
-            // Variables needed
-            var builder = new QueryBuilder();
-
-            // Updatable fields
-            var updateableFields = fields
-                .Where(field => field != identityField && field != primaryField)
-                .Where(field =>
-                    qualifiers.Any(
-                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
-
-            // Compose the statement
-            builder
-                .Clear()
-                .Update()
-                .WriteText("T")
-                .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
-                .From()
-                .TableNameFrom(tableName, dbSetting)
-                .WriteText("T")
-                .HintsFrom(hints)
-                .WriteText("INNER JOIN")
-                .TableNameFrom(tempTableName, dbSetting)
-                .WriteText("S")
-                .WriteText("ON")
-                .WriteText(qualifiers
-                    .Select(
-                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
-                            .Join(" AND "))
-                .End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="field"></param>
         /// <param name="values"></param>

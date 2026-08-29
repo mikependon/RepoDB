@@ -1,0 +1,102 @@
+name: Release - Base
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        description: 'Display name of the project (e.g. RepoDb.SqlServer)'
+        required: true
+        type: string
+      project-path:
+        description: 'Path to the .csproj file relative to repo root (e.g. RepoDb.SqlServer/RepoDb.SqlServer/RepoDb.SqlServer.csproj)'
+        required: true
+        type: string
+      version:
+        description: 'Package version to publish (e.g. 1.x.x). Defaults to the Git tag when not specified.'
+        required: false
+        type: string
+        default: ''
+      dependency-overrides:
+        description: >
+          Semicolon-separated Property=Version pairs pinning the version declared for this
+          project's local ProjectReference dependencies (e.g. 'RepoDbCoreVersion=1.14.0').
+          Without this, dotnet pack's -p:Version applies as a global MSBuild property to the
+          whole build graph, so any ProjectReference (like RepoDb.Core) gets stamped with THIS
+          package's version too - producing a NuGet dependency on a version of the dependency
+          that was never published. Set this whenever project-path is not the RepoDb core
+          project itself and it was not released at the same version this run.
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  publish:
+    name: Publish ${{ inputs.project-name }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+            9.0.x
+            8.0.x
+
+      - name: Resolve Dependency Overrides
+        id: overrides
+        run: |
+          RAW="${{ inputs.dependency-overrides }}"
+          PROPS=""
+          if [ -n "$RAW" ]; then
+            IFS=';' read -ra PAIRS <<< "$RAW"
+            for PAIR in "${PAIRS[@]}"; do
+              [ -n "$PAIR" ] && PROPS="$PROPS -p:${PAIR}"
+            done
+          fi
+          echo "props=$PROPS" >> $GITHUB_OUTPUT
+          echo "Resolved MSBuild property overrides: $PROPS"
+
+      - name: Restore
+        run: dotnet restore ${{ inputs.project-path }} ${{ steps.overrides.outputs.props }}
+
+      - name: Build
+        run: dotnet build ${{ inputs.project-path }} -c Release --no-restore ${{ steps.overrides.outputs.props }}
+
+      - name: Resolve Version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          elif [[ "$GITHUB_REF_NAME" =~ ^v?[0-9]+\.[0-9]+\.[0-9] ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
+          fi
+          if [ -z "$VERSION" ] || ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9] ]]; then
+            echo "::error::Could not resolve a valid semver version. Got: '${VERSION}'. Pass the version input explicitly or run from a tag."
+            exit 1
+          fi
+          echo "value=$VERSION" >> $GITHUB_OUTPUT
+          echo "Resolved version: $VERSION"
+
+      - name: Pack
+        run: dotnet pack ${{ inputs.project-path }} -c Release --no-build -o artifacts -p:Version=${{ steps.version.outputs.value }} ${{ steps.overrides.outputs.props }}
+
+      - name: Login to NuGet
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: mikependon
+
+      - name: Publish
+        run: |
+          dotnet nuget push artifacts/*.nupkg \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }}

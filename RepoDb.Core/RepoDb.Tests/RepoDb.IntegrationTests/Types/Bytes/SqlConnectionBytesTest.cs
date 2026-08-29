@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -41,13 +41,45 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = bytes
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesCrudAsync2()
+        {
+            // Setup
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var entity = new BytesClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = bytes,
+                ColumnImage = bytes,
+                ColumnTinyInt = 128,
+                ColumnVarBinary = bytes
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -71,13 +103,43 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesNullCrudAsync2()
+        {
+            // Setup
+            var entity = new BytesClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = null,
+                ColumnImage = null,
+                ColumnTinyInt = null,
+                ColumnVarBinary = null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -103,13 +165,45 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
+                Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesMappedCrudAsync2()
+        {
+            // Setup
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var entity = new BytesMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinaryMapped = bytes,
+                ColumnImageMapped = bytes,
+                ColumnVarBinaryMapped = bytes,
+                ColumnTinyIntMapped = 128
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -133,13 +227,43 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBinaryMapped);
+                Assert.IsNull(data.ColumnImageMapped);
+                Assert.IsNull(data.ColumnTinyIntMapped);
+                Assert.IsNull(data.ColumnVarBinaryMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesMappedNullCrudAsync2()
+        {
+            // Setup
+            var entity = new BytesMapClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinaryMapped = null,
+                ColumnImageMapped = null,
+                ColumnTinyIntMapped = null,
+                ColumnVarBinaryMapped = null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -165,7 +289,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -197,7 +321,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -231,7 +355,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyIntMapped = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -263,7 +387,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinaryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -301,13 +425,45 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = bytes
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
 
                 // Act Query
                 var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(((byte[])data.ColumnBinary).Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesCrudViaTableNameAsync2()
+        {
+            // Setup
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
+            var bytes = Encoding.UTF8.GetBytes(text);
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = bytes,
+                ColumnImage = bytes,
+                ColumnTinyInt = (byte)128,
+                ColumnVarBinary = bytes
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -331,13 +487,43 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(ClassMappedNameCache.Get<BytesClass>(), entity);
 
                 // Act Query
                 var data = connection.Query(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionBytesNullCrudViaTableNameAsync2()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBinary = (byte[])null,
+                ColumnImage = (byte[])null,
+                ColumnTinyInt = (byte?)null,
+                ColumnVarBinary = (byte[])null
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id })).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -363,7 +549,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnTinyInt = 128
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
@@ -395,7 +581,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 ColumnVarBinary = (byte[])null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);

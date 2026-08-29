@@ -1,0 +1,107 @@
+name: repodb
+version: '3.8'
+
+services:
+
+  clickhouse:
+    container_name: clickhouse
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - 127.0.0.1:8123:8123
+      - 127.0.0.1:9000:9000
+    networks:
+      - repodb
+    environment:
+      CLICKHOUSE_PASSWORD: RepoDB2026
+
+  db2:
+    container_name: db2
+    image: icr.io/db2_community/db2:12.1.0.0
+    privileged: true
+    ports:
+      - 127.0.0.1:50000:50000
+    networks:
+      - repodb
+    environment:
+      LICENSE: accept
+      DB2INSTANCE: db2inst1
+      DB2INST1_PASSWORD: RepoDB2026
+      DBNAME: repodb
+
+  firebird:
+    container_name: firebird
+    image: jacobalberty/firebird:latest
+    ports:
+      - 127.0.0.1:3050:3050
+    networks:
+      - repodb
+    environment:
+      ISC_PASSWORD: RepoDB2026
+      FIREBIRD_DATABASE: repodb.fdb
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    ports:
+      - 127.0.0.1:3307:3306
+    networks:
+      - repodb
+    environment:
+      MARIADB_ROOT_PASSWORD: RepoDB2026
+    command: --local-infile=1
+
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    ports:
+      - 127.0.0.1:1433:1433
+    networks:
+      - repodb
+    environment:
+      ACCEPT_EULA: true
+      MSSQL_SA_PASSWORD: RepoDB2026
+
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    ports:
+      - 127.0.0.1:3306:3306
+    networks:
+      - repodb
+    environment:
+      MYSQL_ROOT_PASSWORD: RepoDB2026
+    command: --local-infile=1
+
+  oracle:
+    container_name: oracle
+    image: container-registry.oracle.com/database/free:latest
+    ports:
+      - 127.0.0.1:1521:1521
+    networks:
+      - repodb
+    environment:
+      ORACLE_PWD: RepoDB2026
+
+  postgresql:
+    container_name: pgsql
+    image: postgres:latest
+    ports:
+      - 127.0.0.1:5432:5432
+    networks:
+      - repodb
+    environment:
+      POSTGRES_PASSWORD: RepoDB2026
+
+  vertica:
+    container_name: vertica
+    image: vertica/vertica-ce:latest
+    ports:
+      - 127.0.0.1:5433:5433
+    networks:
+      - repodb
+    environment:
+      APP_DB_PASSWORD: RepoDB2026
+
+networks:
+  repodb:
+    driver: bridge

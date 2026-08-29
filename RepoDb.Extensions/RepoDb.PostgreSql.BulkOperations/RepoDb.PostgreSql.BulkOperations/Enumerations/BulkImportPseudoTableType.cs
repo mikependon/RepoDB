@@ -1,9 +1,12 @@
-﻿namespace RepoDb.Enumerations.PostgreSql
+﻿using System;
+
+namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define the type of pseudo-temporary table to be
     /// created during the bulk-import operations.
     /// </summary>
+    [Obsolete("This enum is obsolete and will be removed in a future version. Use 'PostgreSqlBulkImportPseudoTableType' instead.")]
     public enum BulkImportPseudoTableType : short
     {
         /// <summary>

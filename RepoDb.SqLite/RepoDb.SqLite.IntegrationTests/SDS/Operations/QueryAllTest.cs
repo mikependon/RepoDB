@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
@@ -45,7 +45,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryAllWithHints()
         {
             // Setup
@@ -54,7 +54,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Act
-                connection.QueryAll<SdsCompleteTable>(hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.QueryAll<SdsCompleteTable>(hints: "WhatEver"));
             }
         }
 
@@ -79,7 +80,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionQueryAllAsyncWithHints()
         {
             // Setup
@@ -88,7 +89,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Act
-                connection.QueryAllAsync<SdsCompleteTable>(hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.QueryAllAsync<SdsCompleteTable>(hints: "WhatEver").Wait());
             }
         }
 
@@ -117,7 +119,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionQueryAllViaTableNameWithHints()
         {
             // Setup
@@ -126,9 +128,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Query(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -153,7 +156,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
+        [TestMethod]
         public void ThrowExceptionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
@@ -162,9 +165,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                Assert.Throws<AggregateException>(() =>
+                    connection.QueryAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                        (object)null,
+                        hints: "WhatEver").Wait());
             }
         }
 

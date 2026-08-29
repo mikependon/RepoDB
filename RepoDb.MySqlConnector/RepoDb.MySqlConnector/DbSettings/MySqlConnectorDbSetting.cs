@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+using MySqlConnector;
 
 namespace RepoDb.DbSettings
 {
@@ -13,16 +13,20 @@ namespace RepoDb.DbSettings
         public MySqlConnectorDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "`";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
+            MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

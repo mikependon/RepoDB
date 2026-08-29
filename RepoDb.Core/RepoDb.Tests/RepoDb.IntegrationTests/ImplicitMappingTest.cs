@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -170,13 +171,32 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var result = connection.Delete<MappedCompleteTableForKey>(id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndDeleteByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var result = await connection.DeleteAsync<MappedCompleteTableForKey>(id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -193,13 +213,32 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var result = connection.Exists<MappedCompleteTableForKey>(id);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndExistsByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var result = await connection.ExistsAsync<MappedCompleteTableForKey>(id);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -216,13 +255,32 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var result = connection.Query<MappedCompleteTable>(id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(result);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var result = (await connection.QueryAsync<MappedCompleteTable>(id)).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(result);
@@ -243,7 +301,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -264,12 +322,38 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForIdentityViaDynamic()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForIdentityViaExpression()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -290,12 +374,38 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForIdentityViaExpression()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(e => e.IdMapped == (long)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForIdentityViaQueryField()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -316,12 +426,38 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForIdentityViaQueryField()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id))).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForIdentityViaQueryFields()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -341,18 +477,69 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForIdentityViaQueryFields()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryField("Id", id).AsEnumerable())).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForIdentityViaQueryGroup()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id))).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForIdentityViaQueryGroup()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new QueryGroup(new QueryField("Id", id)))).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -376,7 +563,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -406,12 +593,47 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForIdentityViaDynamic()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, new { Id = id });
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForIdentityViaExpression()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -441,12 +663,47 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForIdentityViaExpression()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, c => c.IdMapped == (long)id);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForIdentityViaQueryField()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -478,12 +735,49 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForIdentityViaQueryField()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var field = new QueryField("Id", id);
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                field.Reset();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(field)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForIdentityViaQueryFields()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -515,12 +809,49 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForIdentityViaQueryFields()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var fields = new QueryField("Id", id).AsEnumerable();
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                fields.ResetAll();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(fields)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForIdentityViaQueryGroup()
         {
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -551,6 +882,43 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForIdentityViaQueryGroup()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var queryGroup = new QueryGroup(new QueryField("Id", id));
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedIdentityTable>(entity, queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                queryGroup.Reset();
+                var data = (await connection.QueryAsync<MappedIdentityTable>(queryGroup)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
         #endregion
 
         #region InsertAndMergeAndQueryForIdentity
@@ -561,7 +929,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedIdentityTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -591,6 +959,42 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndMergeAndQueryAndQueryForIdentity()
+        {
+            // Setup
+            var entity = GetMappedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
+
+                // Act Update
+                var mergeResult = await connection.MergeAsync<MappedIdentityTable>(entity,
+                    qualifiers: Field.From(new[] { "Id" }));
+
+                // Assert
+                Assert.AreEqual(entity.IdMapped, mergeResult);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedIdentityTable>(new { Id = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.RowGuidMapped, data.RowGuidMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnFloatMapped, data.ColumnFloatMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
         #endregion
 
         #region InsertAllAndQueryAndQueryAllForIdentity
@@ -601,13 +1005,45 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedIdentityTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
 
                 // Act QueryAll
                 var data = connection.QueryAll<MappedIdentityTable>();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(rowsInserted, data.Count());
+                entities.ForEach(entity =>
+                {
+                    var mappedObject = data.FirstOrDefault(d => d.IdMapped == entity.IdMapped);
+                    Assert.IsNotNull(mappedObject);
+                    Assert.AreEqual(entity.RowGuidMapped, mappedObject.RowGuidMapped);
+                    Assert.AreEqual(entity.ColumnBitMapped, mappedObject.ColumnBitMapped);
+                    Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
+                    Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
+                    Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
+                    Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAllAsyncAndQueryAllAndForIdentity()
+        {
+            // Setup
+            var entities = GetMappedIdentityTables().AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act InsertAll
+                var rowsInserted = await connection.InsertAllAsync(entities);
+
+                // Act QueryAll
+                var data = await connection.QueryAllAsync<MappedIdentityTable>();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -637,7 +1073,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedIdentityTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
@@ -678,6 +1114,53 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAllAsyncAndMergeAllAndQueryAllForIdentity()
+        {
+            // Setup
+            var entities = GetMappedIdentityTables().AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act InsertAll
+                var rowsInserted = await connection.InsertAllAsync(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.RowGuidMapped = Guid.NewGuid();
+                    entity.ColumnBitMapped = !entity.ColumnBitMapped;
+                    entity.ColumnDateTime2Mapped = entity.ColumnDateTime2Mapped.Value.AddMonths(1);
+                    entity.ColumnDateTimeMapped = entity.ColumnDateTimeMapped.Value.AddMonths(1);
+                    entity.ColumnFloatMapped = 500;
+                    entity.ColumnIntMapped = 100;
+                    entity.ColumnNVarCharMapped = $"Merged - {entity.ColumnNVarCharMapped}";
+                });
+
+                // Act MergeAll
+                var rowsMerged = await connection.MergeAllAsync(entities);
+
+                // Act QueryAll
+                var data = await connection.QueryAllAsync<MappedIdentityTable>();
+
+                // Assert333333333333
+                Assert.IsNotNull(data);
+                Assert.AreEqual(rowsMerged, data.Count());
+                entities.ForEach(entity =>
+                {
+                    var mappedObject = data.FirstOrDefault(d => d.IdMapped == entity.IdMapped);
+                    Assert.IsNotNull(mappedObject);
+                    Assert.AreEqual(entity.RowGuidMapped, mappedObject.RowGuidMapped);
+                    Assert.AreEqual(entity.ColumnBitMapped, mappedObject.ColumnBitMapped);
+                    Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
+                    Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
+                    Assert.AreEqual(entity.ColumnFloatMapped, mappedObject.ColumnFloatMapped);
+                    Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                });
+            }
+        }
+
         #endregion
 
         #endregion
@@ -692,7 +1175,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -712,12 +1195,37 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForNonIdentityViaDynamic()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForNonIdentityViaExpression()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -737,12 +1245,37 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForNonIdentityViaExpression()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(e => e.SessionIdMapped == (Guid)id)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForNonIdentityViaQueryField()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -762,12 +1295,37 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForNonIdentityViaQueryField()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id))).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForNonIdentityViaQueryFields()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -787,18 +1345,68 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForNonIdentityViaQueryFields()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryField("SessionId", id).AsEnumerable())).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndQueryForNonIdentityViaQueryGroup()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
 
                 // Act Query
                 var data = connection.Query<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id))).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndQueryForNonIdentityViaQueryGroup()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new QueryGroup(new QueryField("SessionId", id)))).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -821,7 +1429,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -850,12 +1458,46 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForNonIdentityViaDynamic()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, new { SessionId = id });
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForNonIdentityViaExpression()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -884,12 +1526,46 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForNonIdentityViaExpression()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, c => c.SessionIdMapped == (Guid)id);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForNonIdentityViaQueryField()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -920,12 +1596,48 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForNonIdentityViaQueryField()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var field = new QueryField("SessionId", id);
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, field);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                field.Reset();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(field)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForNonIdentityViaQueryFields()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -956,12 +1668,48 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForNonIdentityViaQueryFields()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var fields = new QueryField("SessionId", id).AsEnumerable();
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, fields);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                fields.ResetAll();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(fields)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionImplicitMappingInsertAndUpdateAndQueryForNonIdentityViaQueryGroup()
         {
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -991,6 +1739,42 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndUpdateAndQueryForNonIdentityViaQueryGroup()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                var queryGroup = new QueryGroup(new QueryField("SessionId", id));
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Updated)";
+
+                // Act Update
+                var affectedRows = await connection.UpdateAsync<MappedCompleteTable>(entity, queryGroup);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act Query
+                queryGroup.Reset();
+                var data = (await connection.QueryAsync<MappedCompleteTable>(queryGroup)).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
         #endregion
 
         #region InsertAndMergeAndQueryForNonIdentity
@@ -1001,7 +1785,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = GetMappedCompleteTable();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1030,6 +1814,41 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAsyncAndMergeAndQueryAndQueryForNonIdentity()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act Insert
+                var id = await connection.InsertAsync(entity);
+
+                // Setup
+                entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
+
+                // Act Update
+                var mergeResult = await connection.MergeAsync<MappedCompleteTable>(entity,
+                    qualifiers: Field.From(new[] { "SessionId" }));
+
+                // Assert
+                Assert.AreEqual(entity.SessionIdMapped, mergeResult);
+
+                // Act Query
+                var data = (await connection.QueryAsync<MappedCompleteTable>(new { SessionId = id })).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.ColumnBigIntMapped, data.ColumnBigIntMapped);
+                Assert.AreEqual(entity.ColumnBitMapped, data.ColumnBitMapped);
+                Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped);
+                Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
+                Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+            }
+        }
+
         #endregion
 
         #region InsertAllAndQueryAndQueryAllForNonIdentity
@@ -1040,13 +1859,44 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedCompleteTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
 
                 // Act QueryAll
                 var data = connection.QueryAll<MappedCompleteTable>();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(rowsInserted, data.Count());
+                entities.ForEach(entity =>
+                {
+                    var mappedObject = data.FirstOrDefault(d => d.SessionIdMapped == entity.SessionIdMapped);
+                    Assert.IsNotNull(mappedObject);
+                    Assert.AreEqual(entity.ColumnBigIntMapped, mappedObject.ColumnBigIntMapped);
+                    Assert.AreEqual(entity.ColumnBitMapped, mappedObject.ColumnBitMapped);
+                    Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
+                    Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
+                    Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAllAsyncAndQueryAllAndForNonIdentity()
+        {
+            // Setup
+            var entities = GetMappedCompleteTables().AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act InsertAll
+                var rowsInserted = await connection.InsertAllAsync(entities);
+
+                // Act QueryAll
+                var data = await connection.QueryAllAsync<MappedCompleteTable>();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -1075,7 +1925,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = GetMappedCompleteTables().AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act InsertAll
                 var rowsInserted = connection.InsertAll(entities);
@@ -1096,6 +1946,51 @@ namespace RepoDb.IntegrationTests
 
                 // Act QueryAll
                 var data = connection.QueryAll<MappedCompleteTable>();
+
+                // Assert333333333333
+                Assert.IsNotNull(data);
+                Assert.AreEqual(rowsMerged, data.Count());
+                entities.ForEach(entity =>
+                {
+                    var mappedObject = data.FirstOrDefault(d => d.SessionIdMapped == entity.SessionIdMapped);
+                    Assert.IsNotNull(mappedObject);
+                    Assert.AreEqual(entity.ColumnBigIntMapped, mappedObject.ColumnBigIntMapped);
+                    Assert.AreEqual(entity.ColumnBitMapped, mappedObject.ColumnBitMapped);
+                    Assert.AreEqual(entity.ColumnDateTime2Mapped, mappedObject.ColumnDateTime2Mapped);
+                    Assert.AreEqual(entity.ColumnDateTimeMapped, mappedObject.ColumnDateTimeMapped);
+                    Assert.AreEqual(entity.ColumnIntMapped, mappedObject.ColumnIntMapped);
+                    Assert.AreEqual(entity.ColumnNVarCharMapped, mappedObject.ColumnNVarCharMapped);
+                });
+            }
+        }
+
+        [TestMethod]
+        public async Task TestSqlConnectionImplicitMappingInsertAllAsyncAndMergeAllAndQueryAllForNonIdentity()
+        {
+            // Setup
+            var entities = GetMappedCompleteTables().AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act InsertAll
+                var rowsInserted = await connection.InsertAllAsync(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnBigIntMapped = 1000;
+                    entity.ColumnBitMapped = !entity.ColumnBitMapped;
+                    entity.ColumnDateTime2Mapped = entity.ColumnDateTime2Mapped.Value.AddMonths(1);
+                    entity.ColumnDateTimeMapped = entity.ColumnDateTimeMapped.Value.AddMonths(1);
+                    entity.ColumnIntMapped = 100;
+                    entity.ColumnNVarCharMapped = $"Merged - {entity.ColumnNVarCharMapped}";
+                });
+
+                // Act MergeAll
+                var rowsMerged = await connection.MergeAllAsync(entities);
+
+                // Act QueryAll
+                var data = await connection.QueryAllAsync<MappedCompleteTable>();
 
                 // Assert333333333333
                 Assert.IsNotNull(data);

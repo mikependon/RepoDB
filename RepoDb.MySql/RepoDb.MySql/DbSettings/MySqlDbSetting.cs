@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 
 namespace RepoDb.DbSettings
 {
@@ -13,16 +13,20 @@ namespace RepoDb.DbSettings
         public MySqlDbSetting()
         {
             AreTableHintsSupported = false;
-            AverageableType = typeof(double);
             ClosingQuote = "`";
             DefaultSchema = null;
+            IsAffectedRowsSupported = true;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = true;
             IsPreparable = false;
+            IsTransactionSupported = true;
             IsUseUpsert = false;
+            MaxParameterCount = 2100 - 2;
+            MultiStatementSeparator = ";";
             OpeningQuote = "`";
             ParameterPrefix = "@";
+            SqlTextParameterPrefix = "@";
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -145,12 +145,29 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
-            return expression.Operand switch
+            if (expression.NodeType == ExpressionType.Not || expression.NodeType == ExpressionType.Convert)
             {
-                MemberExpression memberExpression => Parse<TEntity>(memberExpression, expression.NodeType),
-                MethodCallExpression methodCallExpression => Parse<TEntity>(methodCallExpression, expression.NodeType),
-                _ => null
-            };
+                // These two handle
+                if (expression.Operand is MemberExpression memberExpression && Parse<TEntity>(memberExpression, expression.NodeType) is { } r1)
+                    return r1;
+                else if (expression.Operand is MethodCallExpression methodCallExpression && Parse<TEntity>(methodCallExpression, expression.NodeType) is { } r2)
+                    return r2;
+            }
+
+            if (Parse<TEntity>(expression.Operand) is { } r)
+            {
+                if (expression.NodeType == ExpressionType.Not)
+                {
+                    // Wrap result in A NOT expression
+                    return new QueryGroup(r, true);
+                }
+                else
+                    return new QueryGroup(r, false);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unary operation '{expression.NodeType}' is currently not supported.");
+            }
         }
 
         /*

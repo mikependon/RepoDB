@@ -42,7 +42,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -144,7 +144,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -180,7 +180,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -215,7 +215,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -288,7 +288,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -330,7 +330,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -363,7 +363,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = (TimeSpan?)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var id = repository.Insert(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -399,7 +399,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = (TimeSpan?)null
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionString))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(ClassMappedNameCache.Get<DatesClass>(), entity);

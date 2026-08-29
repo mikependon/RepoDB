@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using RepoDb.Extensions;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -52,19 +53,51 @@ namespace RepoDb
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
-        public static T ToType<T>(object value)
+        public static T ToType<T>(object value) =>
+            ToType<T>(value, false);
+
+        /// <summary>
+        /// Converts a value to a target type if the value is equals to null or <see cref="DBNull.Value"/>.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="value">The value to be converted.</param>
+        /// <param name="forceAutomatic">Force the automatic conversion.</param>
+        /// <returns>The converted value.</returns>
+        internal static T ToType<T>(object value,
+            bool forceAutomatic = false)
         {
-            if (value is T t)
+            if (value != null && value != DBNull.Value && value is T t)
             {
                 return t;
             }
-            if (typeof(T).Equals(StaticType.Guid) && value is string)
+            if (value == null || value == DBNull.Value)
             {
-                return (T)StringToGuidAsObject(value);
+                if (forceAutomatic || GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
+                    Nullable.GetUnderlyingType(typeof(T)) != null)
+                {
+                    return default;
+                }
+                else if (typeof(T).IsValueType)
+                {
+                    throw new InvalidCastException($"Failed to convert '{(value == DBNull.Value ? "DBNull" : "Null")}' to '{typeof(T).GetUnderlyingType().FullName}'. " +
+                        $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}' or make the type '{typeof(T).FullName}' nullable.");
+                }
             }
-            return value == null || DbNullToNull(value) == null ?
-                default :
-                    (T)Convert.ChangeType(value, typeof(T));
+            try
+            {
+                value = (typeof(T).Equals(StaticType.Guid) && value is string) ?
+                    (T)StringToGuidAsObject(value) : (T)Convert.ChangeType(value, typeof(T));
+                if (value == DBNull.Value)
+                {
+                    throw new Exception("Failed to convert the 'DBNull' value.");
+                }
+                return (T)value;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"{ex.Message} " +
+                    $"Consider enabling 'GlobalConfiguration.Options.ConversionType' to '{ConversionType.Automatic.ToString()}'.");
+            }
         }
 
         /// <summary>

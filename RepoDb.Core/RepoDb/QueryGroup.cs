@@ -513,9 +513,10 @@ namespace RepoDb
         #region Methods (Internal)
 
         /// <summary>
-        /// Prepend an underscore on every parameter object.
+        /// 
         /// </summary>
-        internal void PrependAnUnderscoreAtTheParameters()
+        /// <param name="prefix"></param>
+        internal void PrependTextToAllParameters(string prefix)
         {
             var queryFields = GetFields(true);
             if (queryFields?.Any() != true)
@@ -524,7 +525,7 @@ namespace RepoDb
             }
             foreach (var queryField in queryFields)
             {
-                queryField.PrependAnUnderscoreAtParameter();
+                queryField.PrependTextToParameter(prefix);
             }
         }
 
@@ -680,7 +681,7 @@ namespace RepoDb
         /// Make the current instance of <see cref="QueryGroup"/> object to become an expression for 'Update' operations.
         /// </summary>
         public void IsForUpdate() =>
-            PrependAnUnderscoreAtTheParameters();
+            PrependTextToAllParameters(StringConstant.UpdateParameterPrefix);
 
 
         /// <summary>

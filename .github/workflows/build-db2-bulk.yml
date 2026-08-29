@@ -1,0 +1,20 @@
+name: Build & Run Tests - RepoDb.Db2.BulkOperations (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.Db2/**'
+      - 'RepoDb.Extensions/RepoDb.Db2.BulkOperations/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-db2-bulk.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.Extensions/RepoDb.Db2.BulkOperations
+      solution-file: RepoDb.Db2.BulkOperations.sln
+      artifact-name: release-db2-bulk
+      db-engine: db2

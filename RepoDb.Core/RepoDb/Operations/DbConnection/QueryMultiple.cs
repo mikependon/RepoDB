@@ -9460,106 +9460,167 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+                TraceResult traceResult = null;
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
+
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2);
+            }
         }
 
         #endregion
@@ -10160,135 +10221,221 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+                TraceResult traceResult = null;
 
-                // T3
-                item3 = QueryMultipleInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
 
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T3
+                    item3 = QueryMultipleInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = QueryMultipleSingleStatementInternal<T3>(connection,
+                        CommandTextCache.GetQueryMultipleText(request3),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2, item3);
+            }
         }
 
         #endregion
@@ -11031,163 +11178,274 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = QueryMultipleInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+                TraceResult traceResult = null;
+
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
+
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T3
+                    item3 = QueryMultipleInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
 
 
-                // T4
-                item4 = QueryMultipleInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                    // T4
+                    item4 = QueryMultipleInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = QueryMultipleSingleStatementInternal<T3>(connection,
+                        CommandTextCache.GetQueryMultipleText(request3),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = QueryMultipleSingleStatementInternal<T4>(connection,
+                        CommandTextCache.GetQueryMultipleText(request4),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4);
+            }
         }
 
         #endregion
@@ -12066,191 +12324,326 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = QueryMultipleInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+                TraceResult traceResult = null;
 
-                // T4
-                item4 = QueryMultipleInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
 
-                // T5
-                item5 = QueryMultipleInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T3
+                    item3 = QueryMultipleInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T4
+                    item4 = QueryMultipleInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T5
+                    item5 = QueryMultipleInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = QueryMultipleSingleStatementInternal<T3>(connection,
+                        CommandTextCache.GetQueryMultipleText(request3),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = QueryMultipleSingleStatementInternal<T4>(connection,
+                        CommandTextCache.GetQueryMultipleText(request4),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = QueryMultipleSingleStatementInternal<T5>(connection,
+                        CommandTextCache.GetQueryMultipleText(request5),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5);
+            }
         }
 
         #endregion
@@ -13265,219 +13658,379 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Item6 Request
-            if (item6 == null)
-            {
-                var request6 = new QueryMultipleRequest(6,
-                    tableName6,
-                    connection,
-                    transaction,
-                    fields6 ?? FieldCache.Get<T6>(),
-                    where6,
-                    orderBy6,
-                    top6,
-                    hints6,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
-                maps.Add(where6.MapTo<T6>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = QueryMultipleInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
+                // Item6 Request
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
+                    maps.Add(where6.MapTo<T6>());
+                }
 
-                // T4
-                item4 = QueryMultipleInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+                TraceResult traceResult = null;
 
-                // T5
-                item5 = QueryMultipleInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
 
-                // T6
-                item6 = QueryMultipleInternal<T6>(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T3
+                    item3 = QueryMultipleInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T4
+                    item4 = QueryMultipleInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T5
+                    item5 = QueryMultipleInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T6
+                    item6 = QueryMultipleInternal<T6>(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = QueryMultipleSingleStatementInternal<T3>(connection,
+                        CommandTextCache.GetQueryMultipleText(request3),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = QueryMultipleSingleStatementInternal<T4>(connection,
+                        CommandTextCache.GetQueryMultipleText(request4),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = QueryMultipleSingleStatementInternal<T5>(connection,
+                        CommandTextCache.GetQueryMultipleText(request5),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    item6 = QueryMultipleSingleStatementInternal<T6>(connection,
+                        CommandTextCache.GetQueryMultipleText(request6),
+                        where6.MapTo<T6>(),
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5, item6);
+            }
         }
 
         #endregion
@@ -14628,247 +15181,432 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Item6 Request
-            if (item6 == null)
-            {
-                var request6 = new QueryMultipleRequest(6,
-                    tableName6,
-                    connection,
-                    transaction,
-                    fields6 ?? FieldCache.Get<T6>(),
-                    where6,
-                    orderBy6,
-                    top6,
-                    hints6,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
-                maps.Add(where6.MapTo<T6>());
-            }
-
-            // Item7 Request
-            if (item7 == null)
-            {
-                var request7 = new QueryMultipleRequest(7,
-                    tableName7,
-                    connection,
-                    transaction,
-                    fields7 ?? FieldCache.Get<T7>(),
-                    where7,
-                    orderBy7,
-                    top7,
-                    hints7,
-                    statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request7));
-                maps.Add(where7.MapTo<T7>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
-                traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command));
-
-            // Actual Execution
-            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallback: beforeExecutionCallback))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = QueryMultipleInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = QueryMultipleInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = QueryMultipleInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
+                // Item6 Request
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
+                    maps.Add(where6.MapTo<T6>());
+                }
 
-                // T4
-                item4 = QueryMultipleInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Item7 Request
+                if (item7 == null)
+                {
+                    var request7 = new QueryMultipleRequest(7,
+                        tableName7,
+                        connection,
+                        transaction,
+                        fields7 ?? FieldCache.Get<T7>(),
+                        where7,
+                        orderBy7,
+                        top7,
+                        hints7,
+                        statementBuilder);
+                    commandTexts.Add(CommandTextCache.GetQueryMultipleText(request7));
+                    maps.Add(where7.MapTo<T7>());
+                }
 
-                // T5
-                item5 = QueryMultipleInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+                TraceResult traceResult = null;
 
-                // T6
-                item6 = QueryMultipleInternal<T6>(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Before Execution
+                var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                    traceResult = Tracer
+                        .InvokeBeforeExecution(traceKey, trace, command));
 
-                // T7
-                item7 = QueryMultipleInternal<T7>(connection,
-                    reader,
-                    item7,
-                    cacheKey7,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true);
+                // Actual Execution
+                using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallback: beforeExecutionCallback))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = QueryMultipleInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false);
+
+                    // T2
+                    item2 = QueryMultipleInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T3
+                    item3 = QueryMultipleInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T4
+                    item4 = QueryMultipleInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T5
+                    item5 = QueryMultipleInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T6
+                    item6 = QueryMultipleInternal<T6>(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // T7
+                    item7 = QueryMultipleInternal<T7>(connection,
+                        reader,
+                        item7,
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                    // After Execution
+                    Tracer
+                        .InvokeAfterExecution(traceResult, trace, result);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                // After Execution
-                Tracer
-                    .InvokeAfterExecution(traceResult, trace, result);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = QueryMultipleSingleStatementInternal<T1>(connection,
+                        CommandTextCache.GetQueryMultipleText(request1),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = QueryMultipleSingleStatementInternal<T2>(connection,
+                        CommandTextCache.GetQueryMultipleText(request2),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = QueryMultipleSingleStatementInternal<T3>(connection,
+                        CommandTextCache.GetQueryMultipleText(request3),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = QueryMultipleSingleStatementInternal<T4>(connection,
+                        CommandTextCache.GetQueryMultipleText(request4),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = QueryMultipleSingleStatementInternal<T5>(connection,
+                        CommandTextCache.GetQueryMultipleText(request5),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    item6 = QueryMultipleSingleStatementInternal<T6>(connection,
+                        CommandTextCache.GetQueryMultipleText(request6),
+                        where6.MapTo<T6>(),
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                if (item7 == null)
+                {
+                    var request7 = new QueryMultipleRequest(7,
+                        tableName7,
+                        connection,
+                        transaction,
+                        fields7 ?? FieldCache.Get<T7>(),
+                        where7,
+                        orderBy7,
+                        top7,
+                        hints7,
+                        statementBuilder);
+                    item7 = QueryMultipleSingleStatementInternal<T7>(connection,
+                        CommandTextCache.GetQueryMultipleText(request7),
+                        where7.MapTo<T7>(),
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+            }
         }
 
         #endregion
@@ -15275,7 +16013,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -15862,7 +16601,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -16586,7 +17326,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -17440,7 +18181,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -18426,7 +19168,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -19543,7 +20286,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -20155,109 +20899,172 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+                TraceResult traceResult = null;
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2);
+            }
         }
 
         #endregion
@@ -20878,138 +21685,227 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+                TraceResult traceResult = null;
 
-                // T3
-                item3 = await QueryMultipleAsyncInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = await QueryMultipleSingleStatementAsyncInternal<T3>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2, item3);
+            }
         }
 
         #endregion
@@ -21773,167 +22669,282 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = await QueryMultipleAsyncInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+                TraceResult traceResult = null;
 
-                // T4
-                item4 = await QueryMultipleAsyncInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = await QueryMultipleSingleStatementAsyncInternal<T3>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = await QueryMultipleSingleStatementAsyncInternal<T4>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4);
+            }
         }
 
         #endregion
@@ -22834,196 +23845,337 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = await QueryMultipleAsyncInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
-                // T4
-                item4 = await QueryMultipleAsyncInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+                TraceResult traceResult = null;
 
-                // T5
-                item5 = await QueryMultipleAsyncInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = await QueryMultipleSingleStatementAsyncInternal<T3>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = await QueryMultipleSingleStatementAsyncInternal<T4>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = await QueryMultipleSingleStatementAsyncInternal<T5>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5);
+            }
         }
 
         #endregion
@@ -24061,225 +25213,392 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Item6 Request
-            if (item6 == null)
-            {
-                var request6 = new QueryMultipleRequest(6,
-                    tableName6,
-                    connection,
-                    transaction,
-                    fields6 ?? FieldCache.Get<T6>(),
-                    where6,
-                    orderBy6,
-                    top6,
-                    hints6,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
-                maps.Add(where6.MapTo<T6>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = await QueryMultipleAsyncInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
-                // T4
-                item4 = await QueryMultipleAsyncInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item6 Request
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
+                    maps.Add(where6.MapTo<T6>());
+                }
 
-                // T5
-                item5 = await QueryMultipleAsyncInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+                TraceResult traceResult = null;
 
-                // T6
-                item6 = await QueryMultipleAsyncInternal<T6>(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T6
+                    item6 = await QueryMultipleAsyncInternal<T6>(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = await QueryMultipleSingleStatementAsyncInternal<T3>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = await QueryMultipleSingleStatementAsyncInternal<T4>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = await QueryMultipleSingleStatementAsyncInternal<T5>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    item6 = await QueryMultipleSingleStatementAsyncInternal<T6>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken),
+                        where6.MapTo<T6>(),
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5, item6);
+            }
         }
 
         #endregion
@@ -25454,254 +26773,447 @@ namespace RepoDb
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // Item1 Request
-            if (item1 == null)
+            // DB setting
+            var dbSetting = connection.GetDbSetting();
+
+            if (dbSetting.IsMultiStatementExecutable == true)
             {
-                var request1 = new QueryMultipleRequest(1,
-                    tableName1,
-                    connection,
-                    transaction,
-                    fields1 ?? FieldCache.Get<T1>(),
-                    where1,
-                    orderBy1,
-                    top1,
-                    hints1,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
-                maps.Add(where1.MapTo<T1>());
-            }
-
-            // Item2 Request
-            if (item2 == null)
-            {
-                var request2 = new QueryMultipleRequest(2,
-                    tableName2,
-                    connection,
-                    transaction,
-                    fields2 ?? FieldCache.Get<T2>(),
-                    where2,
-                    orderBy2,
-                    top2,
-                    hints2,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
-                maps.Add(where2.MapTo<T2>());
-            }
-
-            // Item3 Request
-            if (item3 == null)
-            {
-                var request3 = new QueryMultipleRequest(3,
-                    tableName3,
-                    connection,
-                    transaction,
-                    fields3 ?? FieldCache.Get<T3>(),
-                    where3,
-                    orderBy3,
-                    top3,
-                    hints3,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
-                maps.Add(where3.MapTo<T3>());
-            }
-
-            // Item4 Request
-            if (item4 == null)
-            {
-                var request4 = new QueryMultipleRequest(4,
-                    tableName4,
-                    connection,
-                    transaction,
-                    fields4 ?? FieldCache.Get<T4>(),
-                    where4,
-                    orderBy4,
-                    top4,
-                    hints4,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
-                maps.Add(where4.MapTo<T4>());
-            }
-
-            // Item5 Request
-            if (item5 == null)
-            {
-                var request5 = new QueryMultipleRequest(5,
-                    tableName5,
-                    connection,
-                    transaction,
-                    fields5 ?? FieldCache.Get<T5>(),
-                    where5,
-                    orderBy5,
-                    top5,
-                    hints5,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
-                maps.Add(where5.MapTo<T5>());
-            }
-
-            // Item6 Request
-            if (item6 == null)
-            {
-                var request6 = new QueryMultipleRequest(6,
-                    tableName6,
-                    connection,
-                    transaction,
-                    fields6 ?? FieldCache.Get<T6>(),
-                    where6,
-                    orderBy6,
-                    top6,
-                    hints6,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
-                maps.Add(where6.MapTo<T6>());
-            }
-
-            // Item7 Request
-            if (item7 == null)
-            {
-                var request7 = new QueryMultipleRequest(7,
-                    tableName7,
-                    connection,
-                    transaction,
-                    fields7 ?? FieldCache.Get<T7>(),
-                    where7,
-                    orderBy7,
-                    top7,
-                    hints7,
-                    statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request7, cancellationToken));
-                maps.Add(where7.MapTo<T7>());
-            }
-
-            // Shared variables
-            var commandText = string.Join(" ", commandTexts);
-            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
-            TraceResult traceResult = null;
-
-            // Before Execution
-            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
-                traceResult = await Tracer
-                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-
-            // Actual Execution
-            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                traceKey: null,
-                transaction: transaction,
-                trace: null,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: true,
-                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
-            {
-                // Silent cancellation
-                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                // Item1 Request
+                if (item1 == null)
                 {
-                    return default;
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
+                    maps.Add(where1.MapTo<T1>());
                 }
 
-                // DB setting
-                var dbSetting = connection.GetDbSetting();
+                // Item2 Request
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
+                    maps.Add(where2.MapTo<T2>());
+                }
 
-                // T1
-                item1 = await QueryMultipleAsyncInternal<T1>(connection,
-                    reader,
-                    item1,
-                    cacheKey1,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    false,
-                    cancellationToken);
+                // Item3 Request
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
+                    maps.Add(where3.MapTo<T3>());
+                }
 
-                // T2
-                item2 = await QueryMultipleAsyncInternal<T2>(connection,
-                    reader,
-                    item2,
-                    cacheKey2,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item4 Request
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
+                    maps.Add(where4.MapTo<T4>());
+                }
 
-                // T3
-                item3 = await QueryMultipleAsyncInternal<T3>(connection,
-                    reader,
-                    item3,
-                    cacheKey3,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item5 Request
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
+                    maps.Add(where5.MapTo<T5>());
+                }
 
-                // T4
-                item4 = await QueryMultipleAsyncInternal<T4>(connection,
-                    reader,
-                    item4,
-                    cacheKey4,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item6 Request
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
+                    maps.Add(where6.MapTo<T6>());
+                }
 
-                // T5
-                item5 = await QueryMultipleAsyncInternal<T5>(connection,
-                    reader,
-                    item5,
-                    cacheKey5,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Item7 Request
+                if (item7 == null)
+                {
+                    var request7 = new QueryMultipleRequest(7,
+                        tableName7,
+                        connection,
+                        transaction,
+                        fields7 ?? FieldCache.Get<T7>(),
+                        where7,
+                        orderBy7,
+                        top7,
+                        hints7,
+                        statementBuilder);
+                    commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request7, cancellationToken));
+                    maps.Add(where7.MapTo<T7>());
+                }
 
-                // T6
-                item6 = await QueryMultipleAsyncInternal<T6>(connection,
-                    reader,
-                    item6,
-                    cacheKey6,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Shared variables
+                var separator = connection.GetDbSetting().MultiStatementSeparator;
+                var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
+                var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
+                Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+                TraceResult traceResult = null;
 
-                // T7
-                item7 = await QueryMultipleAsyncInternal<T7>(connection,
-                    reader,
-                    item7,
-                    cacheKey7,
-                    dbSetting,
-                    cacheItemExpiration,
-                    transaction,
-                    cache,
-                    true,
-                    cancellationToken);
+                // Before Execution
+                async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                    traceResult = await Tracer
+                        .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Actual Execution
+                using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    traceKey: null,
+                    transaction: transaction,
+                    trace: null,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: true,
+                    beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+                {
+                    // Silent cancellation
+                    if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                    {
+                        return default;
+                    }
+
+                    // T1
+                    item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                        reader,
+                        item1,
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        false,
+                        cancellationToken);
+
+                    // T2
+                    item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                        reader,
+                        item2,
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T3
+                    item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                        reader,
+                        item3,
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T4
+                    item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                        reader,
+                        item4,
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T5
+                    item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                        reader,
+                        item5,
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T6
+                    item6 = await QueryMultipleAsyncInternal<T6>(connection,
+                        reader,
+                        item6,
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // T7
+                    item7 = await QueryMultipleAsyncInternal<T7>(connection,
+                        reader,
+                        item7,
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        transaction,
+                        cache,
+                        true,
+                        cancellationToken);
+
+                    // Result
+                    result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                    // After Execution
+                    await Tracer
+                        .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                }
 
                 // Result
-                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
-
-                // After Execution
-                await Tracer
-                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+                return result;
             }
+            else
+            {
+                // The provider cannot execute multiple SQL statements in a single command text (e.g.
+                // Db2, where IDbSetting.IsMultiStatementExecutable is false) - fall back to one
+                // round-trip per sub-query instead of one combined command + shared reader.
+                if (item1 == null)
+                {
+                    var request1 = new QueryMultipleRequest(1,
+                        tableName1,
+                        connection,
+                        transaction,
+                        fields1 ?? FieldCache.Get<T1>(),
+                        where1,
+                        orderBy1,
+                        top1,
+                        hints1,
+                        statementBuilder);
+                    item1 = await QueryMultipleSingleStatementAsyncInternal<T1>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken),
+                        where1.MapTo<T1>(),
+                        cacheKey1,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
 
-            // Result
-            return result;
+                if (item2 == null)
+                {
+                    var request2 = new QueryMultipleRequest(2,
+                        tableName2,
+                        connection,
+                        transaction,
+                        fields2 ?? FieldCache.Get<T2>(),
+                        where2,
+                        orderBy2,
+                        top2,
+                        hints2,
+                        statementBuilder);
+                    item2 = await QueryMultipleSingleStatementAsyncInternal<T2>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken),
+                        where2.MapTo<T2>(),
+                        cacheKey2,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item3 == null)
+                {
+                    var request3 = new QueryMultipleRequest(3,
+                        tableName3,
+                        connection,
+                        transaction,
+                        fields3 ?? FieldCache.Get<T3>(),
+                        where3,
+                        orderBy3,
+                        top3,
+                        hints3,
+                        statementBuilder);
+                    item3 = await QueryMultipleSingleStatementAsyncInternal<T3>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken),
+                        where3.MapTo<T3>(),
+                        cacheKey3,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item4 == null)
+                {
+                    var request4 = new QueryMultipleRequest(4,
+                        tableName4,
+                        connection,
+                        transaction,
+                        fields4 ?? FieldCache.Get<T4>(),
+                        where4,
+                        orderBy4,
+                        top4,
+                        hints4,
+                        statementBuilder);
+                    item4 = await QueryMultipleSingleStatementAsyncInternal<T4>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken),
+                        where4.MapTo<T4>(),
+                        cacheKey4,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item5 == null)
+                {
+                    var request5 = new QueryMultipleRequest(5,
+                        tableName5,
+                        connection,
+                        transaction,
+                        fields5 ?? FieldCache.Get<T5>(),
+                        where5,
+                        orderBy5,
+                        top5,
+                        hints5,
+                        statementBuilder);
+                    item5 = await QueryMultipleSingleStatementAsyncInternal<T5>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken),
+                        where5.MapTo<T5>(),
+                        cacheKey5,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item6 == null)
+                {
+                    var request6 = new QueryMultipleRequest(6,
+                        tableName6,
+                        connection,
+                        transaction,
+                        fields6 ?? FieldCache.Get<T6>(),
+                        where6,
+                        orderBy6,
+                        top6,
+                        hints6,
+                        statementBuilder);
+                    item6 = await QueryMultipleSingleStatementAsyncInternal<T6>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken),
+                        where6.MapTo<T6>(),
+                        cacheKey6,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                if (item7 == null)
+                {
+                    var request7 = new QueryMultipleRequest(7,
+                        tableName7,
+                        connection,
+                        transaction,
+                        fields7 ?? FieldCache.Get<T7>(),
+                        where7,
+                        orderBy7,
+                        top7,
+                        hints7,
+                        statementBuilder);
+                    item7 = await QueryMultipleSingleStatementAsyncInternal<T7>(connection,
+                        await CommandTextCache.GetQueryMultipleTextAsync(request7, cancellationToken),
+                        where7.MapTo<T7>(),
+                        cacheKey7,
+                        dbSetting,
+                        cacheItemExpiration,
+                        commandTimeout,
+                        traceKey,
+                        transaction,
+                        cache,
+                        trace,
+                        cancellationToken);
+                }
+
+                return Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+            }
         }
 
         #endregion
@@ -26124,7 +27636,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -26731,7 +28244,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -27476,7 +28990,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -28354,7 +29869,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -29365,7 +30881,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -30509,7 +32026,8 @@ namespace RepoDb
             }
 
             // Shared variables
-            var commandText = string.Join(" ", commandTexts);
+            var separator = connection.GetDbSetting().MultiStatementSeparator;
+            var commandText = string.Join(" ", EnsureMultipleStatementSeparator(commandTexts, separator));
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
             TraceResult traceResult = null;
@@ -30853,6 +32371,174 @@ namespace RepoDb
             }
 
             return items;
+        }
+
+        /// <summary>
+        /// Executes a single QueryMultiple sub-query as its own standalone round-trip. Used as a fallback
+        /// for providers whose <see cref="IDbSetting.IsMultiStatementExecutable"/> is <c>false</c> (e.g.
+        /// Db2), which cannot execute multiple SELECT statements joined into a single command text the
+        /// way the combined/single-round-trip code path above does.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="commandText">The command text for this single sub-query only.</param>
+        /// <param name="map">The type map used to translate this sub-query's <see cref="QueryGroup"/> parameters into a bindable object.</param>
+        /// <param name="cacheKey">The cache key for this sub-query.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <returns>The resolved items for this sub-query.</returns>
+        private static IEnumerable<T> QueryMultipleSingleStatementInternal<T>(IDbConnection connection,
+            string commandText,
+            QueryGroupTypeMap map,
+            string cacheKey,
+            IDbSetting dbSetting,
+            int? cacheItemExpiration,
+            int? commandTimeout,
+            string traceKey,
+            IDbTransaction transaction,
+            ICache cache,
+            ITrace trace)
+        {
+            var param = QueryGroup.AsMappedObject(new[] { map }, false);
+            TraceResult traceResult = null;
+
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
+                traceResult = Tracer.InvokeBeforeExecution(traceKey, trace, command));
+
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: CommandType.Text,
+                commandTimeout: commandTimeout,
+                traceKey: null,
+                transaction: transaction,
+                trace: null,
+                entityType: null,
+                dbFields: null,
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
+            {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return null;
+                }
+
+                var result = QueryMultipleInternal<T>(connection,
+                    reader,
+                    null,
+                    cacheKey,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Executes a single QueryMultiple sub-query as its own standalone round-trip in an asynchronous
+        /// way. Used as a fallback for providers whose <see cref="IDbSetting.IsMultiStatementExecutable"/>
+        /// is <c>false</c> (e.g. Db2), which cannot execute multiple SELECT statements joined into a
+        /// single command text the way the combined/single-round-trip code path above does.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="commandText">The command text for this single sub-query only.</param>
+        /// <param name="map">The type map used to translate this sub-query's <see cref="QueryGroup"/> parameters into a bindable object.</param>
+        /// <param name="cacheKey">The cache key for this sub-query.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The resolved items for this sub-query.</returns>
+        private static async Task<IEnumerable<T>> QueryMultipleSingleStatementAsyncInternal<T>(IDbConnection connection,
+            string commandText,
+            QueryGroupTypeMap map,
+            string cacheKey,
+            IDbSetting dbSetting,
+            int? cacheItemExpiration,
+            int? commandTimeout,
+            string traceKey,
+            IDbTransaction transaction,
+            ICache cache,
+            ITrace trace,
+            CancellationToken cancellationToken)
+        {
+            var param = QueryGroup.AsMappedObject(new[] { map }, false);
+            TraceResult traceResult = null;
+
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: CommandType.Text,
+                commandTimeout: commandTimeout,
+                traceKey: null,
+                transaction: transaction,
+                trace: null,
+                cancellationToken: cancellationToken,
+                entityType: null,
+                dbFields: null,
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
+            {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return null;
+                }
+
+                var result = await QueryMultipleAsyncInternal<T>(connection,
+                    reader,
+                    null,
+                    cacheKey,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
+
+                return result;
+            }
+        }
+
+        private static IEnumerable<string> EnsureMultipleStatementSeparator(
+            IList<string> commandTexts,
+            string separator)
+        {
+            foreach (var commandText in commandTexts)
+            {
+                if (string.IsNullOrEmpty(commandText))
+                {
+                    yield return commandText;
+                    continue;
+                }
+                yield return !commandText.Trim().EndsWith(separator) ? $"{commandText}{separator}" : commandText;
+            }
         }
 
         #endregion

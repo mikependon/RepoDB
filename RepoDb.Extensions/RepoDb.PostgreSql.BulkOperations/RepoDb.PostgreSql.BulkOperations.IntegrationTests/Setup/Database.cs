@@ -1,5 +1,5 @@
-﻿using Npgsql;
-using System;
+﻿using System;
+using Npgsql;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -13,12 +13,16 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
-            // Set the connection string
-            ConnectionStringForPosgres = Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB", EnvironmentVariableTarget.Process) ??
-                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
-            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process)??
-                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;";
-            
+            // Master connection
+            ConnectionStringForPostgres =
+                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR_POSTGRES") ??
+                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=RepoDB2026;";
+
+            // RepoDb connection
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_PGSQL_CONSTR_BULK") ??
+                "Server=127.0.0.1;Port=5432;Database=RepoDbBulk;User Id=postgres;Password=RepoDB2026;";
+
             // Initialize PostgreSql
             GlobalConfiguration.Setup().UsePostgreSql();
 
@@ -32,12 +36,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used for Postgres database.
         /// </summary>
-        public static string ConnectionStringForPosgres { get; private set; }
+        public static string ConnectionStringForPostgres { get; private set; }
 
         /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionStringForRepoDb { get; private set; }
+        public static string ConnectionString { get; private set; }
 
         #region Methods
 
@@ -46,12 +50,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForPosgres))
+            using (var connection = new NpgsqlConnection(ConnectionStringForPostgres))
             {
-                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
+                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDbBulk';");
                 if (recordCount <= 0)
                 {
-                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDb""
+                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDbBulk""
                         WITH OWNER = ""postgres""
                         ENCODING = ""UTF8""
                         CONNECTION LIMIT = -1;");
@@ -73,7 +77,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.Truncate("BulkOperationIdentityTable");
                 connection.Truncate("EnumTable");
@@ -116,7 +120,7 @@ namespace RepoDb.IntegrationTests.Setup
 
                     ALTER TABLE public.""BulkOperationIdentityTable""
                         OWNER to postgres;";
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -128,7 +132,7 @@ namespace RepoDb.IntegrationTests.Setup
 
         private static void CreateEnumTable()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"
                     DO $$

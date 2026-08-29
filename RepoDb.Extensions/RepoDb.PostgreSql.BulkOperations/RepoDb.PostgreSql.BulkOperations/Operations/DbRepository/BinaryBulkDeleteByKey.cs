@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using System;
+using Npgsql;
 using RepoDb.Enumerations;
 using RepoDb.Enumerations.PostgreSql;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -29,6 +30,7 @@ namespace RepoDb
         /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
         public static int BinaryBulkDeleteByKey<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -43,11 +45,11 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BinaryBulkDeleteByKey<TPrimaryKey>(tableName: tableName,
+                return connection.BulkDeleteByKey<TPrimaryKey>(tableName: tableName,
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction);
             }
             finally
@@ -73,7 +75,7 @@ namespace RepoDb
 
         /// <summary>
         /// Delete the existing rows by bulk via a list of primary keys in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImportInternal' extended method.
         /// </summary>
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
         /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
@@ -85,6 +87,7 @@ namespace RepoDb
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the target table.</returns>
+        [Obsolete("This method is obsolete and will be removed in a future version. Use 'BulkDeleteByKey' instead.")]
         public static async Task<int> BinaryBulkDeleteByKeyAsync<TPrimaryKey>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TPrimaryKey> primaryKeys,
@@ -100,11 +103,11 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.BinaryBulkDeleteByKeyAsync<TPrimaryKey>(tableName: tableName,
+                return await connection.BulkDeleteByKeyAsync<TPrimaryKey>(tableName: tableName,
                     primaryKeys: primaryKeys,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
-                    pseudoTableType: pseudoTableType,
+                    pseudoTableType: pseudoTableType == BulkImportPseudoTableType.Physical ? PostgreSqlBulkImportPseudoTableType.Physical : PostgreSqlBulkImportPseudoTableType.Memory,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }

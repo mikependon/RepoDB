@@ -11,7 +11,7 @@ namespace RepoDb.Benchmarks.SqlServer.Setup
         {
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
-            ConnectionString = connectionString ?? @"Server=(local);Database=RepoDbTest;Integrated Security=False;User Id=michael;Password=Password123;";
+            ConnectionString = connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;";
 
             CreateDatabase();
             CreatePersonTable();
@@ -49,9 +49,9 @@ namespace RepoDb.Benchmarks.SqlServer.Setup
 
         private static void CreateDatabase()
         {
-            const string commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDbTest'))
+            const string commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
                 BEGIN
-	                CREATE DATABASE [RepoDbTest];
+	                CREATE DATABASE [RepoDb];
                 END";
 
             using var connection = new SqlConnection(ConnectionString);

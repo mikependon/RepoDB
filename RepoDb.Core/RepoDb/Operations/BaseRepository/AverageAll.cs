@@ -8,7 +8,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region AverageAll<TEntity>
+
+        #region AverageAll
 
         /// <averagemary>
         /// Computes the average value of the target field.
@@ -18,7 +19,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public object AverageAll(Field field,
+        public double AverageAll(Field field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
 			IDbTransaction transaction = null)
@@ -37,7 +38,7 @@ namespace RepoDb
         /// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value of the target field.</returns>
-        public object AverageAll(Expression<Func<TEntity, object>> field,
+        public double AverageAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             string traceKey = TraceKeys.AverageAll,
 			IDbTransaction transaction = null)
@@ -47,6 +48,54 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction);
         }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<double> AverageAllAsync(Field field,
+            string hints = null,
+            string traceKey = TraceKeys.AverageAll,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.AverageAllAsync<TEntity>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<double> AverageAllAsync(Expression<Func<TEntity, object>> field,
+            string hints = null,
+            string traceKey = TraceKeys.AverageAll,
+			IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            return DbRepository.AverageAllAsync<TEntity>(field: field,
+                hints: hints,
+                traceKey: traceKey,
+				transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
+        #region AverageAll<TResult>
 
         /// <averagemary>
         /// Computes the average value of the target field.
@@ -86,54 +135,6 @@ namespace RepoDb
                 hints: hints,
                 traceKey: traceKey,
 				transaction: transaction);
-        }
-
-        #endregion
-
-        #region AverageAllAsync<TEntity>
-
-        /// <averagemary>
-        /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The average value of the target field.</returns>
-        public Task<object> AverageAllAsync(Field field,
-            string hints = null,
-            string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.AverageAllAsync<TEntity>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <averagemary>
-        /// Computes the average value of the target field in an asynchronous way.
-        /// </averagemary>
-        /// <param name="field">The field to be averaged.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="traceKey">The tracing key to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The average value of the target field.</returns>
-        public Task<object> AverageAllAsync(Expression<Func<TEntity, object>> field,
-            string hints = null,
-            string traceKey = TraceKeys.AverageAll,
-			IDbTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return DbRepository.AverageAllAsync<TEntity>(field: field,
-                hints: hints,
-                traceKey: traceKey,
-				transaction: transaction,
-                cancellationToken: cancellationToken);
         }
 
         /// <averagemary>
@@ -183,5 +184,6 @@ namespace RepoDb
         }
 
         #endregion
+
     }
 }

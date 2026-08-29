@@ -7,7 +7,8 @@ namespace RepoDb
 {
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region CountAll<TEntity>
+
+        #region CountAll
 
         /// <summary>
         /// Count the number of rows from the table.
@@ -24,10 +25,6 @@ namespace RepoDb
                 traceKey: traceKey,
 				transaction: transaction);
         }
-
-        #endregion
-
-        #region CountAllAsync<TEntity>
 
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.

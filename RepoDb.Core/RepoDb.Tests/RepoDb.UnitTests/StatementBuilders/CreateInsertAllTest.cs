@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Exceptions;
 using RepoDb.UnitTests.CustomObjects;
 using System;
@@ -237,7 +237,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheNonIdentityPrimaryIsNotCovered()
         {
             // Setup
@@ -247,14 +247,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: fields,
-                batchSize: 1,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<PrimaryFieldNotFoundException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: fields,
+                    batchSize: 1,
+                    primaryField: primaryField,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfThereAreNoFields()
         {
             // Setup
@@ -262,14 +265,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<EmptyException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheTableIsNull()
         {
             // Setup
@@ -277,14 +283,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheTableIsEmpty()
         {
             // Setup
@@ -292,14 +301,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "";
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -307,14 +319,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: null,
-                batchSize: 1,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: null,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -324,14 +339,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: fields,
-                batchSize: 1,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: fields,
+                    batchSize: 1,
+                    primaryField: primaryField,
+                    identityField: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -342,14 +360,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: fields,
-                batchSize: 1,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: fields,
+                    batchSize: 1,
+                    primaryField: null,
+                    identityField: identifyField);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheBatchSizeIsGreaterThan1AndTheMultipleStatementExecutionIsNotSupported()
         {
             // Setup
@@ -360,11 +381,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(tableName: tableName,
-                fields: fields,
-                batchSize: 10,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                statementBuilder.CreateInsertAll(tableName: tableName,
+                    fields: fields,
+                    batchSize: 10,
+                    primaryField: null,
+                    identityField: identifyField);
+            });
         }
     }
 }

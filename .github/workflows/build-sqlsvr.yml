@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.SqlServer (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.SqlServer/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-sqlsvr.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.SqlServer
+      solution-file: RepoDb.SqlServer.sln
+      artifact-name: release-sqlsvr
+      db-engine: sqlserver

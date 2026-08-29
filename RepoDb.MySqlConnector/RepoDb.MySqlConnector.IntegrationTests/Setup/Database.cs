@@ -1,7 +1,7 @@
-﻿using RepoDb.MySqlConnector.IntegrationTests.Models;
-using MySqlConnector;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MySqlConnector;
+using RepoDb.MySqlConnector.IntegrationTests.Models;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 {
@@ -12,7 +12,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used for sys.
         /// </summary>
-        public static string ConnectionStringForSys { get; private set; }
+        public static string ConnectionStringForSystem { get; private set; }
 
         /// <summary>
         /// Gets or sets the connection string to be used.
@@ -25,15 +25,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Get the connection string
-            var connectionStringForSys = Environment.GetEnvironmentVariable("REPODB_CONSTR_SYS", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
-
             // Set the connection string
-            ConnectionStringForSys = (connectionStringForSys ?? @"Server=localhost;Database=sys;Uid=user;Pwd=Password123;");
-            ConnectionString = (connectionString ?? @"Server=localhost;Database=RepoDb;Uid=user;Pwd=Password123;");
+            ConnectionStringForSystem =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYSTEM") ??
+                @"Server=127.0.0.1;Port=3306;Database=sys;User ID=root;Password=RepoDB2026;";
 
-            // Initialize MySql
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR") ??
+                @"Server=127.0.0.1;Port=3306;Database=RepoDb;User ID=root;Password=RepoDB2026;";
+
+            // Initialize MySqlConnector
             GlobalConfiguration
                 .Setup()
                 .UseMySqlConnector();
@@ -88,9 +89,10 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            using (var connection = new MySqlConnection(ConnectionStringForSys))
+            using (var connection = new MySqlConnection(ConnectionStringForSystem))
             {
-                connection.ExecuteNonQuery(@"CREATE SCHEMA IF NOT EXISTS `RepoDb`;");
+                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDb`;");
+                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDb.* to 'root'@'%';");
             }
         }
 
@@ -108,7 +110,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `completetable`
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `CompleteTable`
                     (
                         `Id` bigint(20) NOT NULL AUTO_INCREMENT,
                         `ColumnVarchar` varchar(256) DEFAULT NULL,
@@ -161,7 +163,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `nonidentitycompletetable`
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `NonIdentityCompleteTable`
                     (
                         `Id` bigint(20) NOT NULL,
                         `ColumnVarchar` varchar(256) DEFAULT NULL,

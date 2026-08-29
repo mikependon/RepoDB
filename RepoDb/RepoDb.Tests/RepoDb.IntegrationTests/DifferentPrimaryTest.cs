@@ -31,7 +31,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertResult = connection.Insert<IdentityTableWithDifferentPrimary, long>(entity);
@@ -54,7 +54,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTableWithDifferentPrimaries(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 var insertAllResult = connection.InsertAll<IdentityTableWithDifferentPrimary>(entities);
@@ -84,7 +84,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTableWithDifferentPrimary>(entity);
@@ -104,7 +104,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTableWithDifferentPrimary>(entity);
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTableWithDifferentPrimary, long>(entity);
@@ -152,7 +152,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTableWithDifferentPrimary, long>(entity);
@@ -182,7 +182,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entity = Helper.CreateIdentityTableWithDifferentPrimary();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.Insert<IdentityTableWithDifferentPrimary, long>(entity);
@@ -216,7 +216,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTableWithDifferentPrimaries(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
                 connection.InsertAll<IdentityTableWithDifferentPrimary>(entities);

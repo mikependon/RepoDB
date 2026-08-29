@@ -1,60 +1,53 @@
-[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
+[![SqlServerBuild](https://img.shields.io/github/actions/workflow/status/mikependon/RepoDB/build-sqlsvr.yml?logo=github&label=build)](https://github.com/mikependon/RepoDB/actions/workflows/build-sqlsvr.yml)
 [![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
-[![SqlServerReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlserver)
-[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
-[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
-# [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) - a hybrid .NET ORM library for SQL Server.
+# [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) — RepoDB for SQL Server
 
-RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+The SQL Server provider for RepoDB — a fast, lightweight .NET ORM that lets you use raw SQL and fluent operations side by side on the same connection. Built on top of [RepoDb](https://repodb.net) and [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient).
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
+- [GitHub Home](https://github.com/mikependon/RepoDb) — core library and source code.
+- [Website](http://repodb.net) — full documentation, API reference, and blog.
 
-## Community Engagements
+## Community
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [GitHub Issues](https://github.com/mikependon/RepoDb/issues) — bug reports and feature requests.
+- [Microsoft Teams](https://teams.live.com/l/community/FEAIJp5q65nfiiWsQ) — live Q&A.
+- [GitHub Discussions](https://github.com/mikependon/RepoDB/discussions) — ask questions and share ideas.
+- [X / Twitter](https://x.com/mike_pendon) — news and updates.
 
 ## Dependencies
 
-- [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for SqlServer.
-- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDB.
+- [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) — SQL Server data provider.
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) — the RepoDB core library.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2020 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2020 [Michael Camara Pendon](https://x.com/mike_pendon)
 
 --------
 
 ## Installation
 
-At the Package Manager Console, write the command below.
-
-```csharp
-> Install-Package RepoDb.SqlServer
+```
+Install-Package RepoDb.SqlServer
 ```
 
-Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or visit the [installation](http://repodb.net/tutorial/installation) page for more options.
 
 ## Get Started
 
-First, the bootstrapper must be initialized.
+Initialize the bootstrapper once at application startup:
 
 ```csharp
-RepoDb.SqlServerBootstrap.Initialize();
+GlobalConfiguration
+    .Setup()
+    .UseSqlServer();
 ```
 
-**Note:** The call must be done once.
-
-After the bootstrap initialization, any library operation can then be called.
-
-Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for SQL Server.
+Then use any RepoDB operation directly on your `SqlConnection`:
 
 ### Query
 
@@ -101,3 +94,36 @@ using (var connection = new SqlConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
+
+### ExecuteQuery
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE (Id = @Id);", new { Id = 10045 }).FirstOrDefault();
+}
+```
+
+### ExecuteNonQuery
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var affectedRows = connection.ExecuteNonQuery("UPDATE [dbo].[Customer] SET FirstName = @FirstName WHERE (Id = @Id);", new { FirstName = "John", Id = 10045 });
+}
+```
+
+### ExecuteScalar
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var count = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [dbo].[Customer];");
+}
+```
+
+Visit the [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for the full SQL Server guide.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) — Copyright © 2018 [Michael Camara Pendon](https://x.com/mike_pendon)

@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests.Caches
         public class SimpleTableRepository : BaseRepository<IdentityTable, SqlConnection>
         {
             public SimpleTableRepository(ICache cache, int cacheItemExpiration)
-                : base(Database.ConnectionStringForRepoDb,
+                : base(Database.ConnectionString,
                     0,
                     ConnectionPersistency.PerCall,
                     cache,

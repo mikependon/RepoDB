@@ -15,6 +15,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+
         #region Count<TEntity>
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            object where = null,
+            object where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -64,7 +65,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -97,7 +98,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -130,7 +131,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -163,7 +164,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -196,7 +197,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -230,10 +231,6 @@ namespace RepoDb
                 trace: trace);
         }
 
-        #endregion
-
-        #region CountAsync<TEntity>
-
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
@@ -249,7 +246,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            object where = null,
+            object where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -285,7 +282,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -321,7 +318,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -357,7 +354,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -393,7 +390,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -429,7 +426,7 @@ namespace RepoDb
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
             string hints = null,
@@ -484,7 +481,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            object where = null,
+            object where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -518,7 +515,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -552,7 +549,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -586,7 +583,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -620,7 +617,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -653,10 +650,6 @@ namespace RepoDb
                 trace: trace);
         }
 
-        #endregion
-
-        #region CountAsync(TableName)
-
         /// <summary>
         /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
@@ -673,7 +666,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            object where = null,
+            object where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -710,7 +703,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -747,7 +740,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -784,7 +777,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -821,7 +814,7 @@ namespace RepoDb
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAsyncInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
 			string traceKey = TraceKeys.Count,
@@ -897,7 +890,8 @@ namespace RepoDb
 				trace: trace,
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;
@@ -947,7 +941,8 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                forceAutomaticConversion: false);
 
             // Result
             return result;

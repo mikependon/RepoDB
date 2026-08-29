@@ -30,7 +30,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings, entityType);
@@ -50,7 +50,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
@@ -72,7 +72,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
@@ -90,21 +90,21 @@ namespace RepoDb.PostgreSql.BulkOperations
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                BulkImportIdentityBehavior identityBehavior,
+                PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
-                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var includeIdentity = identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity;
                 var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
-                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                    (isPrimaryAnIdentity && identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
                     includePrimary,
                     includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
-                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                    new PostgreSqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
 
                 return GetFunc(tableName, mappings, entityType);
             }
@@ -117,7 +117,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             private static Action<NpgsqlBinaryImporter, TEntity> GetFunc(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
@@ -150,15 +150,33 @@ namespace RepoDb.PostgreSql.BulkOperations
                 {
                     var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
                     var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
-                    var parameters = mapping.NpgsqlDbType.HasValue ?
-                        new Expression[]
+
+                    Expression[] parameters;
+                    MethodInfo writeMethod;
+
+                    if (mapping.DataTypeName != null)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.DataTypeName)
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod();
+                    }
+                    else if (mapping.NpgsqlDbType.HasValue)
+                    {
+                        parameters = new Expression[]
                         {
                             propertyExpression,
                             Expression.Constant(mapping.NpgsqlDbType)
-                        } :
-                        new[] { propertyExpression };
-                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
-                        GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteMethod();
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod();
+                    }
+                    else
+                    {
+                        parameters = new[] { propertyExpression };
+                        writeMethod = GetNpgsqlBinaryImporterWriteMethod();
+                    }
 
                     expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
                 }
@@ -201,7 +219,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
             Type entityType)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, mappings, entityType);
@@ -221,7 +239,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            BulkImportIdentityBehavior identityBehavior,
+            PostgreSqlBulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
@@ -244,7 +262,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType) =>
                 GetFunc(tableName, mappings, entityType);
 
@@ -262,21 +280,21 @@ namespace RepoDb.PostgreSql.BulkOperations
                 DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                BulkImportIdentityBehavior identityBehavior,
+                PostgreSqlBulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
-                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var includeIdentity = (identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
-                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                    (isPrimaryAnIdentity && identityBehavior == PostgreSqlBulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
                     includePrimary,
                     includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
-                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                    new PostgreSqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
 
                 return GetFunc(tableName, mappings, entityType);
             }
@@ -289,7 +307,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="entityType"></param>
             /// <returns></returns>
             private static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetFunc(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                IEnumerable<PostgreSqlBulkInsertMapItem> mappings,
                 Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
@@ -323,11 +341,35 @@ namespace RepoDb.PostgreSql.BulkOperations
                 {
                     var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
                     var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
-                    var parameters = mapping.NpgsqlDbType.HasValue ?
-                        new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType), cancellationTokenExpression } :
-                        new Expression[] { propertyExpression, cancellationTokenExpression };
-                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
-                        GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteAsyncMethod();
+
+                    Expression[] parameters;
+                    MethodInfo writeMethod;
+
+                    if (mapping.DataTypeName != null)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.DataTypeName),
+                            cancellationTokenExpression
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod();
+                    }
+                    else if (mapping.NpgsqlDbType.HasValue)
+                    {
+                        parameters = new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.NpgsqlDbType),
+                            cancellationTokenExpression
+                        };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod();
+                    }
+                    else
+                    {
+                        parameters = new Expression[] { propertyExpression, cancellationTokenExpression };
+                        writeMethod = GetNpgsqlBinaryImporterWriteAsyncMethod();
+                    }
 
                     expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
                 }
@@ -391,7 +433,25 @@ namespace RepoDb.PostgreSql.BulkOperations
                 });
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteWithDataTypeNameMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length == 2 &&
+                    parameters[1].ParameterType == typeof(string);
+            });
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod()
@@ -409,7 +469,26 @@ namespace RepoDb.PostgreSql.BulkOperations
         }
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithDataTypeNameMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length == 3 &&
+                    parameters[1].ParameterType == typeof(string) &&
+                    parameters[2].ParameterType == typeof(CancellationToken);
+            });
+        }
+
+        /// <summary>
+        ///
         /// </summary>
         /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod()
@@ -436,7 +515,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <returns></returns>
         private static Expression GetEntityPropertyExpression(Expression entityExpression,
             Type entityType,
-            NpgsqlBulkInsertMapItem mapping)
+            PostgreSqlBulkInsertMapItem mapping)
         {
             // Property
             var classProperty = PropertyCache.Get(entityType, mapping.SourceColumn);
@@ -447,8 +526,8 @@ namespace RepoDb.PostgreSql.BulkOperations
 
             var propertyExpression = (Expression)Expression.Property(entityExpression, mapping.SourceColumn);
 
-            // Enum
-            if (TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
+            // Enum — skip conversion when DataTypeName is set; Npgsql resolves native PG enum types by name directly
+            if (mapping.DataTypeName == null && TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
             {
                 propertyExpression = GetEntityPropertyExpressionForEnum(propertyExpression, mapping.NpgsqlDbType);
             }
@@ -558,7 +637,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mappings"></param>
         /// <returns></returns>
         private static int GetHashCode<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings) =>
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings) =>
             GetHashCode(typeof(TEntity), tableName, mappings);
 
         /// <summary>
@@ -570,7 +649,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <returns></returns>
         private static int GetHashCode(Type entityType,
             string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            IEnumerable<PostgreSqlBulkInsertMapItem> mappings)
         {
             var hashCode = GetHashCode(entityType, tableName);
 

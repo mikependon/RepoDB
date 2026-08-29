@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -363,7 +363,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfTheTableIsNull()
         {
             // Setup
@@ -373,15 +373,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    where: null,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfTheTableIsEmpty()
         {
             // Setup
@@ -391,15 +392,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    where: null,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfTheTableIsWhitespace()
         {
             // Setup
@@ -409,15 +411,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: null,
-                primaryField: null,
-                identityField: null);
+            Assert.Throws<NullReferenceException>(() =>
+                statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    where: null,
+                    primaryField: null,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
@@ -428,15 +431,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: null,
-                primaryField: primaryField,
-                identityField: null);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    where: null,
+                    primaryField: primaryField,
+                    identityField: null));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
@@ -448,12 +452,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                where: null,
-                primaryField: null,
-                identityField: identifyField);
+            Assert.Throws<InvalidOperationException>(() =>
+                statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                    tableName: tableName,
+                    fields: fields,
+                    where: null,
+                    primaryField: null,
+                    identityField: identifyField));
         }
     }
 }

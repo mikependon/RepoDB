@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMaxAllIfTheTableIsNull()
         {
             // Setup
@@ -104,12 +104,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMaxAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMaxAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMaxAllIfTheTableIsEmpty()
         {
             // Setup
@@ -118,12 +121,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMaxAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMaxAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMaxAllIfTheTableIsWhitespace()
         {
             // Setup
@@ -132,12 +138,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMaxAll(tableName: tableName,
-                field: field,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMaxAll(tableName: tableName,
+                    field: field,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMaxAllIfTheFieldIsNull()
         {
             // Setup
@@ -145,12 +154,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateMaxAll(tableName: tableName,
-                field: null,
-                hints: null);
+            Assert.Throws<NullReferenceException>(() =>
+            {
+                statementBuilder.CreateMaxAll(tableName: tableName,
+                    field: null,
+                    hints: null);
+            });
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void ThrowExceptionOnBaseStatementBuilderCreateMaxAllIIfTheHintsAreNotSupported()
         {
             // Setup
@@ -159,9 +171,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMaxAll(tableName: tableName,
-                field: field,
-                hints: "Hints");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                statementBuilder.CreateMaxAll(tableName: tableName,
+                    field: field,
+                    hints: "Hints");
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
@@ -32,7 +32,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionAverageWithoutExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -49,7 +49,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionAverageWithExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -64,18 +64,19 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageWithHints()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.Average<MdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average<MdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -86,7 +87,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncWithoutExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -103,7 +104,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncWithExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -118,18 +119,19 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncWithHints()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                await connection.AverageAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    (object)null,
-                    hints: "WhatEver");
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.AverageAsync<MdsCompleteTable>(e => e.ColumnInt,
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -144,7 +146,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithoutExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -162,7 +164,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -178,19 +180,20 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithHints()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.Average(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver");
+                Assert.Throws<NotSupportedException>(() =>
+                    connection.Average(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 
@@ -201,7 +204,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncViaTableNameWithoutExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -219,7 +222,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncViaTableNameWithExpression()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
@@ -235,19 +238,20 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        [TestMethod]
         public async Task TestSqLiteConnectionAverageAsyncViaTableNameWithHints()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                await connection.AverageAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    (object)null,
-                    hints: "WhatEver");
+                await Assert.ThrowsAsync<NotSupportedException>(async () =>
+                    await connection.AverageAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                        Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
+                        (object)null,
+                        hints: "WhatEver"));
             }
         }
 

@@ -1,0 +1,19 @@
+name: Build & Run Tests - RepoDb.MariaDb (Push)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'RepoDb.Core/**'
+      - 'RepoDb.MariaDb/**'
+      - '.github/workflows/build-base.yml'
+      - '.github/workflows/build-mariadb.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-base.yml
+    with:
+      solution-dir: RepoDb.MariaDb
+      solution-file: RepoDb.MariaDb.sln
+      artifact-name: release-mariadb
+      db-engine: mariadb
